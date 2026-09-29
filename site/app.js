@@ -298,14 +298,16 @@
   art.querySelectorAll('section.sugya[id]').forEach(function(sec){
     if(!sec.querySelector('ol.steps')) return;
     var sid=sec.id.slice(pre.length); var t=(sec.querySelector('h3')||{}).textContent||'';
-    var l=el('button','fb-sec','הערה על סוגיה זו'); l.type='button';
-    l.onclick=function(){open(sid,t.trim())}; sec.appendChild(l); secs[sid]=sec;
+    var l=el('button','fb-sec'); l.type='button'; l.setAttribute('aria-label','הערה על סוגיה זו'); l.dataset.tip='הערה על סוגיה זו';
+    l.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 8.5h8M8 11.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    l.onclick=function(){open(sid,t.trim())};
+    var h3=sec.querySelector('h3'); if(h3) h3.insertBefore(l,h3.firstChild); else sec.appendChild(l); secs[sid]=sec;
   });
   function badge(sid,cls,txt,reply){
     var sec=secs[sid]||null, host=sec||art.querySelector('.controls');
     if(!host) return;
     var p=el('p','fb-badge '+cls); p.append(el('span',null,txt)); if(reply){p.append(document.createTextNode(' — '+reply))}
-    if(sec) sec.insertBefore(p,sec.querySelector('.fb-sec')); else host.after(p);
+    if(sec) sec.appendChild(p); else host.after(p);
   }
   /* my own notes on this page */
   var own=mine().filter(function(n){return n.page===page});
