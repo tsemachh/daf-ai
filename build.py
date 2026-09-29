@@ -35,6 +35,36 @@ def heb_num(n):
 esc = html.escape
 
 
+SOURCES = [
+    ("ספריא", "https://www.sefaria.org/", "לשון הגמרא (נוסח וילנא), ביאור שטיינזלץ, פסוקים ומקורות הלכה"),
+    ("הדף היומי — daf-yomi.com", "https://daf-yomi.com/", "לוח הדף היומי וחומרי ״ללמוד ולהבין״"),
+    ("כולל עיון הדף — dafyomi.co.il", "https://www.dafyomi.co.il/", "סיכומי נקודות וטבלאות עזר"),
+    ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
+    ("״דף מאיר״ — הרב אורי בריליאנט, אתר סיני", "https://www.sinai.org.il/", "חוברת לבדיקת מסכת בכורות (דפים ב–טז)"),
+]
+
+
+def logo_html(up):
+    for ext in ("svg", "png", "webp"):
+        if os.path.exists(os.path.join(ROOT, "site", "static", f"shefing-logo.{ext}")):
+            return f'<img class="sponsor-logo" src="{up}shefing-logo.{ext}" alt="Shefing" width="120" height="32">'
+    return '<span class="sponsor-word">Shefing</span>'
+
+
+def credits(up=""):
+    items = "".join(f'<li><a href="{u}" rel="noopener">{esc(n)}</a> — {esc(d)}</li>' for n, u, d in SOURCES)
+    return f"""<section class="credits" aria-label="קרדיטים">
+  <a class="sponsor" href="https://shefing.com/" rel="noopener">
+    {logo_html(up)}
+    <span>עיבוד הבינה המלאכותית (הטוקנים) בחסות <b>Shefing</b></span>
+  </a>
+  <h2>מקורות</h2>
+  <ul>{items}</ul>
+  <p class="credits-note">הדפים נבנים ונבדקים על ידי סוכן AI מתוך המקורות האלה; ניסוח ההסברים מקורי. לשון הגמרא מובאת מספריא.</p>
+</section>
+"""
+
+
 def jscript(obj, **attrs):
     a = "".join(f' {k.replace("_", "-") if k != "cls" else "class"}="{v}"' for k, v in attrs.items())
     return f'<script type="application/json"{a}>' + json.dumps(obj, ensure_ascii=False).replace("</", "<\\/") + "</script>"
@@ -143,6 +173,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   </ul>
 </section>
 {pager}
+{credits('../../')}
 <footer>{esc(d.get('footer') or FOOT)}</footer>
 
 {jscript(d['quiz'], cls='qdata')}
@@ -185,6 +216,7 @@ def render_masechet(slug, dafim):
 <div class="cards">
 {cards}
 </div>
+{credits('../')}
 <footer>{FOOT}</footer>
 </section></div>"""
     return page(f"מסכת {first['tractate_he']} · דפי לימוד", body, f"דפי לימוד למסכת {first['tractate_he']}", depth=1)
@@ -210,6 +242,7 @@ def render_home(by_slug, latest, about):
 {mas}
 </div>
 {about}
+{credits('')}
 <footer>{FOOT}</footer>
 </section></div>"""
     return page(SITE_TITLE, body, "דפי לימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
