@@ -10,7 +10,7 @@ unless --refresh.
 
 usage: python tools/fetch_sources.py [--days 21] [--start YYYY-MM-DD] [--refresh] [--cache ../daf-ai-sources]
 """
-import argparse, datetime as dt, html, json, os, re, sys, time, urllib.request
+import argparse, datetime as dt, html, json, os, re, sys, time, urllib.error, urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dafyomi import daf_for  # noqa: E402
@@ -23,11 +23,20 @@ DAFYOMI_CO_IL = {"bechorot": ("bechoros", "be"), "arachin": ("erchin", "er"), "t
 
 def get(url, binary=False):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "he,en"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        data = r.read()
-        if binary:
-            return data, r.headers.get_content_charset()
-        return data.decode(r.headers.get_content_charset() or "utf-8", "replace")
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            data, cs = r.read(), r.headers.get_content_charset()
+    except urllib.error.URLError as e:
+        # Some networks (e.g. a filtering proxy) re-sign TLS with a CA that lives only in the macOS
+        # keychain; the system curl trusts it, Python's bundle does not. Verification stays on.
+        if "CERTIFICATE_VERIFY_FAILED" not in str(e):
+            raise
+        import subprocess
+        data = subprocess.run(["curl", "-sfL", "-m", "60", "-A", UA, url], check=True, capture_output=True).stdout
+        cs = None
+    if binary:
+        return data, cs
+    return data.decode(cs or "utf-8", "replace")
 
 
 def strip_tags(s):
