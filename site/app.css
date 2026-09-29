@@ -190,3 +190,19 @@ html{scroll-padding-top:12px}
 .sponsor-logo{height:28px;width:auto;display:block}
 .sponsor-note{flex-basis:100%;font-size:14px;color:var(--muted)}
 .sponsor-row{display:inline-flex;align-items:center;gap:10px}
+.fb-form input[name=email]{font:inherit;font-size:16px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);text-align:right}
+.fb-notify{font-size:15px}
+.fb-muted{margin:0;font-size:14px;color:var(--muted)}
+.fb-ts:empty{display:none}
+.fb-track{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0}
+.fb-track a{color:var(--accent)}
+.fb-badge{font-family:var(--sans);font-size:14px;margin:12px 0 0;padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
+.fb-badge.st-fixed,.fb-badge.pub{border-color:var(--ok);color:var(--ok)}
+.fb-list{display:grid;gap:12px;margin:18px 0}
+.fb-note{font-family:var(--sans);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.fb-note-h{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:14px;color:var(--muted)}
+.fb-note-h a{color:var(--accent)}
+.fb-note-t{white-space:pre-wrap;margin:8px 0}
+.fb-note-s{margin:0;font-weight:700}
+.fb-note.st-fixed .fb-note-s{color:var(--ok)}
+.fb-note-r{margin:6px 0 0;color:var(--muted)}
