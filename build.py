@@ -77,7 +77,6 @@ def jscript(obj, **attrs):
     return f'<script type="application/json"{a}>' + json.dumps(obj, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
-FONTS = "https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700;900&family=Assistant:wght@400;600;700;800&display=swap"
 SITE_URL = "https://daf-ai.pages.dev"
 
 
@@ -90,10 +89,8 @@ def page(title, body, desc="", depth=0):
 <meta name="description" content="{esc(desc)}">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="{FONTS}" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="{FONTS}"></noscript>
+<link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{up}app.css">
 </head><body>
 {body}
@@ -293,6 +290,7 @@ def main():
     os.makedirs(DIST)
     for f in ("app.css", "app.js"):
         shutil.copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
+    shutil.copytree(os.path.join(ROOT, "site", "fonts"), os.path.join(DIST, "fonts"))
     for f in glob.glob(os.path.join(ROOT, "site", "static", "*")):
         shutil.copy(f, DIST)
     glossary = json.load(open(os.path.join(ROOT, "data", "glossary.json"), encoding="utf8"))
