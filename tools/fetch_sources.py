@@ -2,11 +2,11 @@
 """Fill the private source cache (../daf-ai-sources) for upcoming dapim.
 
 Fetches only sources that allow plain HTTP clients:
-  - Sefaria API: Vilna Hebrew (per segment) and Steinsaltz English, both amudim
+  - Sefaria API: Vilna Hebrew (per segment), Hebrew Steinsaltz, Rashi and English Steinsaltz, both amudim
   - dafyomi.co.il: "points" and Hebrew tables pages
-yeshiva.org.il (פרשני wiki) sits behind a Cloudflare challenge and is saved separately by a real
-browser as yeshiva_a.txt / yeshiva_b.txt (see README in the cache repo). Existing files are kept
-unless --refresh.
+yeshiva.org.il (פרשני wiki) blocks automated clients with a Cloudflare challenge, so it is not
+fetched; a yeshiva_<amud>.txt saved by hand is used when present. Existing files are kept unless
+--refresh.
 
 usage: python tools/fetch_sources.py [--days 21] [--start YYYY-MM-DD] [--refresh] [--cache ../daf-ai-sources]
 """
@@ -67,6 +67,13 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
             seg = [strip_tags(x) for x in j.get("he", [])]
             log[p] = save(p, json.dumps({"ref": ref, "segments": seg}, ensure_ascii=False, indent=1), True)
             time.sleep(0.5)
+        for name, book in (("steinsaltz_he", "Steinsaltz_on_"), ("rashi_he", "Rashi_on_")):
+            p = os.path.join(out, f"{name}_{amud}.json")
+            if refresh or not os.path.exists(p):
+                j = json.loads(get(f"https://www.sefaria.org/api/texts/{book}{ref}?lang=he&context=0"))
+                seg = [[strip_tags(c) for c in x] if isinstance(x, list) else strip_tags(x or "") for x in j.get("he", [])]
+                log[p] = save(p, json.dumps({"ref": book + ref, "segments": seg}, ensure_ascii=False, indent=1), True)
+                time.sleep(0.5)
         p = os.path.join(out, f"steinsaltz_en_{amud}.json")
         if refresh or not os.path.exists(p):
             j = json.loads(get(f"https://www.sefaria.org/api/v3/texts/{ref}?version=english"))
@@ -91,7 +98,8 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
                 time.sleep(0.5)
     for amud in "ab":
         p = os.path.join(out, f"yeshiva_{amud}.txt")
-        log[p] = "present" if os.path.exists(p) else "MISSING (needs real browser)"
+        if os.path.exists(p):
+            log[p] = "present (optional)"
     meta = os.path.join(out, "meta.json")
     m = json.load(open(meta, encoding="utf8")) if os.path.exists(meta) else {}
     m.update({"tractate_he": he, "tractate": sef, "slug": slug, "daf": daf,
