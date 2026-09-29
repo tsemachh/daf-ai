@@ -45,18 +45,20 @@ SOURCES = [
 
 
 def logo_html(up):
-    for ext in ("svg", "png", "webp"):
-        if os.path.exists(os.path.join(ROOT, "site", "static", f"shefing-logo.{ext}")):
-            return f'<img class="sponsor-logo" src="{up}shefing-logo.{ext}" alt="Shefing" width="120" height="32">'
+    if os.path.exists(os.path.join(ROOT, "site", "static", "shefing-logo.png")):
+        dark = ""
+        if os.path.exists(os.path.join(ROOT, "site", "static", "shefing-logo-white.png")):
+            dark = f'<source srcset="{up}shefing-logo-white.png" media="(prefers-color-scheme: dark)">'
+        return f'<picture>{dark}<img class="sponsor-logo" src="{up}shefing-logo.png" alt="Shefing" height="28"></picture>'
     return '<span class="sponsor-word">Shefing</span>'
 
 
 def credits(up=""):
     items = "".join(f'<li><a href="{u}" rel="noopener">{esc(n)}</a> — {esc(d)}</li>' for n, u, d in SOURCES)
     return f"""<section class="credits" aria-label="קרדיטים">
-  <a class="sponsor" href="https://shefing.com/" rel="noopener">
-    {logo_html(up)}
-    <span>עיבוד הבינה המלאכותית (הטוקנים) בחסות <b>Shefing</b></span>
+  <a class="sponsor" href="https://shefing.com/" rel="noopener" aria-label="Powered by Shefing">
+    <span class="sponsor-row" dir="ltr"><span class="sponsor-by">Powered by</span>{logo_html(up)}</span>
+    <span class="sponsor-note">עיבוד ה־AI (הטוקנים) בחסות Shefing</span>
   </a>
   <h2>מקורות</h2>
   <ul>{items}</ul>

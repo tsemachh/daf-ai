@@ -186,3 +186,7 @@ html{scroll-padding-top:12px}
 .sponsor:hover span{text-decoration:underline}
 .sponsor-logo{height:32px;width:auto}
 .sponsor-word{font:800 22px/1 var(--sans);letter-spacing:.02em;color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:4px 10px}
+.sponsor-by{font:700 13px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sponsor-logo{height:28px;width:auto;display:block}
+.sponsor-note{flex-basis:100%;font-size:14px;color:var(--muted)}
+.sponsor-row{display:inline-flex;align-items:center;gap:10px}
