@@ -161,3 +161,28 @@ html{scroll-padding-top:12px}
 .topnav .back{margin-top:0}
 .pager{display:flex;justify-content:space-between;gap:12px;margin-top:32px}
 .pager .back{margin-top:0}
+
+/* feedback */
+.fb-sec{display:block;margin:12px 0 0 auto;background:none;border:0;padding:2px 0;font:inherit;font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.fb-sec:hover{color:var(--accent)}
+.fb-form{font-family:var(--sans);font-size:17px;display:grid;gap:12px}
+.fb-form fieldset{border:0;padding:0;margin:0;display:grid;gap:6px}
+.fb-form legend{font-weight:700;margin-bottom:4px}
+.fb-form label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.fb-form textarea,.fb-form input[name=name]{font:inherit;font-size:16px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.fb-form textarea:focus,.fb-form input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.fb-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.fb-send{justify-self:start;background:var(--accent);color:var(--paper);border-color:var(--accent)}
+.fb-status{margin:0;font-size:15px;color:var(--no)}
+.fb-ok{margin:0;font-size:18px;color:var(--ok);font-weight:700}
+
+/* credits */
+.credits{margin-top:40px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--card);font-size:15px}
+.credits h2{font-family:var(--serif);font-size:20px;margin:16px 0 6px}
+.credits ul{margin:0;padding-inline-start:18px;display:grid;gap:4px}
+.credits a{color:var(--accent)}
+.credits-note{margin:10px 0 0;color:var(--muted);font-size:14px}
+.sponsor{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--ink);text-decoration:none;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.sponsor:hover span{text-decoration:underline}
+.sponsor-logo{height:32px;width:auto}
+.sponsor-word{font:800 22px/1 var(--sans);letter-spacing:.02em;color:var(--accent);border:2px solid var(--accent);border-radius:8px;padding:4px 10px}

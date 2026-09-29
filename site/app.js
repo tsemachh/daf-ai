@@ -180,3 +180,52 @@
   if(location.hash){var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView();}
 
 })();
+
+/* reader feedback: POST /api/feedback (Cloudflare Pages Function → GitHub issue) */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art) return;
+  var page=location.pathname.replace(/^\/|\/$/g,'');
+  var KINDS=[['fix','תיקון בתוכן (טעות, ייחוס, ציטוט)'],['missing','חסר בדף (סוגיה, שלב, מקור)'],['feature','הצעה לשיפור האתר']];
+  function open(section,title){
+    var bg=document.createElement('div'); bg.className='srcdlg-bg';
+    var d=document.createElement('div'); d.className='srcdlg fb-dlg'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
+    var h=document.createElement('header'); var h4=document.createElement('h4'); h4.textContent=section?('הערה על: '+title):'הערה על הדף';
+    var x=document.createElement('button'); x.type='button'; x.className='x'; x.setAttribute('aria-label','סגור'); x.textContent='×'; h.append(h4,x);
+    var f=document.createElement('form'); f.className='body fb-form';
+    var fs=document.createElement('fieldset'); var lg=document.createElement('legend'); lg.textContent='מה סוג ההערה?'; fs.appendChild(lg);
+    KINDS.forEach(function(k,i){var l=document.createElement('label'); var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true; l.append(r,document.createTextNode(' '+k[1])); fs.appendChild(l);});
+    var ta=document.createElement('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=5;
+    ta.placeholder='מה בדיוק לתקן או מה חסר? אם אפשר — ציטוט מהגמרא או מקור.';
+    var nm=document.createElement('input'); nm.name='name'; nm.maxLength=80; nm.placeholder='שם (לא חובה)';
+    var hp=document.createElement('input'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.className='fb-hp';
+    var st=document.createElement('p'); st.className='fb-status'; st.setAttribute('aria-live','polite');
+    var sb=document.createElement('button'); sb.type='submit'; sb.className='btn fb-send'; sb.textContent='שליחה';
+    f.append(fs,ta,nm,hp,sb,st);
+    d.append(h,f); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
+    function close(){bg.remove();}
+    x.onclick=close; bg.addEventListener('click',function(e){if(e.target===bg)close()});
+    document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
+    f.addEventListener('submit',function(e){
+      e.preventDefault(); sb.disabled=true; st.textContent='שולח…';
+      var kind=(f.querySelector('input[name=kind]:checked')||{}).value||'fix';
+      fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,website:hp.value,page:page,section:section||'',sectionTitle:title||''})})
+        .then(function(r){return r.json().catch(function(){return {ok:false}})})
+        .then(function(j){
+          if(j&&j.ok){
+            f.innerHTML=''; var ok=document.createElement('p'); ok.className='fb-ok';
+            ok.textContent='תודה! ההערה נקלטה'+(j.id?' (מס׳ '+j.id+')':'')+'. היא תיבדק מול לשון הגמרא בסבב העדכון הלילי, ואם יש צורך — הדף יתוקן.';
+            var c=document.createElement('button'); c.type='button'; c.className='btn'; c.textContent='סגירה'; c.onclick=close; f.append(ok,c); c.focus();
+          } else { sb.disabled=false; st.textContent=(j&&j.error==='too_short')?'נא לכתוב לפחות כמה מילים.':'ההערה לא נשמרה. נסו שוב מאוחר יותר.'; }
+        })
+        .catch(function(){ sb.disabled=false; st.textContent='אין חיבור. נסו שוב מאוחר יותר.'; });
+    });
+  }
+  var ctr=art.querySelector('.controls');
+  if(ctr){var b=document.createElement('button'); b.type='button'; b.className='btn'; b.textContent='💬 הערה על הדף'; b.onclick=function(){open('','')}; ctr.appendChild(b);}
+  art.querySelectorAll('section.sugya[id]').forEach(function(sec){
+    if(!sec.querySelector('ol.steps')) return;
+    var sid=sec.id.split('-').slice(1).join('-'); var t=(sec.querySelector('h3')||{}).textContent||'';
+    var l=document.createElement('button'); l.type='button'; l.className='fb-sec'; l.textContent='הערה על סוגיה זו';
+    l.onclick=function(){open(sid,t.trim())}; sec.appendChild(l);
+  });
+})();

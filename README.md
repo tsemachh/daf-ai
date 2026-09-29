@@ -57,3 +57,25 @@ python -m http.server -d dist 8000
 4. Custom domains → add your domain (DNS on Cloudflare → one click).
 
 Every push to `main` rebuilds and deploys.
+
+## Reader feedback
+
+Every daf page has "💬 הערה על הדף" and a per-sugya "הערה על סוגיה זו". Submissions go to
+`functions/api/feedback.js` (Cloudflare Pages Function), which opens a GitHub issue labelled
+`feedback`, `kind:<fix|missing|feature>`, `daf:<key>`. The nightly task (`tasks/daily-daf.md`)
+validates each issue against the Gemara and fixes, labels, or closes it.
+
+Setup (once): create a fine-grained GitHub token limited to this repo with **Issues: Read and write**,
+then in Cloudflare → daf-ai → Settings → Variables and Secrets add `GITHUB_TOKEN` (type: Secret).
+Without it the endpoint answers 503 and the form says the note was not saved.
+
+## Credits
+
+Every page shows the sources used and the Shefing sponsorship. To show the Shefing logo, add
+`site/static/shefing-logo.svg` (or `.png`); until then a text wordmark is shown.
+
+## Portability
+
+The nightly instructions live in `tasks/daily-daf.md`. Content, code and hosting are in GitHub and
+Cloudflare, independent of any Claude account: to move the job, create a scheduled task on the new
+account with that file as the prompt and give it write access to this repo.
