@@ -45,18 +45,23 @@ SOURCES = [
 
 
 def logo_html(up):
-    if os.path.exists(os.path.join(ROOT, "site", "static", "shefing-logo.png")):
+    st = os.path.join(ROOT, "site", "static")
+    if os.path.exists(os.path.join(st, "shefing-logo.png")):
         dark = ""
-        if os.path.exists(os.path.join(ROOT, "site", "static", "shefing-logo-white.png")):
-            dark = f'<source srcset="{up}shefing-logo-white.png" media="(prefers-color-scheme: dark)">'
-        return f'<picture>{dark}<img class="sponsor-logo" src="{up}shefing-logo.png" alt="Shefing" height="28"></picture>'
+        if os.path.exists(os.path.join(st, "shefing-logo-white.webp")):
+            dark = (f'<source srcset="{up}shefing-logo-white.webp" type="image/webp" width="91" height="28" '
+                    f'media="(prefers-color-scheme: dark)">')
+        light = f'<source srcset="{up}shefing-logo.webp" type="image/webp" width="128" height="28">' \
+            if os.path.exists(os.path.join(st, "shefing-logo.webp")) else ""
+        return (f'<picture>{dark}{light}<img class="sponsor-logo" src="{up}shefing-logo.png" alt="Shefing" '
+                f'width="128" height="28" loading="lazy" decoding="async"></picture>')
     return '<span class="sponsor-word">Shefing</span>'
 
 
 def credits(up=""):
     items = "".join(f'<li><a href="{u}" rel="noopener">{esc(n)}</a> — {esc(d)}</li>' for n, u, d in SOURCES)
     return f"""<section class="credits" aria-label="קרדיטים">
-  <a class="sponsor" href="https://shefing.com/" rel="noopener" aria-label="Powered by Shefing">
+  <a class="sponsor" href="https://shefing.com/" rel="noopener">
     <span class="sponsor-row" dir="ltr"><span class="sponsor-by">Powered by</span>{logo_html(up)}</span>
     <span class="sponsor-note">עיבוד ה־AI (הטוקנים) בחסות Shefing</span>
   </a>
@@ -72,6 +77,10 @@ def jscript(obj, **attrs):
     return f'<script type="application/json"{a}>' + json.dumps(obj, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
+FONTS = "https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700;900&family=Assistant:wght@400;600;700;800&display=swap"
+SITE_URL = "https://daf-ai.pages.dev"
+
+
 def page(title, body, desc="", depth=0):
     up = "../" * depth
     return f"""<!doctype html>
@@ -80,8 +89,11 @@ def page(title, body, desc="", depth=0):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@400;600;700;800&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="{FONTS}" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{FONTS}"></noscript>
 <link rel="stylesheet" href="{up}app.css">
 </head><body>
 {body}
@@ -136,6 +148,8 @@ def render_daf(d, prev, nxt, glossary, sources):
         pn.append(f'<a class="back" href="../{prev}/">→ דף {heb_num(prev)}</a>')
     if nxt:
         pn.append(f'<a class="back" href="../{nxt}/">דף {heb_num(nxt)} ←</a>')
+    tree_btn = ('    <button class="btn" data-role="tree" aria-pressed="false" type="button" title="כל שלב מוזח תחת השלב שעליו הוא עונה; המספר ↲ מציין את השלב שאליו הוא מתייחס">תצוגת עץ</button>\n'
+                if any(s.get("steps") for s in d["sections"]) else "")
     pager = f'<div class="pager">{"".join(pn)}</div>' if pn else ""
     article = f"""<article class="daf" id="{key}" data-tractate="{d['tractate']}" data-daf="{d['daf']}">
 <div class="topnav"><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></div>
@@ -145,8 +159,12 @@ def render_daf(d, prev, nxt, glossary, sources):
   <h1>{esc(d['title'])}</h1>
   <p class="thesis">{d['thesis']}</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span>{meta}</div>
+  <div class="legend"><span>הקש על מילה מסומנת להסבר קצר:</span><span><span class="lp">חכם</span> — תנא או אמורא</span><span><span class="lt">מושג</span> — מונח, מקום או דין</span></div>
+  <div class="sefaria-bar"><a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">פתח את הדף בספריא</a></div>
   <div class="controls">
     <button class="btn" data-role="mode" aria-pressed="false" type="button">מצב חברותא: הסתר תשובות</button>
+{tree_btn}    <button class="btn" data-role="prefs" aria-expanded="false" type="button">⚙ הגדרות</button>
+    <button class="btn" data-role="fb" type="button">💬 הערה על הדף</button>
   </div>
 </header>
 
@@ -189,7 +207,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 </div>
 {jscript(src, id='srctext')}
 {jscript(gl, id='glossary')}
-<script src="../../app.js"></script>"""
+<script src="../../app.js" defer></script>"""
     desc = re.sub("<[^>]+>", "", d["thesis"])
     return page(f"{d['title']} · דף לימוד", body, desc, depth=2)
 
@@ -265,7 +283,7 @@ def render_feedback(by_slug):
 <footer>{FOOT}</footer>
 </section></div>
 {jscript(names, id="fb-names")}
-<script src="../app.js"></script>"""
+<script src="../app.js" defer></script>"""
     return page("מעקב הערות · " + SITE_TITLE, body, "מצב הטיפול בהערות קוראים", depth=1)
 
 
@@ -301,6 +319,16 @@ def main():
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
+    urls = [""] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")
+    open(os.path.join(DIST, "robots.txt"), "w", encoding="utf8").write(
+        f"User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: {SITE_URL}/sitemap.xml\n")
+    open(os.path.join(DIST, "404.html"), "w", encoding="utf8").write(page(
+        "הדף לא נמצא · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><header><h1>הדף לא נמצא</h1>'
+        f'<p class="thesis">הכתובת אינה קיימת. <a href="/">לדף הבית</a></p></header></section></div>', "הדף לא נמצא"))
     print(f"built {len(alld)} dafim in {len(by_slug)} masechtot -> {DIST}")
 
 

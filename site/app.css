@@ -1,7 +1,7 @@
 :root{
   --paper:#F3F4EF; --card:#FBFBF8; --ink:#1C2230; --muted:#5B6272; --line:#D8DAD1;
   --accent:#2B4C7E; --accent-soft:#E3E9F3; --ok:#3F6E45; --ok-soft:#E4EEE3; --no:#9A3B33; --no-soft:#F4E3E0;
-  --gold:#8A6A1F; --gold-soft:#F2EAD6;
+  --gold:#7A5C14; --gold-soft:#F2EAD6;
   --serif:'Frank Ruhl Libre','David','Times New Roman',serif; --sans:'Assistant','Arial Hebrew','Segoe UI',Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
