@@ -181,51 +181,143 @@
 
 })();
 
-/* reader feedback: POST /api/feedback (Cloudflare Pages Function → GitHub issue) */
+/* reader feedback: /api/feedback (Cloudflare Pages Functions + D1) */
 (function(){
+  var LS='daf-fb-notes';
+  var ST={'new':'התקבלה, ממתינה לבדיקה','in-progress':'בטיפול','fixed':'טופלה — הדף תוקן ✓','feature':'נרשמה כהצעה לשיפור האתר','rejected':'נבדקה — לא נמצא צורך בשינוי','needs-info':'נדרש פירוט נוסף'};
+  var KN={fix:'תיקון בתוכן',missing:'חסר בדף',feature:'הצעה לשיפור'};
+  function mine(){try{return JSON.parse(localStorage.getItem(LS)||'[]')}catch(e){return []}}
+  function remember(n){try{var a=mine().filter(function(x){return x.id!==n.id});a.push(n);localStorage.setItem(LS,JSON.stringify(a.slice(-50)))}catch(e){}}
+  function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
+  function status(pairs){return fetch('/api/feedback/status?n='+pairs.map(function(n){return n.id+'.'+n.token}).join(',')).then(function(r){return r.json()})}
+  function hebNum(n){var o='',A=[[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק'],[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י'],[9,'ט'],[8,'ח'],[7,'ז'],[6,'ו'],[5,'ה'],[4,'ד'],[3,'ג'],[2,'ב'],[1,'א']];
+    n=+n; if(n%100===15){o='טו';n-=15}else if(n%100===16){o='טז';n-=16} var p=''; A.forEach(function(a){while(n>=a[0]){p+=a[1];n-=a[0]}}); return p+o}
+  function trackUrl(n){return location.origin+'/feedback/?n='+n.id+'.'+n.token}
+
+  /* tracking page */
+  var tr=document.getElementById('fbtrack');
+  if(tr){
+    var names={};try{names=JSON.parse(document.getElementById('fb-names').textContent)}catch(e){}
+    var q=new URLSearchParams(location.search).get('n');
+    if(q) q.split(',').forEach(function(p){var a=p.split('.');if(/^\d+$/.test(a[0])&&/^[0-9a-f]{32}$/.test(a[1]||''))remember({id:+a[0],token:a[1]})});
+    var list=document.getElementById('fb-list'), ns=mine();
+    if(!ns.length){list.innerHTML='';list.append(el('p','fb-muted','לא נמצאו הערות ששלחתם מהדפדפן הזה.'));return}
+    status(ns).then(function(j){
+      list.innerHTML='';
+      if(!j.ok||!j.notes.length){list.append(el('p','fb-muted','לא נמצאו הערות.'));return}
+      j.notes.sort(function(a,b){return b.id-a.id}).forEach(function(n){
+        var pg=n.page.split('/'), heb=(names[pg[0]]||pg[0])+' '+hebNum(pg[1]);
+        var c=el('div','fb-note st-'+n.status);
+        var h=el('div','fb-note-h');
+        var a=el('a',null,'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href='/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
+        h.append(el('b',null,'#'+n.id),a,el('span',null,KN[n.kind]||''),el('span',null,n.created_at.slice(0,10)));
+        c.append(h,el('p','fb-note-t',n.text),el('p','fb-note-s',ST[n.status]||n.status));
+        if(n.reply)c.append(el('p','fb-note-r',n.reply));
+        list.append(c);
+      });
+    }).catch(function(){list.innerHTML='';list.append(el('p','fb-muted','לא ניתן לטעון כרגע. נסו שוב מאוחר יותר.'))});
+    return;
+  }
+
   var art=document.querySelector('article.daf'); if(!art) return;
   var page=location.pathname.replace(/^\/|\/$/g,'');
+  var pre=art.id+'-';
+  var cfg=null;
+  function getCfg(){return cfg||(cfg=fetch('/api/feedback/config').then(function(r){return r.json()}).catch(function(){return {}}))}
+  function turnstile(box){
+    return getCfg().then(function(c){
+      if(!c.sitekey) return null;
+      return new Promise(function(res){
+        function go(){var id=window.turnstile.render(box,{sitekey:c.sitekey,language:'he',size:'flexible'});res(id)}
+        if(window.turnstile) return go();
+        var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;s.onload=go;s.onerror=function(){res(null)};document.head.appendChild(s);
+      });
+    });
+  }
   var KINDS=[['fix','תיקון בתוכן (טעות, ייחוס, ציטוט)'],['missing','חסר בדף (סוגיה, שלב, מקור)'],['feature','הצעה לשיפור האתר']];
   function open(section,title){
-    var bg=document.createElement('div'); bg.className='srcdlg-bg';
-    var d=document.createElement('div'); d.className='srcdlg fb-dlg'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
-    var h=document.createElement('header'); var h4=document.createElement('h4'); h4.textContent=section?('הערה על: '+title):'הערה על הדף';
-    var x=document.createElement('button'); x.type='button'; x.className='x'; x.setAttribute('aria-label','סגור'); x.textContent='×'; h.append(h4,x);
-    var f=document.createElement('form'); f.className='body fb-form';
-    var fs=document.createElement('fieldset'); var lg=document.createElement('legend'); lg.textContent='מה סוג ההערה?'; fs.appendChild(lg);
-    KINDS.forEach(function(k,i){var l=document.createElement('label'); var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true; l.append(r,document.createTextNode(' '+k[1])); fs.appendChild(l);});
-    var ta=document.createElement('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=5;
+    var bg=el('div','srcdlg-bg');
+    var d=el('div','srcdlg fb-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
+    var h=el('header'); var h4=el('h4',null,section?('הערה על: '+title):'הערה על הדף');
+    var x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
+    var f=el('form','body fb-form');
+    var fs=el('fieldset'); fs.appendChild(el('legend',null,'מה סוג ההערה?'));
+    KINDS.forEach(function(k,i){var l=el('label'); var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true; l.append(r,document.createTextNode(' '+k[1])); fs.appendChild(l);});
+    var ta=el('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=5;
     ta.placeholder='מה בדיוק לתקן או מה חסר? אם אפשר — ציטוט מהגמרא או מקור.';
-    var nm=document.createElement('input'); nm.name='name'; nm.maxLength=80; nm.placeholder='שם (לא חובה)';
-    var hp=document.createElement('input'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.className='fb-hp';
-    var st=document.createElement('p'); st.className='fb-status'; st.setAttribute('aria-live','polite');
-    var sb=document.createElement('button'); sb.type='submit'; sb.className='btn fb-send'; sb.textContent='שליחה';
-    f.append(fs,ta,nm,hp,sb,st);
+    var nm=el('input'); nm.name='name'; nm.maxLength=80; nm.placeholder='שם (לא חובה)';
+    var em=el('input'); em.name='email'; em.type='email'; em.maxLength=160; em.placeholder='מייל לעדכון (לא חובה)'; em.setAttribute('dir','ltr');
+    var nl=el('label','fb-notify'); var nc=document.createElement('input'); nc.type='checkbox'; nc.name='notify';
+    nl.append(nc,document.createTextNode(' אשמח לעדכון במייל כשההערה תטופל'));
+    em.addEventListener('input',function(){nc.checked=!!em.value.trim()});
+    var hp=el('input','fb-hp'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.setAttribute('aria-hidden','true');
+    var ts=el('div','fb-ts');
+    var note=el('p','fb-muted','ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
+    var st=el('p','fb-status'); st.setAttribute('aria-live','polite');
+    var sb=el('button','btn fb-send','שליחה'); sb.type='submit';
+    f.append(fs,ta,nm,em,nl,hp,ts,note,sb,st);
     d.append(h,f); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
-    function close(){bg.remove();}
+    var tsId=null; turnstile(ts).then(function(id){tsId=id});
+    function close(){bg.remove();document.removeEventListener('keydown',esc)}
+    function esc(e){if(e.key==='Escape')close()}
     x.onclick=close; bg.addEventListener('click',function(e){if(e.target===bg)close()});
-    document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
+    document.addEventListener('keydown',esc);
+    var ERR={too_short:'נא לכתוב לפחות כמה מילים.',bad_email:'כתובת המייל אינה תקינה.',captcha:'אימות האבטחה נכשל. נסו שוב.',rate:'נשלחו הרבה הערות בזמן קצר. נסו שוב בעוד שעה.'};
     f.addEventListener('submit',function(e){
       e.preventDefault(); sb.disabled=true; st.textContent='שולח…';
       var kind=(f.querySelector('input[name=kind]:checked')||{}).value||'fix';
-      fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,website:hp.value,page:page,section:section||'',sectionTitle:title||''})})
+      var tok=(tsId!=null&&window.turnstile)?window.turnstile.getResponse(tsId):'';
+      fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,email:em.value,notify:nc.checked,website:hp.value,turnstile:tok,page:page,section:section||'',sectionTitle:title||''})})
         .then(function(r){return r.json().catch(function(){return {ok:false}})})
         .then(function(j){
           if(j&&j.ok){
-            f.innerHTML=''; var ok=document.createElement('p'); ok.className='fb-ok';
-            ok.textContent='תודה! ההערה נקלטה'+(j.id?' (מס׳ '+j.id+')':'')+'. היא תיבדק מול לשון הגמרא בסבב העדכון הלילי, ואם יש צורך — הדף יתוקן.';
-            var c=document.createElement('button'); c.type='button'; c.className='btn'; c.textContent='סגירה'; c.onclick=close; f.append(ok,c); c.focus();
-          } else { sb.disabled=false; st.textContent=(j&&j.error==='too_short')?'נא לכתוב לפחות כמה מילים.':'ההערה לא נשמרה. נסו שוב מאוחר יותר.'; }
+            var n={id:j.id,token:j.token,page:page,section:section||'',title:title||'',at:new Date().toISOString().slice(0,10)};
+            if(j.id) remember(n);
+            f.innerHTML='';
+            var ok=el('p','fb-ok','תודה! ההערה נקלטה'+(j.id?' (מס׳ '+j.id+')':'')+'.');
+            var more=el('p',null,'היא תיבדק מול לשון הגמרא בסבב העדכון הלילי, ואם יש צורך — הדף יתוקן.');
+            f.append(ok,more);
+            if(j.id){
+              var tl=el('p','fb-track'); var a=el('a',null,'קישור למעקב אחר ההערה'); a.href=trackUrl(n); a.target='_blank';
+              var cp=el('button','btn','העתקת הקישור'); cp.type='button';
+              cp.onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(trackUrl(n)):Promise.reject()).then(function(){cp.textContent='הועתק ✓'}).catch(function(){})};
+              tl.append(a,document.createTextNode(' '),cp); f.append(tl);
+            }
+            var c=el('button','btn','סגירה'); c.type='button'; c.onclick=close; f.append(c); c.focus();
+          } else {
+            sb.disabled=false; st.textContent=ERR[j&&j.error]||'ההערה לא נשמרה. נסו שוב מאוחר יותר.';
+            if(tsId!=null&&window.turnstile) window.turnstile.reset(tsId);
+          }
         })
         .catch(function(){ sb.disabled=false; st.textContent='אין חיבור. נסו שוב מאוחר יותר.'; });
     });
   }
   var ctr=art.querySelector('.controls');
-  if(ctr){var b=document.createElement('button'); b.type='button'; b.className='btn'; b.textContent='💬 הערה על הדף'; b.onclick=function(){open('','')}; ctr.appendChild(b);}
+  if(ctr){var b=el('button','btn','💬 הערה על הדף'); b.type='button'; b.onclick=function(){open('','')}; ctr.appendChild(b);}
+  var secs={};
   art.querySelectorAll('section.sugya[id]').forEach(function(sec){
     if(!sec.querySelector('ol.steps')) return;
-    var sid=sec.id.split('-').slice(1).join('-'); var t=(sec.querySelector('h3')||{}).textContent||'';
-    var l=document.createElement('button'); l.type='button'; l.className='fb-sec'; l.textContent='הערה על סוגיה זו';
-    l.onclick=function(){open(sid,t.trim())}; sec.appendChild(l);
+    var sid=sec.id.slice(pre.length); var t=(sec.querySelector('h3')||{}).textContent||'';
+    var l=el('button','fb-sec','הערה על סוגיה זו'); l.type='button';
+    l.onclick=function(){open(sid,t.trim())}; sec.appendChild(l); secs[sid]=sec;
   });
+  function badge(sid,cls,txt,reply){
+    var sec=secs[sid]||null, host=sec||art.querySelector('.controls');
+    if(!host) return;
+    var p=el('p','fb-badge '+cls); p.append(el('span',null,txt)); if(reply){p.append(document.createTextNode(' — '+reply))}
+    if(sec) sec.insertBefore(p,sec.querySelector('.fb-sec')); else host.after(p);
+  }
+  /* my own notes on this page */
+  var own=mine().filter(function(n){return n.page===page});
+  if(own.length) status(own).then(function(j){
+    (j.notes||[]).forEach(function(n){
+      if(n.status==='new') return;
+      badge(n.section,'mine st-'+n.status,'ההערה שלך (#'+n.id+'): '+(ST[n.status]||n.status),n.reply);
+    });
+  }).catch(function(){});
+  /* public: fixes made after reader notes */
+  fetch('/api/feedback/page?p='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(j){
+    var ownIds=own.map(function(n){return n.id});
+    (j.notes||[]).forEach(function(n){ if(ownIds.indexOf(n.id)<0) badge(n.section,'pub','✓ תוקן בעקבות הערת קורא',n.reply); });
+  }).catch(function(){});
 })();

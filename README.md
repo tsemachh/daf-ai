@@ -60,19 +60,49 @@ Every push to `main` rebuilds and deploys.
 
 ## Reader feedback
 
-Every daf page has "💬 הערה על הדף" and a per-sugya "הערה על סוגיה זו". Submissions go to
-`functions/api/feedback.js` (Cloudflare Pages Function), which opens a GitHub issue labelled
-`feedback`, `kind:<fix|missing|feature>`, `daf:<key>`. The nightly task (`tasks/daily-daf.md`)
-validates each issue against the Gemara and fixes, labels, or closes it.
+Every daf page has "💬 הערה על הדף" and a per-sugya "הערה על סוגיה זו". Notes are stored in
+Cloudflare D1 (`db/schema.sql`) by Pages Functions in `functions/`:
 
-Setup (once): create a fine-grained GitHub token limited to this repo with **Issues: Read and write**,
-then in Cloudflare → daf-ai → Settings → Variables and Secrets add `GITHUB_TOKEN` (type: Secret).
-Without it the endpoint answers 503 and the form says the note was not saved.
+| Endpoint | Who | What |
+|---|---|---|
+| `POST /api/feedback` | public | save a note → `{id, token}`; honeypot, optional Turnstile, 6/hour per IP hash |
+| `GET /api/feedback/status?n=<id>.<token>,…` | the author | status + public reply of their own notes |
+| `GET /api/feedback/page?p=bechorot/9` | public | notes marked `fixed` on a page (no text/name/email) |
+| `GET /api/feedback/config` | public | Turnstile sitekey |
+| `/admin/` , `GET /admin/api/list?status=new` , `POST /admin/api/update` | owner / nightly job | dashboard and API, behind Cloudflare Access |
+
+Readers stay anonymous. The browser keeps `id.token` pairs in localStorage; the tracking page is
+`/feedback/` (or `/feedback/?n=<id>.<token>` from the link shown after sending). An email is kept
+only when "עדכון במייל" is ticked, and should be cleared (`clear_email`) after the update is sent.
+Pages show "✓ תוקן בעקבות הערת קורא" on sections with fixed notes.
+
+Statuses: `new`, `in-progress`, `fixed`, `feature`, `rejected`, `needs-info`.
+Update body: `{"id":12,"status":"fixed","reply":"…","commit_sha":"abc1234","notified":true,"clear_email":true}`.
+
+### Setup (once, Cloudflare dashboard)
+1. **D1** → Create database `daf-ai-feedback` → Console → paste `db/schema.sql` → Execute.
+2. **Pages → daf-ai → Settings → Bindings** → D1 database, variable name `DB` → `daf-ai-feedback`.
+3. **Turnstile** → Add widget (hostname `daf-ai.pages.dev`, Managed). In Pages → Variables and
+   Secrets add `TURNSTILE_SITEKEY` (text) and `TURNSTILE_SECRET` (secret). Optional: `IP_SALT` (secret).
+4. **Zero Trust → Access → Applications** → Self-hosted, domain `daf-ai.pages.dev`, path `admin`,
+   policy "Allow" for the owner's email. Copy the app's **AUD tag**; add Pages variables
+   `ACCESS_TEAM` = `<team>.cloudflareaccess.com` and `ACCESS_AUD` = the AUD tag.
+   For the nightly job: Access → Service Auth → create a service token and add a second policy
+   (action "Service Auth") for it. The job sends `CF-Access-Client-Id` / `CF-Access-Client-Secret`.
+5. Redeploy (Deployments → Retry) so bindings and variables take effect.
+
+Without `DB` the form answers 503 ("not saved"); without `ACCESS_*` `/admin` answers 503.
+
+### Local test
+```
+npx wrangler d1 execute DB --local --file db/schema.sql   # with a wrangler.toml that declares DB
+npx wrangler pages dev                                     # serves dist/ + functions/
+```
 
 ## Credits
 
-Every page shows the sources used and the Shefing sponsorship. To show the Shefing logo, add
-`site/static/shefing-logo.svg` (or `.png`); until then a text wordmark is shown.
+Every page shows the sources used and "Powered by Shefing" with the logo
+(`site/static/shefing-logo.png`, `shefing-logo-white.png` for dark mode) linking to shefing.com.
 
 ## Portability
 

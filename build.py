@@ -250,6 +250,25 @@ def render_home(by_slug, latest, about):
     return page(SITE_TITLE, body, "דפי לימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
 
 
+def render_feedback(by_slug):
+    names = {slug: ds[0]["tractate_he"] for slug, ds in by_slug.items()}
+    body = f"""<div class="wrap" id="app"><section id="fbtrack">
+<a class="back" href="../">→ דף הבית</a>
+<header>
+  <div class="eyebrow">הערות קוראים</div>
+  <h1>מעקב אחר ההערות שלי</h1>
+  <p class="thesis">כאן מופיע מצב הטיפול בהערות ששלחתם מהדפדפן הזה, או דרך קישור המעקב שקיבלתם.</p>
+</header>
+<div id="fb-list" class="fb-list" aria-live="polite"><p class="fb-muted">טוען…</p></div>
+<p class="fb-muted">כל הערה נבדקת מול לשון הגמרא בסבב העדכון הלילי. ההערות אנונימיות; כתובת מייל, אם נמסרה, משמשת רק לעדכון ונמחקת אחריו.</p>
+{credits('../')}
+<footer>{FOOT}</footer>
+</section></div>
+{jscript(names, id="fb-names")}
+<script src="../app.js"></script>"""
+    return page("מעקב הערות · " + SITE_TITLE, body, "מצב הטיפול בהערות קוראים", depth=1)
+
+
 def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
@@ -280,6 +299,8 @@ def main():
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     latest = sorted(alld, key=lambda d: d.get("order", d["daf"]), reverse=True)[:7]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
+    os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
+    open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
     print(f"built {len(alld)} dafim in {len(by_slug)} masechtot -> {DIST}")
 
 
