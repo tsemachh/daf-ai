@@ -10,8 +10,13 @@ You maintain the Daf Yomi study site in the GitHub repo `tsemachh/daf-ai` (deplo
 Pages on every push to `main`). Work autonomously; nobody is watching. Do not ask questions.
 
 ## 0. Setup
-- Clone the repo. Read `README.md` (data schema) and this file.
+- Runs as a Claude Code **routine** (claude.ai/code/routines) with this repo selected; the repo is
+  already cloned on the default branch. Read `README.md` (data schema) and this file.
+- Network: the routine's environment must allow `www.sefaria.org`, `daf-yomi.com`, `www.yeshiva.org.il`,
+  `www.dafyomi.co.il`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
+  `host_not_allowed`), say which host in the report and stop — do not publish unverified content.
 - `TZ=Asia/Jerusalem date` → today + Hebrew date. On Shabbat / Yom Tov in Israel: end with one line.
+- Git identity: leave the routine's default (your GitHub user).
 
 ## 1. Feedback first (reader notes in Cloudflare D1)
 API base `https://daf-ai.pages.dev/admin/api`, headers `CF-Access-Client-Id: $DAF_ACCESS_ID` and
@@ -67,7 +72,10 @@ get their own key: "רבי יהושע הגרסי", "רב נחמיה בריה ד�
 - `python validate.py` must exit 0; `python build.py`; Playwright check of `dist/<slug>/<daf>/`
   (390px and 1280px): no page error, no horizontal overflow, 8 quiz items, every `button.src`
   opens a dialog, `button.term` opens a popover, tree toggle works.
-- Commit `Add <masechet> <daf> (<date>)` and push to `main`.
+- Commit `Add <masechet> <daf> (<date>)` and `git push origin HEAD:main` (Cloudflare Pages deploys `main`).
+  If the push to `main` is rejected, push the same commit to `claude/daily` instead and say so in the
+  report — the owner merges it. Never force-push; never rewrite history.
+- If `data/<slug>/<daf>.json` for a target already exists on `main` (e.g. added by hand), skip it.
 
 ## 6. Report (2–4 Hebrew lines)
 Pages added with links (https://daf-ai.pages.dev/<slug>/<daf>/), notes handled (fixed / feature /
