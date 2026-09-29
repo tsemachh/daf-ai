@@ -42,10 +42,11 @@ missing or the API fails, note it in the report and continue with §2.
 ## 2. Targets — prepare ahead of Shabbat and Yom Tov
 - Target days: today; tomorrow; then keep adding days while the day just added is Shabbat or Yom Tov
   in Israel, and add the first regular weekday after them.
-- Get masechet + daf per day from the Sefaria calendar:
-  `https://www.sefaria.org/api/calendars?year=<y>&month=<m>&day=<d>&timezone=Asia/Jerusalem` → the
-  "Daf Yomi" item (daf-yomi.com blocks cloud runs; use it only as a fallback). Map the masechet
-  to its Sefaria name (בכורות = Bekhorot, ערכין = Arakhin, …) and a lowercase slug (bechorot, arachin, …).
+- Get masechet + daf per day with `python tools/dafyomi.py <YYYY-MM-DD> …` (computed locally; prints
+  the Hebrew name, the Sefaria ref and the slug). Cross-check once per run against the Sefaria calendar
+  `https://www.sefaria.org/api/calendars?year=<y>&month=<m>&day=<d>&timezone=Asia/Jerusalem` ("Daf Yomi"
+  item); if they disagree, use Sefaria and flag it in the report. Do not script daf-yomi.com — it sits
+  behind a Cloudflare bot challenge (403 for non-browser clients); links to it on the pages are fine.
   Cover both amudim, even across a masechet boundary.
 - Skip targets whose `data/<slug>/<daf>.json` already exists. Nothing left → report "הכול מוכן מראש"
   and go to §6.
