@@ -1,3 +1,7 @@
 dist/
 __pycache__/
 *.pyc
+.env
+.env.*
+.idea/
+.wrangler/
