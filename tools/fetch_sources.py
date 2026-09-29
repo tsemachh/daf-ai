@@ -70,7 +70,7 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
         for name, book in (("steinsaltz_he", "Steinsaltz_on_"), ("rashi_he", "Rashi_on_")):
             p = os.path.join(out, f"{name}_{amud}.json")
             if refresh or not os.path.exists(p):
-                j = json.loads(get(f"https://www.sefaria.org/api/texts/{book}{ref}?lang=he&context=0"))
+                j = json.loads(get(f"https://www.sefaria.org/api/texts/{book}{ref}?lang=he&context=0&pad=0"))
                 seg = [[strip_tags(c) for c in x] if isinstance(x, list) else strip_tags(x or "") for x in j.get("he", [])]
                 log[p] = save(p, json.dumps({"ref": book + ref, "segments": seg}, ensure_ascii=False, indent=1), True)
                 time.sleep(0.5)

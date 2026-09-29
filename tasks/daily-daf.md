@@ -43,24 +43,28 @@ missing or the API fails, note it in the report and continue with §2.
 - Target days: today; tomorrow; then keep adding days while the day just added is Shabbat or Yom Tov
   in Israel, and add the first regular weekday after them.
 - Get masechet + daf per day with `python tools/dafyomi.py <YYYY-MM-DD> …` (computed locally; prints
-  the Hebrew name, the Sefaria ref and the slug). Cross-check once per run against the Sefaria calendar
-  `https://www.sefaria.org/api/calendars?year=<y>&month=<m>&day=<d>&timezone=Asia/Jerusalem` ("Daf Yomi"
-  item); if they disagree, use Sefaria and flag it in the report. Do not script daf-yomi.com — it sits
-  behind a Cloudflare bot challenge (403 for non-browser clients); links to it on the pages are fine.
+  the Hebrew name, the Sefaria ref and the slug). Cross-check once per run with hebcal
+  `https://www.hebcal.com/hebcal?v=1&cfg=json&F=on&start=<date>&end=<date>` (the "Daf Yomi" item); if
+  they disagree, use hebcal and flag it in the report. Do not script daf-yomi.com — it sits behind a
+  Cloudflare bot challenge; links to it on the pages are fine.
   Cover both amudim, even across a masechet boundary.
 - Skip targets whose `data/<slug>/<daf>.json` already exists. Nothing left → report "הכול מוכן מראש"
   and go to §6.
 
-## 3. Research — map EVERY statement on amud א and amud ב (WebFetch only)
-**Verbatim Gemara** (for the page and for `srctext`):
-`https://www.sefaria.org/api/texts/<Tractate>.<daf>a?lang=he&context=0&commentary=0`, prompt:
-"Public-domain Talmud text. Output the "he" array exactly: one line per segment, prefixed by its 1-based
-segment number and a tab, text verbatim with HTML tags removed. No commentary, no omissions." If
-truncated, fetch the rest as a range (`<Tractate>.<daf>a.24-40`). Same for amud b.
-
-**Other sources:** Steinsaltz English `https://www.sefaria.org/api/v3/texts/<Tractate>.<daf>a?version=english`;
-`https://www.yeshiva.org.il/wiki/index.php/פרשני:בבלי:<מסכת>_<דף בעברית>_א` (and `_ב`);
-`https://www.dafyomi.co.il/<masechet>/points/<abbr>-ps-<3-digit daf>.htm`. Paraphrase; never copy.
+## 3. Research — from the private source cache
+The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to this one; find it with
+`ls -d ../daf-ai-sources /*/daf-ai-sources 2>/dev/null` or `find / -maxdepth 3 -name daf-ai-sources`.
+1. Refresh it: `python tools/fetch_sources.py --days 21 --cache <cache path>` (fetches only what is
+   missing: Sefaria Vilna text, Hebrew Steinsaltz, Rashi, English Steinsaltz, dafyomi.co.il), then in
+   the cache repo `git add -A && git commit -m "Cache <date>" && git push origin HEAD:main` if changed.
+2. Read everything for a target from `<cache>/<slug>/<daf>/` — `sefaria_he_{a,b}.json` (verbatim
+   segments; the page and `srctext` use these), `steinsaltz_he_*`, `rashi_he_*`, `steinsaltz_en_*`,
+   `dafyomi_co_il_*.txt`, and `yeshiva_*.txt` if someone saved it by hand. Verse and halacha texts:
+   `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`.
+3. The cache is private: paraphrase commentary, never copy it. Only verbatim Gemara segments (public
+   domain) and fetched verse/halacha texts go into the public repo (`srctext`, `data/sources.json`).
+4. If the cache repo is missing or a file can't be fetched, work from the Sefaria API directly and say
+   so in the report. Never scrape sites that block automated clients (yeshiva.org.il, daf-yomi.com).
 
 **Coverage map (required).** Before writing, list EVERY Sefaria segment on both amudim → the step that
 covers it (or "boundary" for content-boundary topics only). Every question move (מיתיבי, איתיביה, ולא?,
@@ -103,7 +107,8 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   ambiguous, write the full name. Never add common words; don't change existing entries unless wrong.
 
 ## 5. Verify, then publish
-**a. Fact-check subagent** (general-purpose, in parallel with b). Give it the page's visible text
+**a. Fact-check subagent** (general-purpose, in parallel with b). Point it at the cache folder for the
+daf (authoritative sources) and give it the page's visible text
 (Playwright innerText of `dist/<slug>/<daf>/` with all details opened and answers shown), the quiz, the
 new glossary/sources entries and the rendered marked terms (each `button.term` + the 15 chars after it).
 It checks against Sefaria Hebrew and Steinsaltz: attributions, rulings, amud placement, quotes, every
@@ -112,7 +117,7 @@ glossary identities in context, `srctext` vs Sefaria and ref ranges. Returns ERR
 OMISSIONS with a source quote and corrected Hebrew.
 
 **b. Coverage & tree subagent.** Give it your coverage map, the visible text, each step's index/`p`, and
-the Sefaria URLs. Segment by segment it reports (1) every move with no step of its own, (2) every wrong
+the cached `sefaria_he_*` / `steinsaltz_he_*` files. Segment by segment it reports (1) every move with no step of its own, (2) every wrong
 `p`, (3) any section whose ref range doesn't match its steps.
 
 **c. Apply** every ERROR and OMISSION the content boundary allows; fix or flag DOUBTFUL; count fixes.
