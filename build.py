@@ -80,6 +80,9 @@ def jscript(obj, **attrs):
 SITE_URL = "https://daf-ai.pages.dev"
 
 
+CSS = " ".join(open(os.path.join(ROOT, "site", "app.css"), encoding="utf8").read().split())
+
+
 def page(title, body, desc="", depth=0):
     up = "../" * depth
     return f"""<!doctype html>
@@ -91,7 +94,7 @@ def page(title, body, desc="", depth=0):
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{up}app.css">
+<style>{CSS}</style>
 </head><body>
 {body}
 </body></html>
