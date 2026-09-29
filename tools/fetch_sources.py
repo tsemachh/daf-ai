@@ -86,7 +86,7 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
     meta = os.path.join(out, "meta.json")
     m = json.load(open(meta, encoding="utf8")) if os.path.exists(meta) else {}
     m.update({"tractate_he": he, "tractate": sef, "slug": slug, "daf": daf,
-              "fetched_at": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+              "fetched_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")})
     json.dump(m, open(meta, "w", encoding="utf8"), ensure_ascii=False, indent=1)
     return log
 
