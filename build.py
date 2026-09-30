@@ -6,7 +6,10 @@ data/<slug>/<daf>.json  ->  dist/<slug>/<daf>/index.html
                         ->  dist/index.html          (home)
 No third-party dependencies (Cloudflare Pages: build command `python build.py`, output `dist`).
 """
-import glob, html, json, os, re, shutil
+import datetime as dt, glob, html, json, os, re, shutil, sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools"))
+import dafyomi  # noqa: E402  (local Daf Yomi calendar)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
@@ -78,6 +81,36 @@ def jscript(obj, **attrs):
 
 
 SITE_URL = "https://daf-ai.pages.dev"
+CATALOG = {"pages": [], "mas": {}}  # filled in main(); embedded for the progress runtime
+
+
+def il_today():
+    try:
+        from zoneinfo import ZoneInfo
+        return dt.datetime.now(ZoneInfo("Asia/Jerusalem")).date()
+    except Exception:
+        return dt.date.today()
+
+
+def yomi_date(slug, daf):
+    """Daf Yomi date of slug/daf in the cycle nearest to today (ISO string), or None."""
+    off = 0
+    for he, sef, sl, first, last in dafyomi.MASECHTOT:
+        if sl == slug and first <= daf <= last:
+            off += daf - first
+            break
+        off += last - first + 1
+    else:
+        return None
+    n = (il_today() - dafyomi.CYCLE_START).days
+    base = dafyomi.CYCLE_START + dt.timedelta(days=(n // dafyomi.CYCLE_LEN) * dafyomi.CYCLE_LEN + off)
+    if (base - il_today()).days < -dafyomi.CYCLE_LEN // 2:
+        base += dt.timedelta(days=dafyomi.CYCLE_LEN)
+    return base.isoformat()
+
+
+def catalog_json():
+    return jscript(CATALOG, id="catalog")
 
 
 CSS = " ".join(open(os.path.join(ROOT, "site", "app.css"), encoding="utf8").read().split())
@@ -207,7 +240,9 @@ def render_daf(d, prev, nxt, glossary, sources):
 </div>
 {jscript(src, id='srctext')}
 {jscript(gl, id='glossary')}
-<script src="../../app.js" defer></script>"""
+{catalog_json()}
+<script src="../../app.js" defer></script>
+<script src="../../progress.js" defer></script>"""
     desc = re.sub("<[^>]+>", "", d["thesis"])
     return page(f"{d['title']} · דף לימוד", body, desc, depth=2)
 
@@ -233,12 +268,15 @@ def render_masechet(slug, dafim):
   <h1>מסכת {first['tractate_he']}</h1>
   <p class="thesis">{len(dafim)} דפים זמינים</p>
 </header>
+<div id="progress-mas" data-slug="{slug}"></div>
 <div class="cards">
 {cards}
 </div>
 {credits('../')}
 <footer>{FOOT}</footer>
-</section></div>"""
+</section></div>
+{catalog_json()}
+<script src="../progress.js" defer></script>"""
     return page(f"מסכת {first['tractate_he']} · דפי לימוד", body, f"דפי לימוד למסכת {first['tractate_he']}", depth=1)
 
 
@@ -253,6 +291,7 @@ def render_home(by_slug, latest, about):
   <p class="thesis">דף לימוד אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span></div>
 </header>
+<div id="progress-home"></div>
 <h2 class="sec-h" style="margin-top:28px">הדפים האחרונים</h2>
 <div class="cards">
 {cards}
@@ -264,7 +303,9 @@ def render_home(by_slug, latest, about):
 {about}
 {credits('')}
 <footer>{FOOT}</footer>
-</section></div>"""
+</section></div>
+{catalog_json()}
+<script src="progress.js" defer></script>"""
     return page(SITE_TITLE, body, "דפי לימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
 
 
@@ -291,7 +332,7 @@ def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
     os.makedirs(DIST)
-    for f in ("app.css", "app.js"):
+    for f in ("app.css", "app.js", "progress.js"):
         shutil.copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
     shutil.copytree(os.path.join(ROOT, "site", "fonts"), os.path.join(DIST, "fonts"))
     for f in glob.glob(os.path.join(ROOT, "site", "static", "*")):
@@ -302,6 +343,16 @@ def main():
     for f in sorted(glob.glob(os.path.join(ROOT, "data", "*", "*.json"))):
         d = json.load(open(f, encoding="utf8"))
         by_slug.setdefault(d["slug"], []).append(d)
+    CATALOG["pages"].clear(); CATALOG["mas"].clear()
+    for slug, ds in by_slug.items():
+        for he, sef, sl, first, last in dafyomi.MASECHTOT:
+            if sl == slug:
+                CATALOG["mas"][slug] = {"he": he, "first": first, "last": last}
+        for d in sorted(ds, key=lambda x: x["daf"]):
+            CATALOG["pages"].append({"k": f"{slug}/{d['daf']}", "s": slug, "d": d["daf"],
+                                     "h": f"{d['tractate_he']} {heb_num(d['daf'])}",
+                                     "t": re.sub("<[^>]+>", "", d["thesis"])[:110],
+                                     "n": [n["id"] for n in d["nav"]], "y": yomi_date(slug, d["daf"])})
     alld = []
     for slug, ds in by_slug.items():
         ds.sort(key=lambda x: x["daf"])

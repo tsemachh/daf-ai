@@ -216,3 +216,51 @@ html{scroll-padding-top:12px}
 .fb-sec::after{content:attr(data-tip);position:absolute;top:50%;left:calc(100% + 6px);transform:translateY(-50%);white-space:nowrap;font-family:var(--sans);font-size:13px;font-weight:600;line-height:1;padding:6px 9px;border-radius:6px;background:var(--ink);color:var(--paper);pointer-events:none;opacity:0;transition:opacity .15s}
 .fb-sec:hover::after,.fb-sec:focus-visible::after{opacity:1}
 @media (hover:none){.fb-sec{opacity:.8}.fb-sec::after{display:none}}
+/* learner progress (progress.js) */
+.pg-strip{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:20px 0 0;padding:8px 14px;background:var(--card);border:1px solid var(--line);border-radius:999px}
+.pg-dots{display:flex;gap:6px;flex-wrap:wrap}
+.pg-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line);background:transparent;padding:0;cursor:pointer}
+.pg-dot.opened{border-color:var(--accent)}
+.pg-dot.learned{background:var(--accent);border-color:var(--accent)}
+.pg-dot.cur{box-shadow:0 0 0 3px var(--accent-soft)}
+.pg-count{font-size:14px;color:var(--muted);font-weight:600}
+.pg-resume{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none}
+.pg-resume:empty{display:none}
+.pg-learn{display:block;margin:16px 0 0 auto;background:var(--card);color:var(--ink);border:1.5px solid var(--accent);border-radius:999px;padding:6px 18px;font-size:15px;font-weight:700;cursor:pointer}
+.pg-learn.on{background:var(--accent-soft);border-color:var(--accent)}
+.pg-set{border-top:1px solid var(--line);margin-top:12px;padding-top:10px;display:grid;gap:6px}
+.pg-plan{display:grid;gap:6px;padding-inline-start:22px}
+.pg-row{display:flex;gap:10px;align-items:center;font-size:15px}.pg-row span{min-width:74px;color:var(--muted)}
+.pg-row select,.pg-row input{font:inherit;font-size:15px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:3px 8px}
+.pg-btns{display:flex;flex-wrap:wrap;gap:8px}
+.pg-file{cursor:pointer;display:inline-block}
+.pg-code{width:100%;font:12px/1.4 ui-monospace,monospace;direction:ltr;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px}
+.pg-hint{font-size:13px;color:var(--muted);margin:0}
+.pg-home{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;margin-top:28px;min-height:170px}
+.pg-home .prefs{grid-column:1/-1}
+@media (max-width:640px){.pg-home{grid-template-columns:1fr}}
+.pg-today{display:block;background:var(--accent-soft);border:2px solid var(--accent);border-radius:14px;padding:16px 18px;color:var(--ink);text-decoration:none}
+.pg-k{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.pg-h{font-family:var(--serif);font-size:30px;line-height:1.3;margin-top:4px}
+.pg-t{font-size:16px;margin-top:4px}
+.pg-m{font-size:14px;color:var(--muted);margin:6px 0 0}
+.pg-side{display:grid;gap:10px;align-content:start}
+.pg-resume-b{display:grid;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:var(--ink);text-decoration:none}
+.pg-resume-b span{font-size:14px;color:var(--muted)}
+.pg-status,.pg-streak{margin:0;font-size:16px}
+.pg-ok{color:var(--ok);font-weight:800}.pg-warn{color:var(--gold)}
+.pg-mas{display:grid;gap:4px;color:var(--ink);text-decoration:none;font-size:14px}
+.pg-bar{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.pg-bar i{display:block;height:100%;background:var(--accent);border-radius:4px;margin-inline-start:0}
+.pg-gear{justify-self:start}
+.pg-map{display:grid;gap:10px;margin:22px 0}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(22px,1fr));gap:5px;max-width:560px}
+.pg-cell{display:block;aspect-ratio:1;border-radius:4px;border:1.5px solid var(--accent);background:transparent}
+.pg-cell.learned{background:var(--accent)}
+.pg-cell.progress{background:var(--accent-soft)}
+.pg-cell.na{border-color:var(--line);background:var(--line);opacity:.55}
+.pg-cell.today{box-shadow:0 0 0 2px var(--gold)}
+.pg-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.pg-legend span{display:flex;align-items:center;gap:6px}.pg-legend i{width:14px;height:14px}
+.pg-badge{font-size:13px;font-weight:700;color:var(--accent)}
+.pg-badge.learned{color:var(--ok)}
