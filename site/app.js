@@ -14,7 +14,7 @@
     {re:new RegExp('שו״ע יו״ד (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+"Shulchan_Arukh,_Yoreh_De'ah."+gem(m[1])+'.'+gem(m[2])+'?lang=he'}},
     {re:new RegExp('רמב״ם מאכלות אסורות (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+'Mishneh_Torah,_Forbidden_Foods.'+gem(m[1])+'.'+gem(m[2])+'?lang=he'}}
   ];
-  var SKIP='A,BUTTON,H1,H3,SCRIPT,.quiz,.map,.tag,.fb,footer,.term,.links,.card,details.storyline,details.flowd';
+  var SKIP='A,BUTTON,H1,H3,SCRIPT,.quiz,.map,.tag,.fb,footer,.term,.links,.card,details.storyline,details.flowd,.nogl';
   function textNodes(root){var out=[],w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||!n.nodeValue.trim())return 2;return p.closest(SKIP)?2:1}});while(w.nextNode())out.push(w.currentNode);return out}
   function mkSrc(url,text){
     var key=decodeURIComponent(url.replace(SEF,'').split('?')[0]), el;
@@ -109,8 +109,7 @@
       var on=mode.getAttribute('aria-pressed')!=='true';
       mode.setAttribute('aria-pressed',on); art.classList.toggle('hide-mode',on);
       mode.textContent='חברותא';
-      art.querySelectorAll('.steps li.ans').forEach(function(li){li.classList.remove('shown'); li.setAttribute('aria-expanded','false'); var g=li.querySelector('.cv'); if(g) g.remove();});
-      art.querySelectorAll('section.sugya').forEach(function(sec){ if(sec.querySelector('li.ans')) sec.classList.remove('cv-done'); var r=sec.querySelector('.cv-res'); if(r) r.remove();});
+      art.querySelectorAll('.steps li.hideable').forEach(function(li){li.classList.remove('shown')});
     });
     (function(){
       var any=art.querySelector('.steps li[data-k]'); if(!any||!mode) return;
@@ -132,38 +131,7 @@
       tb.addEventListener('click',function(){var on=tb.getAttribute('aria-pressed')!=='true';tb.setAttribute('aria-pressed',on);art.classList.toggle('tree-mode',on);tb.textContent='עץ';});
       if(newTb) mode.parentNode.appendChild(tb);
     })();
-    /* חברותא: questions, sources and proofs stay visible; only the answers (תירוץ/דחייה/מסקנה…) are hidden.
-       Reveal one (tap / Enter), say whether you knew it; summaries of the sugya stay closed until it is done. */
-    function cvCheck(sec){
-      var all=sec.querySelectorAll('.steps li.ans'), shown=sec.querySelectorAll('.steps li.ans.shown');
-      if(!all.length||shown.length<all.length||sec.classList.contains('cv-done')) return;
-      sec.classList.add('cv-done');
-      var ok=sec.querySelectorAll('.cv .on.ok').length, tot=sec.querySelectorAll('.cv .on').length;
-      if(tot){ var r=document.createElement('p'); r.className='cv-res'; r.textContent='ידעת '+ok+' מתוך '+tot+' תשובות בסוגיה'; var ol=sec.querySelector('ol.steps'); ol.after(r); }
-    }
-    function reveal(li){
-      if(!art.classList.contains('hide-mode')||li.classList.contains('shown')) return;
-      li.classList.add('shown'); li.setAttribute('aria-expanded','true');
-      var sec=li.closest('section.sugya'), g=document.createElement('span'); g.className='cv';
-      [['ok','✓ ידעתי'],['no','✗ לא ידעתי']].forEach(function(x){ var b=document.createElement('button'); b.type='button'; b.className=x[0]; b.textContent=x[1];
-        b.addEventListener('click',function(ev){ ev.stopPropagation(); g.querySelectorAll('button').forEach(function(y){y.classList.remove('on')}); b.classList.add('on');
-          document.dispatchEvent(new CustomEvent('daf:cv',{detail:{sec:sec&&sec.id,k:li.dataset.k,ok:x[0]==='ok'}})); cvCheck(sec); });
-        g.appendChild(b); });
-      li.querySelector('.body').appendChild(g); if(sec) cvCheck(sec);
-    }
-    art.querySelectorAll('.steps li').forEach(function(li){
-      var tg=li.querySelector('.tag'); if(!tg||!(tg.classList.contains('a')||tg.classList.contains('c'))) return;
-      li.classList.add('ans'); li.tabIndex=0; li.setAttribute('role','button'); li.setAttribute('aria-expanded','false');
-      li.addEventListener('click',function(){reveal(li)});
-      li.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ if(art.classList.contains('hide-mode')&&!li.classList.contains('shown')){e.preventDefault(); reveal(li);} } });
-    });
-    art.querySelectorAll('section.sugya').forEach(function(sec){ if(!sec.querySelector('li.ans')) sec.classList.add('cv-done'); });
-    art.querySelectorAll('section.sugya ol.steps').forEach(function(ol){
-      if(!ol.querySelector('li.ans')) return;
-      var b=document.createElement('button'); b.type='button'; b.className='btn cv-all'; b.textContent='גלה את כל התשובות';
-      b.addEventListener('click',function(){ ol.querySelectorAll('li.ans').forEach(function(li){ li.classList.add('shown'); li.setAttribute('aria-expanded','true'); }); var sec=ol.closest('section.sugya'); if(sec){ sec.classList.add('cv-done'); } });
-      ol.before(b);
-    });
+    art.querySelectorAll('.steps li.hideable .body').forEach(function(b){b.addEventListener('click',function(){b.parentElement.classList.add('shown')})});
     art.querySelectorAll('.reveal').forEach(function(btn){btn.addEventListener('click',function(){var a=btn.nextElementSibling;a.hidden=!a.hidden;btn.textContent=a.hidden?'הצג תשובה':'הסתר תשובה';})});
     (function(){
       var KEY='dafPrefs', P={};
@@ -195,15 +163,13 @@
         var d=document.createElement('div'); d.className='qitem';
         var p=document.createElement('p'); p.textContent=(i+1)+'. '+item.q; d.appendChild(p);
         var opts=document.createElement('div'); opts.className='opts'; var fb=document.createElement('div'); fb.className='fb'; fb.setAttribute('aria-live','polite');
-        var order=item.o.map(function(_,j){return j}); for(var x=order.length-1;x>0;x--){var r=Math.floor(Math.random()*(x+1)),tmp=order[x];order[x]=order[r];order[r]=tmp;}
-        var btns={};
-        order.forEach(function(j){ var t=item.o[j];
-          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=t; btns[j]=b;
+        item.o.forEach(function(t,j){
+          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=t;
           b.addEventListener('click',function(){
             if(d.dataset.done) return; d.dataset.done=1;
             var ok=j===item.a, v=document.createElement('b'); v.className='qv '+(ok?'ok':'no'); v.textContent=ok?'✓ נכון.':'✗ לא בדיוק.';
-            if(ok){b.classList.add('right'); right++;} else{b.classList.add('wrong'); btns[item.a].classList.add('right');}
-            fb.textContent=''; fb.append(v,document.createTextNode(' '+(!ok&&item.w&&item.w[j]?item.w[j]+' ':'')+item.e));
+            if(ok){b.classList.add('right'); right++;} else{b.classList.add('wrong'); opts.children[item.a].classList.add('right');}
+            fb.textContent=''; fb.append(v,document.createTextNode(' '+item.e));
             scoreEl.textContent='· '+right+'/'+Q.length;
             if(box.querySelectorAll('.qitem[data-done]').length===Q.length){
               var sm=document.createElement('div'); sm.className='qsum'; sm.setAttribute('role','status');
