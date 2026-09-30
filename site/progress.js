@@ -4,7 +4,7 @@
   var KEY='dafProgress', C={pages:[],mas:{}};
   try{C=JSON.parse(document.getElementById('catalog').textContent)}catch(e){}
   if(!C.pages) return;
-  function blank(){return {v:1,pages:{},days:[],review:[],pace:{mode:'yomi'},last:null,first:null}}
+  function blank(){return {v:1,pages:{},days:[],review:[],later:{},pace:{mode:'yomi'},last:null,first:null}}
   function norm(s){if(!s||s.v!==1)return blank(); var b=blank(); for(var k in b) if(s[k]==null) s[k]=b[k]; return s}
   var S; try{S=norm(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){S=blank()}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -19,7 +19,18 @@
   function byKey(k){for(var i=0;i<L.length;i++) if(L[i].k===k) return L[i]; return null}
   function entry(k){return S.pages[k]||(S.pages[k]={s:{}})}
   function nLearned(p){var e=S.pages[p.k]; if(!e) return 0; return p.n.filter(function(id){return e.s[id]==='learned'}).length}
-  function stateOf(p){var c=nLearned(p); if(p.n.length&&c===p.n.length) return 'learned'; var e=S.pages[p.k]; return e&&Object.keys(e.s).length?'progress':'new'}
+  function laterIn(p){return p.n.filter(function(id){return S.later[p.k+'#'+id]})}
+  function stateOf(p){var c=nLearned(p); if(p.n.length&&c===p.n.length&&!laterIn(p).length) return 'learned'; var e=S.pages[p.k]; return e&&Object.keys(e.s).length||laterIn(p).length?'progress':'new'}
+  /* WhatsApp-style ticks: one grey = opened, two blue = learned (viewed long enough) */
+  var TICK1='<path d="M1.5 6.2l3.3 3.3L11 2.8"/>', TICK2=TICK1+'<path d="M7.6 9.1l.4.4L14.4 2.8"/>';
+  function ticks(st){ if(st!=='opened'&&st!=='learned'&&st!=='progress') return null;
+    var sp=el('span','pg-tick '+(st==='learned'?'blue':'grey')); sp.setAttribute('aria-label',st==='learned'?'נלמד':'נפתח');
+    sp.innerHTML='<svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(st==='learned'?TICK2:TICK1)+'</svg>'; return sp; }
+  var BOOK='<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-4-5.5 4z" fill="var(--bk-fill,none)" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>';
+  function heb(n){ var o=''; [[400,'ת'],[300,'ש'],[200,'ר'],[100,'ק']].forEach(function(a){while(n>=a[0]){o+=a[1];n-=a[0]}});
+    if(n===15||n===16) return o+'ט'+(n===15?'ו':'ז');
+    [[90,'צ'],[80,'פ'],[70,'ע'],[60,'ס'],[50,'נ'],[40,'מ'],[30,'ל'],[20,'כ'],[10,'י']].forEach(function(a){if(n>=a[0]){o+=a[1];n-=a[0]}});
+    return o+(n?'אבגדהוזחט'.charAt(n-1):''); }
   function url(p){return '/'+p.k+'/'}
   function touch(){if(!S.first) S.first=today()}
   function markDay(){var t=today(); if(S.days.indexOf(t)<0){S.days.push(t); S.days=S.days.slice(-500)}}
@@ -99,53 +110,57 @@
     if(o.first&&(!S.first||o.first<S.first)) S.first=o.first;
     if(o.last&&(!S.last||o.last.ts>S.last.ts)) S.last=o.last;
     if(o.pace&&o.pace.mode==='plan'&&S.pace.mode!=='plan') S.pace=o.pace;
+    Object.keys(o.later||{}).forEach(function(k){ if(!S.later[k]) S.later[k]=o.later[k]; });
   }
 
   var painters=[]; function refresh(){painters.forEach(function(f){f()})}
 
-  /* ---------- daf page ---------- */
+  /* ---------- daf page: tracking is passive — a sugya viewed long enough counts as learned ---------- */
   var art=document.querySelector('article.daf'), P=art&&byKey(location.pathname.replace(/^\/|\/$/g,''));
+  var E=null;
   if(art&&P){
-    var pre=art.id+'-', E=entry(P.k), secs={}, learnBtn={}, dots={};
-    var strip=el('div','pg-strip'); strip.setAttribute('aria-label','התקדמות בדף');
-    var dl=el('div','pg-dots'), cnt=el('span','pg-count'), res=el('a','pg-resume');
-    P.n.forEach(function(id,i){
-      var sec=document.getElementById(pre+id); if(!sec) return; secs[id]=sec;
-      var d=el('button','pg-dot'); d.type='button'; d.setAttribute('aria-label','סוגיה '+(i+1)); d.title='סוגיה '+(i+1);
-      d.onclick=function(){sec.scrollIntoView({behavior:'smooth',block:'start'})}; dl.appendChild(d); dots[id]=d;
-      var b=el('button','pg-learn'); b.type='button';
-      b.onclick=function(){
-        var on=E.s[id]!=='learned'; E.s[id]=on?'learned':'opened'; touch(); if(on) markDay();
-        E.done=nLearned(P)===P.n.length?(E.done||today()):null; save(); paint();
-      };
-      sec.appendChild(b); learnBtn[id]=b;
-    });
-    strip.append(dl,cnt,res);
-    var mapNav=art.querySelector('nav.map'); if(mapNav) mapNav.before(strip); else art.querySelector('header').after(strip);
+    var pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
     var pn=art.querySelector('.prefs'); if(pn) pn.appendChild(settings());
+    art.querySelectorAll('nav.map a[href^="#"]').forEach(function(a){ navA[a.getAttribute('href').slice(1+pre.length)]=a; });
+    P.n.forEach(function(id){
+      var sec=document.getElementById(pre+id); if(!sec) return; secs[id]=sec;
+      var h3=sec.querySelector('h3'); if(!h3) return;
+      var b=el('button','fb-sec pg-later'); b.type='button';
+      b.onclick=function(){ var k=P.k+'#'+id; if(S.later[k]) delete S.later[k]; else {S.later[k]=Date.now(); touch();} save(); paint(); };
+      b.innerHTML=BOOK; var fb=h3.querySelector('.fb-sec'); if(fb) fb.after(b); else h3.insertBefore(b,h3.firstChild); laterB[id]=b;
+    });
     function paint(){
-      var c=0;
-      P.n.forEach(function(id){ var st=E.s[id]||''; if(st==='learned') c++;
-        if(dots[id]) dots[id].className='pg-dot'+(st?' '+st:'')+(id===curId?' cur':'');
-        if(learnBtn[id]){ learnBtn[id].textContent=st==='learned'?'✓ למדתי — לחצו לביטול':'✓ למדתי'; learnBtn[id].classList.toggle('on',st==='learned'); learnBtn[id].setAttribute('aria-pressed',st==='learned'); }
+      P.n.forEach(function(id){
+        var on=!!S.later[P.k+'#'+id], b=laterB[id];
+        if(b){ b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.dataset.tip=on?'סומן ללמוד אחר כך — הקש לביטול':'ללמוד אחר כך'; b.setAttribute('aria-label',b.dataset.tip); }
+        var a=navA[id]; if(!a) return; var o=a.querySelector('.pg-mk'); if(o) o.remove();
+        var mk=el('span','pg-mk'), t=ticks(E.s[id]); if(t) mk.appendChild(t);
+        if(on){ var bk=el('span','pg-bk'); bk.innerHTML=BOOK; bk.setAttribute('aria-label','ללמוד אחר כך'); mk.appendChild(bk); }
+        if(mk.childNodes.length) a.appendChild(mk);
       });
-      cnt.textContent=c===P.n.length?'✓ הדף נלמד':c+' מתוך '+P.n.length+' סוגיות';
     }
     painters.push(paint);
-    /* resume link */
-    if(S.last&&S.last.page===P.k&&!location.hash){ var i=P.n.indexOf(S.last.section);
-      if(i>0){ res.textContent='↩ המשך מסוגיה '+(i+1); res.href='#'+pre+S.last.section; } }
-    /* opened: sugya crosses the middle of the screen for 20s; remember position */
-    var curId=null, timer=null;
+    /* dwell time while the sugya crosses the middle of the screen: ~3s → opened (✓), longer → learned (✓✓) */
+    var cur=null, since=0, acc={};
+    function need(id){ var h=secs[id].offsetHeight/Math.max(1,window.innerHeight); return Math.min(45,Math.max(8,h*7))*1000; }
+    function tick(){
+      if(!cur||document.hidden) return; var now=Date.now(); acc[cur]=(acc[cur]||0)+(now-since); since=now;
+      var st=E.s[cur], ch=false;
+      if(!st&&acc[cur]>=3000){E.s[cur]='opened'; ch=true}
+      if(st!=='learned'&&acc[cur]>=need(cur)){E.s[cur]='learned'; markDay(); ch=true;
+        E.done=nLearned(P)===P.n.length?(E.done||today()):null;}
+      if(ch){touch(); save(); paint();}
+    }
+    setInterval(tick,1000);
+    document.addEventListener('visibilitychange',function(){since=Date.now()});
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(es){es.forEach(function(en){
-        if(!en.isIntersecting) return; var id=en.target.id.slice(pre.length); curId=id;
-        S.last={page:P.k,section:id,ts:Date.now()}; touch(); save(); paint();
-        clearTimeout(timer); timer=setTimeout(function(){ if(curId===id&&!E.s[id]){E.s[id]='opened'; save(); paint();} },20000);
+        if(!en.isIntersecting) return; tick(); cur=en.target.id.slice(pre.length); since=Date.now();
+        S.last={page:P.k,section:cur,ts:Date.now()}; save();
       })},{rootMargin:'-45% 0px -50% 0px'});
       Object.keys(secs).forEach(function(id){io.observe(secs[id])});
     }
-    /* quiz: best score + missed questions for later review */
+    /* quiz: best score + missed questions for later review (not needed for "learned") */
     var qb=art.querySelector('[data-role="quizBox"]');
     if(qb) qb.addEventListener('click',function(ev){ if(!ev.target.closest('.opt')) return; setTimeout(function(){
       var items=qb.querySelectorAll('.qitem'), done=qb.querySelectorAll('.qitem[data-done]'); if(!items.length||done.length<items.length) return;
@@ -158,6 +173,20 @@
     paint();
   }
 
+  /* ---------- shared: a daf chip with its ticks ---------- */
+  function chip(p,d,t){
+    var st=p?stateOf(p):'na', c=el(p?'a':'span','pg-chip '+st+(p&&t&&t.k===p.k?' today':''));
+    c.appendChild(el('span','pg-n',heb(d)));
+    if(p){ c.href=url(p); var tk=ticks(st); if(tk) c.appendChild(tk); if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
+      c.setAttribute('aria-label',p.h+(st==='learned'?' · נלמד':st==='progress'?' · בתהליך':'')); }
+    else c.title='דף '+heb(d)+' — עוד לא באתר';
+    return c;
+  }
+  function laterList(){ return Object.keys(S.later).sort(function(a,b){return S.later[a]-S.later[b]}).map(function(k){
+    var a=k.split('#'), p=byKey(a[0]); if(!p) return null; var i=p.n.indexOf(a[1]); return i<0?null:{p:p,id:a[1],i:i}; }).filter(Boolean); }
+  function laterRow(x){ var a=el('a','pg-row-l'); a.href=url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id; var bk=el('span','pg-bk'); bk.innerHTML=BOOK;
+    a.append(bk,document.createTextNode(' '+x.p.h+' · סוגיה '+(x.i+1))); return a; }
+
   /* ---------- home ---------- */
   var home=document.getElementById('progress-home');
   if(home){
@@ -165,9 +194,9 @@
       home.innerHTML=''; home.className='pg-home';
       var pl=plan(), tp=pl.today, card=el('a','pg-today');
       card.appendChild(el('div','pg-k',S.pace.mode==='plan'?'לפי הקצב שלך — היום':'הדף היומי — היום'));
-      if(tp){ card.href=url(tp); card.appendChild(el('div','pg-h',tp.h)); card.appendChild(el('div','pg-t',tp.t));
-        var c=nLearned(tp); card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c?' · '+c+' נלמדו':'')+(stateOf(tp)==='learned'?' · ✓ נלמד':''))); }
-      else { card.removeAttribute('href'); card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף לימוד להיום')); }
+      if(tp){ card.href=url(tp); var hh=el('div','pg-h',tp.h+' '); var tk=ticks(stateOf(tp)); if(tk) hh.appendChild(tk); card.appendChild(hh); card.appendChild(el('div','pg-t',tp.t));
+        var c=nLearned(tp); card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c&&c<tp.n.length?' · '+c+' נלמדו':''))); }
+      else card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף לימוד להיום'));
       home.appendChild(card);
       var side=el('div','pg-side');
       if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section), a=el('a','pg-resume-b');
@@ -177,9 +206,10 @@
         else { st.append(el('span','pg-warn','●'),document.createTextNode(' מאחר ב־'+bh.length+(bh.length===1?' דף · ':' דפים · '))); var go=el('a',null,'השלם את '+bh[0].h); go.href=url(bh[0]); st.appendChild(go); }
         side.appendChild(st); }
       var sk=streak(); if(sk>0) side.appendChild(el('p','pg-streak','🔥 '+sk+(sk===1?' יום':' ימים')+' ברצף'));
+      var ll=laterList(); if(ll.length){ var lw=el('div','pg-laterbox'); lw.appendChild(el('b',null,'ללמוד אחר כך ('+ll.length+')')); ll.slice(0,3).forEach(function(x){lw.appendChild(laterRow(x))}); side.appendChild(lw); }
       Object.keys(C.mas).forEach(function(slug){ var m=C.mas[slug], tot=m.last-m.first+1,
         done=L.filter(function(p){return p.s===slug&&stateOf(p)==='learned'}).length; if(!done&&!S.first) return;
-        var w=el('a','pg-mas'); w.href='/'+slug+'/'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
+        var w=el('a','pg-mas'); w.href='/'+slug+'/#map'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
         var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; bar.appendChild(f); w.appendChild(bar); side.appendChild(w); });
       var gb=el('button','btn pg-gear','⚙ קצב וגיבוי'); gb.type='button'; gb.setAttribute('aria-expanded','false');
       var sp=settings(); sp.hidden=true; sp.classList.add('prefs');
@@ -189,26 +219,54 @@
     painters.push(paintHome); paintHome();
   }
 
-  /* ---------- masechet page ---------- */
+  /* ---------- masechet page: summary + what matters now; all dapim by perek in a dialog ---------- */
   var mas=document.getElementById('progress-mas');
   if(mas&&C.mas[mas.dataset.slug]){
+    var slug=mas.dataset.slug, M=C.mas[slug], dlg=null;
+    function pubMap(){var o={}; L.forEach(function(p){if(p.s===slug) o[p.d]=p}); return o}
+    function openMap(){
+      var pub=pubMap(), t=plan().today;
+      if(!dlg){ dlg=el('dialog','pg-dlg'); dlg.setAttribute('aria-label','כל הדפים לפי פרקים'); document.body.appendChild(dlg);
+        dlg.addEventListener('click',function(e){ if(e.target===dlg) dlg.close(); }); }
+      dlg.innerHTML='';
+      var hd=el('div','pg-dlg-h'); hd.appendChild(el('h2',null,'מסכת '+M.he+' · כל הדפים'));
+      var x=el('button','btn','סגור'); x.type='button'; x.onclick=function(){dlg.close()}; hd.appendChild(x); dlg.appendChild(hd);
+      var lg=el('p','pg-legend'); [['learned','נלמד'],['progress','נפתח']].forEach(function(q){var s=el('span'); s.append(ticks(q[0]),document.createTextNode(' '+q[1])); lg.appendChild(s)});
+      var sb=el('span'); sb.innerHTML=BOOK; sb.className='pg-bk'; var sbw=el('span'); sbw.append(sb,document.createTextNode(' ללמוד אחר כך')); lg.appendChild(sbw); dlg.appendChild(lg);
+      var per=M.p&&M.p.length?M.p:[['',M.first,M.last]], focus=null;
+      per.forEach(function(r,ix){
+        var det=el('details','pg-perek'), sm=el('summary'), done=0, tot=r[2]-r[1]+1, have=false;
+        for(var d=r[1]; d<=r[2]; d++){ var p=pub[d]; if(p&&stateOf(p)==='learned') done++; if(p&&(stateOf(p)!=='learned'||(t&&t.k===p.k))) have=true; }
+        sm.append(el('span','pg-pn','פרק '+heb(ix+1)+(r[0]?' · '+r[0]:'')), el('span','pg-pr',heb(r[1])+'–'+heb(r[2])+' · '+done+'/'+tot));
+        var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*done/tot)+'%'; bar.appendChild(f); sm.appendChild(bar);
+        det.appendChild(sm); var g=el('div','pg-chips');
+        for(var d2=r[1]; d2<=r[2]; d2++){ var c=chip(pub[d2],d2,t); g.appendChild(c); if(t&&pub[d2]===t) focus=c; }
+        det.appendChild(g); if(have) det.open=true; dlg.appendChild(det);
+      });
+      if(!dlg.open){ if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open',''); }
+      if(focus) focus.scrollIntoView({block:'center'});
+    }
     function paintMas(){
-      var slug=mas.dataset.slug, m=C.mas[slug], pub={}, t=plan().today;
-      L.forEach(function(p){if(p.s===slug) pub[p.d]=p});
-      mas.innerHTML=''; mas.className='pg-map';
-      var done=0; for(var d=m.first; d<=m.last; d++) if(pub[d]&&stateOf(pub[d])==='learned') done++;
-      var tot=m.last-m.first+1, hd=el('p','pg-m',done+' נלמדו מתוך '+tot+' דפים');
-      var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*done/tot)+'%'; bar.appendChild(f);
-      var g=el('div','pg-grid');
-      for(var d=m.first; d<=m.last; d++){ var p=pub[d], c=el(p?'a':'span','pg-cell'+(p?' '+stateOf(p):' na')+(p&&t&&t.k===p.k?' today':''));
-        c.title=p?p.h:'דף '+d+' — עוד לא באתר'; if(p){c.href=url(p); c.setAttribute('aria-label',p.h)} g.appendChild(c); }
-      var lg=el('div','pg-legend'); [['learned','נלמד'],['progress','בתהליך'],['new','זמין'],['na','עוד לא באתר']].forEach(function(x){var s=el('span'); s.append(el('i','pg-cell '+x[0]),document.createTextNode(x[1])); lg.appendChild(s)});
-      mas.append(hd,bar,g,lg);
+      var pub=pubMap(), t=plan().today, tot=M.last-M.first+1, done=0, prog=0;
+      Object.keys(pub).forEach(function(d){var s=stateOf(pub[d]); if(s==='learned') done++; else if(s==='progress') prog++;});
+      mas.innerHTML=''; mas.className='pg-sum'; mas.id='progress-mas';
+      mas.appendChild(el('p','pg-m',tot+' דפים במסכת · '+done+' נלמדו · '+prog+' בתהליך'));
+      var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*done/tot)+'%'; bar.appendChild(f); mas.appendChild(bar);
+      /* what matters now: in progress, today's, the next few not started */
+      var now=[]; L.forEach(function(p){ if(p.s===slug&&stateOf(p)==='progress') now.push(p); });
+      if(t&&t.s===slug&&now.indexOf(t)<0&&stateOf(t)!=='learned') now.push(t);
+      var lastDone=0; L.forEach(function(p){ if(p.s===slug&&stateOf(p)==='learned') lastDone=Math.max(lastDone,p.d); });
+      L.filter(function(p){return p.s===slug&&stateOf(p)==='new'&&p.d>lastDone&&now.indexOf(p)<0}).slice(0,3).forEach(function(p){now.push(p)});
+      now.sort(function(a,b){return a.d-b.d});
+      if(now.length){ var row=el('div','pg-chips'); now.forEach(function(p){row.appendChild(chip(p,p.d,t))}); mas.appendChild(row); }
+      laterList().filter(function(x){return x.p.s===slug}).slice(0,5).forEach(function(x){mas.appendChild(laterRow(x))});
+      var ob=el('button','btn','כל הדפים לפי פרקים'); ob.type='button'; ob.onclick=openMap; mas.appendChild(ob);
       document.querySelectorAll('.cards a.card').forEach(function(a){ var mm=a.getAttribute('href').match(/(\d+)\/$/), p=mm&&pub[+mm[1]]; if(!p) return;
-        var o=a.querySelector('.pg-badge'); if(o) o.remove(); var st=stateOf(p); if(st==='new') return;
-        a.querySelector('.top').appendChild(el('span','pg-badge '+st,st==='learned'?'✓ נלמד':nLearned(p)+'/'+p.n.length)); });
+        var o=a.querySelector('.pg-mk'); if(o) o.remove(); var tk=ticks(stateOf(p)); if(!tk) return; var mk=el('span','pg-mk'); mk.appendChild(tk); a.querySelector('.top h3').appendChild(mk); });
+      if(dlg&&dlg.open) openMap();
     }
     painters.push(paintMas); paintMas();
+    if(location.hash==='#map') openMap();
   }
   window.addEventListener('storage',function(e){ if(e.key===KEY){ try{S=norm(JSON.parse(e.newValue||'null'))}catch(x){} if(P) E=entry(P.k); refresh(); } });
 })();
