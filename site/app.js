@@ -108,7 +108,7 @@
     if(mode) mode.addEventListener('click',function(){
       var on=mode.getAttribute('aria-pressed')!=='true';
       mode.setAttribute('aria-pressed',on); art.classList.toggle('hide-mode',on);
-      mode.textContent=on?'מצב חברותא פעיל: הקש על שלב לגילוי':'מצב חברותא: הסתר תשובות';
+      mode.textContent='חברותא';
       art.querySelectorAll('.steps li.hideable').forEach(function(li){li.classList.remove('shown')});
     });
     (function(){
@@ -126,9 +126,9 @@
       });
       var tb=art.querySelector('.controls [data-role="tree"]'), newTb=!tb;
       if(newTb){tb=document.createElement('button'); tb.className='btn'; tb.type='button'; tb.dataset.role='tree'; tb.setAttribute('aria-pressed','false');
-      tb.textContent='תצוגת עץ';
+      tb.textContent='עץ';
       tb.title='כל שלב מוזח תחת השלב שעליו הוא עונה; המספר ↲ מציין את השלב שאליו הוא מתייחס';}
-      tb.addEventListener('click',function(){var on=tb.getAttribute('aria-pressed')!=='true';tb.setAttribute('aria-pressed',on);art.classList.toggle('tree-mode',on);tb.textContent=on?'תצוגת עץ פעילה':'תצוגת עץ';});
+      tb.addEventListener('click',function(){var on=tb.getAttribute('aria-pressed')!=='true';tb.setAttribute('aria-pressed',on);art.classList.toggle('tree-mode',on);tb.textContent='עץ';});
       if(newTb) mode.parentNode.appendChild(tb);
     })();
     art.querySelectorAll('.steps li.hideable .body').forEach(function(b){b.addEventListener('click',function(){b.parentElement.classList.add('shown')})});
@@ -143,7 +143,7 @@
       function setBtn(role,on){var b=art.querySelector('.controls [data-role="'+role+'"]'); if(b&&(b.getAttribute('aria-pressed')==='true')!==on) b.click();}
       function apply(k,on){ if(k==='open') setOpen(on); if(k==='tree') setBtn('tree',on); if(k==='chav') setBtn('mode',on); }
       var gb=ctr.querySelector('[data-role="prefs"]'), newGb=!gb;
-      if(newGb){gb=document.createElement('button'); gb.type='button'; gb.className='btn'; gb.setAttribute('aria-expanded','false'); gb.textContent='⚙ הגדרות';}
+      if(newGb){gb=document.createElement('button'); gb.type='button'; gb.className='btn'; gb.setAttribute('aria-expanded','false'); gb.textContent='⚙'; gb.setAttribute('aria-label','הגדרות');}
       var pn=document.createElement('div'); pn.className='prefs'; pn.hidden=true;
       var hd=document.createElement('div'); hd.className='prefs-h'; hd.textContent='נשמר במכשיר זה, לכל הדפים'; pn.appendChild(hd);
       OPTS.forEach(function(o){
@@ -295,7 +295,7 @@
     });
   }
   var ctr=art.querySelector('.controls');
-  if(ctr){var b=ctr.querySelector('[data-role="fb"]'); if(!b){b=el('button','btn','💬 הערה על הדף'); b.type='button'; ctr.appendChild(b);} b.onclick=function(){open('','')};}
+  if(ctr){var b=ctr.querySelector('[data-role="fb"]'); if(!b){b=el('button','btn','הערה'); b.type='button'; ctr.appendChild(b);} b.onclick=function(){open('','')};}
   var secs={};
   art.querySelectorAll('section.sugya[id]').forEach(function(sec){
     if(!sec.querySelector('ol.steps')) return;

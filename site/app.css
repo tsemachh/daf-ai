@@ -31,7 +31,7 @@ header{padding-block:40px 24px;border-bottom:1px solid var(--line)}
 h1{font-family:var(--serif);font-weight:900;font-size:clamp(40px,8vw,64px);line-height:1.05;margin:6px 0 10px;text-wrap:balance}
 .thesis{font-family:var(--serif);font-size:24px;color:var(--accent);margin:0}
 .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;color:var(--muted);font-size:15px}
-.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.controls{display:flex;flex-wrap:nowrap;gap:8px;margin-top:18px;overflow-x:auto;scrollbar-width:none}.controls::-webkit-scrollbar{display:none}.controls .btn{white-space:nowrap;flex:0 0 auto}.btn-ic{padding-inline:12px;font-size:17px}
 button{font:inherit;cursor:pointer}
 .btn{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:15px;font-weight:600}
 .btn[aria-pressed="true"]{background:var(--accent);color:var(--paper);border-color:var(--accent)}
@@ -268,3 +268,6 @@ html{scroll-padding-top:12px}
 .pg-perek summary .pg-bar{grid-column:1/-1;height:6px}
 .pg-pn{font-weight:700}.pg-pr{font-size:14px;color:var(--muted)}
 .pg-perek .pg-chips{margin-top:10px}
+.btn[data-role="learned"][aria-pressed="true"]{background:var(--card);color:var(--ink);border-color:var(--tick)}
+@media (max-width:480px){.controls{gap:6px}.controls .btn{padding-inline:11px;font-size:14.5px}.controls .btn-ic{padding-inline:9px}}
+@media (max-width:360px){.controls .btn{padding-inline:9px;font-size:14px}.controls .btn-ic{padding-inline:7px}}
