@@ -4,7 +4,7 @@
   var KEY='dafProgress', C={pages:[],mas:{}};
   try{C=JSON.parse(document.getElementById('catalog').textContent)}catch(e){}
   if(!C.pages) return;
-  function blank(){return {v:1,pages:{},days:[],review:[],later:{},pace:{mode:'yomi'},last:null,first:null}}
+  function blank(){return {v:1,pages:{},days:[],review:[],later:{},pre:{},asked:{},pace:{mode:'yomi'},last:null,first:null}}
   function norm(s){if(!s||s.v!==1)return blank(); var b=blank(); for(var k in b) if(s[k]==null) s[k]=b[k]; return s}
   var S; try{S=norm(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){S=blank()}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -54,7 +54,10 @@
     L.forEach(function(p){ if(p.y===t) tp=p; });
     return {due:L.filter(function(p){return p.y&&p.y<=t&&p.y>=from}), today:tp, beyond:!tp};
   }
-  function behind(){var pl=plan(); return pl.due.filter(function(p){return p!==pl.today&&stateOf(p)!=='learned'})}  /* today's page is not 'behind' */
+  /* S.pre[slug]=n: the learner said dapim up to n were learned before they started using the site */
+  function learnedP(p){return stateOf(p)==='learned'||p.d<=(S.pre[p.s]||0)}
+  function dafState(slug,d,p){ if(d<=(S.pre[slug]||0)) return 'learned'; return p?stateOf(p):'na'; }
+  function behind(){var pl=plan(); return pl.due.filter(function(p){return p!==pl.today&&!learnedP(p)})}  /* today's page is not 'behind' */
 
   /* ---------- settings panel (pace + backup) ---------- */
   function settings(){
@@ -111,6 +114,7 @@
     if(o.last&&(!S.last||o.last.ts>S.last.ts)) S.last=o.last;
     if(o.pace&&o.pace.mode==='plan'&&S.pace.mode!=='plan') S.pace=o.pace;
     Object.keys(o.later||{}).forEach(function(k){ if(!S.later[k]) S.later[k]=o.later[k]; });
+    Object.keys(o.pre||{}).forEach(function(k){ S.pre[k]=Math.max(S.pre[k]||0,o.pre[k]); });
   }
 
   var painters=[]; function refresh(){painters.forEach(function(f){f()})}
@@ -126,8 +130,29 @@
   var art=document.querySelector('article.daf'), P=art&&byKey(location.pathname.replace(/^\/|\/$/g,''));
   var E=null;
   if(art&&P){
-    var pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
+    var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
     var pn=art.querySelector('.prefs'); if(pn) pn.appendChild(settings());
+    /* starting in the middle of a masechet: offer to mark the earlier dapim as learned (asked once per masechet) */
+    (function(){
+      var M=C.mas[P.s]; if(!M||!firstVisit||S.asked[P.s]||P.d<=M.first||(S.pre[P.s]||0)>=P.d-1) return;
+      var any=L.some(function(p){return p.s===P.s&&p.d<P.d&&S.pages[p.k]&&Object.keys(S.pages[p.k].s).length});
+      if(any) return;
+      var bx=el('div','pg-ask'); bx.setAttribute('role','region'); bx.setAttribute('aria-label','התחלה באמצע המסכת');
+      var rng=heb(M.first)+(P.d-1>M.first?'–'+heb(P.d-1):'');
+      bx.appendChild(el('p',null,'מתחילים ללמוד מדף '+heb(P.d)+'? לסמן את דפים '+rng+' במסכת '+M.he+' כנלמדו?'));
+      var yes=el('button','btn','כן, סמן כנלמדו'), no=el('button','btn','לא, תודה'); yes.type=no.type='button';
+      function done(){ S.asked[P.s]=Date.now(); save(); bx.remove(); }
+      yes.onclick=function(){
+        var snap=JSON.stringify({pre:S.pre,pages:S.pages});
+        S.pre[P.s]=P.d-1;
+        L.forEach(function(p){ if(p.s===P.s&&p.d<P.d){ var e=entry(p.k); p.n.forEach(function(id){e.s[id]='learned'}); e.done=e.done||today(); } });
+        touch(); done(); refresh();
+        toast('דפים '+rng+' סומנו כנלמדו',function(){ var o=JSON.parse(snap); S.pre=o.pre; S.pages=o.pages; E=entry(P.k); save(); refresh(); });
+      };
+      no.onclick=done;
+      var row=el('div','pg-btns'); row.append(yes,no); bx.appendChild(row);
+      var ctr=art.querySelector('.controls'); (ctr||art.querySelector('header')).after(bx);
+    })();
     art.querySelectorAll('nav.map a[href^="#"]').forEach(function(a){ navA[a.getAttribute('href').slice(1+pre.length)]=a; });
     var mh=art.querySelector('nav.map h2'); if(mh){ var lg=el('p','pg-legend-line');
       var l1=el('span'); l1.append(ticks('opened'),document.createTextNode('נפתח'));
@@ -208,9 +233,10 @@
   }
 
   /* ---------- shared: a daf chip with its ticks ---------- */
-  function chip(p,d,t){
-    var st=p?stateOf(p):'na', c=el(p?'a':'span','pg-chip '+st+(p&&t&&t.k===p.k?' today':''));
+  function chip(p,d,t,slug){
+    var st=dafState(slug||(p&&p.s),d,p), c=el(p?'a':'span','pg-chip '+(p||st==='learned'?st:'na')+(p&&t&&t.k===p.k?' today':''));
     c.appendChild(el('span','pg-n',heb(d)));
+    if(!p&&st==='learned') c.appendChild(ticks('learned'));
     if(p){ c.href=url(p); var tk=ticks(st); if(tk) c.appendChild(tk); if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
       c.setAttribute('aria-label',p.h+(st==='learned'?' · נלמד':st==='progress'?' · בתהליך':'')); }
     else c.title='דף '+heb(d)+' — עוד לא באתר';
@@ -242,7 +268,7 @@
       var sk=streak(); if(sk>0) side.appendChild(el('p','pg-streak','🔥 '+sk+(sk===1?' יום':' ימים')+' ברצף'));
       var ll=laterList(); if(ll.length){ var lw=el('div','pg-laterbox'); lw.appendChild(el('b',null,'ללמוד אחר כך ('+ll.length+')')); ll.slice(0,3).forEach(function(x){lw.appendChild(laterRow(x))}); side.appendChild(lw); }
       Object.keys(C.mas).forEach(function(slug){ var m=C.mas[slug], tot=m.last-m.first+1,
-        done=L.filter(function(p){return p.s===slug&&stateOf(p)==='learned'}).length; if(!done&&!S.first) return;
+        done=0; for(var dd=m.first; dd<=m.last; dd++){ var pp=byKey(slug+'/'+dd); if(dafState(slug,dd,pp)==='learned') done++; } if(!done&&!S.first) return;
         var w=el('a','pg-mas'); w.href='/'+slug+'/#map'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
         var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; bar.appendChild(f); w.appendChild(bar); side.appendChild(w); });
       var gb=el('button','btn pg-gear','⚙ קצב וגיבוי'); gb.type='button'; gb.setAttribute('aria-expanded','false');
@@ -270,11 +296,11 @@
       var per=M.p&&M.p.length?M.p:[['',M.first,M.last]], focus=null;
       per.forEach(function(r,ix){
         var det=el('details','pg-perek'), sm=el('summary'), done=0, tot=r[2]-r[1]+1, have=false;
-        for(var d=r[1]; d<=r[2]; d++){ var p=pub[d]; if(p&&stateOf(p)==='learned') done++; if(p&&(stateOf(p)!=='learned'||(t&&t.k===p.k))) have=true; }
+        for(var d=r[1]; d<=r[2]; d++){ var p=pub[d], ds=dafState(slug,d,p); if(ds==='learned') done++; if(p&&(ds!=='learned'||(t&&t.k===p.k))) have=true; }
         sm.append(el('span','pg-pn','פרק '+heb(ix+1)+(r[0]?' · '+r[0]:'')), el('span','pg-pr',heb(r[1])+'–'+heb(r[2])+' · '+done+'/'+tot));
         var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*done/tot)+'%'; bar.appendChild(f); sm.appendChild(bar);
         det.appendChild(sm); var g=el('div','pg-chips');
-        for(var d2=r[1]; d2<=r[2]; d2++){ var c=chip(pub[d2],d2,t); g.appendChild(c); if(t&&pub[d2]===t) focus=c; }
+        for(var d2=r[1]; d2<=r[2]; d2++){ var c=chip(pub[d2],d2,t,slug); g.appendChild(c); if(t&&pub[d2]===t) focus=c; }
         det.appendChild(g); if(have) det.open=true; dlg.appendChild(det);
       });
       if(!dlg.open){ if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open',''); }
@@ -282,19 +308,25 @@
     }
     function paintMas(){
       var pub=pubMap(), t=plan().today, tot=M.last-M.first+1, done=0, prog=0;
-      Object.keys(pub).forEach(function(d){var s=stateOf(pub[d]); if(s==='learned') done++; else if(s==='progress') prog++;});
+      for(var d=M.first; d<=M.last; d++){ var ds=dafState(slug,d,pub[d]); if(ds==='learned') done++; else if(ds==='progress') prog++; }
       mas.innerHTML=''; mas.className='pg-sum'; mas.id='progress-mas';
-      mas.appendChild(el('p','pg-m',tot+' דפים במסכת · '+done+' נלמדו · '+prog+' בתהליך'));
+      mas.appendChild(el('p','pg-m',tot+' דפים במסכת · '+done+' נלמדו'+(prog?' · '+prog+' בתהליך':'')));
       var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*done/tot)+'%'; bar.appendChild(f); mas.appendChild(bar);
-      /* what matters now: in progress, today's, the next few not started */
-      var now=[]; L.forEach(function(p){ if(p.s===slug&&stateOf(p)==='progress') now.push(p); });
-      if(t&&t.s===slug&&now.indexOf(t)<0&&stateOf(t)!=='learned') now.push(t);
-      var lastDone=0; L.forEach(function(p){ if(p.s===slug&&stateOf(p)==='learned') lastDone=Math.max(lastDone,p.d); });
-      L.filter(function(p){return p.s===slug&&stateOf(p)==='new'&&p.d>lastDone&&now.indexOf(p)<0}).slice(0,3).forEach(function(p){now.push(p)});
-      now.sort(function(a,b){return a.d-b.d});
-      if(now.length){ var row=el('div','pg-chips'); now.forEach(function(p){row.appendChild(chip(p,p.d,t))}); mas.appendChild(row); }
+      /* the current perek: where today's daf is, else where the learner is, else the first perek with pages */
+      var per=M.p&&M.p.length?M.p:[['',M.first,M.last]], focusD=null;
+      if(t&&t.s===slug) focusD=t.d;
+      if(focusD==null){ L.forEach(function(p){ if(p.s===slug&&dafState(slug,p.d,p)==='progress') focusD=p.d; }); }
+      if(focusD==null){ var ld=0; for(var d3=M.first; d3<=M.last; d3++) if(dafState(slug,d3,pub[d3])==='learned') ld=d3; if(ld) focusD=Math.min(ld+1,M.last); }
+      if(focusD==null){ var fp=L.filter(function(p){return p.s===slug})[0]; focusD=fp?fp.d:M.first; }
+      var pi=0; for(var ix=0; ix<per.length; ix++){ if(focusD>=per[ix][1]&&focusD<=per[ix][2]){ pi=ix; break; } }
+      var r=per[pi], box=el('div','pg-cur'), pd=0, pt=r[2]-r[1]+1;
+      for(var d4=r[1]; d4<=r[2]; d4++) if(dafState(slug,d4,pub[d4])==='learned') pd++;
+      var hdr=el('div','pg-cur-h'); hdr.append(el('b',null,'הפרק הנוכחי: פרק '+heb(pi+1)+(r[0]?' · '+r[0]:'')), el('span','pg-pr',heb(r[1])+'–'+heb(r[2])+' · '+pd+'/'+pt));
+      var b2=el('span','pg-bar'), f2=el('i'); f2.style.width=Math.round(100*pd/pt)+'%'; b2.appendChild(f2);
+      var g=el('div','pg-chips'); for(var d5=r[1]; d5<=r[2]; d5++) g.appendChild(chip(pub[d5],d5,t,slug));
+      box.append(hdr,b2,g); mas.appendChild(box);
       laterList().filter(function(x){return x.p.s===slug}).slice(0,5).forEach(function(x){mas.appendChild(laterRow(x))});
-      var ob=el('button','btn','כל הדפים לפי פרקים'); ob.type='button'; ob.onclick=openMap; mas.appendChild(ob);
+      var ob=el('button','btn','כל הפרקים'); ob.type='button'; ob.onclick=openMap; mas.appendChild(ob);
       document.querySelectorAll('.cards a.card').forEach(function(a){ var mm=a.getAttribute('href').match(/(\d+)\/$/), p=mm&&pub[+mm[1]]; if(!p) return;
         var o=a.querySelector('.pg-mk'); if(o) o.remove(); var tk=ticks(stateOf(p)); if(!tk) return; var mk=el('span','pg-mk'); mk.appendChild(tk); a.querySelector('.top h3').appendChild(mk); });
       if(dlg&&dlg.open) openMap();

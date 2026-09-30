@@ -291,3 +291,7 @@ button.src{padding-block:10px;margin-block:-10px}
 .pg-toast[hidden]{display:none}
 .pg-toast button{background:none;border:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;min-height:44px;padding:0 6px;cursor:pointer}
 .card-when{font-size:12px;font-weight:800;color:var(--paper);background:var(--accent);border-radius:999px;padding:1px 8px;margin-inline-start:8px;vertical-align:middle}
+.pg-ask{margin-top:14px;padding:12px 14px;border:1px solid var(--accent);border-radius:12px;background:var(--accent-soft);display:grid;gap:10px}
+.pg-ask p{margin:0;font-weight:600}
+.pg-cur{display:grid;gap:8px;justify-self:stretch;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.pg-cur-h{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
