@@ -13,7 +13,7 @@ import dafyomi  # noqa: E402  (local Daf Yomi calendar)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
-SITE_TITLE = "דפי לימוד — הדף היומי"
+SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
 FOOT = ("נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. "
         "ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.")
 HEB = {1: "א", 2: "ב", 3: "ג", 4: "ד", 5: "ה", 6: "ו", 7: "ז", 8: "ח", 9: "ט", 10: "י", 20: "כ", 30: "ל",
@@ -250,7 +250,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 <script src="../../app.js" defer></script>
 <script src="../../progress.js" defer></script>"""
     desc = re.sub("<[^>]+>", "", d["thesis"])
-    return page(f"{d['title']} · דף לימוד", body, desc, depth=2)
+    return page(f"{d['title']} · דף חזרה ולימוד", body, desc, depth=2)
 
 
 # ---------------------------------------------------------------- index pages
@@ -270,7 +270,7 @@ def render_masechet(slug, dafim):
     body = f"""<div class="wrap" id="app"><section>
 <a class="back" href="../">→ דף הבית</a>
 <header>
-  <div class="eyebrow">דפי לימוד · נוצר על ידי סוכן AI</div>
+  <div class="eyebrow">דפי חזרה ולימוד · נוצר על ידי סוכן AI</div>
   <h1>מסכת {first['tractate_he']}</h1>
   <p class="thesis">{len(dafim)} דפים זמינים</p>
 </header>
@@ -283,7 +283,7 @@ def render_masechet(slug, dafim):
 </section></div>
 {catalog_json()}
 <script src="../progress.js" defer></script>"""
-    return page(f"מסכת {first['tractate_he']} · דפי לימוד", body, f"דפי לימוד למסכת {first['tractate_he']}", depth=1)
+    return page(f"מסכת {first['tractate_he']} · דפי חזרה ולימוד", body, f"דפי חזרה ולימוד למסכת {first['tractate_he']}", depth=1)
 
 
 def render_home(by_slug, latest, about):
@@ -293,7 +293,7 @@ def render_home(by_slug, latest, about):
     body = f"""<div class="wrap" id="app"><section id="home">
 <header>
   <h1>{SITE_TITLE}</h1>
-  <p class="thesis">דף לימוד אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
+  <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span></div>
 </header>
 <div id="progress-home"></div>
@@ -311,7 +311,7 @@ def render_home(by_slug, latest, about):
 </section></div>
 {catalog_json()}
 <script src="progress.js" defer></script>"""
-    return page(SITE_TITLE, body, "דפי לימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
+    return page(SITE_TITLE, body, "דפי חזרה ולימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
 
 
 def render_feedback(by_slug):
@@ -393,7 +393,7 @@ def main():
         "איך נבנים הדפים · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
         f'<div class="eyebrow">לסוקרים ולמתעניינים</div><h1>איך נבנים הדפים ומה נבדק</h1></header>'
-        f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי הלימוד", depth=1))
+        f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי החזרה והלימוד", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
     urls = ["", "about/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
