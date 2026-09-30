@@ -186,7 +186,7 @@ def render_daf(d, prev, nxt, glossary, sources):
         pn.append(f'<a class="back" href="../{prev}/">→ דף {heb_num(prev)}</a>')
     if nxt:
         pn.append(f'<a class="back" href="../{nxt}/">דף {heb_num(nxt)} ←</a>')
-    tree_btn = ('    <button class="btn" data-role="tree" aria-pressed="false" type="button" title="כל שלב מוזח תחת השלב שעליו הוא עונה; המספר ↲ מציין את השלב שאליו הוא מתייחס">תצוגת עץ</button>\n'
+    tree_btn = ('    <button class="btn" data-role="tree" aria-pressed="false" type="button" title="תצוגת עץ: כל שלב מוזח תחת השלב שעליו הוא עונה">עץ</button>\n'
                 if any(s.get("steps") for s in d["sections"]) else "")
     pager = f'<div class="pager">{"".join(pn)}</div>' if pn else ""
     article = f"""<article class="daf" id="{key}" data-tractate="{d['tractate']}" data-daf="{d['daf']}">
@@ -200,9 +200,10 @@ def render_daf(d, prev, nxt, glossary, sources):
   <div class="legend"><span>הקש על מילה מסומנת להסבר קצר:</span><span><span class="lp">חכם</span> — תנא או אמורא</span><span><span class="lt">מושג</span> — מונח, מקום או דין</span></div>
   <div class="sefaria-bar"><a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">פתח את הדף בספריא</a></div>
   <div class="controls">
-    <button class="btn" data-role="mode" aria-pressed="false" type="button">מצב חברותא: הסתר תשובות</button>
-{tree_btn}    <button class="btn" data-role="prefs" aria-expanded="false" type="button">⚙ הגדרות</button>
-    <button class="btn" data-role="fb" type="button">💬 הערה על הדף</button>
+    <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>
+    <button class="btn" data-role="mode" aria-pressed="false" type="button" title="מצב חברותא: התשובות מוסתרות — הקש על שלב לגילוי">חברותא</button>
+{tree_btn}    <button class="btn" data-role="fb" type="button" title="הערה על הדף">הערה</button>
+    <button class="btn" data-role="learned" aria-pressed="false" type="button" title="סמן את כל הסוגיות בדף כנלמדו">למדתי</button>
   </div>
 </header>
 

@@ -130,6 +130,9 @@
       b.innerHTML=BOOK; var fb=h3.querySelector('.fb-sec'); if(fb) fb.after(b); else h3.insertBefore(b,h3.firstChild); laterB[id]=b;
     });
     function paint(){
+      var ab=art.querySelector('.controls [data-role="learned"]');
+      if(ab){ var all=nLearned(P)===P.n.length; ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
+        ab.title=all?'כל הסוגיות סומנו כנלמדו — הקש לביטול':'סמן את כל הסוגיות בדף כנלמדו'; }
       P.n.forEach(function(id){
         var on=!!S.later[P.k+'#'+id], b=laterB[id];
         if(b){ b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.dataset.tip=on?'סומן ללמוד אחר כך — הקש לביטול':'ללמוד אחר כך'; b.setAttribute('aria-label',b.dataset.tip); }
@@ -140,26 +143,41 @@
       });
     }
     painters.push(paint);
-    /* dwell time while the sugya crosses the middle of the screen: ~3s → opened (✓), longer → learned (✓✓) */
-    var cur=null, since=0, acc={};
-    function need(id){ var h=secs[id].offsetHeight/Math.max(1,window.innerHeight); return Math.min(45,Math.max(8,h*7))*1000; }
+    /* viewing rule: time counts while a sugya fills a good part of the screen (≥40% of it, or ≥60% of the
+       sugya); ~3s → opened (✓). Learned (✓✓) once its end has been on screen and it got enough time for its
+       length (4–20s), so scrolling through while reading counts, a fast fling does not. */
+    var cur=null, acc={}, sawEnd={}, lastT=Date.now();
+    function need(h,vh){ return Math.min(20,Math.max(4,h/vh*2.5))*1000; }
     function tick(){
-      if(!cur||document.hidden) return; var now=Date.now(); acc[cur]=(acc[cur]||0)+(now-since); since=now;
-      var st=E.s[cur], ch=false;
-      if(!st&&acc[cur]>=3000){E.s[cur]='opened'; ch=true}
-      if(st!=='learned'&&acc[cur]>=need(cur)){E.s[cur]='learned'; markDay(); ch=true;
-        E.done=nLearned(P)===P.n.length?(E.done||today()):null;}
-      if(ch){touch(); save(); paint();}
+      var now=Date.now(), dt=Math.min(now-lastT,2000); lastT=now; if(document.hidden) return;
+      var vh=window.innerHeight, ch=false;
+      Object.keys(secs).forEach(function(id){
+        var r=secs[id].getBoundingClientRect(), h=Math.max(1,r.height), vis=Math.min(r.bottom,vh)-Math.max(r.top,0);
+        if(vis<=0) return;
+        if(vis>=0.4*vh||vis>=0.6*h) acc[id]=(acc[id]||0)+dt;
+        if(r.bottom<=vh+4) sawEnd[id]=true;
+        var st=E.s[id];
+        if(!st&&acc[id]>=3000){E.s[id]='opened'; st='opened'; ch=true}
+        if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)){E.s[id]='learned'; markDay(); ch=true}
+      });
+      if(ch){ E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); }
     }
     setInterval(tick,1000);
-    document.addEventListener('visibilitychange',function(){since=Date.now()});
+    document.addEventListener('visibilitychange',function(){lastT=Date.now()});
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(es){es.forEach(function(en){
-        if(!en.isIntersecting) return; tick(); cur=en.target.id.slice(pre.length); since=Date.now();
+        if(!en.isIntersecting) return; cur=en.target.id.slice(pre.length);
         S.last={page:P.k,section:cur,ts:Date.now()}; save();
       })},{rootMargin:'-45% 0px -50% 0px'});
       Object.keys(secs).forEach(function(id){io.observe(secs[id])});
     }
+    /* "למדתי" in the top bar: mark every sugya learned (press again to undo) */
+    var allB=art.querySelector('.controls [data-role="learned"]');
+    if(allB) allB.addEventListener('click',function(){
+      var all=nLearned(P)===P.n.length;
+      P.n.forEach(function(id){ if(all) E.s[id]='opened'; else { E.s[id]='learned'; delete S.later[P.k+'#'+id]; } });
+      if(!all) markDay(); E.done=all?null:(E.done||today()); touch(); save(); paint();
+    });
     /* quiz: best score + missed questions for later review (not needed for "learned") */
     var qb=art.querySelector('[data-role="quizBox"]');
     if(qb) qb.addEventListener('click',function(ev){ if(!ev.target.closest('.opt')) return; setTimeout(function(){
