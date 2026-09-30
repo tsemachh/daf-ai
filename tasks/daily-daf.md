@@ -12,7 +12,7 @@ Pages on every push to `main`). Work autonomously; nobody is watching. Do not as
 ## 0. Setup
 - Runs as a Claude Code **routine** (claude.ai/code/routines) with this repo selected; the repo is
   already cloned on the default branch. Read `README.md` (data schema) and this file.
-- Network: the routine's environment must allow `www.sefaria.org`, `daf-yomi.com`, `www.yeshiva.org.il`,
+- Network: the routine's environment must allow `www.sefaria.org`, `www.hebcal.com`,
   `www.dafyomi.co.il`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
   `host_not_allowed`), say which host in the report and stop — do not publish unverified content.
 - `TZ=Asia/Jerusalem date` → today + Hebrew date. On Shabbat / Yom Tov in Israel: end with one line.
@@ -86,6 +86,8 @@ inheritance) are presented fully and neutrally.
 
 ## 4. Write `data/<slug>/<daf>.json`
 Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
+- Section ids (`s1`, `s2`, …) are learners' progress keys (saved in their browsers): never renumber or
+  reuse the ids of a published daf when fixing it — append new sections with new ids instead.
 - `nav` (מהלך הדף) listing every section; `storyline` (הקדמה): one paragraph of flowing prose on how the
   daf moves from sugya to sugya.
 - One section per sugya: `ref` like `Bekhorot.12a.5-9` or `Bekhorot.12a.20-12b.1` covering exactly its
