@@ -1,4 +1,3 @@
-bechorot/2
 bechorot/3
 bechorot/4
 bechorot/7
