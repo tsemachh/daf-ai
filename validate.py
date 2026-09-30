@@ -60,9 +60,25 @@ def check(path, glossary):
     q = d["quiz"]
     if len(q) != 8:
         E(f"quiz has {len(q)} items (need 8)")
+    longest = 0
     for i, it in enumerate(q):
-        if not (isinstance(it.get("o"), list) and len(it["o"]) == 3 and it.get("a") in (0, 1, 2) and it.get("q") and it.get("e")):
+        o = it.get("o")
+        if not (isinstance(o, list) and len(o) in (3, 4) and isinstance(it.get("a"), int) and 0 <= it["a"] < len(o)
+                and it.get("q") and it.get("e")):
             E(f"quiz item {i} malformed")
+            continue
+        if "w" in it and not (isinstance(it["w"], dict) and all(str(k).isdigit() and int(k) < len(o) and int(k) != it["a"] for k in it["w"])):
+            E(f"quiz item {i}: 'w' must map wrong-option indexes to short explanations")
+        lens = [len(x) for x in o]
+        if lens[it["a"]] == max(lens) and lens.count(max(lens)) == 1 and max(lens) > 1.4 * sorted(lens)[-2]:
+            longest += 1
+    # the answer should not be guessable from option length (site shuffles positions, not lengths)
+    if longest >= 4:
+        warns.append(f"quiz: in {longest}/8 items the correct option is clearly the longest — balance option lengths")
+    for s in d["sections"]:
+        for st in s.get("steps", []):
+            if "לא הורחב כאן" in st.get("body", ""):
+                warns.append(f"section {s['id']}: a step says 'לא הורחב כאן' — give at least a one-line gist")
     # compound sage names must have their own glossary key (else a shorter key marks part of them)
     text = json.dumps(d, ensure_ascii=False)
     for m in re.finditer(r"(רבי|רב|רבן) [א-ת]+(?: (?:בן|בר|בריה ד|ברבי)[א-ת]*(?: [א-ת]+)?| ה[א-ת]{3,}י)", text):

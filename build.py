@@ -143,7 +143,7 @@ def page(title, body, desc="", depth=0):
 def render_steps(steps):
     out = ['  <ol class="steps">']
     for k, s in enumerate(steps):
-        cls = ' class="hideable"' if s.get("hideable") else ""
+        cls = ""  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
         p = f' data-p="{s["p"]}"' if "p" in s else ""
         t = f' {s["type"]}' if s.get("type") else ""
         out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{s["tag"]}</span><span class="body">{s["body"]}</span></li>')
@@ -377,6 +377,17 @@ def main():
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     latest = sorted(alld, key=lambda d: d.get("order", d["daf"]), reverse=True)[:7]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
+    # quiz bank for spaced review (fetched by progress.js on /review/ and for the "yesterday" opener)
+    json.dump({f"{d['slug']}/{d['daf']}": d["quiz"] for d in alld}, open(os.path.join(DIST, "quiz.json"), "w", encoding="utf8"),
+              ensure_ascii=False, separators=(",", ":"))
+    os.makedirs(os.path.join(DIST, "review"), exist_ok=True)
+    open(os.path.join(DIST, "review", "index.html"), "w", encoding="utf8").write(page(
+        "חזרה · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+        f'<div class="eyebrow">חזרה מרווחת</div><h1 id="rv-title">חזרה היום</h1>'
+        f'<p class="thesis" id="rv-sub">שאלות מדפים שלמדתם — כל שאלה חוזרת אחרי יום, 3, 7, 21 ו־60 ימים.</p></header>'
+        f'<div id="review-app" aria-live="polite"></div><footer>{FOOT}</footer></section></div>'
+        f'{catalog_json()}<script src="../progress.js" defer></script>', "חזרה מרווחת על שאלות מהדפים שנלמדו", depth=1))
     os.makedirs(os.path.join(DIST, "about"), exist_ok=True)
     open(os.path.join(DIST, "about", "index.html"), "w", encoding="utf8").write(page(
         "איך נבנים הדפים · " + SITE_TITLE,
