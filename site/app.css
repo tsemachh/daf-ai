@@ -323,3 +323,4 @@ button.src{padding-block:10px;margin-block:-10px}
 .pg-steps{display:none}.review-mode .pg-steps{display:inline-flex;min-height:40px;align-items:center;margin:4px 0 10px}
 .pg-rmode{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--gold);font-weight:700}
 .pg-rmode a{color:var(--accent)}
+.pg-grade{flex-wrap:nowrap;align-items:center;gap:6px}.pg-grade .btn{padding-inline:12px;min-height:40px;font-size:14px}

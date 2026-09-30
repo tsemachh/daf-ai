@@ -248,11 +248,11 @@
       var body=[].slice.call(sum.children).filter(function(c){return !c.classList.contains('amud')&&c.tagName!=='H3'});
       if(!body.length||E.recall||RM) return;
       body.forEach(function(c){c.hidden=true});
-      var bx=el('div','pg-recall'); bx.appendChild(el('p',null,'רגע לפני הסיכום: נסו להיזכר — מה 3 הדברים העיקריים בדף?'));
+      var bx=el('div','pg-recall'); bx.appendChild(el('p',null,'נסו להיזכר: מה 3 עיקרי הדף?'));
       var sh=el('button','btn','הצג את הסיכום'); sh.type='button';
       sh.onclick=function(){ body.forEach(function(c){c.hidden=false}); sh.remove();
-        var q=el('div','pg-btns'); q.appendChild(el('span','pg-hint','כמה זכרת?'));
-        [['all','זכרתי הכול'],['part','חלקית'],['none','שכחתי']].forEach(function(x){ var b=el('button','btn',x[1]); b.type='button';
+        var q=el('div','pg-btns pg-grade'); q.appendChild(el('span','pg-hint','זכרת?'));
+        [['all','הכול'],['part','חלקית'],['none','שכחתי']].forEach(function(x){ var b=el('button','btn',x[1]); b.type='button';
           b.onclick=function(){ E.recall={r:x[0],ts:Date.now()}; touch(); save(); q.replaceWith(el('p','pg-hint','נשמר. '+(x[0]==='all'?'יפה!':'כדאי לחזור על הסיכום מחר.'))); };
           q.appendChild(b); });
         bx.appendChild(q); };
