@@ -318,3 +318,8 @@ button.src{padding-block:10px;margin-block:-10px}
 .pg-star{color:var(--gold);font-size:14px;line-height:1}
 #review-app{display:grid;gap:12px;margin-top:18px}
 #review-app .qitem p{margin:0 0 10px;font-weight:700}
+/* מצב חזרה (?r): summaries, verdicts and the summary table; steps on demand */
+.review-mode section.sugya:not(.expand) ol.steps,.review-mode .cv-all,.review-mode .think{display:none}
+.pg-steps{display:none}.review-mode .pg-steps{display:inline-flex;min-height:40px;align-items:center;margin:4px 0 10px}
+.pg-rmode{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:14px;padding:10px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--gold);font-weight:700}
+.pg-rmode a{color:var(--accent)}
