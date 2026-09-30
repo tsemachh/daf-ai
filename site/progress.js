@@ -130,7 +130,17 @@
   var art=document.querySelector('article.daf'), P=art&&byKey(location.pathname.replace(/^\/|\/$/g,''));
   var E=null;
   if(art&&P){
+    var RM=/(^|[?&])r(=|&|$)/.test(location.search.slice(1));   /* ?r = חזרה: summaries, verdicts and the summary table only */
     var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
+    if(RM){ art.classList.add('review-mode');
+      art.querySelectorAll('details.flowd,details.storyline').forEach(function(d){d.open=true});
+      art.querySelectorAll('section.sugya ol.steps').forEach(function(ol){ var b=el('button','btn pg-steps','הצג את השקלא וטריא'); b.type='button';
+        b.onclick=function(){ ol.closest('section.sugya').classList.toggle('expand'); b.textContent=ol.closest('section.sugya').classList.contains('expand')?'הסתר את השקלא וטריא':'הצג את השקלא וטריא'; };
+        ol.before(b); });
+      var rb=el('div','pg-rmode'); rb.appendChild(el('span',null,'מצב חזרה — תקצירים, מסקנות וסיכום בלבד')); var full=el('a',null,'לדף המלא'); full.href=location.pathname; rb.appendChild(full);
+      var ctr0=art.querySelector('.controls'); (ctr0||art.querySelector('header')).after(rb);
+      setTimeout(function(){ markDay(); touch(); save(); },20000);   /* a review visit counts for the streak */
+    }
     var pn=art.querySelector('.prefs'); if(pn) pn.appendChild(settings());
     /* starting in the middle of a masechet: offer to mark the earlier dapim as learned (asked once per masechet) */
     (function(){
@@ -201,7 +211,7 @@
       });
       if(ch){ E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); }
     }
-    setInterval(tick,1000);
+    if(!RM) setInterval(tick,1000);
     document.addEventListener('visibilitychange',function(){lastT=Date.now()});
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(es){es.forEach(function(en){
@@ -236,25 +246,25 @@
     /* free recall before the summary table */
     (function(){ var sum=document.getElementById(pre+'sum'); if(!sum) return;
       var body=[].slice.call(sum.children).filter(function(c){return !c.classList.contains('amud')&&c.tagName!=='H3'});
-      if(!body.length||E.recall) return;
+      if(!body.length||E.recall||RM) return;
       body.forEach(function(c){c.hidden=true});
-      var bx=el('div','pg-recall'); bx.appendChild(el('p',null,'לפני הסיכום: נסו לומר לעצמכם (או לכתוב) את 3 עיקרי הדף.'));
-      var ta=el('textarea','pg-code'); ta.rows=3; ta.placeholder='1. …\n2. …\n3. …'; ta.setAttribute('aria-label','עיקרי הדף במילים שלי'); ta.style.direction='rtl';
-      var sh=el('button','btn','הצג את הסיכום והשווה'); sh.type='button';
-      sh.onclick=function(){ body.forEach(function(c){c.hidden=false}); sh.remove(); ta.readOnly=true;
+      var bx=el('div','pg-recall'); bx.appendChild(el('p',null,'רגע לפני הסיכום: נסו להיזכר — מה 3 הדברים העיקריים בדף?'));
+      var sh=el('button','btn','הצג את הסיכום'); sh.type='button';
+      sh.onclick=function(){ body.forEach(function(c){c.hidden=false}); sh.remove();
         var q=el('div','pg-btns'); q.appendChild(el('span','pg-hint','כמה זכרת?'));
         [['all','זכרתי הכול'],['part','חלקית'],['none','שכחתי']].forEach(function(x){ var b=el('button','btn',x[1]); b.type='button';
           b.onclick=function(){ E.recall={r:x[0],ts:Date.now()}; touch(); save(); q.replaceWith(el('p','pg-hint','נשמר. '+(x[0]==='all'?'יפה!':'כדאי לחזור על הסיכום מחר.'))); };
           q.appendChild(b); });
         bx.appendChild(q); };
-      bx.append(ta,sh); var h=sum.querySelector('h3'); (h||sum.firstChild).after(bx);
+      bx.append(sh); var h=sum.querySelector('h3'); (h||sum.firstChild).after(bx);
     })();
     /* open with yesterday: 2 questions from the previous daf the learner studied */
-    (function(){ var prev=byKey(P.s+'/'+(P.d-1)); if(!prev||!S.pages[prev.k]) return;
+    (function(){ var prev=byKey(P.s+'/'+(P.d-1)); if(RM||!prev||!S.pages[prev.k]) return;
       if(E.warm===today()) return;
       var bx=el('div','pg-warm'); var h=el('p',null,'חזרה על '+prev.h+' לפני שמתחילים: 2 שאלות'); var go=el('button','btn','התחל'); go.type='button';
       var skip=el('button','btn','דלג'); skip.type='button'; skip.onclick=function(){E.warm=today(); save(); bx.remove();};
-      var row=el('div','pg-btns'); row.append(go,skip); bx.append(h,row);
+      var sumL=el('a','btn','סיכום '+prev.h); sumL.href=url(prev)+'?r';
+      var row=el('div','pg-btns'); row.append(go,sumL,skip); bx.append(h,row);
       go.onclick=function(){ row.remove(); bank().then(function(B){ var Q=B[prev.k]||[]; if(!Q.length){bx.remove();return}
         var idx=Q.map(function(_,i){return i}).sort(function(){return Math.random()-.5}).slice(0,2), left=idx.length;
         idx.forEach(function(i){ var w=el('div','qitem'); bx.appendChild(w); renderQ(w,Q[i],prev,function(ok){ enqueue(prev.k,i,ok); if(--left===0){ E.warm=today(); save(); } }); }); }); };
@@ -268,7 +278,7 @@
     var st=dafState(slug||(p&&p.s),d,p), c=el(p?'a':'span','pg-chip '+(p||st==='learned'?st:'na')+(p&&t&&t.k===p.k?' today':''));
     c.appendChild(el('span','pg-n',heb(d)));
     if(!p&&st==='learned') c.appendChild(ticks('learned'));
-    if(p){ c.href=url(p); var tk=ticks(st); if(tk) c.appendChild(tk); var qz=S.pages[p.k]&&S.pages[p.k].quiz; if(qz&&qz.best/qz.of>=0.75){ var sr=el('span','pg-star','★'); sr.title='חזרה: '+qz.best+'/'+qz.of; c.appendChild(sr); } if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
+    if(p){ c.href=url(p)+(st==='learned'?'?r':''); if(st==='learned') c.title='חזרה על '+p.h; var tk=ticks(st); if(tk) c.appendChild(tk); var qz=S.pages[p.k]&&S.pages[p.k].quiz; if(qz&&qz.best/qz.of>=0.75){ var sr=el('span','pg-star','★'); sr.title='חזרה: '+qz.best+'/'+qz.of; c.appendChild(sr); } if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
       c.setAttribute('aria-label',p.h+(st==='learned'?' · נלמד':st==='progress'?' · בתהליך':'')); }
     else c.title='דף '+heb(d)+' — עוד לא באתר';
     return c;
@@ -290,7 +300,7 @@
     order.forEach(function(j){ var b=el('button','opt',item.o[j]); b.type='button'; btns[j]=b; opts.appendChild(b);
       b.onclick=function(){ if(done) return; done=true; var ok=j===item.a; b.classList.add(ok?'right':'wrong'); if(!ok) btns[item.a].classList.add('right');
         var v=el('b','qv '+(ok?'ok':'no'),ok?'✓ נכון.':'✗ לא בדיוק.'); fb.append(v,document.createTextNode(' '+(!ok&&item.w&&item.w[j]?item.w[j]+' ':'')+item.e+' '));
-        if(p){ var a=el('a',null,'('+p.h+')'); a.href=url(p); fb.appendChild(a); } cb(ok); }; });
+        if(p){ var a=el('a',null,'(סיכום '+p.h+')'); a.href=url(p)+'?r'; fb.appendChild(a); } cb(ok); }; });
     w.append(opts,fb);
   }
   function laterRow(x){ var a=el('a','pg-row-l'); a.href=url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id; var bk=el('span','pg-bk'); bk.innerHTML=BOOK;
@@ -311,7 +321,8 @@
       if(S.first||S.review.length){ var dl=dueList(), rc=el('a','pg-review'); rc.href='/review/';
         if(dl.length){ rc.append(el('b',null,'חזרה היום · '+dl.length+(dl.length===1?' שאלה':' שאלות')), el('span',null,'כ־'+Math.max(1,Math.round(dl.length*0.4))+' דק׳ · לפני הדף החדש')); }
         else { rc.classList.add('done'); rc.append(el('b',null,'✓ אין חזרות להיום'), el('span',null,'השאלות הבאות יחזרו לפי הלוח')); }
-        side.appendChild(rc); }
+        side.appendChild(rc);
+        if(dow(today())>=4&&dow(today())<=5){ var wr=el('a','pg-review done'); wr.href='/review/?week'; wr.append(el('b',null,'חזרה שבועית לקראת שבת'), el('span',null,'10 שאלות מעורבות מהדפים של השבוע')); side.appendChild(wr); } }
       if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section), a=el('a','pg-resume-b');
         a.href=url(lp)+(i>0?'#'+lp.s+lp.d+'-'+S.last.section:''); a.append(el('b',null,'↩ המשך מהמקום שעצרת'),el('span',null,lp.h+(i>=0?' · סוגיה '+(i+1):''))); side.appendChild(a); } }
       if(S.first){ var bh=behind(), st=el('p','pg-status');
@@ -392,17 +403,23 @@
   /* ---------- review page ---------- */
   var RV=document.getElementById('review-app');
   if(RV){ bank().then(function(B){
-    var qs=[], m=(location.search.match(/perek=([a-z-]+):(\d+)/)||[]), mode=m[1]?'perek':'due';
+    var qs=[], m=(location.search.match(/perek=([a-z-]+):(\d+)/)||[]), mode=m[1]?'perek':/week/.test(location.search)?'week':'due';
+    if(mode==='week'){ document.getElementById('rv-title').textContent='חזרה שבועית';
+      document.getElementById('rv-sub').textContent='שאלות מעורבות מהדפים שלמדתם בשבוע האחרון.';
+      var wk=addDays(today(),-7), wpool=[];
+      L.forEach(function(p){ var e=S.pages[p.k]; if(!e) return; var last=e.done||(e.quiz&&new Date(e.quiz.ts).toISOString().slice(0,10))||p.y;
+        if(last&&last>=wk) (B[p.k]||[]).forEach(function(_,i){wpool.push({page:p.k,q:i})}); });
+      qs=wpool.sort(function(){return Math.random()-.5}).slice(0,10); }
     if(mode==='perek'){ var M=C.mas[m[1]], r=M&&M.p&&M.p[+m[2]];
       if(r){ document.getElementById('rv-title').textContent='חזרה על פרק '+heb(+m[2]+1)+(r[0]?' · '+r[0]:'');
         document.getElementById('rv-sub').textContent='שאלות מעורבות מכל דפי הפרק שלמדתם.';
         var pool=[]; L.forEach(function(p){ if(p.s===m[1]&&p.d>=r[1]&&p.d<=r[2]&&S.pages[p.k]) (B[p.k]||[]).forEach(function(_,i){pool.push({page:p.k,q:i})}); });
         qs=pool.sort(function(){return Math.random()-.5}).slice(0,10); } }
-    else qs=dueList().slice(0,12);
+    else if(mode==='due') qs=dueList().slice(0,12);
     var i=0, right=0;
     function next(){
       RV.innerHTML='';
-      if(!qs.length){ RV.appendChild(el('p','pg-m',mode==='perek'?'עדיין אין דפים שלמדתם בפרק הזה.':'✓ אין שאלות לחזרה היום. השאלות הבאות יחזרו לפי הלוח.'));
+      if(!qs.length){ RV.appendChild(el('p','pg-m',mode==='perek'?'עדיין אין דפים שלמדתם בפרק הזה.':mode==='week'?'לא נמצאו דפים שלמדתם בשבוע האחרון.':'✓ אין שאלות לחזרה היום. השאלות הבאות יחזרו לפי הלוח.'));
         var h=el('a','btn','לדף הבית'); h.href='/'; RV.appendChild(h); return; }
       if(i>=qs.length){ RV.appendChild(el('div','qsum','סיימתם: '+right+' מתוך '+qs.length+(mode==='due'?' · השאלות שטעיתם בהן יחזרו מחר, והשאר בעוד כמה ימים.':'')));
         var h2=el('a','btn','לדף הבית'); h2.href='/'; RV.appendChild(h2); return; }
