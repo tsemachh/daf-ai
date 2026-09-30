@@ -114,10 +114,15 @@ def catalog_json():
 
 
 CSS = " ".join(open(os.path.join(ROOT, "site", "app.css"), encoding="utf8").read().split())
+# cache-busting version for the scripts: a new deploy never runs against a stale cached copy
+import hashlib  # noqa: E402
+ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
+                                for f in ("app.js", "progress.js"))).hexdigest()[:8]
 
 
 def page(title, body, desc="", depth=0):
     up = "../" * depth
+    body = re.sub(r'((?:app|progress)\.js)(" defer)', rf'\1?v={ASSET_V}\2', body)
     return f"""<!doctype html>
 <html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
