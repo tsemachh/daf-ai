@@ -271,3 +271,23 @@ html{scroll-padding-top:12px}
 .btn[data-role="learned"][aria-pressed="true"]{background:var(--card);color:var(--ink);border-color:var(--tick)}
 @media (max-width:480px){.controls{gap:6px}.controls .btn{padding-inline:11px;font-size:14.5px}.controls .btn-ic{padding-inline:9px}}
 @media (max-width:360px){.controls .btn{padding-inline:9px;font-size:14px}.controls .btn-ic{padding-inline:7px}}
+
+/* UX review quick wins */
+.fb .qv{font-weight:800}.fb .qv.ok{color:var(--ok)}.fb .qv.no{color:var(--no)}
+.qsum a.btn{text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.sefaria-bar .src{display:inline-block;padding-block:12px}
+.qsum{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--accent-soft);font-weight:700}
+.controls .btn{min-height:44px}.controls .btn-ic{min-width:44px;flex-shrink:0}
+.fb-sec{width:44px;height:44px}
+.pager .back,.topnav .back,.about-link .back{display:inline-flex;align-items:center;min-height:44px;padding-inline:4px}
+.amud .src,.src.inline-hit{display:inline-block;padding-block:10px;margin-block:-10px}
+button.src{padding-block:10px;margin-block:-10px}
+.reveal{min-height:44px}
+.pg-legend-line{font-size:13px;color:var(--muted);margin:-4px 0 10px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+.pg-legend-line span{display:inline-flex;align-items:center;gap:4px}
+.map a .pg-mk{order:0;min-width:34px;margin:0;justify-content:flex-start}
+.map a .pg-mk:empty{visibility:hidden}
+.pg-toast{position:fixed;inset-inline:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:60;max-width:520px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.pg-toast[hidden]{display:none}
+.pg-toast button{background:none;border:0;color:inherit;font:inherit;font-weight:800;text-decoration:underline;min-height:44px;padding:0 6px;cursor:pointer}
+.card-when{font-size:12px;font-weight:800;color:var(--paper);background:var(--accent);border-radius:999px;padding:1px 8px;margin-inline-start:8px;vertical-align:middle}

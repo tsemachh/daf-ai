@@ -223,6 +223,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   <div class="quiz" data-role="quizBox"></div>
   <button class="btn" data-role="resetQuiz" type="button" style="margin-top:14px">התחל מחדש</button>
 </section>
+{pager}
 
 <section class="sugya">
   <div class="amud">להעמקה</div>
@@ -231,7 +232,6 @@ def render_daf(d, prev, nxt, glossary, sources):
 {links}
   </ul>
 </section>
-{pager}
 {credits('../../')}
 <footer>{esc(d.get('footer') or FOOT)}</footer>
 
@@ -256,7 +256,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 # ---------------------------------------------------------------- index pages
 def card(d, href):
     c = d.get("card", {})
-    stats = "".join(c.get("stats_html", [])) or f"<span>{len(d['nav'])} סוגיות</span><span>{len(d['quiz'])} שאלות חזרה</span>"
+    stats = f"<span>{len(d['nav'])} סוגיות</span><span>{len(d['quiz'])} שאלות חזרה</span><span>נבדק מול הגמרא</span>"
     return f"""  <a class="card" href="{href}">
     <div class="top"><h3>{esc(d['title'])}</h3><span class="date">{esc(c.get('date', ''))}</span></div>
     <p>{esc(c.get('topics', ''))}</p>
@@ -292,7 +292,6 @@ def render_home(by_slug, latest, about):
                     f'<span class="date">{len(ds)} דפים</span></div></a>' for s, ds in by_slug.items())
     body = f"""<div class="wrap" id="app"><section id="home">
 <header>
-  <div class="eyebrow">דפי לימוד · הדף היומי</div>
   <h1>{SITE_TITLE}</h1>
   <p class="thesis">דף לימוד אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span></div>
@@ -306,7 +305,7 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {mas}
 </div>
-{about}
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -378,9 +377,15 @@ def main():
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     latest = sorted(alld, key=lambda d: d.get("order", d["daf"]), reverse=True)[:7]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
+    os.makedirs(os.path.join(DIST, "about"), exist_ok=True)
+    open(os.path.join(DIST, "about", "index.html"), "w", encoding="utf8").write(page(
+        "איך נבנים הדפים · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+        f'<div class="eyebrow">לסוקרים ולמתעניינים</div><h1>איך נבנים הדפים ומה נבדק</h1></header>'
+        f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי הלימוד", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
-    urls = [""] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")
