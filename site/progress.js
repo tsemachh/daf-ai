@@ -114,6 +114,13 @@
   }
 
   var painters=[]; function refresh(){painters.forEach(function(f){f()})}
+  var toastEl=null, toastT=null;
+  function toast(msg,undo){
+    if(!toastEl){toastEl=el('div','pg-toast'); toastEl.setAttribute('role','status'); toastEl.setAttribute('aria-live','polite'); document.body.appendChild(toastEl);}
+    toastEl.innerHTML=''; toastEl.appendChild(el('span',null,msg));
+    if(undo){var u=el('button',null,'בטל'); u.type='button'; u.onclick=function(){undo(); toastEl.hidden=true;}; toastEl.appendChild(u);}
+    toastEl.hidden=false; clearTimeout(toastT); toastT=setTimeout(function(){toastEl.hidden=true},5000);
+  }
 
   /* ---------- daf page: tracking is passive — a sugya viewed long enough counts as learned ---------- */
   var art=document.querySelector('article.daf'), P=art&&byKey(location.pathname.replace(/^\/|\/$/g,''));
@@ -122,11 +129,18 @@
     var pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
     var pn=art.querySelector('.prefs'); if(pn) pn.appendChild(settings());
     art.querySelectorAll('nav.map a[href^="#"]').forEach(function(a){ navA[a.getAttribute('href').slice(1+pre.length)]=a; });
+    var mh=art.querySelector('nav.map h2'); if(mh){ var lg=el('p','pg-legend-line');
+      var l1=el('span'); l1.append(ticks('opened'),document.createTextNode('נפתח'));
+      var l2=el('span'); l2.append(ticks('learned'),document.createTextNode('נלמד'));
+      var l3=el('span'), b3=el('span','pg-bk'); b3.innerHTML=BOOK; l3.append(b3,document.createTextNode('ללמוד אחר כך'));
+      lg.append(l1,l2,l3); mh.after(lg); }
     P.n.forEach(function(id){
       var sec=document.getElementById(pre+id); if(!sec) return; secs[id]=sec;
       var h3=sec.querySelector('h3'); if(!h3) return;
       var b=el('button','fb-sec pg-later'); b.type='button';
-      b.onclick=function(){ var k=P.k+'#'+id; if(S.later[k]) delete S.later[k]; else {S.later[k]=Date.now(); touch();} save(); paint(); };
+      b.onclick=function(){ var k=P.k+'#'+id, was=S.later[k];
+        if(was) delete S.later[k]; else {S.later[k]=Date.now(); touch();} save(); paint();
+        toast(was?'הוסר מ״ללמוד אחר כך״':'נשמר ל״ללמוד אחר כך״ — מופיע בדף הבית',function(){ if(was) S.later[k]=was; else delete S.later[k]; save(); paint(); }); };
       b.innerHTML=BOOK; var fb=h3.querySelector('.fb-sec'); if(fb) fb.after(b); else h3.insertBefore(b,h3.firstChild); laterB[id]=b;
     });
     function paint(){
@@ -139,7 +153,7 @@
         var a=navA[id]; if(!a) return; var o=a.querySelector('.pg-mk'); if(o) o.remove();
         var mk=el('span','pg-mk'), t=ticks(E.s[id]); if(t) mk.appendChild(t);
         if(on){ var bk=el('span','pg-bk'); bk.innerHTML=BOOK; bk.setAttribute('aria-label','ללמוד אחר כך'); mk.appendChild(bk); }
-        if(mk.childNodes.length) a.appendChild(mk);
+        var am=a.querySelector('.amud'); if(am) am.after(mk); else a.insertBefore(mk,a.firstChild);
       });
     }
     painters.push(paint);
@@ -167,16 +181,18 @@
     if('IntersectionObserver' in window){
       var io=new IntersectionObserver(function(es){es.forEach(function(en){
         if(!en.isIntersecting) return; cur=en.target.id.slice(pre.length);
-        S.last={page:P.k,section:cur,ts:Date.now()}; save();
+        var li=S.last&&S.last.page===P.k?P.n.indexOf(S.last.section):-1;
+        if(P.n.indexOf(cur)>=li){ S.last={page:P.k,section:cur,ts:Date.now()}; save(); }  /* resume = furthest point reached */
       })},{rootMargin:'-45% 0px -50% 0px'});
       Object.keys(secs).forEach(function(id){io.observe(secs[id])});
     }
     /* "למדתי" in the top bar: mark every sugya learned (press again to undo) */
     var allB=art.querySelector('.controls [data-role="learned"]');
     if(allB) allB.addEventListener('click',function(){
-      var all=nLearned(P)===P.n.length;
+      var all=nLearned(P)===P.n.length, snap=JSON.stringify({s:E.s,done:E.done,later:S.later});
       P.n.forEach(function(id){ if(all) E.s[id]='opened'; else { E.s[id]='learned'; delete S.later[P.k+'#'+id]; } });
       if(!all) markDay(); E.done=all?null:(E.done||today()); touch(); save(); paint();
+      toast(all?'הסימון בוטל':'סומנו '+P.n.length+' סוגיות כנלמדו',function(){ var o=JSON.parse(snap); E.s=o.s; E.done=o.done; S.later=o.later; save(); paint(); });
     });
     /* quiz: best score + missed questions for later review (not needed for "learned") */
     var qb=art.querySelector('[data-role="quizBox"]');
@@ -286,5 +302,11 @@
     painters.push(paintMas); paintMas();
     if(location.hash==='#map') openMap();
   }
+  (function(){ var t=today(), tm=addDays(t,1);
+    document.querySelectorAll('.cards a.card').forEach(function(a){ var m=(a.getAttribute('href')||'').match(/([a-z-]+)\/(\d+)\/$/)||[], k=m[1]?m[1]+'/'+m[2]:null;
+      if(!k&&mas){ var mm=(a.getAttribute('href')||'').match(/(\d+)\/$/); if(mm) k=mas.dataset.slug+'/'+mm[1]; }
+      var p=k&&byKey(k); if(!p||S.pace.mode==='plan') return; var w=p.y===t?'היום':p.y===tm?'מחר':null;
+      if(w){ var h=a.querySelector('.top h3'); if(h) h.appendChild(el('span','card-when',w)); } });
+  })();
   window.addEventListener('storage',function(e){ if(e.key===KEY){ try{S=norm(JSON.parse(e.newValue||'null'))}catch(x){} if(P) E=entry(P.k); refresh(); } });
 })();

@@ -162,14 +162,22 @@
       Q.forEach(function(item,i){
         var d=document.createElement('div'); d.className='qitem';
         var p=document.createElement('p'); p.textContent=(i+1)+'. '+item.q; d.appendChild(p);
-        var opts=document.createElement('div'); opts.className='opts'; var fb=document.createElement('div'); fb.className='fb';
+        var opts=document.createElement('div'); opts.className='opts'; var fb=document.createElement('div'); fb.className='fb'; fb.setAttribute('aria-live','polite');
         item.o.forEach(function(t,j){
           var b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=t;
           b.addEventListener('click',function(){
             if(d.dataset.done) return; d.dataset.done=1;
-            if(j===item.a){b.classList.add('right'); right++; fb.textContent='נכון. '+item.e;}
-            else{b.classList.add('wrong'); opts.children[item.a].classList.add('right'); fb.textContent='לא בדיוק. '+item.e;}
+            var ok=j===item.a, v=document.createElement('b'); v.className='qv '+(ok?'ok':'no'); v.textContent=ok?'✓ נכון.':'✗ לא בדיוק.';
+            if(ok){b.classList.add('right'); right++;} else{b.classList.add('wrong'); opts.children[item.a].classList.add('right');}
+            fb.textContent=''; fb.append(v,document.createTextNode(' '+item.e));
             scoreEl.textContent='· '+right+'/'+Q.length;
+            if(box.querySelectorAll('.qitem[data-done]').length===Q.length){
+              var sm=document.createElement('div'); sm.className='qsum'; sm.setAttribute('role','status');
+              sm.appendChild(document.createTextNode('סיימתם את החזרה: '+right+' מתוך '+Q.length+(right===Q.length?' — כל הכבוד!':'')));
+              var nx=[].slice.call(art.querySelectorAll('.pager a')).filter(function(a){return a.textContent.indexOf('←')>=0})[0];
+              if(nx){var a=document.createElement('a'); a.href=nx.href; a.className='btn'; a.textContent='לדף הבא ←'; sm.appendChild(a);}
+              box.appendChild(sm);
+            }
           });
           opts.appendChild(b);
         });
