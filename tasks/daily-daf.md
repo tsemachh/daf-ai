@@ -48,8 +48,14 @@ missing or the API fails, note it in the report and continue with §2.
   they disagree, use hebcal and flag it in the report. Do not script daf-yomi.com — it sits behind a
   Cloudflare bot challenge; links to it on the pages are fine.
   Cover both amudim, even across a masechet boundary.
-- Skip targets whose `data/<slug>/<daf>.json` already exists. Nothing left → report "הכול מוכן מראש"
-  and go to §6.
+- Skip targets whose `data/<slug>/<daf>.json` already exists.
+- **Backfill queue:** after the calendar targets, take up to 3 lines from `tasks/backfill.txt` (one
+  `<slug>/<daf>` per line, top first; skip lines whose JSON already exists) and treat them as extra
+  targets with the same §3–§5 process. Their Daf Yomi dates are in the past — use the real date
+  (one day per daf back from a known one, e.g. Bechorot 7 = 2026-09-25; confirm with
+  `python tools/dafyomi.py <date>`) in `card.date` / `meta`. In the commit that adds a backfilled daf, also
+  remove its line from `tasks/backfill.txt`. Calendar targets always come first.
+- Nothing left (no calendar targets, empty queue) → report "הכול מוכן מראש" and go to §6.
 
 ## 3. Research — from the private source cache
 The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to this one; find it with
