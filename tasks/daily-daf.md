@@ -55,12 +55,7 @@ missing or the API fails, note it in the report and continue with §2.
   (one day per daf back from a known one, e.g. Bechorot 7 = 2026-09-25; confirm with
   `python tools/dafyomi.py <date>`) in `card.date` / `meta`. In the commit that adds a backfilled daf, also
   remove its line from `tasks/backfill.txt`. Calendar targets always come first.
-- **Refresh queue:** then take up to 2 lines from `tasks/refresh.txt` (published dapim made before the
-  current quiz/חברותא rules). For each: rewrite the `quiz` per §4 (mix of item types, real distractors,
-  balanced lengths, `w` lines), add missing `flow` (בקצרה) summaries, replace any "לא הורחב כאן" step with
-  a gist, and check step `type`s (answers = a/c). Keep every section id and all correct content; verify
-  with one sub-agent against the cache; commit "Refresh Bechorot N: quiz and summaries" and remove the line.
-- Nothing left (no calendar targets, empty queues) → report "הכול מוכן מראש" and go to §6.
+- Nothing left (no calendar targets, empty queue) → report "הכול מוכן מראש" and go to §6.
 
 ## 3. Research — from the private source cache
 The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to this one; find it with
@@ -104,29 +99,15 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
 - One section per sugya: `ref` like `Bekhorot.12a.5-9` or `Bekhorot.12a.20-12b.1` covering exactly its
   segments; `title`; optional `quote` {text, cite}; `flow` (בקצרה, 1–3 sentences: the question, why it
   arises, how it ends) for every sugya with give-and-take; `steps` with `tag`, `type` (q/a/c/""),
-  `p`, `body`; optional verdicts/think boxes in `post` (1–3 think boxes per daf). Set `type` carefully:
-  in חברותא mode the site hides exactly the `a`/`c` steps (answers, rejections, conclusions) and shows
-  the `q` and source steps as prompts. Never leave a segment as "לא הורחב כאן" — give at least a
-  one-line gist. Verdict cards use neutral colours (no ok/no class for a halachic side).
+  `hideable`, `p`, `body`; optional verdicts/think boxes in `post` (1–3 think boxes per daf).
 - `srctext`: an entry for EVERY section ref (t = "בכורות י״ב ע״א", p = verbatim segments, a lone "…"
   where skipped). New Tanakh/halacha citations go into `data/sources.json` keyed by Sefaria ref
   ("Leviticus.11.4"), text fetched from `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`,
   cantillation stripped, nikud kept. Never paste text you did not fetch; never change existing entries.
 - Citation formats in text: "<ספר> <פרק>, <פסוק>" in Hebrew letters; "שו״ע יו״ד <סימן>, <סעיף>";
   "רמב״ם מאכלות אסורות <פרק>, <הלכה>".
-- `quiz`: exactly 8 {q, o:[3–4], a, e, w?}. The quiz feeds spaced review, so it must test understanding:
-  - Mix per daf: 2 recall (who/what), 3 reasoning ("why was the ראיה rejected?", "what is the הו״א and why
-    is it wrong?"), 2 application to a new case in the spirit of the sugya, 1 ordering/structure question
-    (which move comes after which, or what answers what).
-  - Distractors are real misconceptions: a rejected proof, the other side of the מחלוקת, the הו״א, a
-    neighbouring sugya's ruling. No implausible fillers. Use 4 options when there are 3 good distractors.
-  - All options of similar length and form (the correct one must not be the longest or the only one with
-    a quote); `a` may be any index (the site shuffles options anyway).
-  - `e` explains the correct answer from the Gemara; `w` (optional) maps a wrong option's index to one
-    short line on why it is wrong, e.g. {"0": "זו הו״א שנדחתה: …"}.
-  - Don't reuse a "חשבו לפני שממשיכים" question as a quiz item.
-- `links` (להעמקה); `card` {topics, date}; `meta` incl. Hebrew date (+ holiday), "עמודים א–ב", and an
-  honest time estimate ("~25 דקות לימוד" for ~40 steps, "~35" for ~70).
+- `quiz`: exactly 8 {q, o:[3], a, e}; `links` (להעמקה); `card` {topics, date}; `meta` incl. Hebrew date
+  (+ holiday), "עמודים א–ב", "~20 דקות לימוד".
 - `data/glossary.json`: add concise Hebrew entries for every missing sage/concept (types תנא / אמורא /
   מושג / מונח / מקום; a sage gets generation, Tanna/Amora, Eretz Yisrael/Bavel and one identifying fact),
   exact spelling as in the text. Every compound or epithet name gets its own key so a shorter key never
