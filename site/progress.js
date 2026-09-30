@@ -223,12 +223,43 @@
     var qb=art.querySelector('[data-role="quizBox"]');
     if(qb) qb.addEventListener('click',function(ev){ if(!ev.target.closest('.opt')) return; setTimeout(function(){
       var items=qb.querySelectorAll('.qitem'), done=qb.querySelectorAll('.qitem[data-done]'); if(!items.length||done.length<items.length) return;
-      var right=0; items.forEach(function(q,i){ var ok=!q.querySelector('.opt.wrong'); if(ok) right++;
-        S.review=S.review.filter(function(r){return !(r.page===P.k&&r.q===i&&ok)});
-        if(!ok&&!S.review.some(function(r){return r.page===P.k&&r.q===i})) S.review.push({page:P.k,q:i,due:addDays(today(),1),n:0});
+      var right=0, spare=2; items.forEach(function(q,i){ var ok=!q.querySelector('.opt.wrong'); if(ok) right++;
+        var inQ=S.review.some(function(r){return r.page===P.k&&r.q===i});
+        if(!ok&&!inQ) S.review.push({page:P.k,q:i,due:addDays(today(),1),n:0});
+        else if(ok&&!inQ&&spare>0){ spare--; S.review.push({page:P.k,q:i,due:addDays(today(),3),n:1}); }  /* a couple of correct ones come back too */
       });
       if(!E.quiz||right>E.quiz.best) E.quiz={best:right,of:items.length,ts:Date.now()}; touch(); save();
     },0)});
+    /* חברותא: remember what the learner knew per sugya */
+    document.addEventListener('daf:cv',function(ev){ var d=ev.detail, sid=(d.sec||'').slice(pre.length); if(!sid) return;
+      E.cv=E.cv||{}; E.cv[sid]=E.cv[sid]||{}; E.cv[sid][d.k]=d.ok?1:0; touch(); save(); });
+    /* free recall before the summary table */
+    (function(){ var sum=document.getElementById(pre+'sum'); if(!sum) return;
+      var body=[].slice.call(sum.children).filter(function(c){return !c.classList.contains('amud')&&c.tagName!=='H3'});
+      if(!body.length||E.recall) return;
+      body.forEach(function(c){c.hidden=true});
+      var bx=el('div','pg-recall'); bx.appendChild(el('p',null,'לפני הסיכום: נסו לומר לעצמכם (או לכתוב) את 3 עיקרי הדף.'));
+      var ta=el('textarea','pg-code'); ta.rows=3; ta.placeholder='1. …\n2. …\n3. …'; ta.setAttribute('aria-label','עיקרי הדף במילים שלי'); ta.style.direction='rtl';
+      var sh=el('button','btn','הצג את הסיכום והשווה'); sh.type='button';
+      sh.onclick=function(){ body.forEach(function(c){c.hidden=false}); sh.remove(); ta.readOnly=true;
+        var q=el('div','pg-btns'); q.appendChild(el('span','pg-hint','כמה זכרת?'));
+        [['all','זכרתי הכול'],['part','חלקית'],['none','שכחתי']].forEach(function(x){ var b=el('button','btn',x[1]); b.type='button';
+          b.onclick=function(){ E.recall={r:x[0],ts:Date.now()}; touch(); save(); q.replaceWith(el('p','pg-hint','נשמר. '+(x[0]==='all'?'יפה!':'כדאי לחזור על הסיכום מחר.'))); };
+          q.appendChild(b); });
+        bx.appendChild(q); };
+      bx.append(ta,sh); var h=sum.querySelector('h3'); (h||sum.firstChild).after(bx);
+    })();
+    /* open with yesterday: 2 questions from the previous daf the learner studied */
+    (function(){ var prev=byKey(P.s+'/'+(P.d-1)); if(!prev||!S.pages[prev.k]) return;
+      if(E.warm===today()) return;
+      var bx=el('div','pg-warm'); var h=el('p',null,'חזרה על '+prev.h+' לפני שמתחילים: 2 שאלות'); var go=el('button','btn','התחל'); go.type='button';
+      var skip=el('button','btn','דלג'); skip.type='button'; skip.onclick=function(){E.warm=today(); save(); bx.remove();};
+      var row=el('div','pg-btns'); row.append(go,skip); bx.append(h,row);
+      go.onclick=function(){ row.remove(); bank().then(function(B){ var Q=B[prev.k]||[]; if(!Q.length){bx.remove();return}
+        var idx=Q.map(function(_,i){return i}).sort(function(){return Math.random()-.5}).slice(0,2), left=idx.length;
+        idx.forEach(function(i){ var w=el('div','qitem'); bx.appendChild(w); renderQ(w,Q[i],prev,function(ok){ enqueue(prev.k,i,ok); if(--left===0){ E.warm=today(); save(); } }); }); }); };
+      var ctr=art.querySelector('nav.map'); if(ctr) ctr.before(bx);
+    })();
     paint();
   }
 
@@ -237,13 +268,31 @@
     var st=dafState(slug||(p&&p.s),d,p), c=el(p?'a':'span','pg-chip '+(p||st==='learned'?st:'na')+(p&&t&&t.k===p.k?' today':''));
     c.appendChild(el('span','pg-n',heb(d)));
     if(!p&&st==='learned') c.appendChild(ticks('learned'));
-    if(p){ c.href=url(p); var tk=ticks(st); if(tk) c.appendChild(tk); if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
+    if(p){ c.href=url(p); var tk=ticks(st); if(tk) c.appendChild(tk); var qz=S.pages[p.k]&&S.pages[p.k].quiz; if(qz&&qz.best/qz.of>=0.75){ var sr=el('span','pg-star','★'); sr.title='חזרה: '+qz.best+'/'+qz.of; c.appendChild(sr); } if(laterIn(p).length){var bk=el('span','pg-bk'); bk.innerHTML=BOOK; c.appendChild(bk);}
       c.setAttribute('aria-label',p.h+(st==='learned'?' · נלמד':st==='progress'?' · בתהליך':'')); }
     else c.title='דף '+heb(d)+' — עוד לא באתר';
     return c;
   }
   function laterList(){ return Object.keys(S.later).sort(function(a,b){return S.later[a]-S.later[b]}).map(function(k){
     var a=k.split('#'), p=byKey(a[0]); if(!p) return null; var i=p.n.indexOf(a[1]); return i<0?null:{p:p,id:a[1],i:i}; }).filter(Boolean); }
+  /* ---------- spaced review ---------- */
+  var LADDER=[1,3,7,21,60];
+  function bank(){ return window.__qb||(window.__qb=fetch('/quiz.json').then(function(r){return r.json()}).catch(function(){return {}})); }
+  function dueList(){ var t=today(); return S.review.filter(function(r){return r.due<=t}).sort(function(a,b){return a.due<b.due?-1:a.due>b.due?1:0}); }
+  function enqueue(k,i,ok){ if(!ok&&!S.review.some(function(r){return r.page===k&&r.q===i})) S.review.push({page:k,q:i,due:addDays(today(),1),n:0}); markDay(); touch(); save(); }
+  function grade(r,ok){ if(ok){ r.n=(r.n||0)+1; if(r.n>=LADDER.length) S.review.splice(S.review.indexOf(r),1); else r.due=addDays(today(),LADDER[r.n]); }
+    else { r.n=0; r.due=addDays(today(),1); } markDay(); touch(); save(); }
+  /* one multiple-choice question: shuffled options, explanation (and why the chosen option is wrong, when the data has it) */
+  function renderQ(w,item,p,cb){
+    w.appendChild(el('p',null,item.q)); var opts=el('div','opts'), fb=el('div','fb'); fb.setAttribute('aria-live','polite');
+    var order=item.o.map(function(_,j){return j}); for(var x=order.length-1;x>0;x--){var r=Math.floor(Math.random()*(x+1)),t=order[x];order[x]=order[r];order[r]=t;}
+    var btns={}, done=false;
+    order.forEach(function(j){ var b=el('button','opt',item.o[j]); b.type='button'; btns[j]=b; opts.appendChild(b);
+      b.onclick=function(){ if(done) return; done=true; var ok=j===item.a; b.classList.add(ok?'right':'wrong'); if(!ok) btns[item.a].classList.add('right');
+        var v=el('b','qv '+(ok?'ok':'no'),ok?'✓ נכון.':'✗ לא בדיוק.'); fb.append(v,document.createTextNode(' '+(!ok&&item.w&&item.w[j]?item.w[j]+' ':'')+item.e+' '));
+        if(p){ var a=el('a',null,'('+p.h+')'); a.href=url(p); fb.appendChild(a); } cb(ok); }; });
+    w.append(opts,fb);
+  }
   function laterRow(x){ var a=el('a','pg-row-l'); a.href=url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id; var bk=el('span','pg-bk'); bk.innerHTML=BOOK;
     a.append(bk,document.createTextNode(' '+x.p.h+' · סוגיה '+(x.i+1))); return a; }
 
@@ -255,10 +304,14 @@
       var pl=plan(), tp=pl.today, card=el('a','pg-today');
       card.appendChild(el('div','pg-k',S.pace.mode==='plan'?'לפי הקצב שלך — היום':'הדף היומי — היום'));
       if(tp){ card.href=url(tp); var hh=el('div','pg-h',tp.h+' '); var tk=ticks(stateOf(tp)); if(tk) hh.appendChild(tk); card.appendChild(hh); card.appendChild(el('div','pg-t',tp.t));
-        var c=nLearned(tp); card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c&&c<tp.n.length?' · '+c+' נלמדו':''))); }
+        var c=nLearned(tp), qz=S.pages[tp.k]&&S.pages[tp.k].quiz; card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c&&c<tp.n.length?' · '+c+' נלמדו':'')+(qz?' · חזרה '+qz.best+'/'+qz.of:''))); }
       else card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף לימוד להיום'));
       home.appendChild(card);
       var side=el('div','pg-side');
+      if(S.first||S.review.length){ var dl=dueList(), rc=el('a','pg-review'); rc.href='/review/';
+        if(dl.length){ rc.append(el('b',null,'חזרה היום · '+dl.length+(dl.length===1?' שאלה':' שאלות')), el('span',null,'כ־'+Math.max(1,Math.round(dl.length*0.4))+' דק׳ · לפני הדף החדש')); }
+        else { rc.classList.add('done'); rc.append(el('b',null,'✓ אין חזרות להיום'), el('span',null,'השאלות הבאות יחזרו לפי הלוח')); }
+        side.appendChild(rc); }
       if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section), a=el('a','pg-resume-b');
         a.href=url(lp)+(i>0?'#'+lp.s+lp.d+'-'+S.last.section:''); a.append(el('b',null,'↩ המשך מהמקום שעצרת'),el('span',null,lp.h+(i>=0?' · סוגיה '+(i+1):''))); side.appendChild(a); } }
       if(S.first){ var bh=behind(), st=el('p','pg-status');
@@ -324,7 +377,9 @@
       var hdr=el('div','pg-cur-h'); hdr.append(el('b',null,'הפרק הנוכחי: פרק '+heb(pi+1)+(r[0]?' · '+r[0]:'')), el('span','pg-pr',heb(r[1])+'–'+heb(r[2])+' · '+pd+'/'+pt));
       var b2=el('span','pg-bar'), f2=el('i'); f2.style.width=Math.round(100*pd/pt)+'%'; b2.appendChild(f2);
       var g=el('div','pg-chips'); for(var d5=r[1]; d5<=r[2]; d5++) g.appendChild(chip(pub[d5],d5,t,slug));
-      box.append(hdr,b2,g); mas.appendChild(box);
+      box.append(hdr,b2,g);
+      if(L.some(function(p){return p.s===slug&&p.d>=r[1]&&p.d<=r[2]&&S.pages[p.k]})){ var pr=el('a','btn','חזרה על הפרק · שאלות מעורבות'); pr.href='/review/?perek='+slug+':'+pi; box.appendChild(pr); }
+      mas.appendChild(box);
       laterList().filter(function(x){return x.p.s===slug}).slice(0,5).forEach(function(x){mas.appendChild(laterRow(x))});
       var ob=el('button','btn','כל הפרקים'); ob.type='button'; ob.onclick=openMap; mas.appendChild(ob);
       document.querySelectorAll('.cards a.card').forEach(function(a){ var mm=a.getAttribute('href').match(/(\d+)\/$/), p=mm&&pub[+mm[1]]; if(!p) return;
@@ -334,6 +389,32 @@
     painters.push(paintMas); paintMas();
     if(location.hash==='#map') openMap();
   }
+  /* ---------- review page ---------- */
+  var RV=document.getElementById('review-app');
+  if(RV){ bank().then(function(B){
+    var qs=[], m=(location.search.match(/perek=([a-z-]+):(\d+)/)||[]), mode=m[1]?'perek':'due';
+    if(mode==='perek'){ var M=C.mas[m[1]], r=M&&M.p&&M.p[+m[2]];
+      if(r){ document.getElementById('rv-title').textContent='חזרה על פרק '+heb(+m[2]+1)+(r[0]?' · '+r[0]:'');
+        document.getElementById('rv-sub').textContent='שאלות מעורבות מכל דפי הפרק שלמדתם.';
+        var pool=[]; L.forEach(function(p){ if(p.s===m[1]&&p.d>=r[1]&&p.d<=r[2]&&S.pages[p.k]) (B[p.k]||[]).forEach(function(_,i){pool.push({page:p.k,q:i})}); });
+        qs=pool.sort(function(){return Math.random()-.5}).slice(0,10); } }
+    else qs=dueList().slice(0,12);
+    var i=0, right=0;
+    function next(){
+      RV.innerHTML='';
+      if(!qs.length){ RV.appendChild(el('p','pg-m',mode==='perek'?'עדיין אין דפים שלמדתם בפרק הזה.':'✓ אין שאלות לחזרה היום. השאלות הבאות יחזרו לפי הלוח.'));
+        var h=el('a','btn','לדף הבית'); h.href='/'; RV.appendChild(h); return; }
+      if(i>=qs.length){ RV.appendChild(el('div','qsum','סיימתם: '+right+' מתוך '+qs.length+(mode==='due'?' · השאלות שטעיתם בהן יחזרו מחר, והשאר בעוד כמה ימים.':'')));
+        var h2=el('a','btn','לדף הבית'); h2.href='/'; RV.appendChild(h2); return; }
+      var it=qs[i], p=byKey(it.page), item=(B[it.page]||[])[it.q];
+      if(!item){ if(mode==='due') S.review.splice(S.review.indexOf(it),1), save(); qs.splice(i,1); return next(); }
+      RV.appendChild(el('p','pg-m',(i+1)+' מתוך '+qs.length+' · '+(p?p.h:'')));
+      var w=el('div','qitem'); RV.appendChild(w);
+      renderQ(w,item,p,function(ok){ if(ok) right++; if(mode==='due') grade(it,ok); else enqueue(it.page,it.q,ok);
+        var nb=el('button','btn',i+1<qs.length?'לשאלה הבאה ←':'לסיכום'); nb.type='button'; nb.style.marginTop='12px'; nb.onclick=function(){i++; next(); window.scrollTo(0,0);}; w.appendChild(nb); nb.focus(); });
+    }
+    next();
+  }); }
   (function(){ var t=today(), tm=addDays(t,1);
     document.querySelectorAll('.cards a.card').forEach(function(a){ var m=(a.getAttribute('href')||'').match(/([a-z-]+)\/(\d+)\/$/)||[], k=m[1]?m[1]+'/'+m[2]:null;
       if(!k&&mas){ var mm=(a.getAttribute('href')||'').match(/(\d+)\/$/); if(mm) k=mas.dataset.slug+'/'+mm[1]; }
