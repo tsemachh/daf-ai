@@ -315,7 +315,7 @@
       card.appendChild(el('div','pg-k',S.pace.mode==='plan'?'לפי הקצב שלך — היום':'הדף היומי — היום'));
       if(tp){ card.href=url(tp); var hh=el('div','pg-h',tp.h+' '); var tk=ticks(stateOf(tp)); if(tk) hh.appendChild(tk); card.appendChild(hh); card.appendChild(el('div','pg-t',tp.t));
         var c=nLearned(tp), qz=S.pages[tp.k]&&S.pages[tp.k].quiz; card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c&&c<tp.n.length?' · '+c+' נלמדו':'')+(qz?' · חזרה '+qz.best+'/'+qz.of:''))); }
-      else card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף לימוד להיום'));
+      else card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף להיום'));
       home.appendChild(card);
       var side=el('div','pg-side');
       if(S.first||S.review.length){ var dl=dueList(), rc=el('a','pg-review'); rc.href='/review/';
