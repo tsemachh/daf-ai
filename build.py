@@ -344,10 +344,13 @@ def main():
         d = json.load(open(f, encoding="utf8"))
         by_slug.setdefault(d["slug"], []).append(d)
     CATALOG["pages"].clear(); CATALOG["mas"].clear()
+    pk_path = os.path.join(ROOT, "data", "perakim.json")
+    perakim = json.load(open(pk_path, encoding="utf8")) if os.path.exists(pk_path) else {}
     for slug, ds in by_slug.items():
         for he, sef, sl, first, last in dafyomi.MASECHTOT:
             if sl == slug:
-                CATALOG["mas"][slug] = {"he": he, "first": first, "last": last}
+                CATALOG["mas"][slug] = {"he": he, "first": first, "last": last,
+                                        "p": [[x["he"], x["from"], x["to"]] for x in perakim.get(slug, [])]}
         for d in sorted(ds, key=lambda x: x["daf"]):
             CATALOG["pages"].append({"k": f"{slug}/{d['daf']}", "s": slug, "d": d["daf"],
                                      "h": f"{d['tractate_he']} {heb_num(d['daf'])}",
