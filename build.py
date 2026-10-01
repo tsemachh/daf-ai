@@ -305,7 +305,7 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {mas}
 </div>
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> · <a class="back" href="./ideas/">רעיונות לשיפור ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -394,9 +394,18 @@ def main():
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
         f'<div class="eyebrow">לסוקרים ולמתעניינים</div><h1>איך נבנים הדפים ומה נבדק</h1></header>'
         f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי החזרה והלימוד", depth=1))
+    ideas_p = os.path.join(ROOT, "content", "ideas.html")
+    if os.path.exists(ideas_p):
+        os.makedirs(os.path.join(DIST, "ideas"), exist_ok=True)
+        open(os.path.join(DIST, "ideas", "index.html"), "w", encoding="utf8").write(page(
+            "רעיונות לשיפור · " + SITE_TITLE,
+            f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+            f'<div class="eyebrow">בתכנון</div><h1>רעיונות לשיפור</h1>'
+            f'<p class="thesis">מה אנחנו שוקלים להוסיף לאתר. שום דבר כאן עדיין לא פעיל.</p></header>'
+            f'{open(ideas_p, encoding="utf8").read()}<footer>{FOOT}</footer></section></div>', "רעיונות לשיפור האתר", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
-    urls = ["", "about/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/", "ideas/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")
