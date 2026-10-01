@@ -474,6 +474,6 @@
     var ns=(j.notes||[]).slice(0,3); if(!ns.length) return;
     var box=el('div','fb-recent'); box.append(el('div','fb-recent-h','תוקן בעקבות הערות קוראים'));
     var ul=el('ul'); ns.forEach(function(n){var li=el('li'), a=el('a',null,name(n.page)+(n.section_title?' · '+n.section_title:'')); a.href=link(n); li.append(a); if(n.reply) li.append(el('span',null,' — '+n.reply)); ul.append(li)});
-    box.append(ul); home.after(box);
+    box.append(ul); var al=document.querySelector('#home .about-link'); if(al) al.before(box); else home.after(box);
   }).catch(function(){});
 })();

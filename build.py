@@ -122,7 +122,7 @@ ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
 
 def page(title, body, desc="", depth=0):
     up = "../" * depth
-    body = re.sub(r'((?:app|progress)\.js)(" defer)', rf'\1?v={ASSET_V}\2', body)
+    body = re.sub(r'((?:app|progress)\.js)(")', rf'\1?v={ASSET_V}\2', body)
     return f"""<!doctype html>
 <html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -287,7 +287,7 @@ def render_masechet(slug, dafim):
 <footer>{FOOT}</footer>
 </section></div>
 {catalog_json()}
-<script src="../progress.js" defer></script>"""
+<script src="../progress.js"></script>"""
     return page(f"מסכת {first['tractate_he']} · דפי חזרה ולימוד", body, f"דפי חזרה ולימוד למסכת {first['tractate_he']}", depth=1)
 
 
@@ -315,7 +315,7 @@ def render_home(by_slug, latest, about):
 <footer>{FOOT}</footer>
 </section></div>
 {catalog_json()}
-<script src="progress.js" defer></script>"""
+<script src="progress.js"></script>"""
     return page(SITE_TITLE, body, "דפי חזרה ולימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
 
 

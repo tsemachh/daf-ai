@@ -138,12 +138,15 @@
     bg=document.createElement('div'); bg.className='srcdlg-bg';
     var d=document.createElement('div'); d.className='srcdlg'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
     var h=document.createElement('header'); var h4=document.createElement('h4'); h4.textContent=it.t; var x=document.createElement('button'); x.type='button'; x.className='x'; x.setAttribute('aria-label','סגור'); x.textContent='×'; x.onclick=closeSrc; h.append(h4,x);
-    var isGem=/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key);
+    var isGem=/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key); if(isGem) d.classList.add('gem');
     var b=document.createElement('div'); b.className='body'; var paras=[];
+    var stFirst=isGem&&!!a.dataset.st, hold=stFirst?document.createDocumentFragment():b;
     (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'; p.textContent=t}
       else if(isGem){ t.split(/(\s+)/).forEach(function(w){ if(/\S/.test(w)){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; p.appendChild(sp)} else p.appendChild(document.createTextNode(w)) }); paras.push({el:p,text:t}) }
       else p.textContent=t;
-      b.appendChild(p)});
+      hold.appendChild(p)});
+    if(stFirst){var ld=document.createElement('p'); ld.className='gap'; ld.textContent='טוען ביאור…'; b.appendChild(ld)}
+    var flush=function(){ if(hold!==b){ b.replaceChildren(hold); hold=b } };
     var f=document.createElement('footer'); var sp=document.createElement('span'); sp.textContent='הטקסט מתוך ספריא'; var l=document.createElement('a'); l.className='src'; l.href=a.dataset.url; l.target='_blank'; l.rel='noopener'; l.textContent='פתח בספריא'; l.dataset.external='1'; f.append(sp,l);
     var card=null;
     if(isGem){
@@ -158,7 +161,7 @@
         tog.classList.add('busy');
         ready().then(function(){ tog.classList.remove('busy'); paras.forEach(function(P){ if(!P.al) return; var dv=document.createElement('div'); dv.className='stx';
           P.al.ch.forEach(function(c){ renderParts(dv,c) });
-          P.el.after(dv) }) }).catch(function(){tog.classList.remove('busy'); tog.setAttribute('aria-pressed','false'); fail()});
+          P.el.after(dv) }); flush() }).catch(function(){flush(); tog.classList.remove('busy'); tog.setAttribute('aria-pressed','false'); fail()});
       };
       b.addEventListener('click',function(e){
         var w=e.target.closest('.w'); if(!w) return;
