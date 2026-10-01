@@ -353,3 +353,17 @@ button.src{padding-block:10px;margin-block:-10px}
 .sugya > .amud .sec-tools{order:9;margin-inline-start:auto;display:inline-flex;align-items:center;gap:2px}
 .sec-tools .fb-sec{float:none;margin:0}
 .sec-tools .fb-sec::after{top:calc(100% + 6px);left:0;transform:none}
+
+/* compact daf header */
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.topnav .ai-badge{font-size:12px;padding:2px 9px}
+.titlerow{display:flex;align-items:baseline;justify-content:space-between;gap:6px 14px;flex-wrap:wrap}
+.titlerow h1{margin-bottom:6px}
+.tmeta{display:inline-flex;align-items:baseline;gap:12px;font-size:14px;color:var(--muted);white-space:nowrap}
+.tmeta .src{font-weight:700}
+article.daf header .thesis{font-size:21px;line-height:1.45}
+article.daf header .meta{font-size:14px;margin-top:10px;gap:4px 14px}
+article.daf header .legend{flex-wrap:nowrap;gap:10px;font-size:13px;margin-top:6px;white-space:nowrap;overflow:hidden}
+article.daf header .legend span:last-child{overflow:hidden;text-overflow:ellipsis}
+.topnav .ai-badge{word-spacing:3px}
+article.daf header{padding-top:28px}
