@@ -367,3 +367,15 @@ article.daf header .legend{flex-wrap:nowrap;gap:10px;font-size:13px;margin-top:6
 article.daf header .legend span:last-child{overflow:hidden;text-overflow:ellipsis}
 .topnav .ai-badge{word-spacing:3px}
 article.daf header{padding-top:28px}
+
+/* amud row: keep label, links and the two icons on one line on phones */
+.sugya > .amud{flex-wrap:nowrap;min-width:0}
+.sugya > .amud .amud-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sugya > .amud .src{white-space:nowrap;flex-shrink:0}
+.sugya > .amud .sec-tools{flex-shrink:0}
+@media (max-width:480px){
+  .sugya > .amud .m-hide{display:none}
+  .sugya > .amud .src{margin-inline-start:6px}
+  .sec-tools .fb-sec{width:38px;height:40px}
+  .sugya > .amud .sec-tools{gap:0}
+}
