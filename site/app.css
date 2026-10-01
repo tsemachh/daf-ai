@@ -389,3 +389,6 @@ button.src{border-bottom:0;text-decoration:underline dashed var(--accent);text-d
 .tw{white-space:nowrap}
 .tag .tsp{display:block;font-size:11.5px;font-weight:700;opacity:.85;line-height:1.25;margin-top:1px}
 .about-link{display:flex;flex-wrap:wrap;gap:0 18px}
+.srcdlg.gem{height:min(78vh,720px)}
+.srcdlg.gem footer{flex-wrap:nowrap}.srcdlg.gem footer span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srcdlg.gem footer a{flex-shrink:0}
+.srcdlg.gem .body{flex:1 1 auto;min-height:0}
