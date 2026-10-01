@@ -356,7 +356,7 @@
       var hd=el('div','pg-dlg-h'); hd.appendChild(el('h2',null,'מסכת '+M.he+' · כל הדפים'));
       var x=el('button','btn','סגור'); x.type='button'; x.onclick=function(){dlg.close()}; hd.appendChild(x); dlg.appendChild(hd);
       var lg=el('p','pg-legend'); [['learned','נלמד'],['progress','נפתח']].forEach(function(q){var s=el('span'); s.append(ticks(q[0]),document.createTextNode(' '+q[1])); lg.appendChild(s)});
-      var sb=el('span'); sb.innerHTML=BOOK; sb.className='pg-bk'; var sbw=el('span'); sbw.append(sb,document.createTextNode(' ללמוד אחר כך')); lg.appendChild(sbw); dlg.appendChild(lg);
+      var sb=el('span'); sb.innerHTML=BOOK; sb.className='pg-bk'; var sbw=el('span'); sbw.append(sb,document.createTextNode(' ללמוד אחר כך')); lg.appendChild(sbw); var stw=el('span'); stw.append(el('span','pg-star','★'),document.createTextNode(' 75%+ בשאלות החזרה')); lg.appendChild(stw); dlg.appendChild(lg);
       var per=M.p&&M.p.length?M.p:[['',M.first,M.last]], focus=null;
       per.forEach(function(r,ix){
         var det=el('details','pg-perek'), sm=el('summary'), done=0, tot=r[2]-r[1]+1, have=false;
