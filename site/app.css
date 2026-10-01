@@ -392,3 +392,24 @@ button.src{border-bottom:0;text-decoration:underline dashed var(--accent);text-d
 .srcdlg.gem{height:min(78vh,720px)}
 .srcdlg.gem footer{flex-wrap:nowrap}.srcdlg.gem footer span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srcdlg.gem footer a{flex-shrink:0}
 .srcdlg.gem .body{flex:1 1 auto;min-height:0}
+/* stats page */
+.st-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+.st-tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.st-k{font-size:13px;font-weight:800;color:var(--muted)}
+.st-n{font-family:var(--serif);font-size:40px;font-weight:900;line-height:1.1;color:var(--ink)}
+.st-s{font-size:13px;color:var(--muted);margin-top:2px}
+.st-fig{margin:26px 0 0;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.st-cap{font-weight:800;font-size:15px;margin-bottom:4px}
+.st-max{font-size:12px;color:var(--muted);border-bottom:1px dashed var(--line);padding-bottom:2px}
+.st-chart{display:flex;align-items:flex-end;gap:2px;height:160px;direction:ltr}
+.st-col{flex:1;height:100%;display:flex;align-items:flex-end;background:none;border:0;padding:0;cursor:pointer;min-width:0}
+.st-bar{display:block;width:100%;background:var(--accent);border-radius:4px 4px 0 0;opacity:.85}
+.st-col.on .st-bar,.st-col:hover .st-bar{opacity:1}
+.st-col:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.st-ax{display:flex;justify-content:space-between;direction:ltr;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:4px}
+.st-tip{margin-top:8px;font-size:14px;font-weight:700;color:var(--ink);min-height:1.4em}
+.st-tbl{margin-top:16px}.st-tbl summary{cursor:pointer;font-weight:700;color:var(--accent)}
+.st-tbl table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.st-tbl th,.st-tbl td{text-align:start;padding:6px 8px;border-bottom:1px solid var(--line)}
+.st-note{margin-top:22px}
+#today-users{margin-top:0;font-weight:700}

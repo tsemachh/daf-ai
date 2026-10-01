@@ -299,7 +299,7 @@ def render_home(by_slug, latest, about):
 <header>
   <h1>{SITE_TITLE}</h1>
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
-  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span></div>
+  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 <div id="progress-home"></div>
 <h2 class="sec-h" style="margin-top:28px">הדפים האחרונים</h2>
@@ -310,7 +310,7 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {mas}
 </div>
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -408,6 +408,17 @@ def main():
             f'<div class="eyebrow">בתכנון</div><h1>רעיונות לשיפור</h1>'
             f'<p class="thesis">מה אנחנו שוקלים להוסיף לאתר. שום דבר כאן עדיין לא פעיל.</p></header>'
             f'{open(ideas_p, encoding="utf8").read()}<footer>{FOOT}</footer></section></div>', "רעיונות לשיפור האתר", depth=1))
+    os.makedirs(os.path.join(DIST, "stats"), exist_ok=True)
+    open(os.path.join(DIST, "stats", "index.html"), "w", encoding="utf8").write(page(
+        "נתוני ביקורים · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+        f'<div class="eyebrow">שקיפות</div><h1>נתוני ביקורים</h1>'
+        f'<p class="thesis">כמה לומדים משתמשים באתר — ספירה אנונימית, בלי עוגיות ובלי מידע מזהה.</p></header>'
+        f'<div id="stats-app" aria-live="polite"><p class="pg-hint">טוען…</p></div>'
+        f'<p class="pg-hint st-note">כל דפדפן מקבל מזהה אקראי שנשמר רק אצלו; השרת סופר כמה מזהים שונים נכנסו בכל יום, ואת המדינה בלבד. '
+        f'לא נשמרים כתובת IP, שם או דפים שנקראו. הספירה התחילה באוקטובר 2026.</p>'
+        f'<footer>{FOOT}</footer></section></div>'
+        f'{catalog_json()}<script src="../progress.js" defer></script>', "נתוני ביקורים אנונימיים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
     urls = ["", "about/", "ideas/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
