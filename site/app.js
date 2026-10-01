@@ -45,10 +45,11 @@
         while((m=re.exec(v))){var k=m[3]; if(seen[k]) continue; if(G[k].np&&m[2]) continue; hit=m; break}
         if(!hit) break;
         var k=hit[3]; seen[k]=1;
-        var start=hit.index+hit[1].length+hit[2].length;
-        var mid=n.splitText(start); var rest=mid.splitText(k.length);
+        var start=hit.index+hit[1].length, pl=hit[2].length;
+        var mid=n.splitText(start); var rest=mid.splitText(pl+k.length);
         var b=document.createElement('button'); b.type='button'; b.className='term info'+((G[k].t==='תנא'||G[k].t==='אמורא')?' person':''); b.textContent=k; b.setAttribute('aria-haspopup','dialog'); b.setAttribute('aria-expanded','false'); b.title='הקש להסבר'; b.dataset.k=k;
-        mid.parentNode.replaceChild(b,mid); n=rest;
+        var w=document.createElement('span'); w.className='tw'; if(pl) w.appendChild(document.createTextNode(hit[2])); w.appendChild(b);
+        mid.parentNode.replaceChild(w,mid); n=rest;
       }
     });
   }

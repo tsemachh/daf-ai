@@ -146,7 +146,11 @@ def render_steps(steps):
         cls = ""  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
         p = f' data-p="{s["p"]}"' if "p" in s else ""
         t = f' {s["type"]}' if s.get("type") else ""
-        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{s["tag"]}</span><span class="body">{s["body"]}</span></li>')
+        tg = s["tag"]
+        if " · " in tg:  # "קושיה · רב אשי" → type, then the speaker on its own smaller line
+            a_, b_ = tg.split(" · ", 1)
+            tg = f'{a_}<span class="tsp">{b_}</span>'
+        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{s["body"]}</span></li>')
     out.append("  </ol>")
     return "\n".join(out)
 
@@ -306,7 +310,7 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {mas}
 </div>
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> · <a class="back" href="./ideas/">רעיונות לשיפור ←</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>

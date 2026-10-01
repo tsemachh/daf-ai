@@ -379,3 +379,13 @@ article.daf header{padding-top:28px}
   .sec-tools .fb-sec{width:38px;height:40px}
   .sugya > .amud .sec-tools{gap:0}
 }
+
+/* underline hugs the text (borders sat below the enlarged tap padding) */
+button.term{border-bottom:0;padding-bottom:0;text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:4px;text-decoration-skip-ink:none}
+button.term.person{text-decoration-color:var(--gold)}
+button.src{border-bottom:0;text-decoration:underline dashed var(--accent);text-decoration-thickness:1px;text-underline-offset:4px}
+.legend .lt,.legend .lp{border-bottom:0;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:4px}
+.legend .lt{text-decoration-color:var(--accent)} .legend .lp{text-decoration-color:var(--gold)}
+.tw{white-space:nowrap}
+.tag .tsp{display:block;font-size:11.5px;font-weight:700;opacity:.85;line-height:1.25;margin-top:1px}
+.about-link{display:flex;flex-wrap:wrap;gap:0 18px}
