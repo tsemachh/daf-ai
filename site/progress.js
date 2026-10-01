@@ -169,14 +169,15 @@
       var l2=el('span'); l2.append(ticks('learned'),document.createTextNode('נלמד'));
       var l3=el('span'), b3=el('span','pg-bk'); b3.innerHTML=BOOK; l3.append(b3,document.createTextNode('ללמוד אחר כך'));
       lg.append(l1,l2,l3); mh.after(lg); }
+    function secTools(sec){var t=sec.querySelector('.sec-tools'); if(t) return t; var host=sec.querySelector(':scope > .amud'); t=document.createElement('span'); t.className='sec-tools'; if(host) host.appendChild(t); else {var h=sec.querySelector('h3'); if(!h) return null; h.insertBefore(t,h.firstChild)} return t}
     P.n.forEach(function(id){
       var sec=document.getElementById(pre+id); if(!sec) return; secs[id]=sec;
-      var h3=sec.querySelector('h3'); if(!h3) return;
+      var tl=secTools(sec); if(!tl) return;
       var b=el('button','fb-sec pg-later'); b.type='button';
       b.onclick=function(){ var k=P.k+'#'+id, was=S.later[k];
         if(was) delete S.later[k]; else {S.later[k]=Date.now(); touch();} save(); paint();
         toast(was?'הוסר מ״ללמוד אחר כך״':'נשמר ל״ללמוד אחר כך״ — מופיע בדף הבית',function(){ if(was) S.later[k]=was; else delete S.later[k]; save(); paint(); }); };
-      b.innerHTML=BOOK; var fb=h3.querySelector('.fb-sec'); if(fb) fb.after(b); else h3.insertBefore(b,h3.firstChild); laterB[id]=b;
+      b.innerHTML=BOOK; tl.insertBefore(b,tl.firstChild); laterB[id]=b;
     });
     function paint(){
       var ab=art.querySelector('.controls [data-role="learned"]');
