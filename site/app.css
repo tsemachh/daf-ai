@@ -347,3 +347,9 @@ button.src{padding-block:10px;margin-block:-10px}
 .fb-recent li{margin:4px 0}
 .fb-recent a{font-weight:700;color:var(--ink)}
 .fb-recent span{color:var(--muted)}
+
+/* section tools (ללמוד אחר כך + הערה) on the amud line */
+.sugya > .amud{display:flex;align-items:center;flex-wrap:wrap;column-gap:4px}
+.sugya > .amud .sec-tools{order:9;margin-inline-start:auto;display:inline-flex;align-items:center;gap:2px}
+.sec-tools .fb-sec{float:none;margin:0}
+.sec-tools .fb-sec::after{top:calc(100% + 6px);left:0;transform:none}
