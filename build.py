@@ -175,7 +175,9 @@ def render_section(d, s):
 
 def render_daf(d, prev, nxt, glossary, sources):
     key = d["key"]
-    meta = "".join(f"<span>{esc(m)}</span>" for m in d["meta"])
+    mins = [m for m in d["meta"] if "דקות" in m]
+    meta = "".join(f"<span>{esc(m)}</span>" for m in d["meta"] if m not in mins)
+    mins = esc(mins[0].replace("דקות לימוד", "דק׳").replace("דקות", "דק׳")) if mins else ""
     nav = "\n".join(f'    <li><a href="#{key}-{n["id"]}"><span class="amud">{n["amud"]}</span>{n["title"]}</a></li>' for n in d["nav"])
     story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary><p>{d["storyline"]}</p></details>'
              if d.get("storyline") else "")
@@ -190,15 +192,14 @@ def render_daf(d, prev, nxt, glossary, sources):
                 if any(s.get("steps") for s in d["sections"]) else "")
     pager = f'<div class="pager">{"".join(pn)}</div>' if pn else ""
     article = f"""<article class="daf" id="{key}" data-tractate="{d['tractate']}" data-daf="{d['daf']}">
-<div class="topnav"><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></div>
+<div class="topnav"><span><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></span><span class="ai-badge">נוצר על ידי סוכן AI</span></div>
 
 <header>
   <div class="eyebrow">{esc(d['eyebrow'])}</div>
-  <h1>{esc(d['title'])}</h1>
+  <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
-  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span>{meta}</div>
-  <div class="legend"><span>הקש על מילה מסומנת להסבר קצר:</span><span><span class="lp">חכם</span> — תנא או אמורא</span><span><span class="lt">מושג</span> — מונח, מקום או דין</span></div>
-  <div class="sefaria-bar"><a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">פתח את הדף בספריא</a></div>
+  <div class="meta">{meta}</div>
+  <div class="legend"><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת להסבר</span></div>
   <div class="controls">
     <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>
     <button class="btn" data-role="mode" aria-pressed="false" type="button" title="מצב חברותא: התשובות מוסתרות — הקש על שלב לגילוי">חברותא</button>

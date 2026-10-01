@@ -64,7 +64,7 @@
       var l=document.createElement('a'); l.className='src'; l.href=SEF+ref+'?lang=he'; l.target='_blank'; l.rel='noopener'; l.textContent='לשון הגמרא'; el.appendChild(l);
     });
     var meta=art.querySelector('header .meta');
-    if(meta&&!art.querySelector('.sefaria-bar')){var d=document.createElement('div'); d.className='sefaria-bar'; d.innerHTML='<a class="src" target="_blank" rel="noopener" href="'+SEF+tr+'.'+daf+'a?lang=he">פתח את הדף בספריא</a>'; meta.after(d)}
+    if(meta&&!art.querySelector('.sefaria-bar,.tmeta')){var d=document.createElement('div'); d.className='sefaria-bar'; d.innerHTML='<a class="src" target="_blank" rel="noopener" href="'+SEF+tr+'.'+daf+'a?lang=he">פתח את הדף בספריא</a>'; meta.after(d)}
   }
   var pop=document.createElement('div'); pop.className='pop'; pop.hidden=true; pop.setAttribute('role','dialog'); document.body.appendChild(pop); var cur=null;
   function closePop(){pop.hidden=true; if(cur){cur.setAttribute('aria-expanded','false'); cur=null}}
