@@ -55,7 +55,8 @@
   function amudLinks(art){
     var tr=art.dataset.tractate, daf=parseInt(art.dataset.daf,10); if(!tr||!daf) return;
     art.querySelectorAll('.sugya > .amud').forEach(function(el){
-      if(el.dataset.ref){el.appendChild(mkSrc(SEF+el.dataset.ref+'?lang=he','לשון הגמרא')); return;}
+      if(el.dataset.ref){var sb=mkSrc(SEF+el.dataset.ref+'?lang=he','לשון הגמרא'); el.appendChild(sb);
+        if(sb.tagName==='BUTTON'){var st=mkSrc(SEF+el.dataset.ref+'?lang=he','שטיינזלץ'); st.dataset.st='1'; st.classList.add('st'); el.appendChild(st)} return;}
       var t=el.textContent, m=t.match(new RegExp('\\((['+H+']{1,3})([.:])\\)')), ref=null;
       if(m){ref=tr+'.'+gem(m[1])+(m[2]===':'?'b':'a')}
       else{var a=t.match(/עמוד ([אב])/); if(a) ref=tr+'.'+daf+(a[1]==='א'?'a':'b')}
@@ -79,6 +80,54 @@
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()});
   window.addEventListener('hashchange',closePop);
   var SRC={}; try{SRC=JSON.parse(document.getElementById('srctext').textContent)}catch(e){} window.__SRC=SRC;
+  /* Steinsaltz (William Davidson Edition, CC-BY-NC) — loaded live from Sefaria in the reader's
+     browser, never stored in the repo. Gemara segment i ↔ Steinsaltz segment i on the same amud. */
+  var ST={};
+  function norm(t){return (t||'').replace(/<[^>]+>/g,' ').replace(/[֑-ׇ]/g,'').replace(/[^א-ת\s]/g,' ').replace(/\s+/g,' ').trim()}
+  function amudim(key){
+    var m=key.match(/^(.+)\.(\d+)([ab])(?:\.\d+)?(?:-(?:(\d+)([ab])\.)?\d+)?$/); if(!m) return null;
+    var tr=m[1], d=+m[2], a=m[3], ed=m[4]?+m[4]:d, ea=m[5]||a, out=[];
+    for(var g=0; g<6; g++){ out.push(tr+'.'+d+a); if(d===ed&&a===ea) break; if(a==='a'){a='b'} else {a='a'; d++} }
+    return out;
+  }
+  function getJ(u){return fetch(u).then(function(r){if(!r.ok) throw r.status; return r.json()})}
+  function chunks(html){
+    // <b>gemara</b> explanation … → phrase chunks; a short insertion (≤2 words) between bold runs stays in the same chunk
+    var parts=String(html||'').replace(/<(?!\/?(b|strong)>)[^>]+>/g,'').split(/<\/?(?:b|strong)>/), out=[], cur=null;
+    function words(t){return (norm(t).match(/\S+/g)||[]).length}
+    parts.forEach(function(t,i){
+      if(!t) return;
+      if(i%2){ if(!cur||(cur.open&&cur.tail<=2)){ if(!cur){cur={g:'',p:[]}; out.push(cur)} } else {cur={g:'',p:[]}; out.push(cur)}
+        cur.g+=' '+t; cur.p.push({b:1,t:t}); cur.open=true; cur.tail=0 }
+      else { if(!cur){cur={g:'',p:[]}; out.push(cur)} cur.p.push({b:0,t:t}); cur.tail=(cur.tail||0)+words(t); }
+    });
+    return out;
+  }
+  function renderParts(el,c){ c.p.forEach(function(x){ if(x.b){var bb=document.createElement('b'); bb.textContent=x.t; el.appendChild(bb)} else el.appendChild(document.createTextNode(x.t)) }) }
+  function loadSt(key){
+    if(ST[key]) return ST[key];
+    var am=amudim(key); if(!am) return Promise.reject('ref');
+    return ST[key]=Promise.all(am.map(function(r){
+      return Promise.all([getJ(SEF+'api/texts/'+r+'?lang=he&context=0&commentary=0'),getJ(SEF+'api/texts/Steinsaltz_on_'+r+'?lang=he&context=0&pad=0')])
+        .then(function(x){var g=x[0].he||[], s=x[1].he||[]; return g.map(function(t,i){return {n:norm(t), s:s[i]||''}})});
+    })).then(function(l){return [].concat.apply([],l)}).catch(function(e){delete ST[key]; throw e});
+  }
+  function alignPara(segs,text){
+    var n=norm(text), seg=null;
+    segs.some(function(x){if(x.n===n){seg=x;return true}});
+    if(!seg&&n.length>8) segs.some(function(x){var a=n.slice(0,30), b=x.n.slice(0,30); if(x.n.indexOf(a)===0||n.indexOf(b)===0){seg=x;return true}});
+    if(!seg) return null;
+    var ch=chunks(seg.s), bw=[]; ch.forEach(function(c,ci){norm(c.g).split(' ').forEach(function(w){if(w) bw.push({w:w,c:ci})})});
+    return {ch:ch, bw:bw};
+  }
+  function mapTokens(al,toks){
+    var j=0, last=-1;
+    return toks.map(function(t){
+      var w=norm(t); if(!w) return last;
+      for(var k=j; k<Math.min(al.bw.length,j+6); k++){var b=al.bw[k].w; if(b===w||(w.length>2&&b.length>2&&(b.indexOf(w)===0||w.indexOf(b)===0))){j=k+1; return last=al.bw[k].c}}
+      return last<0&&al.bw.length?(last=al.bw[0].c):last;
+    });
+  }
   var lastFocus=null, bg=null;
   function closeSrc(){ if(bg){bg.remove(); bg=null; if(lastFocus) lastFocus.focus()} }
   function openSrc(a){
@@ -87,10 +136,46 @@
     bg=document.createElement('div'); bg.className='srcdlg-bg';
     var d=document.createElement('div'); d.className='srcdlg'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
     var h=document.createElement('header'); var h4=document.createElement('h4'); h4.textContent=it.t; var x=document.createElement('button'); x.type='button'; x.className='x'; x.setAttribute('aria-label','סגור'); x.textContent='×'; x.onclick=closeSrc; h.append(h4,x);
-    var b=document.createElement('div'); b.className='body'; (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'} p.textContent=t; b.appendChild(p)});
+    var isGem=/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key);
+    var b=document.createElement('div'); b.className='body'; var paras=[];
+    (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'; p.textContent=t}
+      else if(isGem){ t.split(/(\s+)/).forEach(function(w){ if(/\S/.test(w)){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; p.appendChild(sp)} else p.appendChild(document.createTextNode(w)) }); paras.push({el:p,text:t}) }
+      else p.textContent=t;
+      b.appendChild(p)});
     var f=document.createElement('footer'); var sp=document.createElement('span'); sp.textContent='הטקסט מתוך ספריא'; var l=document.createElement('a'); l.className='src'; l.href=a.dataset.url; l.target='_blank'; l.rel='noopener'; l.textContent='פתח בספריא'; l.dataset.external='1'; f.append(sp,l);
-    d.append(h,b,f); bg.appendChild(d); document.body.appendChild(bg);
-    bg.addEventListener('click',function(e){if(e.target===bg)closeSrc()}); x.focus(); return true;
+    var card=null;
+    if(isGem){
+      var tog=document.createElement('button'); tog.type='button'; tog.className='st-tog'; tog.textContent='שטיינזלץ'; tog.setAttribute('aria-pressed','false'); h.insertBefore(tog,x);
+      card=document.createElement('div'); card.className='stw'; card.hidden=true; card.setAttribute('aria-live','polite');
+      var credit=function(){sp.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא'};
+      var ready=function(){ return loadSt(key).then(function(segs){ paras.forEach(function(P){ if(P.al!==undefined) return; P.al=alignPara(segs,P.text); var ws=P.el.querySelectorAll('.w'); P.ws=ws; P.map=P.al?mapTokens(P.al,[].map.call(ws,function(w){return w.textContent})):[] }); credit(); return segs }) };
+      var fail=function(){card.hidden=false; card.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'};
+      tog.onclick=function(){
+        var on=tog.getAttribute('aria-pressed')!=='true'; tog.setAttribute('aria-pressed',on);
+        if(!on){ b.querySelectorAll('.stx').forEach(function(e){e.remove()}); return }
+        tog.classList.add('busy');
+        ready().then(function(){ tog.classList.remove('busy'); paras.forEach(function(P){ if(!P.al) return; var dv=document.createElement('div'); dv.className='stx';
+          P.al.ch.forEach(function(c){ renderParts(dv,c) });
+          P.el.after(dv) }) }).catch(function(){tog.classList.remove('busy'); tog.setAttribute('aria-pressed','false'); fail()});
+      };
+      b.addEventListener('click',function(e){
+        var w=e.target.closest('.w'); if(!w) return;
+        b.querySelectorAll('.w.on').forEach(function(o){o.classList.remove('on')});
+        card.hidden=false; card.textContent='טוען ביאור…';
+        ready().then(function(){
+          var P=paras.filter(function(P){return P.el.contains(w)})[0]; if(!P) return;
+          var i=[].indexOf.call(P.ws,w), ci=P.map[i];
+          if(!P.al||ci==null||ci<0){card.textContent='לא נמצא ביאור למילה זו.'; return}
+          var c=P.al.ch[ci], words=[];
+          P.map.forEach(function(v,k){if(v===ci){P.ws[k].classList.add('on'); words.push(P.ws[k].textContent)}});
+          card.innerHTML=''; renderParts(card,c);
+        }).catch(fail);
+      });
+    }
+    d.append(h,b); if(card) d.append(card); d.append(f); bg.appendChild(d); document.body.appendChild(bg);
+    bg.addEventListener('click',function(e){if(e.target===bg)closeSrc()}); x.focus();
+    if(isGem&&a.dataset.st) d.querySelector('.st-tog').click();
+    return true;
   }
   document.addEventListener('click',function(e){
     var a=e.target.closest&&e.target.closest('button.src[data-ref]'); if(!a) return;

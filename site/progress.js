@@ -440,3 +440,39 @@
   })();
   window.addEventListener('storage',function(e){ if(e.key===KEY){ try{S=norm(JSON.parse(e.newValue||'null'))}catch(x){} if(P) E=entry(P.k); refresh(); } });
 })();
+
+/* handled reader notes: a one-time toast for the reader's own notes, and recent fixes on Home */
+(function(){
+  var C={pages:[]}; try{C=JSON.parse(document.getElementById('catalog').textContent)}catch(e){}
+  function name(p){var x=(C.pages||[]).filter(function(q){return q.k===p})[0]; return x?x.h:p}
+  function link(n){var a=n.page.split('/'); return '/'+n.page+'/'+(n.section?'#'+a[0]+a[1]+'-'+n.section:'')}
+  function el(t,c,txt){var e=document.createElement(t); if(c) e.className=c; if(txt!=null) e.textContent=txt; return e}
+  function get(k,d){try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch(e){return d}}
+  function put(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  var ST={fixed:'טופלה',feature:'נרשמה כהצעה לשיפור',rejected:'נבדקה — לא נדרש שינוי','needs-info':'נדרש פירוט נוסף','in-progress':'בטיפול'};
+
+  /* 1. my notes → toast once per status change (checked at most every 3 hours) */
+  var mine=get('daf-fb-notes',[]), seen=get('daf-fb-seen',{});
+  if(mine.length && Date.now()-(seen._t||0)>3*3600e3){
+    fetch('/api/feedback/status?n='+mine.slice(-30).map(function(n){return n.id+'.'+n.token}).join(',')).then(function(r){return r.json()}).then(function(j){
+      seen._t=Date.now();
+      var ch=(j.notes||[]).filter(function(n){return n.status!=='new' && seen[n.id]!==n.status});
+      ch.forEach(function(n){seen[n.id]=n.status}); put('daf-fb-seen',seen);
+      if(!ch.length) return;
+      var t=el('div','pg-toast fb-toast'); t.setAttribute('role','status');
+      var n=ch[0], msg=ch.length>1?ch.length+' מההערות ששלחת עודכנו':'ההערה שלך על '+name(n.page)+': '+(ST[n.status]||n.status)+(n.reply?' — '+n.reply:'');
+      var s=el('span',null,msg), a=el('a',null,'פרטים'); a.href=ch.length>1?'/feedback/':link(n);
+      var x=el('button',null,'×'); x.type='button'; x.setAttribute('aria-label','סגור'); x.onclick=function(){t.remove()};
+      t.append(s,a,x); document.body.appendChild(t); setTimeout(function(){t.remove()},15000);
+    }).catch(function(){});
+  }
+
+  /* 2. Home: recent fixes after reader notes */
+  var home=document.getElementById('progress-home');
+  if(home) fetch('/api/feedback/recent').then(function(r){return r.json()}).then(function(j){
+    var ns=(j.notes||[]).slice(0,3); if(!ns.length) return;
+    var box=el('div','fb-recent'); box.append(el('div','fb-recent-h','תוקן בעקבות הערות קוראים'));
+    var ul=el('ul'); ns.forEach(function(n){var li=el('li'), a=el('a',null,name(n.page)+(n.section_title?' · '+n.section_title:'')); a.href=link(n); li.append(a); if(n.reply) li.append(el('span',null,' — '+n.reply)); ul.append(li)});
+    box.append(ul); home.after(box);
+  }).catch(function(){});
+})();
