@@ -477,3 +477,56 @@
     box.append(ul); var al=document.querySelector('#home .about-link'); if(al) al.before(box); else home.after(box);
   }).catch(function(){});
 })();
+
+/* anonymous daily visitor count (random id in this browser only; /api/stats) + /stats/ page */
+(function(){
+  function el(t,c,txt){var e=document.createElement(t); if(c) e.className=c; if(txt!=null) e.textContent=txt; return e}
+  try{
+    var q=new URLSearchParams(location.search).get('nostats');
+    if(q==='1') localStorage.setItem('daf-nostats','1'); else if(q==='0') localStorage.removeItem('daf-nostats');
+    if(!navigator.webdriver && !localStorage.getItem('daf-nostats') && navigator.sendBeacon){
+      var v=localStorage.getItem('daf-vid');
+      if(!/^[0-9a-f]{16,32}$/.test(v||'')){ var a=new Uint8Array(12); crypto.getRandomValues(a); v=[].map.call(a,function(x){return ('0'+x.toString(16)).slice(-2)}).join(''); localStorage.setItem('daf-vid',v) }
+      navigator.sendBeacon('/api/stats/hit', JSON.stringify({v:v,p:location.pathname}));
+    }
+  }catch(e){}
+  var tu=document.getElementById('today-users'), app=document.getElementById('stats-app');
+  if(!tu && !app) return;
+  fetch('/api/stats').then(function(r){return r.json()}).then(function(j){
+    if(!j.ok) throw 0;
+    var days=j.days||[], last=days[days.length-1], t=(last&&last.day===j.today)?last:{users:0,users_il:0,views:0};
+    if(tu){ tu.textContent=t.users+' לומדים היום'; tu.hidden=false }
+    if(!app) return;
+    app.innerHTML='';
+    var tiles=el('div','st-tiles');
+    function tile(k,n,sub){var d=el('div','st-tile'); d.append(el('div','st-k',k),el('div','st-n',String(n))); if(sub) d.append(el('div','st-s',sub)); tiles.append(d)}
+    tile('היום',t.users,'מהם '+(t.users_il||0)+' מישראל · '+(t.views||0)+' צפיות');
+    tile('7 ימים',j.week.n,'מהם '+(j.week.il||0)+' מישראל · '+(j.returning7||0)+' חזרו יותר מיום אחד');
+    tile('30 ימים',j.month.n,'מהם '+(j.month.il||0)+' מישראל');
+    app.append(tiles);
+    // daily users, last 30 days (one series: bars in the accent colour, hover/tap shows the numbers)
+    var map={}; days.forEach(function(d){map[d.day]=d});
+    var list=[]; for(var i=29;i>=0;i--){var dt=new Date(Date.parse(j.today+'T12:00:00Z')-i*864e5).toISOString().slice(0,10); list.push(map[dt]||{day:dt,users:0,users_il:0,views:0})}
+    var max=Math.max(1,Math.max.apply(null,list.map(function(d){return d.users})));
+    var fig=el('figure','st-fig'); fig.append(el('figcaption','st-cap','לומדים ביום — 30 הימים האחרונים'));
+    var ch=el('div','st-chart'); ch.setAttribute('role','img'); ch.setAttribute('aria-label','גרף לומדים ביום');
+    var HINT='הצביעו על עמודה לפרטי היום'; var tip=el('div','st-tip',HINT);
+    list.forEach(function(d){
+      var c=el('button','st-col'); c.type='button';
+      var b=el('span','st-bar'); b.style.height=(d.users?Math.max(3,d.users/max*100):0)+'%'; c.append(b);
+      var lbl=d.day.slice(8,10)+'/'+d.day.slice(5,7)+': '+d.users+' לומדים · '+(d.users_il||0)+' מישראל · '+(d.views||0)+' צפיות';
+      c.setAttribute('aria-label',lbl);
+      function show(){tip.textContent=lbl; ch.querySelectorAll('.on').forEach(function(x){x.classList.remove('on')}); c.classList.add('on')}
+      c.addEventListener('mouseenter',show); c.addEventListener('focus',show); c.addEventListener('click',show);
+      ch.append(c);
+    });
+    ch.addEventListener('mouseleave',function(){tip.textContent=HINT; ch.querySelectorAll('.on').forEach(function(x){x.classList.remove('on')})});
+    var ax=el('div','st-ax'); ax.append(el('span',null,list[0].day.slice(8,10)+'/'+list[0].day.slice(5,7)),el('span',null,'היום'));
+    fig.append(el('div','st-max','מקסימום '+max),ch,ax,tip); app.append(fig);
+    // table view
+    var det=el('details','st-tbl'); det.append(el('summary',null,'טבלה'));
+    var tb=el('table'), hd=el('tr'); ['יום','לומדים','מישראל','צפיות'].forEach(function(h){hd.append(el('th',null,h))}); tb.append(hd);
+    list.slice().reverse().filter(function(d){return d.users}).forEach(function(d){var tr=el('tr'); [d.day.slice(8,10)+'/'+d.day.slice(5,7),d.users,d.users_il||0,d.views||0].forEach(function(x){tr.append(el('td',null,String(x)))}); tb.append(tr)});
+    det.append(tb); app.append(det);
+  }).catch(function(){ if(app) app.innerHTML='<p class="pg-hint">הנתונים לא זמינים כרגע.</p>' });
+})();
