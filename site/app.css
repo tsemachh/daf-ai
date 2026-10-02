@@ -413,3 +413,10 @@ button.src{border-bottom:0;text-decoration:underline dashed var(--accent);text-d
 .st-tbl th,.st-tbl td{text-align:start;padding:6px 8px;border-bottom:1px solid var(--line)}
 .st-note{margin-top:22px}
 #today-users{margin-top:0;font-weight:700}
+
+/* taps: bigger targets, no double-tap delay, visible press feedback */
+a,button,summary,.opt,[role=button]{touch-action:manipulation}
+details.flowd>summary{min-height:44px;padding:8px 16px}
+details.storyline>summary{min-height:44px}
+details>summary:active,.map a:active,.btn:active,.opt:active{opacity:.7}
+.map a{min-height:44px;align-items:center}
