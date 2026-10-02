@@ -458,3 +458,24 @@
     (j.notes||[]).forEach(function(n){ if(ownIds.indexOf(n.id)<0) badge(n.section,'pub','✓ תוקן בעקבות הערת קורא',n.reply); });
   }).catch(function(){});
 })();
+
+/* summaries (בקצרה / הקדמה / פרקים): toggle on a clean tap ourselves. On phones a tap that lands while
+   the page is still gliding from a scroll only stops the glide and never becomes a click, so the
+   learner had to tap twice. A short, still touch on a <summary> now toggles it directly. */
+(function(){
+  var t0=0, x0=0, y0=0, sum=null;
+  document.addEventListener('touchstart',function(e){
+    var s=e.target.closest&&e.target.closest('details>summary'); sum=s||null; if(!s||e.touches.length>1) {sum=null; return}
+    t0=Date.now(); x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!sum) return; var t=e.touches[0]; if(Math.abs(t.clientX-x0)>10||Math.abs(t.clientY-y0)>10) sum=null;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    var s=sum; sum=null; if(!s||Date.now()-t0>600) return;
+    var end=e.changedTouches[0], hit=document.elementFromPoint(end.clientX,end.clientY);
+    if(!hit||!s.contains(hit)) return;
+    e.preventDefault();               /* no synthetic click → no double toggle */
+    var d=s.parentElement; d.open=!d.open;
+  },{passive:false});
+})();
