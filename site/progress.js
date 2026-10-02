@@ -181,13 +181,15 @@
     });
     function paint(){
       var ab=art.querySelector('.controls [data-role="learned"]');
-      if(ab){ var all=nLearned(P)===P.n.length; ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
+      if(ab&&ab.dataset.all!==String(nLearned(P)===P.n.length)){ var all=nLearned(P)===P.n.length; ab.dataset.all=String(all); ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
         ab.title=all?'כל הסוגיות סומנו כנלמדו — הקש לביטול':'סמן את כל הסוגיות בדף כנלמדו'; }
       P.n.forEach(function(id){
         var on=!!S.later[P.k+'#'+id], b=laterB[id];
         if(b){ b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.dataset.tip=on?'סומן ללמוד אחר כך — הקש לביטול':'ללמוד אחר כך'; b.setAttribute('aria-label',b.dataset.tip); }
-        var a=navA[id]; if(!a) return; var o=a.querySelector('.pg-mk'); if(o) o.remove();
-        var mk=el('span','pg-mk'), t=ticks(E.s[id]); if(t) mk.appendChild(t);
+        var a=navA[id]; if(!a) return; var sig=(E.s[id]||'')+(on?'+b':''), o=a.querySelector('.pg-mk');
+        if(o&&o.dataset.sig===sig) return;  /* unchanged: don't touch the link (replacing nodes mid-tap swallows the click) */
+        if(o) o.remove();
+        var mk=el('span','pg-mk'), t=ticks(E.s[id]); mk.dataset.sig=sig; if(t) mk.appendChild(t);
         if(on){ var bk=el('span','pg-bk'); bk.innerHTML=BOOK; bk.setAttribute('aria-label','ללמוד אחר כך'); mk.appendChild(bk); }
         var am=a.querySelector('.amud'); if(am) am.after(mk); else a.insertBefore(mk,a.firstChild);
       });
