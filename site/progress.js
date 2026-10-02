@@ -11,7 +11,7 @@
 
   /* ---------- helpers ---------- */
   function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
-  function today(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem'}).format(new Date())}catch(e){return new Date().toISOString().slice(0,10)}}
+  var TF=null, TC={t:0,v:''}; function today(){var n=Date.now(); if(n-TC.t<60000) return TC.v; try{TF=TF||new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem'}); TC.v=TF.format(new Date())}catch(e){TC.v=new Date().toISOString().slice(0,10)} TC.t=n; return TC.v}
   function addDays(iso,n){var d=new Date(iso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
   function dow(iso){return new Date(iso+'T12:00:00Z').getUTCDay()}
   function rest(iso){return dow(iso)===6}               /* Shabbat never breaks a streak or a plan */

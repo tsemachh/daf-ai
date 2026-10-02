@@ -420,3 +420,6 @@ details.flowd>summary{min-height:44px;padding:8px 16px}
 details.storyline>summary{min-height:44px}
 details>summary:active,.map a:active,.btn:active,.opt:active{opacity:.7}
 .map a{min-height:44px;align-items:center}
+
+/* long pages: skip layout/paint of sections far off screen (big win on slower phones) */
+article.daf section.sugya{content-visibility:auto;contain-intrinsic-size:auto 900px}
