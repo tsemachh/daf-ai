@@ -112,6 +112,8 @@ account with that file as the prompt and give it write access to this repo.
 
 ### Optional section fields
 - `table`: opinions × cases matrix — `{"title": str, "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תא>", …]]}`.
+- `decide`: if → then cards — `{"title", "branches": [{"if": str, "then": [str, …]}]}`.
+- `chain`: source chain — `{"title", "links": [{"k": "פסוק|דרשה|דין|תוצאה", "t": str}]}`.
 - `cont`: `"next"` / `"prev"` for a sugya split across dapim (otherwise inferred from the amud label).
 
 ### What's new

@@ -165,6 +165,21 @@ def render_table(t):
     return f'  <div class="mtx">{title}<div class="mtx-s"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></div>'
 
 
+def render_decide(t):
+    """If → then cards: {"title", "branches": [{"if": str, "then": [str, …]}, …]}."""
+    cards = "".join(f'<div class="dc-b"><div class="dc-if"><span>אם</span> {b["if"]}</div><ul>'
+                    + "".join(f"<li>{x}</li>" for x in b["then"]) + "</ul></div>" for b in t["branches"])
+    title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
+    return f'  <div class="dc">{title}<div class="dc-g">{cards}</div></div>'
+
+
+def render_chain(t):
+    """Source chain: {"title", "links": [{"k": label, "t": text}, …]} — verse → derivation → rule → result."""
+    items = "".join(f'<li><span class="ch-k">{x["k"]}</span><span class="ch-t">{x["t"]}</span></li>' for x in t["links"])
+    title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
+    return f'  <div class="ch">{title}<ol>{items}</ol></div>'
+
+
 def cont_link(d, s, way):
     """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
     amud = s.get("amud", "")
@@ -223,6 +238,10 @@ def render_section(d, s):
         parts.append(render_steps(s["steps"]))
         if s.get("table"):
             parts.append(render_table(s["table"]))
+        if s.get("decide"):
+            parts.append(render_decide(s["decide"]))
+        if s.get("chain"):
+            parts.append(render_chain(s["chain"]))
         if s.get("post"):
             parts.append("  " + s["post"])
         parts.append(cont_link(d, s, "next"))

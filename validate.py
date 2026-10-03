@@ -39,6 +39,14 @@ def check(path, glossary):
                 E(f"{where}: table needs cols and rows")
             elif any(len(r) != len(t["cols"]) for r in t["rows"]):
                 E(f"{where}: every table row needs {len(t['cols'])} cells")
+        dc = s.get("decide")
+        if dc is not None and (not isinstance(dc, dict) or not dc.get("branches")
+                               or any(not b.get("if") or not b.get("then") for b in dc["branches"])):
+            E(f"{where}: decide needs branches with 'if' and 'then'")
+        ch = s.get("chain")
+        if ch is not None and (not isinstance(ch, dict) or len(ch.get("links", [])) < 2
+                               or any(not x.get("k") or not x.get("t") for x in ch["links"])):
+            E(f"{where}: chain needs ≥2 links with 'k' and 't'")
         if s.get("cont") not in (None, "next", "prev"):
             E(f"{where}: cont must be 'next' or 'prev'")
         if s["kind"] == "sugya":
