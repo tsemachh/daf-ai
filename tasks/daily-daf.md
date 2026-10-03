@@ -123,6 +123,12 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   cases with different outcomes), add `{"title", "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תשובה>", …], …]}`
   — short cells (״כן״ / ״לא — ״אותה״ ממעט״ / ״לא נאמר״), never a claim the Gemara doesn't make. At most 2 per
   daf; the steps stay as they are. Example: `data/bechorot/14.json` s8. The fact-check subagent checks every cell.
+- **If → then cards** (optional `decide`): a ruling that turns on conditions (what came first, which status)
+  → `{"title", "branches": [{"if": "<תנאי>", "then": ["<דין>", …]}, …]}`, 2–3 branches. **Source chain**
+  (optional `chain`): a derivation that runs verse → דרשה → rule → result → `{"title", "links": [{"k": "פסוק",
+  "t": …}, {"k": "דרשה", …}, {"k": "דין", …}, {"k": "תוצאה", …}]}`. Use each only where it makes the sugya
+  clearer (examples in `data/bechorot/14.json` s2, s8); verses quoted only as fetched. The fact-check subagent
+  checks them like any step.
 - **A sugya split across dapim:**
   - Continues into the next daf: if the rest there is short (≤4 segments), finish it on this page with steps
     tagged ״סוף הסוגיה (דף X)״ and say so in `flow` (the next daf still covers those segments in full).
