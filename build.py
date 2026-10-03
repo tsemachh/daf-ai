@@ -174,10 +174,11 @@ def render_decide(t):
 
 
 def render_chain(t):
-    """Source chain: {"title", "links": [{"k": label, "t": text}, …]} — verse → derivation → rule → result."""
+    """Source chain: {"title", "links": [{"k": label, "t": text}, …], "note"?} — verse → derivation → rule → result."""
     items = "".join(f'<li><span class="ch-k">{x["k"]}</span><span class="ch-t">{x["t"]}</span></li>' for x in t["links"])
     title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
-    return f'  <div class="ch">{title}<ol>{items}</ol></div>'
+    note = f'<p class="ch-n">{t["note"]}</p>' if t.get("note") else ""
+    return f'  <div class="ch">{title}<ol>{items}</ol>{note}</div>'
 
 
 def cont_link(d, s, way):
@@ -236,12 +237,15 @@ def render_section(d, s):
         if s.get("pre"):
             parts.append("  " + s["pre"])
         parts.append(render_steps(s["steps"]))
+        aids, names = [], []
         if s.get("table"):
-            parts.append(render_table(s["table"]))
+            aids.append(render_table(s["table"])); names.append("טבלת שיטות")
         if s.get("decide"):
-            parts.append(render_decide(s["decide"]))
+            aids.append(render_decide(s["decide"])); names.append("אם… אז…")
         if s.get("chain"):
-            parts.append(render_chain(s["chain"]))
+            aids.append(render_chain(s["chain"])); names.append("שרשרת לימוד")
+        if aids:
+            parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):
             parts.append("  " + s["post"])
         parts.append(cont_link(d, s, "next"))

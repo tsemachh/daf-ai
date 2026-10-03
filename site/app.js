@@ -260,8 +260,8 @@
       try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){P={}}
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
-      var OPTS=[['open','תקצירים והקדמה פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל']];
-      function setOpen(on){art.querySelectorAll('details.storyline,details.flowd').forEach(function(d){d.open=on})}
+      var OPTS=[['open','תקצירים, הקדמה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל']];
+      function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids').forEach(function(d){d.open=on})}
       function setBtn(role,on){var b=art.querySelector('.controls [data-role="'+role+'"]'); if(b&&(b.getAttribute('aria-pressed')==='true')!==on) b.click();}
       function apply(k,on){ if(k==='open') setOpen(on); if(k==='tree') setBtn('tree',on); if(k==='chav') setBtn('mode',on); }
       var gb=ctr.querySelector('[data-role="prefs"]'), newGb=!gb;

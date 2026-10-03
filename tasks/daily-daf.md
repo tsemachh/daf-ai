@@ -127,7 +127,10 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   → `{"title", "branches": [{"if": "<תנאי>", "then": ["<דין>", …]}, …]}`, 2–3 branches. **Source chain**
   (optional `chain`): a derivation that runs verse → דרשה → rule → result → `{"title", "links": [{"k": "פסוק",
   "t": …}, {"k": "דרשה", …}, {"k": "דין", …}, {"k": "תוצאה", …}]}`. Use each only where it makes the sugya
-  clearer (examples in `data/bechorot/14.json` s2, s8); verses quoted only as fetched. The fact-check subagent
+  clearer (examples in `data/bechorot/14.json` s2, s8); verses quoted only as fetched. A chain may end with a
+  `note` for the other opinion (e.g. that it has no source of its own, or that the verse stays a קושיא for it)
+  — never invent a derivation the Gemara doesn't give. The site groups table/decide/chain in a collapsed
+  ״עזרים״ panel per sugya. The fact-check subagent
   checks them like any step.
 - **A sugya split across dapim:**
   - Continues into the next daf: if the rest there is short (≤4 segments), finish it on this page with steps

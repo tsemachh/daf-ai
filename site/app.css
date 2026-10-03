@@ -461,3 +461,13 @@ p.cont{color:var(--muted);font-weight:600}
 .ch li{position:relative;display:grid;grid-template-columns:62px 1fr;gap:10px;padding:6px 0 14px;font-size:15px;line-height:1.5}
 .ch li:not(:last-child)::after{content:"↓";position:absolute;bottom:-4px;inset-inline-start:24px;color:var(--accent);font-weight:800}
 .ch-k{font-size:12px;font-weight:800;color:var(--gold);background:var(--gold-soft);border-radius:6px;text-align:center;padding:2px 0;align-self:start}
+
+/* collapsible aids panel */
+details.aids{margin:12px 0}
+details.aids>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:999px;background:var(--gold-soft);color:var(--gold);font-size:15px;font-weight:700;user-select:none}
+details.aids>summary::-webkit-details-marker{display:none}
+details.aids>summary::before{content:"◂";display:inline-block;transition:transform .15s;font-size:.8em}
+details.aids[open]>summary::before{transform:rotate(-90deg)}
+details.aids[open]>summary{margin-bottom:4px}
+.ch-n{margin:4px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:14px;color:var(--muted)}
+.hide-mode section.sugya:not(.cv-done) details.aids{display:none}
