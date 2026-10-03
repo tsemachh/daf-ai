@@ -47,6 +47,12 @@ def check(path, glossary):
         if ch is not None and (not isinstance(ch, dict) or len(ch.get("links", [])) < 2
                                or any(not x.get("k") or not x.get("t") for x in ch["links"])):
             E(f"{where}: chain needs ≥2 links with 'k' and 't'")
+        cl = s.get("calc")
+        if cl is not None and (not isinstance(cl, dict) or not cl.get("rows") or any(len(r) < 2 for r in cl["rows"])):
+            E(f"{where}: calc needs rows of [label, value, cite?]")
+        sq = s.get("seq")
+        if sq is not None and (not isinstance(sq, dict) or len(sq.get("items", [])) < 2):
+            E(f"{where}: seq needs ≥2 items")
         if s.get("cont") not in (None, "next", "prev"):
             E(f"{where}: cont must be 'next' or 'prev'")
         if s["kind"] == "sugya":

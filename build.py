@@ -181,6 +181,24 @@ def render_chain(t):
     return f'  <div class="ch">{title}<ol>{items}</ol>{note}</div>'
 
 
+def render_calc(t):
+    """Worked numbers: {"title", "rows": [[label, value, cite?]], "lines": [[label, value]], "note"?}."""
+    def row(r, cls=""):
+        cite = f'<span class="cl-c">{r[2]}</span>' if len(r) > 2 and r[2] else ""
+        return f'<li class="{cls}"><span class="cl-l">{r[0]}{cite}</span><span class="cl-v">{r[1]}</span></li>'
+    body = "".join(row(r) for r in t["rows"]) + "".join(row(r, "sum") for r in t.get("lines", []))
+    title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
+    note = f'<p class="ch-n">{t["note"]}</p>' if t.get("note") else ""
+    return f'  <div class="ch cl">{title}<ul>{body}</ul>{note}</div>'
+
+
+def render_seq(t):
+    """Order of events (a story or a process): {"title", "items": [str, …]}."""
+    items = "".join(f"<li>{x}</li>" for x in t["items"])
+    title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
+    return f'  <div class="ch sq">{title}<ol>{items}</ol></div>'
+
+
 def cont_link(d, s, way):
     """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
     amud = s.get("amud", "")
@@ -244,6 +262,10 @@ def render_section(d, s):
             aids.append(render_decide(s["decide"])); names.append("אם… אז…")
         if s.get("chain"):
             aids.append(render_chain(s["chain"])); names.append("שרשרת לימוד")
+        if s.get("calc"):
+            aids.append(render_calc(s["calc"])); names.append("חשבון")
+        if s.get("seq"):
+            aids.append(render_seq(s["seq"])); names.append("סדר האירועים")
         if aids:
             parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):

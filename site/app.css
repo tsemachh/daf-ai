@@ -471,3 +471,15 @@ details.aids[open]>summary::before{transform:rotate(-90deg)}
 details.aids[open]>summary{margin-bottom:4px}
 .ch-n{margin:4px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:14px;color:var(--muted)}
 .hide-mode section.sugya:not(.cv-done) details.aids{display:none}
+
+/* worked numbers */
+.cl ul{list-style:none;margin:0;padding:0}
+.cl li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.cl li:last-child{border-bottom:0}
+.cl li.sum{font-weight:800}
+.cl-c{display:block;font-size:12px;color:var(--muted);font-weight:400}
+.cl-v{font-variant-numeric:tabular-nums;white-space:nowrap;direction:ltr}
+/* order of events */
+.sq ol{margin:0;padding-inline-start:22px;font-size:15px;line-height:1.55}
+.sq li{margin:4px 0}
+.sq li::marker{color:var(--gold);font-weight:800}
