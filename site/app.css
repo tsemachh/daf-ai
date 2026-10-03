@@ -483,3 +483,8 @@ details.aids[open]>summary{margin-bottom:4px}
 .sq ol{margin:0;padding-inline-start:22px;font-size:15px;line-height:1.55}
 .sq li{margin:4px 0}
 .sq li::marker{color:var(--gold);font-weight:800}
+.mtx-n{margin:0;padding:8px 14px 10px}
+/* long unbreakable text must not widen a step past the column */
+.steps li{grid-template-columns:78px minmax(0,1fr)}
+.steps .body{min-width:0;overflow-wrap:anywhere}
+@media (max-width:480px){.tree-mode .steps li{grid-template-columns:70px minmax(0,1fr)}}

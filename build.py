@@ -162,7 +162,8 @@ def render_table(t):
     rows = "".join("<tr>" + "".join((f"<th>{c}</th>" if i == 0 else f"<td>{c}</td>") for i, c in enumerate(r)) + "</tr>"
                    for r in t["rows"])
     title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
-    return f'  <div class="mtx">{title}<div class="mtx-s"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></div>'
+    note = f'<p class="ch-n mtx-n">{t["note"]}</p>' if t.get("note") else ""
+    return f'  <div class="mtx">{title}<div class="mtx-s"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div>{note}</div>'
 
 
 def render_decide(t):
