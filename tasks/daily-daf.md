@@ -119,6 +119,12 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   in חברותא mode the site hides exactly the `a`/`c` steps (answers, rejections, conclusions) and shows
   the `q` and source steps as prompts. Never leave a segment as "לא הורחב כאן" — give at least a
   one-line gist. Verdict cards use neutral colours (no ok/no class for a halachic side).
+- **Visual aids ("עזרים") — only when they make the sugya clearer, and never invent anything:** every cell,
+  line and arrow must state what the Gemara (or a fetched verse) says; where it says nothing, write ״לא נאמר״
+  or leave the aid out. Most sugyot need none. The menu: `table`, `decide`, `chain` (below), `calc` (worked
+  numbers: `{"title", "rows": [[label, value, cite?]], "lines": [[label, value, cite?]], "note"?}`, e.g.
+  `data/bechorot/5.json` s3) and `seq` (order of events in a story or a process: `{"title", "items": [...]}`).
+  The fact-check subagent checks every aid like a step.
 - **Table of opinions** (optional `table` on a section): when a sugya has ≥2 opinions over ≥2 cases (or ≥3
   cases with different outcomes), add `{"title", "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תשובה>", …], …]}`
   — short cells (״כן״ / ״לא — ״אותה״ ממעט״ / ״לא נאמר״), never a claim the Gemara doesn't make. At most 2 per

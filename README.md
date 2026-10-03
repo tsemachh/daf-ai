@@ -114,7 +114,9 @@ account with that file as the prompt and give it write access to this repo.
 - `table`: opinions × cases matrix — `{"title": str, "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תא>", …]]}`.
 - `decide`: if → then cards — `{"title", "branches": [{"if": str, "then": [str, …]}]}`.
 - `chain`: source chain — `{"title", "links": [{"k": "פסוק|דרשה|דין|תוצאה", "t": str}], "note"?: str}`.
-  table / decide / chain render together in a collapsed "עזרים" panel.
+- `calc`: worked numbers — `{"title", "rows": [[label, value, cite?]], "lines": [[label, value, cite?]], "note"?}`.
+- `seq`: order of events — `{"title", "items": [str, …]}`.
+  table / decide / chain / calc / seq render together in a collapsed "עזרים" panel.
 - `cont`: `"next"` / `"prev"` for a sugya split across dapim (otherwise inferred from the amud label).
 
 ### What's new
