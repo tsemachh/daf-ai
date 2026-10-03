@@ -13,7 +13,7 @@ Pages on every push to `main`). Work autonomously; nobody is watching. Do not as
 - Runs as a Claude Code **routine** (claude.ai/code/routines) with this repo selected; the repo is
   already cloned on the default branch. Read `README.md` (data schema) and this file.
 - Network: the routine's environment must allow `www.sefaria.org`, `www.hebcal.com`,
-  `www.dafyomi.co.il`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
+  `www.dafyomi.co.il`, `www.daf-yomi.com`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
   `host_not_allowed`), say which host in the report and stop — do not publish unverified content.
 - `TZ=Asia/Jerusalem date` → today + Hebrew date. On Shabbat / Yom Tov in Israel: end with one line.
 - Git identity: leave the routine's default (your GitHub user).
@@ -45,8 +45,8 @@ missing or the API fails, note it in the report and continue with §2.
 - Get masechet + daf per day with `python tools/dafyomi.py <YYYY-MM-DD> …` (computed locally; prints
   the Hebrew name, the Sefaria ref and the slug). Cross-check once per run with hebcal
   `https://www.hebcal.com/hebcal?v=1&cfg=json&F=on&start=<date>&end=<date>` (the "Daf Yomi" item); if
-  they disagree, use hebcal and flag it in the report. Do not script daf-yomi.com — it sits behind a
-  Cloudflare bot challenge; links to it on the pages are fine.
+  they disagree, use hebcal and flag it in the report. daf-yomi.com's HTML pages sit behind a
+  bot challenge: read them only with WebFetch (one page per target daf, see §3.1b), never curl/scrape.
   Cover both amudim, even across a masechet boundary.
 - Skip targets whose `data/<slug>/<daf>.json` already exists.
 - **Backfill queue:** after the calendar targets, take up to 3 lines from `tasks/backfill.txt` (one
@@ -68,14 +68,25 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
 1. Refresh it: `python tools/fetch_sources.py --days 21 --cache <cache path>` (fetches only what is
    missing: Sefaria Vilna text, Hebrew Steinsaltz, Rashi, English Steinsaltz, dafyomi.co.il), then in
    the cache repo `git add -A && git commit -m "Cache <date>" && git push origin HEAD:main` if changed.
+1b. Study aids from daf-yomi.com (once per target daf): WebFetch
+   `https://www.daf-yomi.com/dafyomi.aspx?d=<day>&m=<month>&y=<year>` with the prompt "List every link URL
+   containing UploadedFiles with its exact title, one per line as: title<TAB>url", save the lines to a
+   file, then `python tools/fetch_dafyomi_com.py --cache <cache> --slug <slug> --daf <daf> --manifest <file>`.
+   It downloads each useful file once (most cover a range of dapim and are reused), extracts text to
+   `<cache>/<slug>/_dyc/<id>.txt` and lists the ones for this daf in `<cache>/<slug>/<daf>/dafyomi_com.json`.
+   If WebFetch or the host is blocked, note it in the report and continue — these are a cross-check, not a source.
 2. Read everything for a target from `<cache>/<slug>/<daf>/` — `sefaria_he_{a,b}.json` (verbatim
    segments; the page and `srctext` use these), `steinsaltz_he_*`, `rashi_he_*`, `steinsaltz_en_*`,
-   `dafyomi_co_il_*.txt`, and `yeshiva_*.txt` if someone saved it by hand. Verse and halacha texts:
+   `dafyomi_co_il_*.txt`, `yeshiva_*.txt` if someone saved it by hand, and the daf-yomi.com aids listed in
+   `dafyomi_com.json` (read only the part of each `_dyc/<id>.txt` that covers this daf: סיכומי סוגיות /
+   תמצית מסקנות / דרך ישרה / שינון for conclusions, גמרא סדורה for the flow, שאלות חזרה / מחודדים בפיך
+   for what learners are asked — don't copy their questions). Verse and halacha texts:
    `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`.
 3. The cache is private: paraphrase commentary, never copy it. Only verbatim Gemara segments (public
    domain) and fetched verse/halacha texts go into the public repo (`srctext`, `data/sources.json`).
 4. If the cache repo is missing or a file can't be fetched, work from the Sefaria API directly and say
-   so in the report. Never scrape sites that block automated clients (yeshiva.org.il, daf-yomi.com).
+   so in the report. Never scrape sites that block automated clients (yeshiva.org.il; daf-yomi.com only
+   via WebFetch as in 1b).
 
 **Coverage map (required).** Before writing, list EVERY Sefaria segment on both amudim → the step that
 covers it (or "boundary" for content-boundary topics only). Every question move (מיתיבי, איתיביה, ולא?,
@@ -138,7 +149,8 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
 daf (authoritative sources) and give it the page's visible text
 (Playwright innerText of `dist/<slug>/<daf>/` with all details opened and answers shown), the quiz, the
 new glossary/sources entries and the rendered marked terms (each `button.term` + the 15 chars after it).
-It checks against Sefaria Hebrew and Steinsaltz: attributions, rulings, amud placement, quotes, every
+It checks against Sefaria Hebrew and Steinsaltz (and, as a cross-check of each sugya's conclusion, the
+daf-yomi.com summaries in the cache — the Gemara wins any disagreement): attributions, rulings, amud placement, quotes, every
 intermediate קושיה/תירוץ and each FINAL conclusion, storyline and בקצרה accuracy, every quiz answer,
 glossary identities in context, `srctext` vs Sefaria and ref ranges. Returns ERRORS / DOUBTFUL /
 OMISSIONS with a source quote and corrected Hebrew.
