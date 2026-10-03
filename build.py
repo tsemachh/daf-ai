@@ -13,6 +13,7 @@ import dafyomi  # noqa: E402  (local Daf Yomi calendar)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
+DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
 FOOT = ("נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. "
         "ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.")
@@ -155,12 +156,61 @@ def render_steps(steps):
     return "\n".join(out)
 
 
+def render_table(t):
+    """Opinions × cases matrix: {"title", "cols": [corner, opinion…], "rows": [[case, cell…], …]}."""
+    head = "".join(f"<th>{c}</th>" for c in t["cols"])
+    rows = "".join("<tr>" + "".join((f"<th>{c}</th>" if i == 0 else f"<td>{c}</td>") for i, c in enumerate(r)) + "</tr>"
+                   for r in t["rows"])
+    title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
+    return f'  <div class="mtx">{title}<div class="mtx-s"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></div>'
+
+
+def cont_link(d, s, way):
+    """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
+    amud = s.get("amud", "")
+    if way == "next" and s.get("cont") != "next" and "ממשיך" not in amud:
+        # unlabelled: still link if this is the daf's last sugya and the next daf opens with "המשך מדף…"
+        mine = [x for x in d["sections"] if x.get("kind") != "raw" and x["id"] != "sum"]
+        n = DAFS.get((d["slug"], d["daf"] + 1))
+        first = next((x for x in (n or {}).get("sections", []) if x.get("kind") != "raw"), None)
+        if not (mine and mine[-1] is s and first and (first.get("cont") == "prev" or "המשך" in first.get("amud", ""))):
+            return ""
+    if way == "next":
+        n = DAFS.get((d["slug"], d["daf"] + 1))
+        if not n:
+            return f'  <p class="cont">הסוגיה ממשיכה בדף {heb_num(d["daf"] + 1)}</p>'
+        secs = [x for x in n["sections"] if x.get("kind") != "raw"]
+        t = next((x for x in secs if x.get("cont") == "prev" or "המשך" in x.get("amud", "")), secs[0] if secs else None)
+        if not t:
+            return ""
+        return f'  <a class="cont" href="../{n["daf"]}/#{n["key"]}-{t["id"]}">המשך הסוגיה בדף {heb_num(n["daf"])} ←</a>'
+    if way == "prev" and not (s.get("cont") == "prev" or "המשך מדף" in amud or "המשך האגדה מדף" in amud):
+        # unlabelled: link if this is the daf's first sugya and the previous daf's last one says "ממשיך"
+        mine = [x for x in d["sections"] if x.get("kind") != "raw"]
+        pd = DAFS.get((d["slug"], d["daf"] - 1))
+        plast = [x for x in (pd or {}).get("sections", []) if x.get("kind") != "raw" and x["id"] != "sum"]
+        if not (mine and mine[0] is s and plast and (plast[-1].get("cont") == "next" or "ממשיך" in plast[-1].get("amud", ""))):
+            return ""
+    if way == "prev":
+        p = DAFS.get((d["slug"], d["daf"] - 1))
+        if not p:
+            return ""
+        secs = [x for x in p["sections"] if x.get("kind") != "raw" and x["id"] != "sum"]
+        t = next((x for x in reversed(secs) if x.get("cont") == "next" or "ממשיך" in x.get("amud", "")), secs[-1] if secs else None)
+        if not t:
+            return ""
+        return f'  <a class="cont prev" href="../{p["daf"]}/#{p["key"]}-{t["id"]}">→ תחילת הסוגיה בדף {heb_num(p["daf"])}</a>'
+    return ""
+
+
 def render_section(d, s):
     sid = f'{d["key"]}-{s["id"]}'
     ref = f' data-ref="{s["ref"]}"' if s.get("ref") else ""
     parts = [f'<section class="sugya" id="{sid}">', f'  <div class="amud"{ref}>{s["amud"]}</div>']
     if s.get("title"):
         parts.append(f'  <h3>{s["title"]}</h3>')
+    if s["kind"] != "raw":
+        parts.append(cont_link(d, s, "prev"))
     if s["kind"] == "raw":
         parts.append("  " + s["html"])
     else:
@@ -171,8 +221,11 @@ def render_section(d, s):
         if s.get("pre"):
             parts.append("  " + s["pre"])
         parts.append(render_steps(s["steps"]))
+        if s.get("table"):
+            parts.append(render_table(s["table"]))
         if s.get("post"):
             parts.append("  " + s["post"])
+        parts.append(cont_link(d, s, "next"))
     parts.append("</section>")
     return "\n".join(parts)
 
@@ -291,6 +344,30 @@ def render_masechet(slug, dafim):
     return page(f"מסכת {first['tractate_he']} · דפי חזרה ולימוד", body, f"דפי חזרה ולימוד למסכת {first['tractate_he']}", depth=1)
 
 
+def changelog():
+    p = os.path.join(ROOT, "data", "changelog.json")
+    return json.load(open(p, encoding="utf8")) if os.path.exists(p) else []
+
+
+def fmt_day(iso):
+    y, m, d = iso.split("-")
+    return f"{int(d)}.{int(m)}"
+
+
+def whatsnew(limit=None, link=True):
+    log, out, n = changelog(), [], 0
+    for e in log:
+        items = e["items"] if limit is None else e["items"][:max(0, limit - n)]
+        if not items:
+            break
+        n += len(items)
+        out.append(f'<li><span class="wn-d">{fmt_day(e["date"])}</span><ul>' + "".join(f"<li>{x}</li>" for x in items) + "</ul></li>")
+    if not out:
+        return ""
+    more = '<a class="back" href="./changes/">כל השינויים ←</a>' if link else ""
+    return f'<section class="wn"><h2 class="sec-h">מה חדש באתר</h2><ul class="wn-l">{"".join(out)}</ul>{more}</section>'
+
+
 def render_home(by_slug, latest, about):
     cards = "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in latest)
     mas = "\n".join(f'  <a class="card" href="./{s}/"><div class="top"><h3>מסכת {ds[0]["tractate_he"]}</h3>'
@@ -310,7 +387,8 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {mas}
 </div>
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a></p>
+{whatsnew(5)}
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -366,6 +444,10 @@ def main():
                                      "h": f"{d['tractate_he']} {heb_num(d['daf'])}",
                                      "t": re.sub("<[^>]+>", "", d["thesis"])[:110],
                                      "n": [n["id"] for n in d["nav"]], "y": yomi_date(slug, d["daf"])})
+    DAFS.clear()
+    for slug, ds in by_slug.items():
+        for d in ds:
+            DAFS[(slug, d["daf"])] = d
     alld = []
     for slug, ds in by_slug.items():
         ds.sort(key=lambda x: x["daf"])
@@ -408,6 +490,13 @@ def main():
             f'<div class="eyebrow">בתכנון</div><h1>רעיונות לשיפור</h1>'
             f'<p class="thesis">מה אנחנו שוקלים להוסיף לאתר. שום דבר כאן עדיין לא פעיל.</p></header>'
             f'{open(ideas_p, encoding="utf8").read()}<footer>{FOOT}</footer></section></div>', "רעיונות לשיפור האתר", depth=1))
+    os.makedirs(os.path.join(DIST, "changes"), exist_ok=True)
+    open(os.path.join(DIST, "changes", "index.html"), "w", encoding="utf8").write(page(
+        "מה חדש · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+        f'<div class="eyebrow">התקדמות</div><h1>מה חדש באתר</h1>'
+        f'<p class="thesis">כל השיפורים, מהחדש לישן.</p></header>{whatsnew(None, link=False)}'
+        f'<footer>{FOOT}</footer></section></div>', "שינויים ושיפורים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "stats"), exist_ok=True)
     open(os.path.join(DIST, "stats", "index.html"), "w", encoding="utf8").write(page(
         "נתוני ביקורים · " + SITE_TITLE,
@@ -421,7 +510,7 @@ def main():
         f'{catalog_json()}<script src="../progress.js" defer></script>', "נתוני ביקורים אנונימיים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
-    urls = ["", "about/", "ideas/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/", "ideas/", "changes/", "stats/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")

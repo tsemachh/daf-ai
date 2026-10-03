@@ -33,6 +33,14 @@ def check(path, glossary):
     sugyot = 0
     for s in d["sections"]:
         where = f'section {s["id"]}'
+        t = s.get("table")
+        if t is not None:
+            if not isinstance(t, dict) or not t.get("cols") or not t.get("rows"):
+                E(f"{where}: table needs cols and rows")
+            elif any(len(r) != len(t["cols"]) for r in t["rows"]):
+                E(f"{where}: every table row needs {len(t['cols'])} cells")
+        if s.get("cont") not in (None, "next", "prev"):
+            E(f"{where}: cont must be 'next' or 'prev'")
         if s["kind"] == "sugya":
             sugyot += 1
             if not s.get("ref"):
