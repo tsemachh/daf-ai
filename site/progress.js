@@ -133,7 +133,7 @@
     var RM=/(^|[?&])r(=|&|$)/.test(location.search.slice(1));   /* ?r = חזרה: summaries, verdicts and the summary table only */
     var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
     if(RM){ art.classList.add('review-mode');
-      art.querySelectorAll('details.flowd,details.storyline').forEach(function(d){d.open=true});
+      art.querySelectorAll('details.flowd,details.storyline,details.aids').forEach(function(d){d.open=true});
       art.querySelectorAll('section.sugya ol.steps').forEach(function(ol){ var b=el('button','btn pg-steps','הצג את השקלא וטריא'); b.type='button';
         b.onclick=function(){ ol.closest('section.sugya').classList.toggle('expand'); b.textContent=ol.closest('section.sugya').classList.contains('expand')?'הסתר את השקלא וטריא':'הצג את השקלא וטריא'; };
         ol.before(b); });
