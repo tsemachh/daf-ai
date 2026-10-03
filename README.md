@@ -109,3 +109,11 @@ Every page shows the sources used and "Powered by Shefing" with the logo
 The nightly instructions live in `tasks/daily-daf.md`. Content, code and hosting are in GitHub and
 Cloudflare, independent of any Claude account: to move the job, create a scheduled task on the new
 account with that file as the prompt and give it write access to this repo.
+
+### Optional section fields
+- `table`: opinions × cases matrix — `{"title": str, "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תא>", …]]}`.
+- `cont`: `"next"` / `"prev"` for a sugya split across dapim (otherwise inferred from the amud label).
+
+### What's new
+`data/changelog.json` — newest first, `[{"date": "YYYY-MM-DD", "items": ["…"]}]`. Home shows the latest 5 items;
+`/changes/` lists everything. Add an entry for every site improvement.

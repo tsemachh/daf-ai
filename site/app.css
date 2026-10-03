@@ -423,3 +423,24 @@ details>summary:active,.map a:active,.btn:active,.opt:active{opacity:.7}
 
 /* long pages: skip layout/paint of sections far off screen (big win on slower phones) */
 article.daf section.sugya{content-visibility:auto;contain-intrinsic-size:auto 900px}
+
+/* opinions × cases table */
+.mtx{margin:14px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.mtx-h{font-size:13px;font-weight:800;color:var(--accent);padding:10px 14px 0}
+.mtx-s{overflow-x:auto}
+.mtx table{min-width:0;width:100%;font-size:15px;line-height:1.45}
+.mtx th,.mtx td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.mtx thead th{font-size:13px;color:var(--muted)}
+.mtx tbody th{font-weight:700;color:var(--ink);font-size:15px;white-space:nowrap}
+.mtx tr:last-child th,.mtx tr:last-child td{border-bottom:0}
+/* split sugya links */
+.cont{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;font-weight:700;color:var(--accent);text-decoration:none}
+.cont.prev{margin:0 0 6px}
+p.cont{color:var(--muted);font-weight:600}
+/* what's new */
+.wn{margin-top:32px}
+.wn-l{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.wn-l>li{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:start}
+.wn-d{font-size:13px;font-weight:800;color:var(--gold);padding-top:3px}
+.wn-l ul{margin:0;padding-inline-start:18px;font-size:16px;line-height:1.55}
+.wn-l ul li{margin:2px 0}

@@ -119,6 +119,17 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   in חברותא mode the site hides exactly the `a`/`c` steps (answers, rejections, conclusions) and shows
   the `q` and source steps as prompts. Never leave a segment as "לא הורחב כאן" — give at least a
   one-line gist. Verdict cards use neutral colours (no ok/no class for a halachic side).
+- **Table of opinions** (optional `table` on a section): when a sugya has ≥2 opinions over ≥2 cases (or ≥3
+  cases with different outcomes), add `{"title", "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תשובה>", …], …]}`
+  — short cells (״כן״ / ״לא — ״אותה״ ממעט״ / ״לא נאמר״), never a claim the Gemara doesn't make. At most 2 per
+  daf; the steps stay as they are. Example: `data/bechorot/14.json` s8. The fact-check subagent checks every cell.
+- **A sugya split across dapim:**
+  - Continues into the next daf: if the rest there is short (≤4 segments), finish it on this page with steps
+    tagged ״סוף הסוגיה (דף X)״ and say so in `flow` (the next daf still covers those segments in full).
+    Otherwise end with one step on where it is heading, mention it in `flow`, and set the amud label to
+    "… · ממשיך בדף X׳" (or `"cont": "next"`).
+  - Continues from the previous daf: amud label "עמוד א · המשך מדף X׳" (or `"cont": "prev"`) and open with a
+    one-line רקע step recapping where the sugya stands. `build.py` adds the links between the two parts.
 - `srctext`: an entry for EVERY section ref (t = "בכורות י״ב ע״א", p = verbatim segments, a lone "…"
   where skipped). New Tanakh/halacha citations go into `data/sources.json` keyed by Sefaria ref
   ("Leviticus.11.4"), text fetched from `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`,
