@@ -40,12 +40,14 @@ def span(title):
 # Older PDFs (e.g. עוז והדר) use 7-bit Hebrew fonts: pdftotext returns ASCII where ` a b … z stand
 # for א ב ג … ת (finals in alphabet order) and each line comes out in visual (reversed) order.
 LEGACY = dict(zip("`abcdefghijklmnopqrstuvwxyz", "אבגדהוזחטיךכלםמןנסעףפץצקרשת"))
+LEGACY.update(zip("".join(map(chr, range(0xE0, 0xFB))), "אבגדהוזחטיךכלםמןנסעףפץצקרשת"))  # cp1255 bytes read as Latin-1
+LEGACY_MARKS = re.compile("[\u00a1-\u00bf]")  # vowel/cantillation glyphs of those fonts
 BIDI = re.compile("[\u200e\u200f\u202a-\u202e\u2066-\u2069]")
 NIQQUD = re.compile("[\u0591-\u05c7]")
 
 
 def legacy_line(line):
-    out = "".join(LEGACY.get(c, c) for c in line)[::-1]
+    out = "".join(LEGACY.get(c, c) for c in LEGACY_MARKS.sub("", line))[::-1]
     out = re.sub(r"\d+", lambda m: m.group(0)[::-1], out)  # numbers read left-to-right again
     return out.translate(str.maketrans("()[]{}", ")(][}{"))
 
