@@ -213,7 +213,7 @@ def cont_link(d, s, way):
     if way == "next":
         n = DAFS.get((d["slug"], d["daf"] + 1))
         if not n:
-            return f'  <p class="cont">הסוגיה ממשיכה בדף {heb_num(d["daf"] + 1)}</p>'
+            return f'  <p class="cont nogl">הסוגיה ממשיכה בדף {heb_num(d["daf"] + 1)}</p>'
         secs = [x for x in n["sections"] if x.get("kind") != "raw"]
         t = next((x for x in secs if x.get("cont") == "prev" or "המשך" in x.get("amud", "")), secs[0] if secs else None)
         if not t:
