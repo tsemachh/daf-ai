@@ -89,7 +89,7 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
    via WebFetch as in 1b).
 
 **Coverage map (required).** Before writing, list EVERY Sefaria segment on both amudim → the step that
-covers it (or "boundary" for content-boundary topics only). Every question move (מיתיבי, איתיביה, ולא?,
+covers it. Every question move (מיתיבי, איתיביה, ולא?,
 והא, ורמינהו, מאי טעמא, מנא הני מילי, למאי נפקא מינה, וליגמר מיניה, בשלמא… אלא…), every answer (אלא,
 הכא במאי עסקינן, לא קשיא, שאני), every דחייה (לא, דלמא, ממאי), every איכא דאמרי / לישנא אחרינא, every
 ראיה (תא שמע, תניא דמסייע), every תיובתא / קשיא / שמע מינה, and every ואיבעית אימא is its OWN step.
@@ -102,7 +102,7 @@ that falls or stands; a new speaker's independent view, איכא דאמרי or �
 `p`). After a reformulation, later objections point to the reformulated step.
 
 **Content boundary (required).** Do not explain or expand passages about reproduction or mating (human
-or animal) or intimate relations; write one neutral step "קטע זה לא הורחב כאן — ראוי ללמדו בגמרא" and cut
+or animal) or intimate relations invloving child abuse; write one neutral step "קטע זה לא הורחב כאן — ראוי ללמדו בגמרא" and cut
 those segments from `srctext` with "…". Legal-monetary topics (kiddushin as a legal act, ketubah,
 inheritance) are presented fully and neutrally.
 
@@ -185,7 +185,7 @@ OMISSIONS with a source quote and corrected Hebrew.
 the cached `sefaria_he_*` / `steinsaltz_he_*` files. Segment by segment it reports (1) every move with no step of its own, (2) every wrong
 `p`, (3) any section whose ref range doesn't match its steps.
 
-**c. Apply** every ERROR and OMISSION the content boundary allows; fix or flag DOUBTFUL; count fixes.
+**c. Apply** every ERROR and OMISSION; fix or flag DOUBTFUL; count fixes.
 
 **d. Checks:** `python validate.py` exits 0 (no new compound-name warnings); `python build.py`;
 Playwright on `dist/<slug>/<daf>/index.html` (serve `dist` with `python -m http.server`) at 390 and
