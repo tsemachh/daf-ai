@@ -10,6 +10,7 @@ dapim, e.g. "(ב-יט)"), extracts text, and records which dapim each covers.
 Private cache only: paraphrase, never copy (same rule as the rest of the cache).
 
 usage: python tools/fetch_dafyomi_com.py --cache ../daf-ai-sources --slug bechorot --daf 17 --manifest links.tsv
+       python tools/fetch_dafyomi_com.py --cache ../daf-ai-sources --slug bechorot --refix   # re-clean saved texts
 """
 import argparse, json, os, re, shutil, subprocess, sys, time
 
@@ -36,6 +37,28 @@ def span(title):
     return a, heb(m.group(2)) if m.group(2) else a
 
 
+# Older PDFs (e.g. עוז והדר) use 7-bit Hebrew fonts: pdftotext returns ASCII where ` a b … z stand
+# for א ב ג … ת (finals in alphabet order) and each line comes out in visual (reversed) order.
+LEGACY = dict(zip("`abcdefghijklmnopqrstuvwxyz", "אבגדהוזחטיךכלםמןנסעףפץצקרשת"))
+BIDI = re.compile("[\u200e\u200f\u202a-\u202e\u2066-\u2069]")
+NIQQUD = re.compile("[\u0591-\u05c7]")
+
+
+def legacy_line(line):
+    out = "".join(LEGACY.get(c, c) for c in line)[::-1]
+    out = re.sub(r"\d+", lambda m: m.group(0)[::-1], out)  # numbers read left-to-right again
+    return out.translate(str.maketrans("()[]{}", ")(][}{"))
+
+
+def clean(txt):
+    """Strip bidi marks and niqqud (so grep finds words) and decode legacy 7-bit Hebrew."""
+    txt = NIQQUD.sub("", BIDI.sub("", txt))
+    heb = len(re.findall("[\u05d0-\u05ea]", txt)); lat = len(re.findall("[`a-z]", txt))
+    if lat > 3 * heb and lat > 200:
+        txt = "\n".join(legacy_line(l) for l in txt.split("\n"))
+    return txt
+
+
 def text_of(path):
     if path.endswith(".pdf"):
         if shutil.which("pdftotext"):
@@ -55,11 +78,26 @@ def text_of(path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", required=True); ap.add_argument("--slug", required=True)
-    ap.add_argument("--daf", type=int, required=True); ap.add_argument("--manifest", required=True)
+    ap.add_argument("--daf", type=int); ap.add_argument("--manifest")
+    ap.add_argument("--refix", action="store_true", help="re-extract and clean every saved file, then exit")
     a = ap.parse_args()
     base = os.path.join(a.cache, a.slug, "_dyc"); os.makedirs(base, exist_ok=True)
     idx_p = os.path.join(base, "index.json")
     idx = json.load(open(idx_p, encoding="utf8")) if os.path.exists(idx_p) else {}
+    if a.refix:
+        for fid, it in idx.items():
+            src = next((os.path.join(base, f"{fid}.{e}") for e in ("pdf", "doc") if os.path.exists(os.path.join(base, f"{fid}.{e}"))), None)
+            if not src:
+                continue
+            txt = clean(text_of(src))
+            open(os.path.join(base, f"{fid}.txt"), "w", encoding="utf8").write(txt)
+            heb = len(re.findall("[\u05d0-\u05ea]", txt))
+            it["chars"] = len(txt)
+            print(f"{fid} {it['title']}: {len(txt)} chars, {heb} Hebrew letters")
+        json.dump(idx, open(idx_p, "w", encoding="utf8"), ensure_ascii=False, indent=1)
+        return
+    if a.daf is None or not a.manifest:
+        ap.error("--daf and --manifest are required unless --refix")
     mine = []
     for line in open(a.manifest, encoding="utf8"):
         if "\t" not in line:
@@ -80,7 +118,7 @@ def main():
                 if not data[:5] in (b"%PDF-", b"\xd0\xcf\x11\xe0\xa1"):
                     raise ValueError("not a PDF/DOC (blocked?)")
                 open(path, "wb").write(data)
-                txt = text_of(path)
+                txt = clean(text_of(path))
                 open(os.path.join(base, f"{fid}.txt"), "w", encoding="utf8").write(txt)
                 idx[fid] = {"title": title, "url": url, "from": lo, "to": hi, "chars": len(txt)}
                 print(f"saved {fid} {title} ({len(txt)} chars)")

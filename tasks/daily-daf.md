@@ -75,6 +75,9 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
    It downloads each useful file once (most cover a range of dapim and are reused), extracts text to
    `<cache>/<slug>/_dyc/<id>.txt` and lists the ones for this daf in `<cache>/<slug>/<daf>/dafyomi_com.json`.
    If WebFetch or the host is blocked, note it in the report and continue — these are a cross-check, not a source.
+   Texts are cleaned on save (legacy 7-bit Hebrew fonts decoded, niqqud and bidi marks stripped). If a
+   `_dyc/<id>.txt` is still unreadable (mostly Latin letters or broken words), skip it and log it as
+   `unreadable` in `sources_used.json` (below).
 2. Read everything for a target from `<cache>/<slug>/<daf>/` — `sefaria_he_{a,b}.json` (verbatim
    segments; the page and `srctext` use these), `steinsaltz_he_*`, `rashi_he_*`, `steinsaltz_en_*`,
    `dafyomi_co_il_*.txt`, `yeshiva_*.txt` if someone saved it by hand, and the daf-yomi.com aids listed in
@@ -87,6 +90,15 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
 4. If the cache repo is missing or a file can't be fetched, work from the Sefaria API directly and say
    so in the report. Never scrape sites that block automated clients (yeshiva.org.il; daf-yomi.com only
    via WebFetch as in 1b).
+
+**Source log (required).** Write `<cache>/<slug>/<daf>/sources_used.json` and commit it with the cache
+(private repo — never in the public repo). One entry per source file you opened or skipped:
+`{"source": "sefaria_he_a" | "steinsaltz_he_b" | "rashi_he_a" | "dafyomi_co_il_tables" | "dyc:<id>" …,
+"status": "used" | "skimmed" | "skipped" | "unreadable", "contributed": ["s2: attribution of ניחזי אנן",
+"quiz 5 distractor", …], "corrections": <how many claims it changed or confirmed against your draft>,
+"note": "<why skipped / what was missing>"}`. Be concrete and honest: `contributed` names the section
+and what the source changed; an empty list means it added nothing. The fact-check subagent (§5a)
+appends its own entries with `"by": "factcheck"`. Update the file after §5c with the final counts.
 
 **Coverage map (required).** Before writing, list EVERY Sefaria segment on both amudim → the step that
 covers it. Every question move (מיתיבי, איתיביה, ולא?,
@@ -176,7 +188,8 @@ daf (authoritative sources) and give it the page's visible text
 (Playwright innerText of `dist/<slug>/<daf>/` with all details opened and answers shown), the quiz, the
 new glossary/sources entries and the rendered marked terms (each `button.term` + the 15 chars after it).
 It checks against Sefaria Hebrew and Steinsaltz (and, as a cross-check of each sugya's conclusion, the
-daf-yomi.com summaries in the cache — the Gemara wins any disagreement): attributions, rulings, amud placement, quotes, every
+daf-yomi.com summaries in the cache — the Gemara wins any disagreement; it reports which cached
+files it actually used, for the source log): attributions, rulings, amud placement, quotes, every
 intermediate קושיה/תירוץ and each FINAL conclusion, storyline and בקצרה accuracy, every quiz answer,
 glossary identities in context, `srctext` vs Sefaria and ref ranges. Returns ERRORS / DOUBTFUL /
 OMISSIONS with a source quote and corrected Hebrew.
@@ -200,6 +213,7 @@ in the report. Never force-push. If research or verification could not be comple
 report what failed — the 12:47 run retries.
 
 ## 6. Report (2–4 Hebrew lines)
-Pages added with links (https://daf-ai.pages.dev/<slug>/<daf>/), notes handled (fixed / feature /
+Pages added with links (https://daf-ai.pages.dev/<slug>/<daf>/), one line on sources (e.g. "מקורות:
+ספריא, שטיינזלץ, רש״י; daf-yomi.com — 3 שימושיים, 1 לא קריא"), notes handled (fixed / feature /
 rejected / needs-info), fixes applied by the verification, anything that failed. If a daf could not be
 verified, do not publish it; the 12:47 run retries.
