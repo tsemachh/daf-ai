@@ -55,6 +55,8 @@ def check(path, glossary):
             E(f"{where}: seq needs ≥2 items")
         if s.get("cont") not in (None, "next", "prev"):
             E(f"{where}: cont must be 'next' or 'prev'")
+        if s.get("ends_next") not in (None, True) or (s.get("ends_next") and s.get("cont") == "next"):
+            E(f"{where}: ends_next must be true and not combined with cont 'next'")
         if s["kind"] == "sugya":
             sugyot += 1
             if not s.get("ref"):

@@ -203,7 +203,7 @@ def render_seq(t):
 def cont_link(d, s, way):
     """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
     amud = s.get("amud", "")
-    if way == "next" and s.get("cont") != "next" and "ממשיך" not in amud:
+    if way == "next" and s.get("cont") != "next" and "ממשיך" not in amud and not s.get("ends_next"):
         # unlabelled: still link if this is the daf's last sugya and the next daf opens with "המשך מדף…"
         mine = [x for x in d["sections"] if x.get("kind") != "raw" and x["id"] != "sum"]
         n = DAFS.get((d["slug"], d["daf"] + 1))
@@ -218,6 +218,8 @@ def cont_link(d, s, way):
         t = next((x for x in secs if x.get("cont") == "prev" or "המשך" in x.get("amud", "")), secs[0] if secs else None)
         if not t:
             return ""
+        if s.get("ends_next"):
+            return f'  <a class="cont" href="../{n["daf"]}/#{n["key"]}-{t["id"]}">סוף הסוגיה (מראש דף {heb_num(n["daf"])}) מובא כאן; לעיון שם ←</a>'
         return f'  <a class="cont" href="../{n["daf"]}/#{n["key"]}-{t["id"]}">המשך הסוגיה בדף {heb_num(n["daf"])} ←</a>'
     if way == "prev" and not (s.get("cont") == "prev" or "המשך מדף" in amud or "המשך האגדה מדף" in amud):
         # unlabelled: link if this is the daf's first sugya and the previous daf's last one says "ממשיך"

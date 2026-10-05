@@ -151,10 +151,13 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   ״עזרים״ panel per sugya. The fact-check subagent
   checks them like any step.
 - **A sugya split across dapim:**
-  - Continues into the next daf: if the rest there is short (≤4 segments), finish it on this page with steps
-    tagged ״סוף הסוגיה (דף X)״ and say so in `flow` (the next daf still covers those segments in full).
-    Otherwise end with one step on where it is heading, mention it in `flow`, and set the amud label to
-    "… · ממשיך בדף X׳" (or `"cont": "next"`).
+  - Continues into the next daf: never stop a sugya at the page break mid-argument (an open קושיה, a
+    half-quoted proof, an unanswered "מאי?"). If the rest of the SAME give-and-take on the next daf is up to
+    ~8 segments, finish it on this page: append its steps with tags like "תירוץ · דף X", extend the
+    section `ref` across the break (e.g. "Bekhorot.16b.9-17a.3") and its `srctext`, write the real ending in
+    `flow`, and set `"ends_next": true` (the next daf still covers those segments in full, with its רקע
+    step). Only when the continuation is long (a new layer of argument, many segments) end with one step
+    on where it is heading, mention it in `flow`, and set `"cont": "next"`.
   - Continues from the previous daf: amud label "עמוד א · המשך מדף X׳" (or `"cont": "prev"`) and open with a
     one-line רקע step recapping where the sugya stands. `build.py` adds the links between the two parts.
 - `srctext`: an entry for EVERY section ref (t = "בכורות י״ב ע״א", p = verbatim segments, a lone "…"
