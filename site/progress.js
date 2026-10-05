@@ -84,9 +84,10 @@
     [c1,c2,sel,dt,per].forEach(function(x){x.addEventListener('change',apply)});
     box.append(r1,r2,pl);
 
-    box.appendChild(el('div','prefs-h','סנכרון בין מכשירים'));
+    box.appendChild(el('div','prefs-h','התחברות וסנכרון בין מכשירים'));
     box.appendChild(syncBox());
-    box.appendChild(el('div','prefs-h','גיבוי והעברה למכשיר אחר'));
+    var bk=el('details','pg-manual'); bk.appendChild(el('summary',null,'גיבוי ידני בלי חשבון (קובץ או קוד)'));
+    box.appendChild(bk); bkEls.push(bk); bk.hidden=!!SY.user;
     var row=el('div','pg-btns');
     var dl=el('button','btn','הורד קובץ'); dl.type='button';
     dl.onclick=function(){var b=new Blob([JSON.stringify(S)],{type:'application/json'}), a=el('a'); a.href=URL.createObjectURL(b); a.download='daf-progress-'+today()+'.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(a.href)},1000)};
@@ -98,7 +99,7 @@
     fi.onchange=function(){var f=fi.files[0]; if(!f) return; f.text().then(importText)};
     var ip=el('button','btn','טען מקוד'); ip.type='button'; ip.onclick=function(){importText(ta.value.trim())};
     var msg=el('p','pg-hint','גיבוי ידני, בלי חשבון. טעינה ממזגת עם מה שכבר קיים כאן.');
-    row.append(dl,cp,fl,ip); box.append(row,ta,msg);
+    row.append(dl,cp,fl,ip); bk.append(row,ta,msg);
     function importText(t){
       var o=null; try{o=JSON.parse(t)}catch(e){try{o=JSON.parse(decodeURIComponent(escape(atob(t))))}catch(e2){}}
       if(!o||o.v!==1){msg.textContent='הקובץ או הקוד אינם תקינים'; return}
@@ -124,7 +125,7 @@
   var painters=[]; function refresh(){painters.forEach(function(f){f()})}
 
   /* ---------- sign-in + sync ---------- */
-  var syncEls=[], pushT=null, gsi=null;
+  var syncEls=[], bkEls=[], pushT=null, gsi=null;
   function api(u,o){return fetch(u,Object.assign({credentials:'same-origin'},o||{})).then(function(r){return r.json().catch(function(){return {}})})}
   SY.push=function(){clearTimeout(pushT); pushT=setTimeout(function(){
     api('/api/progress',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({data:S})}).then(function(j){ if(j&&j.error==='signed_out'){SY.user=null;paintSync()} });
@@ -133,7 +134,8 @@
     if(j&&j.ok&&j.data&&j.data.v===1){ merge(norm(j.data)); try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} refresh(); }
     if(j&&j.ok) SY.push();
   }); }
-  function paintSync(){ syncEls=syncEls.filter(function(f){return f.w.isConnected}); syncEls.forEach(function(f){f()}) }
+  function paintSync(){ syncEls=syncEls.filter(function(f){return f.w.isConnected}); syncEls.forEach(function(f){f()});
+    bkEls=bkEls.filter(function(b){return b.isConnected}); bkEls.forEach(function(b){b.hidden=!!SY.user}) }
   function loadGsi(){ return gsi||(gsi=new Promise(function(res){
     if(window.google&&google.accounts) return res(true);
     var sc=document.createElement('script'); sc.src='https://accounts.google.com/gsi/client'; sc.async=true;
@@ -389,7 +391,7 @@
         done=0; for(var dd=m.first; dd<=m.last; dd++){ var pp=byKey(slug+'/'+dd); if(dafState(slug,dd,pp)==='learned') done++; } if(!done&&!S.first) return;
         var w=el('a','pg-mas'); w.href='/'+slug+'/#map'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
         var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; bar.appendChild(f); w.appendChild(bar); side.appendChild(w); });
-      var gb=el('button','btn pg-gear','⚙ קצב, גיבוי וכניסה'); gb.type='button'; gb.setAttribute('aria-expanded','false');
+      var gb=el('button','btn pg-gear','⚙ קצב והתחברות'); gb.type='button'; gb.setAttribute('aria-expanded','false');
       var sp=settings(); sp.hidden=true; sp.classList.add('prefs');
       gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden)};
       side.appendChild(gb); home.append(side,sp);
