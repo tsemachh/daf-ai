@@ -210,6 +210,9 @@ section has a `button.src` and each opens a `.srcdlg` (Escape between clicks), a
 `.pop` inside the viewport, the tree toggle adds `tree-mode`, the chavruta button works, and the
 previous daf's pager links to the new one.
 
+**d2. Share image.** `node tools/og.mjs <slug> <daf>` (writes `site/og/<slug>-<daf>.png`, the
+LinkedIn/WhatsApp preview; `npm i playwright` first if it is missing). Commit the PNG with the page.
+
 **e. Publish.** Commit `Add <masechet> <daf> (<date>)` and `git push origin HEAD:main` (Cloudflare Pages
 deploys `main`). If the push to `main` is rejected, push the same commit to `claude/daily` and say so
 in the report. Never force-push. If research or verification could not be completed, do NOT publish;

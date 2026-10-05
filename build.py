@@ -121,8 +121,9 @@ ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
                                 for f in ("app.js", "progress.js"))).hexdigest()[:8]
 
 
-def page(title, body, desc="", depth=0):
+def page(title, body, desc="", depth=0, og="site.png"):
     up = "../" * depth
+    ogi = f"{SITE_URL}/og/{og}"
     body = re.sub(r'((?:app|progress)\.js)(")', rf'\1?v={ASSET_V}\2', body)
     return f"""<!doctype html>
 <html lang="he" dir="rtl"><head>
@@ -130,6 +131,8 @@ def page(title, body, desc="", depth=0):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <meta property="og:site_name" content="דפי חזרה ולימוד"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<meta property="og:image" content="{ogi}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="he_IL">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ogi}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
@@ -356,7 +359,10 @@ def render_daf(d, prev, nxt, glossary, sources):
 <script src="../../app.js" defer></script>
 <script src="../../progress.js" defer></script>"""
     desc = re.sub("<[^>]+>", "", d["thesis"])
-    return page(f"{d['title']} · דף חזרה ולימוד", body, desc, depth=2)
+    og = f"{d['slug']}-{d['daf']}.png"
+    if not os.path.exists(os.path.join(ROOT, "site", "og", og)):
+        og = "site.png"
+    return page(f"{d['title']} · דף חזרה ולימוד", body, desc, depth=2, og=og)
 
 
 # ---------------------------------------------------------------- index pages
@@ -491,6 +497,8 @@ def main():
     for f in ("app.css", "app.js", "progress.js"):
         shutil.copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
     shutil.copytree(os.path.join(ROOT, "site", "fonts"), os.path.join(DIST, "fonts"))
+    if os.path.isdir(os.path.join(ROOT, "site", "og")):
+        shutil.copytree(os.path.join(ROOT, "site", "og"), os.path.join(DIST, "og"))
     for f in glob.glob(os.path.join(ROOT, "site", "static", "*")):
         shutil.copy(f, DIST)
     glossary = json.load(open(os.path.join(ROOT, "data", "glossary.json"), encoding="utf8"))
