@@ -362,23 +362,25 @@
     return getCfg().then(function(c){
       if(!c.sitekey) return null;
       return new Promise(function(res){
-        function go(){var id=window.turnstile.render(box,{sitekey:c.sitekey,language:'he',size:'flexible'});res(id)}
+        function go(){var id=window.turnstile.render(box,{sitekey:c.sitekey,language:'he',size:'flexible',appearance:'interaction-only'});res(id)}
         if(window.turnstile) return go();
         var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;s.onload=go;s.onerror=function(){res(null)};document.head.appendChild(s);
       });
     });
   }
-  var KINDS=[['fix','תיקון בתוכן (טעות, ייחוס, ציטוט)'],['missing','חסר בדף (סוגיה, שלב, מקור)'],['feature','הצעה לשיפור האתר']];
+  var KINDS=[['fix','תיקון','טעות, ייחוס או ציטוט'],['missing','חסר בדף','סוגיה, שלב או מקור'],['feature','הצעה לאתר','שיפור באתר עצמו']];
   function open(section,title){
     var bg=el('div','srcdlg-bg');
     var d=el('div','srcdlg fb-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
     var h=el('header'); var h4=el('h4',null,section?('הערה על: '+title):'הערה על הדף');
     var x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
     var f=el('form','body fb-form');
-    var fs=el('fieldset'); fs.appendChild(el('legend',null,'מה סוג ההערה?'));
-    KINDS.forEach(function(k,i){var l=el('label'); var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true; l.append(r,document.createTextNode(' '+k[1])); fs.appendChild(l);});
-    var ta=el('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=5;
-    ta.placeholder='מה בדיוק לתקן או מה חסר? אם אפשר — ציטוט מהגמרא או מקור.';
+    var fs=el('fieldset','fb-kinds'); fs.appendChild(el('legend','fb-sr','סוג ההערה'));
+    var ta=el('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=8;
+    var PH={fix:'מה לא מדויק? כתבו את התיקון, ואם אפשר — ציטוט מהגמרא או מקור.',missing:'מה חסר? איזו סוגיה, שלב או מקור כדאי להוסיף?',feature:'מה היה משפר את האתר בשבילכם?'};
+    ta.placeholder=PH.fix;
+    KINDS.forEach(function(k,i){var l=el('label','fb-chip'); l.title=k[2]; var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true;
+      r.addEventListener('change',function(){ta.placeholder=PH[k[0]]}); l.append(r,el('span',null,k[1])); fs.appendChild(l);});
     var nm=el('input'); nm.name='name'; nm.maxLength=80; nm.placeholder='שם (לא חובה)';
     var em=el('input'); em.name='email'; em.type='email'; em.maxLength=160; em.placeholder='מייל לעדכון (לא חובה)'; em.setAttribute('dir','ltr');
     var nl=el('label','fb-notify'); var nc=document.createElement('input'); nc.type='checkbox'; nc.name='notify';
@@ -387,9 +389,10 @@
     var hp=el('input','fb-hp'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.setAttribute('aria-hidden','true');
     var ts=el('div','fb-ts');
     var note=el('p','fb-muted','ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
+    var who=el('div','fb-who'); who.append(nm,em);
     var st=el('p','fb-status'); st.setAttribute('aria-live','polite');
     var sb=el('button','btn fb-send','שליחה'); sb.type='submit';
-    f.append(fs,ta,nm,em,nl,hp,ts,note,sb,st);
+    f.append(fs,ta,who,nl,hp,ts,sb,st,note);
     d.append(h,f); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
     var tsId=null; turnstile(ts).then(function(id){tsId=id});
     function close(){bg.remove();document.removeEventListener('keydown',esc)}
