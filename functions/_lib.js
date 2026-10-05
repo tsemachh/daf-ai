@@ -24,3 +24,11 @@ export function newToken() {
 }
 
 export const PAGE_RE = /^[a-z]+\/\d{1,3}$/;
+
+// Columns added after launch; added lazily so no manual migration is needed.
+let colsOk = false;
+export async function ensureCols(env) {
+  if (colsOk || !env.DB) return;
+  try { await env.DB.prepare("ALTER TABLE feedback ADD COLUMN public INTEGER NOT NULL DEFAULT 0").run(); } catch { /* exists */ }
+  colsOk = true;
+}

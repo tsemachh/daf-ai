@@ -436,7 +436,7 @@ def render_home(by_slug, latest, about):
 {mas}
 </div>
 {whatsnew(5)}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./notes/">הערות קוראים ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -462,6 +462,26 @@ def render_feedback(by_slug):
 {jscript(names, id="fb-names")}
 <script src="../app.js" defer></script>"""
     return page("מעקב הערות · " + SITE_TITLE, body, "מצב הטיפול בהערות קוראים", depth=1)
+
+
+def render_notes(by_slug):
+    names = {slug: ds[0]["tractate_he"] for slug, ds in by_slug.items()}
+    body = f"""<div class="wrap" id="app"><section id="fbpublic">
+<a class="back" href="../">→ דף הבית</a>
+<header>
+  <div class="eyebrow">הערות קוראים</div>
+  <h1>הערות שטופלו</h1>
+  <p class="thesis">כל הערה נבדקת מול לשון הגמרא. כאן מופיעות ההערות שטופלו והתגובה לכל אחת, בלי שמות. נוסח ההערה מוצג רק כששולחה הסכים לכך.</p>
+  <p class="fb-muted" id="fb-sum"></p>
+</header>
+<div id="fb-list" class="fb-list" aria-live="polite"><p class="fb-muted">טוען…</p></div>
+<p class="fb-muted"><a class="back" href="../feedback/">ההערות שלי ←</a></p>
+{credits('../')}
+<footer>{FOOT}</footer>
+</section></div>
+{jscript(names, id="fb-names")}
+<script src="../app.js" defer></script>"""
+    return page("הערות קוראים · " + SITE_TITLE, body, "הערות הקוראים שטופלו והתגובות להן", depth=1)
 
 
 def main():
@@ -558,7 +578,9 @@ def main():
         f'{catalog_json()}<script src="../progress.js" defer></script>', "נתוני ביקורים אנונימיים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
-    urls = ["", "about/", "ideas/", "changes/", "stats/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    os.makedirs(os.path.join(DIST, "notes"), exist_ok=True)
+    open(os.path.join(DIST, "notes", "index.html"), "w", encoding="utf8").write(render_notes(by_slug))
+    urls = ["", "about/", "ideas/", "changes/", "stats/", "notes/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")

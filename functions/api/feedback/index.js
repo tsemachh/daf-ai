@@ -1,6 +1,6 @@
 // POST /api/feedback — store a reader note in D1 (binding DB).
 // Optional env: TURNSTILE_SECRET (secret) → Turnstile verification; IP_SALT (secret) for rate-limit hashing.
-import { KINDS, json, clean, sha256, newToken, PAGE_RE } from "../../_lib.js";
+import { KINDS, json, clean, sha256, newToken, PAGE_RE, ensureCols } from "../../_lib.js";
 
 const MAX_PER_HOUR = 6;
 
@@ -18,6 +18,7 @@ export async function onRequestPost({ request, env }) {
   const name = clean(b.name, 80);
   let email = clean(b.email, 160).toLowerCase();
   const notify = b.notify && email ? 1 : 0;
+  const pub = b.public ? 1 : 0;
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ ok: false, error: "bad_email" }, 400);
   if (!notify) email = "";
   if (text.length < 5) return json({ ok: false, error: "too_short" }, 400);
@@ -42,11 +43,12 @@ export async function onRequestPost({ request, env }) {
     if (n >= MAX_PER_HOUR) return json({ ok: false, error: "rate" }, 429);
   }
 
+  await ensureCols(env);
   const token = newToken();
   const r = await env.DB.prepare(
-    `INSERT INTO feedback (token, page, section, section_title, kind, text, name, email, notify, ip_hash)
-     VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id`
-  ).bind(token, page, section, sectionTitle, kind, text, name, email, notify, ipHash).first();
+    `INSERT INTO feedback (token, page, section, section_title, kind, text, name, email, notify, ip_hash, public)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING id`
+  ).bind(token, page, section, sectionTitle, kind, text, name, email, notify, ipHash, pub).first();
   return json({ ok: true, id: r.id, token });
 }
 

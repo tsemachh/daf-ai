@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS feedback (
   commit_sha    TEXT    NOT NULL DEFAULT '',
   notified_at   TEXT,
   ip_hash       TEXT    NOT NULL DEFAULT '',
+  public        INTEGER NOT NULL DEFAULT 0,    -- author allowed showing the text on /notes/ (no name/email)
   created_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
   updated_at    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now'))
 );

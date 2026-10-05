@@ -328,6 +328,31 @@
     n=+n; if(n%100===15){o='טו';n-=15}else if(n%100===16){o='טז';n-=16} var p=''; A.forEach(function(a){while(n>=a[0]){p+=a[1];n-=a[0]}}); return p+o}
   function trackUrl(n){return location.origin+'/feedback/?n='+n.id+'.'+n.token}
 
+  /* public notes page */
+  var pub=document.getElementById('fbpublic');
+  if(pub){
+    var pnames={};try{pnames=JSON.parse(document.getElementById('fb-names').textContent)}catch(e){}
+    var pl2=document.getElementById('fb-list'), sum=document.getElementById('fb-sum');
+    fetch('/api/feedback/public').then(function(r){return r.json()}).then(function(j){
+      pl2.innerHTML='';
+      var c=j.counts||{}, all=0; Object.keys(c).forEach(function(k){all+=c[k]});
+      if(sum&&all) sum.textContent='התקבלו '+all+' הערות · '+(c.fixed||0)+' תוקנו · '+(c.feature||0)+' הצעות לשיפור · '+(c.rejected||0)+' נבדקו בלי שינוי'+((c['new']||0)+(c['in-progress']||0)?' · '+((c['new']||0)+(c['in-progress']||0))+' בטיפול':'');
+      if(!j.notes||!j.notes.length){pl2.append(el('p','fb-muted','עדיין אין הערות שטופלו.'));return}
+      j.notes.forEach(function(n){
+        var pg=n.page.split('/'), heb=(pnames[pg[0]]||pg[0])+' '+hebNum(pg[1]);
+        var cd=el('div','fb-note st-'+n.status), h=el('div','fb-note-h');
+        var a=el('a',null,'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href='/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
+        h.append(a,el('span',null,KN[n.kind]||''),el('span',null,(n.updated_at||'').slice(0,10)));
+        cd.append(h);
+        if(n.text)cd.append(el('p','fb-note-t',n.text));
+        cd.append(el('p','fb-note-s',ST[n.status]||n.status));
+        if(n.reply)cd.append(el('p','fb-note-r',n.reply));
+        pl2.append(cd);
+      });
+    }).catch(function(){pl2.innerHTML='';pl2.append(el('p','fb-muted','לא ניתן לטעון כרגע. נסו שוב מאוחר יותר.'))});
+    return;
+  }
+
   /* tracking page */
   var tr=document.getElementById('fbtrack');
   if(tr){
@@ -386,13 +411,15 @@
     var nl=el('label','fb-notify'); var nc=document.createElement('input'); nc.type='checkbox'; nc.name='notify';
     nl.append(nc,document.createTextNode(' אשמח לעדכון במייל כשההערה תטופל'));
     em.addEventListener('input',function(){nc.checked=!!em.value.trim()});
+    var pl=el('label','fb-notify'); var pc=document.createElement('input'); pc.type='checkbox'; pc.name='public';
+    pl.append(pc,document.createTextNode(' אפשר להציג את ההערה בדף ההערות הציבורי (בלי שם ומייל)'));
     var hp=el('input','fb-hp'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.setAttribute('aria-hidden','true');
     var ts=el('div','fb-ts');
     var note=el('p','fb-muted','ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
     var who=el('div','fb-who'); who.append(nm,em);
     var st=el('p','fb-status'); st.setAttribute('aria-live','polite');
     var sb=el('button','btn fb-send','שליחה'); sb.type='submit';
-    f.append(fs,ta,who,nl,hp,ts,sb,st,note);
+    f.append(fs,ta,who,nl,pl,hp,ts,sb,st,note);
     d.append(h,f); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
     var tsId=null; turnstile(ts).then(function(id){tsId=id});
     function close(){bg.remove();document.removeEventListener('keydown',esc)}
@@ -404,7 +431,7 @@
       e.preventDefault(); sb.disabled=true; st.textContent='שולח…';
       var kind=(f.querySelector('input[name=kind]:checked')||{}).value||'fix';
       var tok=(tsId!=null&&window.turnstile)?window.turnstile.getResponse(tsId):'';
-      fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,email:em.value,notify:nc.checked,website:hp.value,turnstile:tok,page:page,section:section||'',sectionTitle:title||''})})
+      fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,email:em.value,notify:nc.checked,public:pc.checked,website:hp.value,turnstile:tok,page:page,section:section||'',sectionTitle:title||''})})
         .then(function(r){return r.json().catch(function(){return {ok:false}})})
         .then(function(j){
           if(j&&j.ok){
