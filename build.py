@@ -442,7 +442,7 @@ def render_home(by_slug, latest, about):
 {mas}
 </div>
 {whatsnew(5)}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./notes/">הערות קוראים ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./notes/">הערות קוראים ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a> <a class="back" href="./privacy/">פרטיות ←</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -468,6 +468,32 @@ def render_feedback(by_slug):
 {jscript(names, id="fb-names")}
 <script src="../app.js" defer></script>"""
     return page("מעקב הערות · " + SITE_TITLE, body, "מצב הטיפול בהערות קוראים", depth=1)
+
+
+def render_privacy():
+    body = f"""<div class="wrap" id="app"><section>
+<a class="back" href="../">→ דף הבית</a>
+<header>
+  <div class="eyebrow">פרטיות</div>
+  <h1>מדיניות פרטיות</h1>
+  <p class="thesis">האתר נבנה כדי ללמוד, לא כדי לאסוף מידע. זה כל מה שנשמר, ולמה.</p>
+</header>
+<div class="about">
+<h2>בלי חשבון</h2>
+<p>ההתקדמות שלכם (סוגיות שנלמדו, רצף, קצב, שאלות לחזרה) נשמרת רק בדפדפן שלכם. לספירת מבקרים נשמר בדפדפן מזהה אקראי, בלי כתובת IP ובלי עוגיות. Cloudflare Web Analytics מודד צפיות באופן מצטבר ובלי עוגיות.</p>
+<h2>כניסה עם Google (לא חובה)</h2>
+<p>אם תתחברו, נשמרים: מזהה החשבון של Google, השם הפרטי, כתובת המייל וההתקדמות — כדי שתוכלו להמשיך מכל מכשיר. לא נשמרת סיסמה, ואין גישה לשום מידע אחר בחשבון. החיבור נשמר בעוגייה מאובטחת אחת לשם כך בלבד.</p>
+<h2>הערות קוראים</h2>
+<p>ההערה נשמרת כדי לבדוק אותה ולתקן את הדף. שם לא חובה. כתובת מייל, אם נמסרה, משמשת רק לעדכון אחד כשההערה טופלה, ונמחקת מיד אחריו. נוסח ההערה מוצג בדף ההערות הציבורי רק אם סימנתם שמותר.</p>
+<h2>שיתוף עם אחרים</h2>
+<p>המידע לא נמכר ולא מועבר לאף גורם. הוא נשמר בתשתית של Cloudflare; מיילים נשלחים דרך Resend.</p>
+<h2>מחיקה</h2>
+<p>להתנתקות: בהגדרות (⚙). למחיקת החשבון וההתקדמות השמורה בו, או לכל שאלה: <a href="mailto:tsemachh@gmail.com">tsemachh@gmail.com</a>.</p>
+</div>
+{credits('../')}
+<footer>{FOOT}</footer>
+</section></div>"""
+    return page("מדיניות פרטיות · " + SITE_TITLE, body, "מה נשמר באתר דפי חזרה ולימוד ולמה", depth=1)
 
 
 def render_notes(by_slug):
@@ -586,9 +612,11 @@ def main():
         f'{catalog_json()}<script src="../progress.js" defer></script>', "נתוני ביקורים אנונימיים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "feedback"), exist_ok=True)
     open(os.path.join(DIST, "feedback", "index.html"), "w", encoding="utf8").write(render_feedback(by_slug))
+    os.makedirs(os.path.join(DIST, "privacy"), exist_ok=True)
+    open(os.path.join(DIST, "privacy", "index.html"), "w", encoding="utf8").write(render_privacy())
     os.makedirs(os.path.join(DIST, "notes"), exist_ok=True)
     open(os.path.join(DIST, "notes", "index.html"), "w", encoding="utf8").write(render_notes(by_slug))
-    urls = ["", "about/", "ideas/", "changes/", "stats/", "notes/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/", "ideas/", "changes/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")

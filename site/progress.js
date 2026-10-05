@@ -151,6 +151,7 @@
         wrap.append(out); return;
       }
       wrap.append(el('p','pg-hint','התחברו כדי להמשיך מאותה נקודה בכל מכשיר — במחשב ובנייד. ההתקדמות שכבר יש בדפדפן הזה תצורף לחשבון.'));
+      var pv=el('a','pg-hint','מה נשמר? מדיניות הפרטיות'); pv.href='/privacy/'; wrap.append(pv);
       var slot=el('div','pg-gbtn'); wrap.append(slot);
       authCfg().then(function(c){
         if(!c||!c.google){slot.append(el('p','pg-hint','הכניסה עדיין לא הוגדרה.')); return}
