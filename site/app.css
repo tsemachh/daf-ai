@@ -512,3 +512,7 @@ details.aids[open]>summary{margin-bottom:4px}
 
 .pg-sync{display:grid;gap:8px;margin-bottom:6px}
 .pg-gbtn{min-height:44px}
+
+.pg-manual{margin-top:6px;font-size:14px}
+.pg-manual summary{cursor:pointer;color:var(--muted);min-height:36px;display:flex;align-items:center}
+.pg-manual[open]{display:grid;gap:8px}
