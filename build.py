@@ -81,7 +81,7 @@ def jscript(obj, **attrs):
     return f'<script type="application/json"{a}>' + json.dumps(obj, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
-SITE_URL = "https://daf-ai.pages.dev"
+SITE_URL = "https://daf.tsemach.dev"
 CATALOG = {"pages": [], "mas": {}}  # filled in main(); embedded for the progress runtime
 
 
@@ -129,7 +129,7 @@ def page(title, body, desc="", depth=0):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<meta property="og:site_name" content="דפי חזרה ולימוד"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>

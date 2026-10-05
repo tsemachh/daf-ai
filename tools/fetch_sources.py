@@ -15,7 +15,7 @@ import argparse, datetime as dt, html, json, os, re, sys, time, urllib.error, ur
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dafyomi import daf_for  # noqa: E402
 
-UA = "daf-ai source cache (+https://daf-ai.pages.dev)"
+UA = "daf-ai source cache (+https://daf.tsemach.dev)"
 # slug -> (dafyomi.co.il directory, file prefix)
 DAFYOMI_CO_IL = {"bechorot": ("bechoros", "be"), "arachin": ("erchin", "er"), "temurah": ("temurah", "tm"),
                  "keritot": ("kerisus", "kr"), "meilah": ("meilah", "ml"), "niddah": ("nidah", "ni")}

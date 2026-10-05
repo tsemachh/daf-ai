@@ -216,7 +216,7 @@ in the report. Never force-push. If research or verification could not be comple
 report what failed — the 12:47 run retries.
 
 ## 6. Report (2–4 Hebrew lines)
-Pages added with links (https://daf-ai.pages.dev/<slug>/<daf>/), one line on sources (e.g. "מקורות:
+Pages added with links (https://daf.tsemach.dev/<slug>/<daf>/), one line on sources (e.g. "מקורות:
 ספריא, שטיינזלץ, רש״י; daf-yomi.com — 3 שימושיים, 1 לא קריא"), notes handled (fixed / feature /
 rejected / needs-info), fixes applied by the verification, anything that failed. If a daf could not be
 verified, do not publish it; the 12:47 run retries.
