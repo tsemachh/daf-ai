@@ -430,6 +430,19 @@ def whatsnew(limit=None, link=True):
     return f'<section class="wn"><h2 class="sec-h">מה חדש באתר</h2><ul class="wn-l">{"".join(out)}</ul>{more}</section>'
 
 
+def lab_banner():
+    if not LAB:
+        return ""
+    e = list(LAB.values())[-1]
+    pg = f"{e['slug']}/{e['daf']}"
+    return f"""<div class="lab-ban" id="lab-ban" data-page="{pg}" hidden>
+  <a href="/lab/{pg}/"><b>🧪 ניסוי חדש:</b> אותו דף, שני מודלים — {esc(e['title'])} בשתי גרסאות. איזו עוזרת יותר? <span>השוו והצביעו ←</span></a>
+  <button type="button" class="lab-x" aria-label="הסתר">×</button>
+</div>
+<script>(function(){{var b=document.getElementById('lab-ban'),p=b.dataset.page;try{{if(localStorage.getItem('lab-vote-'+p)||localStorage.getItem('lab-hide-'+p))return}}catch(e){{}}
+b.hidden=false;b.querySelector('.lab-x').onclick=function(){{b.remove();try{{localStorage.setItem('lab-hide-'+p,'1')}}catch(e){{}}}}}})();</script>"""
+
+
 def render_home(by_slug, latest, about):
     cards = "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in latest)
     mas = "\n".join(f'  <a class="card" href="./{s}/"><div class="top"><h3>מסכת {ds[0]["tractate_he"]}</h3>'
@@ -440,6 +453,7 @@ def render_home(by_slug, latest, about):
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
+{lab_banner()}
 <div id="progress-home"></div>
 <h2 class="sec-h" style="margin-top:28px">הדפים האחרונים</h2>
 <div class="cards">
