@@ -281,6 +281,14 @@ def render_section(d, s):
     return "\n".join(parts)
 
 
+def lab_registry():
+    p = os.path.join(ROOT, "lab", "index.json")
+    return json.load(open(p, encoding="utf8")) if os.path.exists(p) else []
+
+
+LAB = {}
+
+
 def render_daf(d, prev, nxt, glossary, sources):
     key = d["key"]
     mins = [m for m in d["meta"] if "דקות" in m]
@@ -470,6 +478,76 @@ def render_feedback(by_slug):
     return page("מעקב הערות · " + SITE_TITLE, body, "מצב הטיפול בהערות קוראים", depth=1)
 
 
+def lab_version_page(d, slug, glossary, sources, model):
+    """A full daf page for the comparison lab: absolute links, no progress tracking or notes."""
+    g = dict(glossary); g.update(d.get("glossextra", {}))
+    src = dict(sources); src.update(d.get("srcextra", {}))
+    html = render_daf(d, None, None, g, src)
+    html = html.replace('="../../', '="/').replace('href="../', f'href="/{slug}/')
+    html = re.sub(r'<script src="/progress\.js[^"]*" defer></script>', "", html)
+    html = html.replace('<html lang="he"', '<html class="lab" lang="he"', 1)
+    html = html.replace("<head>", '<head>\n<meta name="robots" content="noindex"><base target="_top">', 1)
+    return html
+
+
+def render_lab(glossary, sources):
+    for e in LAB.values():
+        slug, daf = e["slug"], e["daf"]
+        base = os.path.join(DIST, "lab", slug, str(daf))
+        for v in e["versions"]:
+            d = DAFS[(slug, daf)] if not v.get("file") else json.load(open(os.path.join(ROOT, "lab", v["file"]), encoding="utf8"))
+            os.makedirs(os.path.join(base, v["id"]), exist_ok=True)
+            open(os.path.join(base, v["id"], "index.html"), "w", encoding="utf8").write(lab_version_page(d, slug, glossary, sources, v["model"]))
+        cfg = {"page": f"{slug}/{daf}", "versions": [{"id": v["id"], "model": v["model"], "note": v.get("note", "")} for v in e["versions"]]}
+        body = f"""<div class="wrap wide" id="app"><section id="lab">
+<a class="back" href="/{slug}/{daf}/">→ חזרה ל{esc(e["title"])}</a>
+<header>
+  <div class="eyebrow">ניסוי · השוואת מודלים</div>
+  <h1>{esc(e["title"])}: שתי גרסאות</h1>
+  <p class="thesis">אותו דף, אותם מקורות ואותה בדיקה אוטומטית — שני מודלים שונים כתבו אותו. שמות המודלים מוסתרים עד שתבחרו איזו גרסה עזרה לכם יותר.</p>
+</header>
+<div class="lab-tabs" role="tablist"></div>
+<div class="lab-frames"></div>
+<div class="lab-vote">
+  <p class="lab-q">איזו גרסה עזרה לך יותר להבין את הדף?</p>
+  <div class="lab-btns"></div>
+  <p class="lab-res" aria-live="polite"></p>
+</div>
+<p class="fb-muted">ההתקדמות וההערות נשמרות רק בדף הרגיל. ההצבעה אנונימית.</p>
+</section></div>
+{jscript(cfg, id="lab-cfg")}
+<script>{LAB_JS}</script>"""
+        open(os.path.join(base, "index.html"), "w", encoding="utf8").write(page(f"השוואת גרסאות · {e['title']} · " + SITE_TITLE, body, "שתי גרסאות של אותו דף, שכתבו מודלים שונים — השוו והצביעו", depth=3))
+
+
+LAB_JS = r"""(function(){
+var C=JSON.parse(document.getElementById('lab-cfg').textContent), V=C.versions.slice(), L='אב';
+var ord; try{ord=JSON.parse(localStorage.getItem('lab-order-'+C.page))}catch(e){}
+if(!ord||ord.length!==V.length){ord=V.map(function(v){return v.id}); if(Math.random()<.5) ord.reverse(); try{localStorage.setItem('lab-order-'+C.page,JSON.stringify(ord))}catch(e){}}
+V.sort(function(a,b){return ord.indexOf(a.id)-ord.indexOf(b.id)});
+var tabs=document.querySelector('.lab-tabs'), fr=document.querySelector('.lab-frames'), btns=document.querySelector('.lab-btns'), res=document.querySelector('.lab-res');
+var voted=null; try{voted=localStorage.getItem('lab-vote-'+C.page)}catch(e){}
+function name(i){return voted?V[i].model:'גרסה '+L[i]}
+var panes=V.map(function(v,i){var w=document.createElement('div'); w.className='lab-pane'+(i?'':' on');
+  var h=document.createElement('div'); h.className='lab-h'; w.appendChild(h);
+  var f=document.createElement('iframe'); f.src=v.id+'/'; f.loading=i?'lazy':'eager'; f.title='גרסה '+L[i]; w.appendChild(f); fr.appendChild(w); return {w:w,h:h,v:v}});
+var tb=V.map(function(v,i){var b=document.createElement('button'); b.type='button'; b.className='btn'+(i?'':' on'); b.setAttribute('role','tab');
+  b.onclick=function(){tb.forEach(function(x,j){x.classList.toggle('on',j===i)}); panes.forEach(function(p,j){p.w.classList.toggle('on',j===i)})}; tabs.appendChild(b); return b});
+function paint(){V.forEach(function(v,i){tb[i].textContent=name(i); panes[i].h.textContent=name(i)+(voted&&v.note?' — '+v.note:'')})}
+function show(c){fetch('/api/lab/votes?page='+encodeURIComponent(C.page)).then(function(r){return r.json()}).then(function(j){
+  var n=j.counts||{}, t=0; Object.keys(n).forEach(function(k){t+=n[k]});
+  res.textContent=(c?'תודה! ':'')+'בחרת: '+(voted==='same'?'שתיהן דומות':V.filter(function(v){return v.id===voted})[0].model)+(t?' · עד עכשיו '+t+' הצבעות: '+V.map(function(v){return v.model+' '+(n[v.id]||0)}).join(' · ')+(n.same?' · דומות '+n.same:''):'');
+}).catch(function(){})}
+[[0],[1],['same']].forEach(function(a){var b=document.createElement('button'); b.type='button'; b.className='btn';
+  b.textContent=a[0]==='same'?'שתיהן דומות':'גרסה '+L[a[0]];
+  b.onclick=function(){var id=a[0]==='same'?'same':V[a[0]].id, vid='';try{vid=localStorage.getItem('daf-vid')||''}catch(e){}
+    fetch('/api/lab/vote',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:C.page,choice:id,vid:vid})}).then(function(){
+      voted=id; try{localStorage.setItem('lab-vote-'+C.page,id)}catch(e){} paint(); show(true); btns.hidden=true; document.querySelector('.lab-q').textContent='הגרסאות נחשפו:'});};
+  btns.appendChild(b)});
+paint(); if(voted){btns.hidden=true; document.querySelector('.lab-q').textContent='הגרסאות נחשפו:'; show(false)}
+})();"""
+
+
 def render_privacy():
     body = f"""<div class="wrap" id="app"><section>
 <a class="back" href="../">→ דף הבית</a>
@@ -550,6 +628,9 @@ def main():
     for slug, ds in by_slug.items():
         for d in ds:
             DAFS[(slug, d["daf"])] = d
+    LAB.clear()
+    for e in lab_registry():
+        LAB[(e["slug"], e["daf"])] = e
     alld = []
     for slug, ds in by_slug.items():
         ds.sort(key=lambda x: x["daf"])
@@ -559,9 +640,13 @@ def main():
             nxt = nums[i + 1] if i + 1 < len(nums) and nums[i + 1] == d["daf"] + 1 else None
             out = os.path.join(DIST, slug, str(d["daf"]))
             os.makedirs(out, exist_ok=True)
-            open(os.path.join(out, "index.html"), "w", encoding="utf8").write(render_daf(d, prev, nxt, glossary, sources))
+            html = render_daf(d, prev, nxt, glossary, sources)
+            if (slug, d["daf"]) in LAB:
+                html = html.replace("</header>", f'</header>\n<p class="lab-link"><a href="/lab/{slug}/{d["daf"]}/">🧪 ניסוי: השוו את הדף הזה לגרסה שהכין מודל אחר ←</a></p>', 1)
+            open(os.path.join(out, "index.html"), "w", encoding="utf8").write(html)
             alld.append(d)
         open(os.path.join(DIST, slug, "index.html"), "w", encoding="utf8").write(render_masechet(slug, ds))
+    render_lab(glossary, sources)
     about_p = os.path.join(ROOT, "content", "home_about.html")
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     latest = sorted(alld, key=lambda d: d.get("order", d["daf"]), reverse=True)[:7]
