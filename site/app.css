@@ -509,3 +509,6 @@ details.aids[open]>summary{margin-bottom:4px}
 .fb-dlg header{padding:10px 14px}
 .fb-dlg h4{font-size:17px;line-height:1.35;font-family:var(--sans);font-weight:700}
 .fb-dlg .fb-status:empty{display:none}
+
+.pg-sync{display:grid;gap:8px;margin-bottom:6px}
+.pg-gbtn{min-height:44px}

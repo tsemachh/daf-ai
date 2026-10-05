@@ -1,5 +1,6 @@
 /* learner progress: sugya ✓, resume, streak, pace, export/import.
-   Stored only in this browser (localStorage key "dafProgress"); nothing is sent to the server. */
+   Stored in this browser (localStorage key "dafProgress"); after Google sign-in it is also synced to
+   /api/progress so it follows the learner between devices (merge = union, never loses progress). */
 (function(){
   var KEY='dafProgress', C={pages:[],mas:{}};
   try{C=JSON.parse(document.getElementById('catalog').textContent)}catch(e){}
@@ -7,7 +8,8 @@
   function blank(){return {v:1,pages:{},days:[],review:[],later:{},pre:{},asked:{},pace:{mode:'yomi'},last:null,first:null}}
   function norm(s){if(!s||s.v!==1)return blank(); var b=blank(); for(var k in b) if(s[k]==null) s[k]=b[k]; return s}
   var S; try{S=norm(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){S=blank()}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(SY.user) SY.push()}
+  var SY={user:null,push:function(){}};
 
   /* ---------- helpers ---------- */
   function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
@@ -82,6 +84,8 @@
     [c1,c2,sel,dt,per].forEach(function(x){x.addEventListener('change',apply)});
     box.append(r1,r2,pl);
 
+    box.appendChild(el('div','prefs-h','סנכרון בין מכשירים'));
+    box.appendChild(syncBox());
     box.appendChild(el('div','prefs-h','גיבוי והעברה למכשיר אחר'));
     var row=el('div','pg-btns');
     var dl=el('button','btn','הורד קובץ'); dl.type='button';
@@ -93,7 +97,7 @@
     var fl=el('label','btn pg-file','טען מקובץ'), fi=el('input'); fi.type='file'; fi.accept='application/json,.json'; fi.hidden=true; fl.appendChild(fi);
     fi.onchange=function(){var f=fi.files[0]; if(!f) return; f.text().then(importText)};
     var ip=el('button','btn','טען מקוד'); ip.type='button'; ip.onclick=function(){importText(ta.value.trim())};
-    var msg=el('p','pg-hint','ההתקדמות נשמרת רק בדפדפן הזה. טעינה ממזגת עם מה שכבר קיים כאן.');
+    var msg=el('p','pg-hint','גיבוי ידני, בלי חשבון. טעינה ממזגת עם מה שכבר קיים כאן.');
     row.append(dl,cp,fl,ip); box.append(row,ta,msg);
     function importText(t){
       var o=null; try{o=JSON.parse(t)}catch(e){try{o=JSON.parse(decodeURIComponent(escape(atob(t))))}catch(e2){}}
@@ -118,6 +122,52 @@
   }
 
   var painters=[]; function refresh(){painters.forEach(function(f){f()})}
+
+  /* ---------- sign-in + sync ---------- */
+  var syncEls=[], pushT=null, gsi=null;
+  function api(u,o){return fetch(u,Object.assign({credentials:'same-origin'},o||{})).then(function(r){return r.json().catch(function(){return {}})})}
+  SY.push=function(){clearTimeout(pushT); pushT=setTimeout(function(){
+    api('/api/progress',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({data:S})}).then(function(j){ if(j&&j.error==='signed_out'){SY.user=null;paintSync()} });
+  },2500)};
+  function pull(){ return api('/api/progress').then(function(j){
+    if(j&&j.ok&&j.data&&j.data.v===1){ merge(norm(j.data)); try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} refresh(); }
+    if(j&&j.ok) SY.push();
+  }); }
+  function paintSync(){ syncEls=syncEls.filter(function(f){return f.w.isConnected}); syncEls.forEach(function(f){f()}) }
+  function loadGsi(){ return gsi||(gsi=new Promise(function(res){
+    if(window.google&&google.accounts) return res(true);
+    var sc=document.createElement('script'); sc.src='https://accounts.google.com/gsi/client'; sc.async=true;
+    sc.onload=function(){res(true)}; sc.onerror=function(){res(false)}; document.head.appendChild(sc);
+  })) }
+  var AC=null; function authCfg(){return AC||(AC=api('/api/auth/config'))}
+  function syncBox(){
+    var wrap=el('div','pg-sync');
+    function paint(){
+      wrap.innerHTML='';
+      if(SY.user){
+        wrap.append(el('p','pg-hint','מחובר'+(SY.user.name?' כ־'+SY.user.name:'')+(SY.user.email?' ('+SY.user.email+')':'')+'. ההתקדמות נשמרת גם בחשבון ומתעדכנת בכל מכשיר שבו תתחברו.'));
+        var out=el('button','btn','התנתקות'); out.type='button';
+        out.onclick=function(){api('/api/auth/logout',{method:'POST'}).then(function(){SY.user=null; try{google.accounts.id.disableAutoSelect()}catch(e){} paintSync()})};
+        wrap.append(out); return;
+      }
+      wrap.append(el('p','pg-hint','התחברו כדי להמשיך מאותה נקודה בכל מכשיר — במחשב ובנייד. ההתקדמות שכבר יש בדפדפן הזה תצורף לחשבון.'));
+      var slot=el('div','pg-gbtn'); wrap.append(slot);
+      authCfg().then(function(c){
+        if(!c||!c.google){slot.append(el('p','pg-hint','הכניסה עדיין לא הוגדרה.')); return}
+        loadGsi().then(function(ok){
+          if(!ok){slot.append(el('p','pg-hint','לא ניתן לטעון את כפתור Google כרגע.')); return}
+          google.accounts.id.initialize({client_id:c.google, ux_mode:'popup', auto_select:false, callback:function(r){
+            api('/api/auth/google',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({credential:r.credential})}).then(function(j){
+              if(j&&j.ok){SY.user=j.user; paintSync(); pull()} else slot.append(el('p','pg-hint','הכניסה נכשלה. נסו שוב.'));
+            });
+          }});
+          google.accounts.id.renderButton(slot,{theme:'outline',size:'large',shape:'pill',text:'signin_with',locale:'he'});
+        });
+      });
+    }
+    paint.w=wrap; syncEls.push(paint); paint(); return wrap;
+  }
+  api('/api/auth/me').then(function(j){ if(j&&j.user){SY.user=j.user; paintSync(); pull()} }).catch(function(){});
   var toastEl=null, toastT=null;
   function toast(msg,undo){
     if(!toastEl){toastEl=el('div','pg-toast'); toastEl.setAttribute('role','status'); toastEl.setAttribute('aria-live','polite'); document.body.appendChild(toastEl);}
@@ -338,7 +388,7 @@
         done=0; for(var dd=m.first; dd<=m.last; dd++){ var pp=byKey(slug+'/'+dd); if(dafState(slug,dd,pp)==='learned') done++; } if(!done&&!S.first) return;
         var w=el('a','pg-mas'); w.href='/'+slug+'/#map'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
         var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; bar.appendChild(f); w.appendChild(bar); side.appendChild(w); });
-      var gb=el('button','btn pg-gear','⚙ קצב וגיבוי'); gb.type='button'; gb.setAttribute('aria-expanded','false');
+      var gb=el('button','btn pg-gear','⚙ קצב, גיבוי וכניסה'); gb.type='button'; gb.setAttribute('aria-expanded','false');
       var sp=settings(); sp.hidden=true; sp.classList.add('prefs');
       gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden)};
       side.appendChild(gb); home.append(side,sp);
