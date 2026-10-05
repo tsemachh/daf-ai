@@ -124,3 +124,6 @@ account with that file as the prompt and give it write access to this repo.
 ### What's new
 `data/changelog.json` — newest first, `[{"date": "YYYY-MM-DD", "items": ["…"]}]`. Home shows the latest 5 items;
 `/changes/` lists everything. Add an entry for every site improvement.
+
+## Model comparison lab
+`lab/index.json` lists dapim that have an alternative version (`lab/<slug>-<daf>-<model>.json`, same schema as `data/`). `build.py` renders `/lab/<slug>/<daf>/` with both versions side by side (blind, randomized order) and a vote (`/api/lab/vote`, table `lab_votes`); the regular daf page links to it.

@@ -1,0 +1,20 @@
+[
+ {
+  "slug": "bechorot",
+  "daf": 17,
+  "title": "בכורות י״ז",
+  "versions": [
+   {
+    "id": "opus",
+    "model": "Claude Opus 5.5",
+    "note": "הגרסה שבאתר (ריצת הלילה הרגילה)"
+   },
+   {
+    "id": "fable",
+    "model": "Claude Fable 5.1",
+    "file": "bechorot-17-fable.json",
+    "note": "אותה ריצה, אותם מקורות ואותה בדיקה — מודל אחר"
+   }
+  ]
+ }
+]
