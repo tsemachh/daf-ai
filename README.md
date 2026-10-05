@@ -82,9 +82,9 @@ Update body: `{"id":12,"status":"fixed","reply":"…","commit_sha":"abc1234","no
 ### Setup (once, Cloudflare dashboard)
 1. **D1** → Create database `daf-ai-feedback` → Console → paste `db/schema.sql` → Execute.
 2. **Pages → daf-ai → Settings → Bindings** → D1 database, variable name `DB` → `daf-ai-feedback`.
-3. **Turnstile** → Add widget (hostname `daf-ai.pages.dev`, Managed). In Pages → Variables and
+3. **Turnstile** → Add widget (hostnames `daf.tsemach.dev` and `daf-ai.pages.dev`, Managed). In Pages → Variables and
    Secrets add `TURNSTILE_SITEKEY` (text) and `TURNSTILE_SECRET` (secret). Optional: `IP_SALT` (secret).
-4. **Zero Trust → Access → Applications** → Self-hosted, domain `daf-ai.pages.dev`, path `admin`,
+4. **Zero Trust → Access → Applications** → Self-hosted, domains `daf.tsemach.dev` and `daf-ai.pages.dev`, path `admin`,
    policy "Allow" for the owner's email. Copy the app's **AUD tag**; add Pages variables
    `ACCESS_TEAM` = `<team>.cloudflareaccess.com` and `ACCESS_AUD` = the AUD tag.
    For the nightly job: Access → Service Auth → create a service token and add a second policy
