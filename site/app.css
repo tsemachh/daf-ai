@@ -58,6 +58,8 @@ blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-siz
 .steps b{font-weight:800}
 .explain{margin:14px 0 0;color:var(--muted);font-size:17px}
 .explain.flow{color:var(--ink);font-size:18px;margin:0 0 14px;padding:10px 14px;border-inline-start:3px solid var(--accent);background:var(--card);border-radius:0 8px 8px 0}
+.explain.flow p{margin:0}
+.explain.flow p+p{margin-top:8px}
 .storyline{margin:24px 0 8px;padding:16px 18px;background:var(--accent-soft);border-radius:12px}
 .storyline .sl-h{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:6px}
 .storyline p{margin:0;font-size:18px}
@@ -568,3 +570,15 @@ html.lab .fb-sec[aria-label],html.lab [data-role=fb],html.lab .lab-link{display:
 .pg-rail-pill.on{opacity:1}
 @media print{.pg-rail,.pg-rail-pill{display:none}}
 .meta .ai-badge{font-size:12px;padding:1px 9px}
+/* quotes: verse quote = source link; Gemara quote = Steinsaltz on tap */
+button.src.q-src{border-bottom:1px dashed var(--accent);color:inherit;font-weight:inherit;padding-block:0;margin-block:0;text-align:inherit;display:inline}
+button.src.q-src::after,a.src.q-src::after{content:"";}
+a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
+.gq{cursor:pointer;border-radius:4px;transition:background .15s}
+.gq:hover,.gq[aria-expanded="true"]{background:var(--accent-soft)}
+.gq:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.pop .st-pd{font-size:15px;line-height:1.6}
+.pop .st-pd b{color:var(--accent)}
+.pop .st-cr{margin-top:8px;font-size:12px;color:var(--muted)}
+.hide-mode .steps li.hideable:not(.shown) .q-src,.hide-mode .steps li.ans:not(.shown) .gq{pointer-events:none}
+.pop .st-pd{max-height:45vh;overflow:auto}
