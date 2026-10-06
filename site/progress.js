@@ -295,6 +295,39 @@
       });
     }
     painters.push(paint);
+    /* progress rail: a thin bar on the page edge, one segment per sugya (height ∝ its length), coloured by
+       state (opened / learned) with a marker for the reading position; a small pill shows "x/n" while
+       scrolling. Purely visual (pointer-events:none), so it never blocks a tap. */
+    (function(){
+      if(RM||!P.n.length) return;
+      var ids=P.n.filter(function(id){return secs[id]}); if(!ids.length) return;
+      var rail=el('div','pg-rail'), mark=el('i','pg-rail-at'), pill=el('div','pg-rail-pill'), seg={}, pillT=null;
+      rail.setAttribute('aria-hidden','true'); pill.setAttribute('aria-hidden','true');
+      ids.forEach(function(id){ seg[id]=el('b'); rail.appendChild(seg[id]); });
+      rail.appendChild(mark); document.body.append(rail,pill);
+      /* equal segments (sections below the fold have estimated heights); the marker moves through the
+         current sugya's segment in proportion to how far into it the reading line is */
+      function layout(){}
+      function colour(){ ids.forEach(function(id){ seg[id].className=E.s[id]==='learned'?'l':E.s[id]==='opened'?'o':''; }); }
+      var q=false, n=ids.length;
+      function pos(show){
+        var line=window.innerHeight*0.45, i=-1, f=0;
+        for(var k=0;k<n;k++){ var r=secs[ids[k]].getBoundingClientRect(); if(r.top<=line){ i=k; f=Math.min(1,(line-r.top)/Math.max(1,r.height)); } }
+        var lastR=secs[ids[n-1]].getBoundingClientRect(), inside=i>=0&&lastR.bottom>=line-40;
+        rail.classList.toggle('on',inside); if(i<0) return;
+        var p=(i+f)/n; mark.style.top=(p*100)+'%';
+        var nl=ids.filter(function(id){return E.s[id]==='learned'}).length;
+        pill.textContent='סוגיה '+(i+1)+' מתוך '+n+(nl?' · נלמדו '+nl:'');
+        pill.style.top='calc(12vh + '+(p*76).toFixed(2)+'vh)';
+        if(show&&inside){ pill.classList.add('on'); clearTimeout(pillT); pillT=setTimeout(function(){pill.classList.remove('on')},1100); }
+      }
+      window.addEventListener('scroll',function(){ if(q) return; q=true; requestAnimationFrame(function(){q=false; pos(true)}); },{passive:true});
+      var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){layout(); pos(false)},150); });
+      document.addEventListener('toggle',function(){ clearTimeout(rt); rt=setTimeout(function(){layout(); pos(false)},150); },true);
+      painters.push(colour); var p0=paint; paint=function(){p0(); colour();};
+      setTimeout(function(){ layout(); colour(); pos(false); },300);
+      window.addEventListener('load',function(){ layout(); pos(false); });
+    })();
     /* viewing rule: time counts while a sugya fills a good part of the screen (≥40% of it, or ≥60% of the
        sugya); ~3s → opened (✓). Learned (✓✓) once its end has been on screen and it got enough time for its
        length (4–20s), so scrolling through while reading counts, a fast fling does not. */

@@ -560,3 +560,13 @@ html.lab .fb-sec[aria-label],html.lab [data-role=fb],html.lab .lab-link{display:
   .topnav .acct{order:2;margin-inline-start:auto}
   .topnav .ai-badge{order:3}
 }
+/* in-page progress rail (one segment per sugya) */
+.pg-rail{position:fixed;inset-inline-end:3px;top:12vh;height:76vh;width:5px;display:flex;flex-direction:column;gap:3px;z-index:40;pointer-events:none;opacity:0;transition:opacity .25s}
+.pg-rail.on{opacity:1}
+.pg-rail b{display:block;min-height:6px;flex:1 1 0;border-radius:3px;background:var(--line)}
+.pg-rail b.o{background:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.pg-rail b.l{background:var(--accent)}
+.pg-rail-at{position:absolute;inset-inline-end:-3px;width:11px;height:11px;margin-top:-5px;border-radius:50%;background:var(--card);border:2px solid var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.2);transition:top .12s linear}
+.pg-rail-pill{position:fixed;top:50vh;inset-inline-end:18px;z-index:40;pointer-events:none;font-size:13px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 10px;box-shadow:0 2px 8px rgba(0,0,0,.12);opacity:0;transform:translateY(-50%);transition:opacity .2s;white-space:nowrap}
+.pg-rail-pill.on{opacity:1}
+@media print{.pg-rail,.pg-rail-pill{display:none}}
