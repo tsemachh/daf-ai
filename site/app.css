@@ -583,3 +583,4 @@ a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
 .hide-mode .steps li.hideable:not(.shown) .q-src,.hide-mode .steps li.ans:not(.shown) .gq{pointer-events:none}
 .pop .st-pd{max-height:45vh;overflow:auto}
 .tmeta .perek{font-weight:700;color:var(--ink)}
+.storyline p+p{margin-top:10px}

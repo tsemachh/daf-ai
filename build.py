@@ -245,7 +245,7 @@ def cont_link(d, s, way):
 
 
 HEB_L = "\u05d0-\u05ea"
-def flow_paras(t, target=200):
+def split_paras(t, target=200):
     """Split a "בקצרה" paragraph into short paragraphs (~2 sentences) at sentence ends outside parentheses."""
     sents, buf, q, par, i = [], "", False, 0, 0
     tags = re.compile(r"<[^>]+>")
@@ -267,7 +267,11 @@ def flow_paras(t, target=200):
     if cur:
         if paras and len(re.sub(r"<[^>]+>", "", cur)) < 60: paras[-1] += " " + cur
         else: paras.append(cur)
-    return '<div class="explain flow">' + "".join(f"<p>{x}</p>" for x in paras) + "</div>"
+    return paras
+
+
+def flow_paras(t, target=200):
+    return '<div class="explain flow">' + "".join(f"<p>{x}</p>" for x in split_paras(t, target)) + "</div>"
 
 def render_section(d, s):
     sid = f'{d["key"]}-{s["id"]}'
@@ -335,7 +339,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     eyebrow = " · ".join(rest)
     mins = esc(mins[0].replace("דקות לימוד", "דק׳").replace("דקות", "דק׳")) if mins else ""
     nav = "\n".join(f'    <li><a href="#{key}-{n["id"]}"><span class="amud">{n["amud"]}</span>{n["title"]}</a></li>' for n in d["nav"])
-    story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary><p>{d["storyline"]}</p></details>'
+    story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary>{"".join(f"<p>{x}</p>" for x in split_paras(d["storyline"], 240))}</details>'
              if d.get("storyline") else "")
     sections = "\n\n".join(render_section(d, s) for s in d["sections"])
     links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in d.get("links", []))
