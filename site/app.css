@@ -582,3 +582,4 @@ a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
 .pop .st-cr{margin-top:8px;font-size:12px;color:var(--muted)}
 .hide-mode .steps li.hideable:not(.shown) .q-src,.hide-mode .steps li.ans:not(.shown) .gq{pointer-events:none}
 .pop .st-pd{max-height:45vh;overflow:auto}
+.tmeta .perek{font-weight:700;color:var(--ink)}
