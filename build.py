@@ -321,7 +321,18 @@ def render_daf(d, prev, nxt, glossary, sources):
     meta = "".join(f"<span>{esc(m)}</span>" for m in d["meta"] if m not in mins and m.strip() != "עמודים א–ב")
     meta += '<span class="ai-badge">נוצר על ידי סוכן AI</span>'
     # the masechet is already in the breadcrumb and the title
-    eyebrow = " · ".join(x for x in d["eyebrow"].split(" · ") if x.strip() != f"מסכת {d['tractate_he']}")
+    # perek goes next to the title as "פרק ב׳"; "הדף היומי" and the masechet (in breadcrumb + title) are dropped
+    ORD = {"ראשון": "א׳", "שני": "ב׳", "שלישי": "ג׳", "רביעי": "ד׳", "חמישי": "ה׳", "שישי": "ו׳", "שביעי": "ז׳",
+           "שמיני": "ח׳", "תשיעי": "ט׳", "עשירי": "י׳"}
+    perek, rest = "", []
+    for x in (y.strip() for y in d["eyebrow"].split(" · ")):
+        if x in ("הדף היומי", f"מסכת {d['tractate_he']}"): continue
+        if "פרק" in x:
+            perek = re.sub(r"פרק (\S+)", lambda m: "פרק " + ORD.get(m.group(1), m.group(1)), x)
+            perek = perek.replace("סוף ", "").replace("ותחילת", "–").replace(" – פרק ", "–")
+            continue
+        rest.append(x)
+    eyebrow = " · ".join(rest)
     mins = esc(mins[0].replace("דקות לימוד", "דק׳").replace("דקות", "דק׳")) if mins else ""
     nav = "\n".join(f'    <li><a href="#{key}-{n["id"]}"><span class="amud">{n["amud"]}</span>{n["title"]}</a></li>' for n in d["nav"])
     story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary><p>{d["storyline"]}</p></details>'
@@ -340,8 +351,8 @@ def render_daf(d, prev, nxt, glossary, sources):
 <div class="topnav"><span><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></span></div>
 
 <header>
-  <div class="eyebrow">{esc(eyebrow)}</div>
-  <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
+  {f'<div class="eyebrow">{esc(eyebrow)}</div>' if eyebrow else ''}
+  <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span class="perek">{esc(perek)}</span>' if perek else ''}{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
   <div class="meta">{meta}</div>
   <div class="legend"><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
