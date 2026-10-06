@@ -292,7 +292,10 @@ LAB = {}
 def render_daf(d, prev, nxt, glossary, sources):
     key = d["key"]
     mins = [m for m in d["meta"] if "דקות" in m]
-    meta = "".join(f"<span>{esc(m)}</span>" for m in d["meta"] if m not in mins)
+    meta = "".join(f"<span>{esc(m)}</span>" for m in d["meta"] if m not in mins and m.strip() != "עמודים א–ב")
+    meta += '<span class="ai-badge">נוצר על ידי סוכן AI</span>'
+    # the masechet is already in the breadcrumb and the title
+    eyebrow = " · ".join(x for x in d["eyebrow"].split(" · ") if x.strip() != f"מסכת {d['tractate_he']}")
     mins = esc(mins[0].replace("דקות לימוד", "דק׳").replace("דקות", "דק׳")) if mins else ""
     nav = "\n".join(f'    <li><a href="#{key}-{n["id"]}"><span class="amud">{n["amud"]}</span>{n["title"]}</a></li>' for n in d["nav"])
     story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary><p>{d["storyline"]}</p></details>'
@@ -308,10 +311,10 @@ def render_daf(d, prev, nxt, glossary, sources):
                 if any(s.get("steps") for s in d["sections"]) else "")
     pager = f'<div class="pager">{"".join(pn)}</div>' if pn else ""
     article = f"""<article class="daf" id="{key}" data-tractate="{d['tractate']}" data-daf="{d['daf']}">
-<div class="topnav"><span><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></span><span class="ai-badge">נוצר על ידי סוכן AI</span></div>
+<div class="topnav"><span><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></span></div>
 
 <header>
-  <div class="eyebrow">{esc(d['eyebrow'])}</div>
+  <div class="eyebrow">{esc(eyebrow)}</div>
   <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
   <div class="meta">{meta}</div>
