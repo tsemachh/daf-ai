@@ -142,34 +142,81 @@
     sc.onload=function(){res(true)}; sc.onerror=function(){res(false)}; document.head.appendChild(sc);
   })) }
   var AC=null; function authCfg(){return AC||(AC=api('/api/auth/config'))}
+  /* one GIS init for every button on the page (header chip + settings panel) */
+  var GI=null;
+  function gsiReady(){ return GI||(GI=authCfg().then(function(c){
+    if(!c||!c.google) return 'nocfg';
+    return loadGsi().then(function(ok){
+      if(!ok) return 'noload';
+      google.accounts.id.initialize({client_id:c.google, ux_mode:'popup', auto_select:false, callback:function(r){
+        api('/api/auth/google',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({credential:r.credential})}).then(function(j){
+          if(j&&j.ok){SY.user=j.user; paintSync(); pull()} else toast('הכניסה נכשלה. נסו שוב.');
+        });
+      }});
+      return 'ok';
+    });
+  })) }
+  function gButton(slot,size){
+    gsiReady().then(function(st){
+      if(st==='nocfg'){slot.append(el('p','pg-hint','הכניסה עדיין לא הוגדרה.')); return}
+      if(st!=='ok'){slot.append(el('p','pg-hint','לא ניתן לטעון את כפתור Google כרגע.')); return}
+      google.accounts.id.renderButton(slot,{theme:'outline',size:size||'large',shape:'pill',text:'signin_with',locale:'he',width:240});
+    });
+  }
+  function logout(){ api('/api/auth/logout',{method:'POST'}).then(function(){SY.user=null; try{google.accounts.id.disableAutoSelect()}catch(e){} paintSync()}) }
   function syncBox(){
     var wrap=el('div','pg-sync');
     function paint(){
       wrap.innerHTML='';
       if(SY.user){
         wrap.append(el('p','pg-hint','מחובר'+(SY.user.name?' כ־'+SY.user.name:'')+(SY.user.email?' ('+SY.user.email+')':'')+'. ההתקדמות נשמרת גם בחשבון ומתעדכנת בכל מכשיר שבו תתחברו.'));
-        var out=el('button','btn','התנתקות'); out.type='button';
-        out.onclick=function(){api('/api/auth/logout',{method:'POST'}).then(function(){SY.user=null; try{google.accounts.id.disableAutoSelect()}catch(e){} paintSync()})};
+        var out=el('button','btn','התנתקות'); out.type='button'; out.onclick=logout;
         wrap.append(out); return;
       }
       wrap.append(el('p','pg-hint','התחברו כדי להמשיך מאותה נקודה בכל מכשיר — במחשב ובנייד. ההתקדמות שכבר יש בדפדפן הזה תצורף לחשבון.'));
       var pv=el('a','pg-hint','מה נשמר? מדיניות הפרטיות'); pv.href='/privacy/'; wrap.append(pv);
-      var slot=el('div','pg-gbtn'); wrap.append(slot);
-      authCfg().then(function(c){
-        if(!c||!c.google){slot.append(el('p','pg-hint','הכניסה עדיין לא הוגדרה.')); return}
-        loadGsi().then(function(ok){
-          if(!ok){slot.append(el('p','pg-hint','לא ניתן לטעון את כפתור Google כרגע.')); return}
-          google.accounts.id.initialize({client_id:c.google, ux_mode:'popup', auto_select:false, callback:function(r){
-            api('/api/auth/google',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({credential:r.credential})}).then(function(j){
-              if(j&&j.ok){SY.user=j.user; paintSync(); pull()} else slot.append(el('p','pg-hint','הכניסה נכשלה. נסו שוב.'));
-            });
-          }});
-          google.accounts.id.renderButton(slot,{theme:'outline',size:'large',shape:'pill',text:'signin_with',locale:'he'});
-        });
-      });
+      var slot=el('div','pg-gbtn'); wrap.append(slot); gButton(slot);
     }
     paint.w=wrap; syncEls.push(paint); paint(); return wrap;
   }
+  /* account chip, always visible at the top: "התחברות" or "שלום, <name>" with a small menu */
+  (function(){
+    var host=document.querySelector('.topnav'), app=document.getElementById('app')||document.querySelector('.wrap');
+    if(!host&&!app) return;
+    var box=el('div','acct'), btn=el('button','acct-btn'); btn.type='button'; btn.setAttribute('aria-haspopup','true'); btn.setAttribute('aria-expanded','false');
+    var menu=el('div','acct-menu'); menu.hidden=true; box.append(btn,menu);
+    if(host){ var g=el('span','topnav-end'); var b=host.querySelector('.ai-badge'); if(b) g.append(b); g.append(box); host.append(g); }
+    else { var bar=el('div','acct-bar'); bar.append(box); app.insertBefore(bar,app.firstChild); }
+    function close(){menu.hidden=true; btn.setAttribute('aria-expanded','false')}
+    btn.onclick=function(e){e.stopPropagation(); var o=menu.hidden; menu.hidden=!o; btn.setAttribute('aria-expanded',o); if(o) fill();};
+    document.addEventListener('click',function(e){ if(!box.contains(e.target)) close(); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+    var G='<svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.2z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.5-3.8-12.2-9H4.5v5.7C8.1 41.1 15.5 46 24 46z"/><path fill="#FBBC05" d="M11.8 28.3c-.4-1.3-.7-2.8-.7-4.3s.3-3 .7-4.3V14H4.5C3 17 2 20.4 2 24s1 7 2.5 10l7.3-5.7z"/><path fill="#EA4335" d="M24 10.7c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.5 2 8.1 6.9 4.5 14l7.3 5.7c1.7-5.2 6.5-9 12.2-9z"/></svg>';
+    function paint(){
+      close();
+      if(SY.user){
+        var n=(SY.user.name||'').trim()||(SY.user.email||'').split('@')[0];
+        btn.innerHTML=''; var av=el('span','acct-av',(n||'?').charAt(0)); btn.append(av, el('span','acct-t','שלום, '+n));
+        btn.setAttribute('aria-label','שלום '+n+' — תפריט חשבון'); box.classList.add('in');
+      } else {
+        btn.innerHTML=G; btn.append(el('span','acct-t','התחברות')); btn.setAttribute('aria-label','התחברות עם Google'); box.classList.remove('in');
+        gsiReady();
+      }
+    }
+    function fill(){
+      menu.innerHTML='';
+      if(SY.user){
+        if(SY.user.email) menu.append(el('p','acct-mail',SY.user.email));
+        menu.append(el('p','pg-hint','ההתקדמות נשמרת בחשבון ומסתנכרנת בין המכשירים.'));
+        var out=el('button','btn','התנתקות'); out.type='button'; out.onclick=logout; menu.append(out);
+      } else {
+        menu.append(el('p','acct-h','המשיכו מאותה נקודה בכל מכשיר'));
+        var slot=el('div','pg-gbtn'); menu.append(slot); gButton(slot);
+        var pv=el('a','pg-hint','מה נשמר? מדיניות הפרטיות'); pv.href='/privacy/'; menu.append(pv);
+      }
+    }
+    paint.w=box; syncEls.push(paint); paint();
+  })();
   api('/api/auth/me').then(function(j){ if(j&&j.user){SY.user=j.user; paintSync(); pull()} }).catch(function(){});
   var toastEl=null, toastT=null;
   function toast(msg,undo){
