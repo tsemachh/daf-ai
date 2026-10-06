@@ -32,6 +32,9 @@ missing or the API fails, note it in the report and continue with §2.
      `{status:"fixed", reply:"<what changed>", commit_sha:"<sha>"}`.
    - **Feature request** (site behaviour, not content) → `{status:"feature", reply:"נרשם כהצעה לשיפור האתר."}`.
    - **Not valid** → `{status:"rejected", reply:"<the source quote that shows why>"}`.
+   - **Page already correct** (the reader misread, e.g. the Gemara itself orders it so) → change NOTHING on
+     the page and do not add an explanatory note to it; only answer: `{status:"rejected", reply:"<short
+     explanation with the source>"}`.
    - **Unclear** → `{status:"needs-info", reply:"<what exact line / quote is needed>"}`.
 4. Email is automatic: send `status` and `reply` in the SAME `POST /update` call. When a note with
    `notify` reaches fixed / feature / rejected, the server emails the author the reply and page link once
@@ -158,6 +161,7 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
     `flow`, and set `"ends_next": true` (the next daf still covers those segments in full, with its רקע
     step). Only when the continuation is long (a new layer of argument, many segments) end with one step
     on where it is heading, mention it in `flow`, and set `"cont": "next"`.
+  - A sugya spanning both amudim: amud label "עמוד א–ב" (short; never "סוף עמוד א – תחילת עמוד ב").
   - Continues from the previous daf: amud label "עמוד א · המשך מדף X׳" (or `"cont": "prev"`) and open with a
     one-line רקע step recapping where the sugya stands. `build.py` adds the links between the two parts.
 - `srctext`: an entry for EVERY section ref (t = "בכורות י״ב ע״א", p = verbatim segments, a lone "…"

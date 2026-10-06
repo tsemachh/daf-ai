@@ -259,6 +259,7 @@
       var KEY='dafPrefs', P={};
       try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){P={}}
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+      var DEF={tree:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
       var OPTS=[['open','תקצירים, הקדמה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל']];
       function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids').forEach(function(d){d.open=on})}
@@ -269,13 +270,13 @@
       var pn=document.createElement('div'); pn.className='prefs'; pn.hidden=true;
       var hd=document.createElement('div'); hd.className='prefs-h'; hd.textContent='נשמר במכשיר זה, לכל הדפים'; pn.appendChild(hd);
       OPTS.forEach(function(o){
-        var l=document.createElement('label'); var c=document.createElement('input'); c.type='checkbox'; c.checked=!!P[o[0]];
+        var l=document.createElement('label'); var c=document.createElement('input'); c.type='checkbox'; c.checked=val(o[0]);
         c.addEventListener('change',function(){P[o[0]]=c.checked; save(); apply(o[0],c.checked);});
         l.append(c,document.createTextNode(' '+o[1])); pn.appendChild(l);
       });
       gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
       if(newGb) ctr.appendChild(gb); ctr.after(pn);
-      setTimeout(function(){ OPTS.forEach(function(o){ if(P[o[0]]) apply(o[0],true); }); },0);
+      setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
     })();
     var Q=[]; try{Q=JSON.parse(art.querySelector('.qdata').textContent)}catch(e){}
     var box=art.querySelector('[data-role="quizBox"]'), scoreEl=art.querySelector('[data-role="score"]');
