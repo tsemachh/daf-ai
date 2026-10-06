@@ -243,6 +243,32 @@ def cont_link(d, s, way):
     return ""
 
 
+
+HEB_L = "\u05d0-\u05ea"
+def flow_paras(t, target=200):
+    """Split a "בקצרה" paragraph into short paragraphs (~2 sentences) at sentence ends outside parentheses."""
+    sents, buf, q, par, i = [], "", False, 0, 0
+    tags = re.compile(r"<[^>]+>")
+    while i < len(t):
+        m = tags.match(t, i)
+        if m: buf += m.group(0); i = m.end(); continue
+        c = t[i]; buf += c
+        if c == "(": par += 1
+        elif c == ")": par = max(0, par - 1)
+        elif c in ".?!" and not par and (i + 1 == len(t) or t[i+1] == " "):
+            sents.append(buf.strip()); buf = ""
+        i += 1
+    if buf.strip(): sents.append(buf.strip())
+    paras, cur = [], ""
+    L = lambda z: len(re.sub(r"<[^>]+>", "", z))
+    for x in sents:
+        if cur and L(cur) + L(x) > target and L(cur) >= 60: paras.append(cur); cur = x
+        else: cur = (cur + " " + x).strip()
+    if cur:
+        if paras and len(re.sub(r"<[^>]+>", "", cur)) < 60: paras[-1] += " " + cur
+        else: paras.append(cur)
+    return '<div class="explain flow">' + "".join(f"<p>{x}</p>" for x in paras) + "</div>"
+
 def render_section(d, s):
     sid = f'{d["key"]}-{s["id"]}'
     ref = f' data-ref="{s["ref"]}"' if s.get("ref") else ""
@@ -257,7 +283,7 @@ def render_section(d, s):
         if s.get("quote"):
             parts.append(f'  <blockquote>{s["quote"]["text"]}<cite>{s["quote"]["cite"]}</cite></blockquote>')
         if s.get("flow"):
-            parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary><p class="explain flow">{s["flow"]}</p></details>')
+            parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary>{flow_paras(s["flow"])}</details>')
         if s.get("pre"):
             parts.append("  " + s["pre"])
         parts.append(render_steps(s["steps"]))
@@ -318,7 +344,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
   <div class="meta">{meta}</div>
-  <div class="legend"><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת להסבר</span></div>
+  <div class="legend"><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
   <div class="controls">
     <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>
     <button class="btn" data-role="mode" aria-pressed="false" type="button" title="מצב חברותא: התשובות מוסתרות — הקש על שלב לגילוי">חברותא</button>

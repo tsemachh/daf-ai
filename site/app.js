@@ -53,6 +53,45 @@
       }
     });
   }
+
+  /* quotes in the sugya steps: a verse quote followed by "(ספר פרק, פסוק)" becomes the source link
+     itself (the parenthetical goes); a Gemara quote ״…״ opens the Steinsaltz explanation of those words */
+  var HL=new RegExp('['+H+']'), VREF=new RegExp('^\\s*\\(('+Object.keys(BOOKS).join('|')+')\\s+(['+H+']{1,3})[׳\']?,\\s*(['+H+']{1,3})[׳\']?(?:[–-]['+H+']{1,3}[׳\']?)?\\)');
+  function quotes(art){
+    art.querySelectorAll('.steps .body, .verdicts li, .think').forEach(function(body){
+      var nodes=[], flat='', w=document.createTreeWalker(body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){return n.parentElement.closest('button,a,.tag')?2:1}});
+      while(w.nextNode()){ nodes.push({n:w.currentNode,o:flat.length}); flat+=w.currentNode.nodeValue; }
+      if(flat.indexOf('״')<0) return;
+      function at(pos){ for(var k=nodes.length-1;k>=0;k--){ if(nodes[k].o<=pos) return {n:nodes[k].n,i:pos-nodes[k].o}; } return null; }
+      var pairs=[], open=-1;
+      for(var i=0;i<flat.length;i++){ if(flat[i]!=='״') continue;
+        var pl=HL.test(flat[i-1]||' '), nl=HL.test(flat[i+1]||' ');
+        if(open<0){ if(nl&&(!pl||/[ומשהכלב]/.test(flat[i-1])&&!HL.test(flat[i-2]||' '))) open=i; }
+        else if(pl||/[?!.׳]/.test(flat[i-1])){ if(!nl){ pairs.push([open,i]); open=-1; } }
+      }
+      for(var k=pairs.length-1;k>=0;k--){
+        var a=pairs[k][0], b=pairs[k][1], after=flat.slice(b+1), vm=after.match(VREF);
+        var txt=flat.slice(a+1,b); if(!vm&&(txt.split(/\s+/).length<2||!body.closest('section.sugya'))) continue;
+        var s0=at(a), s1=at(b); if(!s0||!s1) continue;
+        var r=document.createRange(); try{ r.setStart(s0.n,s0.i); r.setEnd(s1.n,s1.i+1); }catch(e){ continue; }
+        /* a Gemara quote that cites a verse inside it (׳…׳): the inner verse becomes the link, the outer stays a Gemara quote */
+        var inner=null;
+        if(vm){ var ib=flat.lastIndexOf('׳',b-1), ia=ib>a?flat.lastIndexOf('׳',ib-1):-1;
+          while(ia>a&&HL.test(flat[ia-1])) ia=flat.lastIndexOf('׳',ia-1);
+          if(ia>a&&!HL.test(flat[ia-1])&&HL.test(flat[ia+1]||' ')&&!HL.test(flat[ib+1]||' ')&&flat.slice(ia+1,ib).trim().split(/\s+/).length>=2&&flat.slice(a+1,ia).trim().split(/\s+/).length>=2) inner=[ia,ib]; }
+        var url=vm?SEF+BOOKS[vm[1]]+'.'+gem(vm[2])+'.'+gem(vm[3])+'?lang=he':null, vref=vm?vm[0].trim().replace(/^\(|\)$/g,''):'';
+        function vlink(){ var v=mkSrc(url,''); v.classList.add('q-src'); v.title=vref; v.setAttribute('aria-label',(v.textContent||'')+' '+vref); return v; }
+        var el;
+        if(vm&&!inner){ el=vlink(); el.setAttribute('aria-label',txt+' — '+vref); }
+        else { el=document.createElement('span'); el.className='gq'; el.tabIndex=0; el.setAttribute('role','button'); el.title='ביאור שטיינזלץ'; }
+        if(inner){ var i0=at(inner[0]), i1=at(inner[1]);
+          if(i0&&i1){ var ri=document.createRange(); try{ ri.setStart(i0.n,i0.i); ri.setEnd(i1.n,i1.i+1); var v=vlink(); v.appendChild(ri.extractContents()); ri.insertNode(v); }catch(e){} } }
+        el.appendChild(r.extractContents()); r.insertNode(el);
+        /* the "(ספר פרק, פסוק)" right after the quote is now the link's title: drop it from the text */
+        if(vm){ var nx=el.nextSibling; if(nx&&nx.nodeType===3&&nx.nodeValue.indexOf(vm[0])===0) nx.nodeValue=nx.nodeValue.slice(vm[0].length); }
+      }
+    });
+  }
   function amudLinks(art){
     var tr=art.dataset.tractate, daf=parseInt(art.dataset.daf,10); if(!tr||!daf) return;
     art.querySelectorAll('.sugya > .amud').forEach(function(el){
@@ -130,6 +169,51 @@
       return last<0&&al.bw.length?(last=al.bw[0].c):last;
     });
   }
+
+  /* tap a Gemara quote in the steps → Steinsaltz for those words (from the section's own amud text) */
+  function stPop(q){
+    var sec=q.closest('section.sugya'), am=sec&&sec.querySelector(':scope > .amud'), key=am&&am.dataset.ref;
+    closePop(); pop.innerHTML=''; var pk=document.createElement('div'); pk.className='pk'; pk.textContent='ביאור שטיינזלץ';
+    var pd=document.createElement('div'); pd.className='st-pd'; pd.textContent='טוען…'; pop.append(pk,pd);
+    var cr=document.createElement('div'); cr.className='st-cr'; cr.textContent='CC-BY-NC · ספריא'; pop.append(cr);
+    pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
+    var r=q.getBoundingClientRect(), w=Math.min(320,innerWidth-32); pop.style.width=w+'px';
+    var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px';
+    if(!key){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+    var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean);
+    /* the section's own amudim first, then the neighbouring amudim (a sugya often quotes the previous daf) */
+    var art=q.closest('article.daf'), tr=art.dataset.tractate, dn=+art.dataset.daf, keys=[key];
+    [[dn-1,'b'],[dn,'a'],[dn,'b'],[dn+1,'a']].forEach(function(x){ if(x[0]>1) keys.push(tr+'.'+x[0]+x[1]); });
+    function find(segs){
+      var probe=full.split(' ').slice(0,3).join(' '), seg=null;
+      segs.some(function(x){ if(full.length>3&&x.n.indexOf(full)>=0){seg=x;return true} });
+      if(!seg&&probe.split(' ').length>=2) segs.some(function(x){ if(x.n.indexOf(probe)>=0){seg=x;return true} });
+      return seg;
+    }
+    function tryKey(k){
+      if(k>=keys.length) return Promise.resolve(null);
+      return loadSt(keys[k]).then(function(segs){ return find(segs)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
+    }
+    tryKey(0).then(function(seg){
+      if(cur!==q) return;
+      if(!seg){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+      /* the run of chunks whose Gemara words are the quote's words: start at the quote's first word, extend while they overlap */
+      var ch=chunks(seg.s), set={}, gws=ch.map(function(c){return norm(c.g).split(' ').filter(Boolean)});
+      qw.forEach(function(x){set[x]=1});
+      var ov=function(ci){return gws[ci].filter(function(x){return set[x]}).length};
+      var from=-1; for(var a=0;a<Math.min(3,qw.length)&&from<0;a++){ for(var ci=0;ci<ch.length;ci++){ if(gws[ci].indexOf(qw[a])>=0){from=ci;break} } }
+      if(from<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+      var to=from, got=ov(from); while(to+1<ch.length&&got<qw.length&&ov(to+1)>0&&to-from<6){ to++; got+=ov(to); }
+      pd.textContent=''; for(var i=from;i<=to;i++){ renderParts(pd,ch[i]); pd.appendChild(document.createTextNode(' ')); }
+    }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'; });
+  }
+  document.addEventListener('click',function(e){
+    if(e.target.closest&&e.target.closest('.info,button,a')) return;
+    var q=e.target.closest&&e.target.closest('.gq'); if(!q) return;
+    var hl=q.closest('li.ans'); if(hl&&hl.closest('.hide-mode')&&!hl.classList.contains('shown')) return;
+    if(cur===q){closePop();return} stPop(q);
+  });
+  document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('gq')){ e.preventDefault(); stPop(e.target); } });
   var lastFocus=null, bg=null;
   function closeSrc(){ if(bg){bg.remove(); bg=null; if(lastFocus) lastFocus.focus()} }
   function openSrc(a){
@@ -188,7 +272,7 @@
   },true);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSrc()});
   window.addEventListener('hashchange',closeSrc);
-  window.__enrichDaf=function(art){ if(art.dataset.enriched) return; art.dataset.enriched=1; linkify(art); amudLinks(art); glossify(art); };
+  window.__enrichDaf=function(art){ if(art.dataset.enriched) return; art.dataset.enriched=1; quotes(art); linkify(art); amudLinks(art); glossify(art); };
 })();
 
 (function(){
