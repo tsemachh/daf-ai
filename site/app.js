@@ -703,6 +703,7 @@
     c.querySelectorAll('p,li,br,div').forEach(function(x){ x.after(' '); });
     return c.textContent.replace(/ה׳/g,'השם').replace(/ע״א/g,'עמוד א').replace(/ע״ב/g,'עמוד ב')
       .replace(/(דף|דפים|דפי|פרק)\s+([א-ת]{0,2})[״׳]?([א-ת])['׳]?(?![א-ת])/g,function(m,w,a,b){ return w+' '+gm(a+b); })
+      .replace(/(^|[\s(—:–-])״([^״\u0001\u0002]{2,}?)״/g,function(m,a,q){ return a+A+q+Z; })
       .replace(/[״׳"]/g,'').replace(/[▤↗←→]/g,'').replace(/\s+/g,' ').trim();
   }
   function plain(t){ return t.replace(/[\u0001\u0002]/g,''); }
@@ -711,22 +712,41 @@
       if(ch===A||ch===Z){ if(cur) out.push({t:cur,r:inq}); cur=''; inq=(ch===A); } else cur+=ch; }
     if(cur) out.push({t:cur,r:inq}); return out; }
   /* ---- Dicta Nakdan (simple CORS POST, no preflight) + a per-browser cache ---- */
-  var NK_URL='https://nakdan-2-0.loadbalancer.dicta.org.il/api', CK='nk1:'+location.pathname, cache={};
+  var NK_URL='https://nakdan-2-0.loadbalancer.dicta.org.il/api', CK='nk2:'+location.pathname, cache={};
   try{cache=JSON.parse(localStorage.getItem(CK)||'{}')||{}}catch(e){cache={}}
-  function saveCache(){ try{localStorage.setItem(CK,JSON.stringify(cache))}catch(e){ try{ Object.keys(localStorage).filter(function(k){return k.indexOf('nk1:')===0&&k!==CK}).forEach(function(k){localStorage.removeItem(k)}); localStorage.setItem(CK,JSON.stringify(cache)); }catch(e2){} } }
+  function saveCache(){ try{localStorage.setItem(CK,JSON.stringify(cache))}catch(e){ try{ Object.keys(localStorage).filter(function(k){return k.indexOf('nk')===0&&k!==CK}).forEach(function(k){localStorage.removeItem(k)}); localStorage.setItem(CK,JSON.stringify(cache)); }catch(e2){} } }
   function nakdan(lines,genre){
     return fetch(NK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({task:'nakdan',genre:genre,data:lines.join('\n'),keepmetagim:false,keepqq:true})})
       .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
-      .then(function(ws){ var out=ws.map(function(w){ return (w.options&&w.options.length?w.options[0]:w.word).replace(/\|/g,''); }).join('').split('\n');
+      .then(function(ws){ var out=ws.map(function(w){ return (w.options&&w.options.length?w.options[0]:w.word); }).join('').split('\n');
         if(out.length!==lines.length) throw 'lines'; return out; });
+  }
+  /* pronunciation fixes. LEX: words the voice must say one way (sages' names, study terms). Other sages' names
+     (from the glossary) are vocalized once in rabbinic mode and used wherever they appear. */
+  var LEX={'רבי':'רַבִּי','רב':'רַב','רבה':'רַבָּה','חייא':'חִיָּיא','כהן':'כֹּהֵן','טרפון':'טַרְפוֹן','משנה':'מִשְׁנָה','אמי':'אַמִּי','אסי':'אַסִּי',
+    'הונא':'הוּנָא','יוחנן':'יוֹחָנָן','אביי':'אַבַּיֵּי','רבא':'רָבָא','נחמן':'נַחְמָן','יהודה':'יְהוּדָה','מאיר':'מֵאִיר','עקיבא':'עֲקִיבָא',
+    'שמעון':'שִׁמְעוֹן','אלעזר':'אֶלְעָזָר','אליעזר':'אֱלִיעֶזֶר','ישמעאל':'יִשְׁמָעֵאל','יוסי':'יוֹסֵי','פפא':'פָּפָּא','אשי':'אָשֵׁי','רבינא':'רָבִינָא',
+    'זירא':'זֵירָא','חסדא':'חִסְדָּא','ששת':'שֵׁשֶׁת','יוסף':'יוֹסֵף','אושעיא':'אוֹשַׁעְיָא','חנינא':'חֲנִינָא','גמליאל':'גַּמְלִיאֵל','עמרם':'עַמְרָם',
+    'אבהו':'אֲבָהוּ','עולא':'עוּלָּא','שמואל':'שְׁמוּאֵל','יהושע':'יְהוֹשֻׁעַ','ירמיה':'יִרְמְיָה','כהנא':'כָּהֲנָא','אבוה':'אֲבוּהַ','זוטרא':'זוּטְרָא',
+    'ברייתא':'בָּרַיְיתָא','גמרא':'גְּמָרָא','תנא':'תַּנָּא','מימרא':'מֵימְרָא','רישא':'רֵישָׁא','סיפא':'סֵיפָא','תיובתא':'תְּיוּבְתָּא','איבעיא':'אִיבַּעְיָא',
+    'קושיה':'קֻשְׁיָה','תירוץ':'תֵּרוּץ','בכור':'בְּכוֹר','בכורה':'בְּכוֹרָה','דרשה':'דְּרָשָׁה','מסקנה':'מַסְקָנָה','סוגיה':'סוּגְיָה','בהמה':'בְּהֵמָה','מתניתין':'מַתְנִיתִין'};
+  var NAMEW={}; try{ var GL=JSON.parse(document.getElementById('glossary').textContent);
+    Object.keys(GL).forEach(function(k){ if(GL[k].t==='תנא'||GL[k].t==='אמורא') k.split(/\s+/).forEach(function(w){ if(w.length>1&&!LEX[w]&&!/[״׳]/.test(w)) NAMEW[w]=1; }); }); }catch(e){}
+  function bare(w){ return w.replace(/[֑-ׇ]/g,''); }
+  function fix(v){   /* v: Dicta output with prefix|stem marks → apply LEX / name vocalizations to the stem */
+    return v.replace(/[א-ת֑-ׇ|]+/g,function(tok){ var parts=tok.split('|'), stem=parts.pop(), b=bare(stem);
+      var r=LEX[b]||cache['n:'+b]; return parts.join('')+(r||stem); });
   }
   function vocalize(items){
     var need={m:[],r:[]};
+    var names=[];
+    items.forEach(function(it){ if(it.say) return; (it.text.match(/[\u05D0-\u05EA]+/g)||[]).forEach(function(w){ [w,w.slice(1)].forEach(function(x){ if(NAMEW[x]&&!(('n:'+x) in cache)&&names.indexOf(x)<0) names.push(x); }); }); });
     items.forEach(function(it){ if(it.say) return; it.rs=it.rs||runs(it.text); it.rs.forEach(function(x){ var k=(x.r?'r:':'m:')+x.t.trim(); if(x.t.trim()&&!(k in cache)&&need[x.r?'r':'m'].indexOf(x.t.trim())<0) need[x.r?'r':'m'].push(x.t.trim()); }); });
     function batch(list,genre){ var jobs=[], cur=[], len=0; list.forEach(function(t){ if(len+t.length>2500&&cur.length){ jobs.push(cur); cur=[]; len=0; } cur.push(t); len+=t.length+1; }); if(cur.length) jobs.push(cur);
       return Promise.all(jobs.map(function(j){ return nakdan(j,genre).then(function(v){ j.forEach(function(t,i){ cache[(genre==='rabbinic'?'r:':'m:')+t]=v[i]; }); }); })); }
-    return Promise.all([batch(need.m,'modern'),batch(need.r,'rabbinic')]).then(function(){ saveCache(); },function(){ saveCache(); throw 'nk'; })
-      .then(function(){ items.forEach(function(it){ it.say=it.rs.map(function(x){ var v=cache[(x.r?'r:':'m:')+x.t.trim()]; return v?x.t.replace(x.t.trim(),v):x.t; }).join(''); }); });
+    var namesP=names.length?nakdan(names,'rabbinic').then(function(v){ names.forEach(function(w,i){ cache['n:'+w]=(v[i]||'').replace(/\|/g,'').trim(); }); }).catch(function(){}):Promise.resolve();
+    return Promise.all([namesP,batch(need.m,'modern'),batch(need.r,'rabbinic')]).then(function(){ saveCache(); },function(){ saveCache(); throw 'nk'; })
+      .then(function(){ items.forEach(function(it){ it.say=it.rs.map(function(x){ var v=cache[(x.r?'r:':'m:')+x.t.trim()]; return v?x.t.replace(x.t.trim(),fix(v).replace(/\|/g,'')):x.t; }).join(''); }); });
   }
   /* reading queue: one entry per element; long texts are split at sentence ends when spoken (some engines stop after ~15s) */
   function chunks(t){ var out=[], cur=''; t.split(/(?<=[.?!:;])\s+/).forEach(function(s){ if((cur+' '+s).length>220&&cur){out.push(cur); cur=s} else cur=(cur+' '+s).trim(); }); if(cur) out.push(cur); return out; }
