@@ -684,7 +684,8 @@
 
 
 /* listen mode: the browser's own Hebrew voice reads the sugyot — title, "בקצרה", then each step — with the
-   step being read highlighted. No server, works offline with the device's voice. */
+   step being read highlighted. Text is vocalized first with Dicta's Nakdan (modern Hebrew for the explanation,
+   rabbinic for Gemara/verse quotes) so the voice reads it right; vocalized text is kept in the browser. */
 (function(){
   var art=document.querySelector('article.daf'); if(!art||!('speechSynthesis' in window)) return;
   var ctr=art.querySelector('.controls'); if(!ctr) return;
@@ -692,29 +693,57 @@
   try{P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}}catch(e){}
   function pick(){ var vs=S.getVoices()||[]; voice=vs.filter(function(v){return /^(he|iw)/i.test(v.lang)}).sort(function(a,b){return (b.localService?1:0)-(a.localService?1:0)})[0]||null; }
   pick(); if(S.onvoiceschanged!==undefined) S.onvoiceschanged=pick;
+  var A='\u0001', Z='\u0002';   /* marks a Gemara / verse quote inside the text (rabbinic vocalization) */
+  var NUM={'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,'י':10,'כ':20,'ל':30,'מ':40,'נ':50,'ס':60,'ע':70,'פ':80,'צ':90,'ק':100,'ר':200,'ש':300,'ת':400};
+  function gm(w){ var n=0; for(var k=0;k<w.length;k++) n+=NUM[w[k]]||0; return n; }
   function clean(el){
     var c=el.cloneNode(true);
     c.querySelectorAll('.sec-tools,.fb-sec,.cv,.tn,.pg-mk,.vref,.fb-badge,script').forEach(function(x){x.remove()});
+    c.querySelectorAll('.gq,.q-src').forEach(function(q){ if(q.parentNode.closest&&q.parentNode.closest('.gq,.q-src')) return; q.prepend(A); q.append(Z); });
     c.querySelectorAll('p,li,br,div').forEach(function(x){ x.after(' '); });
-    var NUM={'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,'י':10,'כ':20,'ל':30,'מ':40,'נ':50,'ס':60,'ע':70,'פ':80,'צ':90,'ק':100,'ר':200,'ש':300,'ת':400};
-    var gm=function(w){ var n=0; for(var k=0;k<w.length;k++) n+=NUM[w[k]]||0; return n; };
     return c.textContent.replace(/ה׳/g,'השם').replace(/ע״א/g,'עמוד א').replace(/ע״ב/g,'עמוד ב')
       .replace(/(דף|דפים|דפי|פרק)\s+([א-ת]{0,2})[״׳]?([א-ת])['׳]?(?![א-ת])/g,function(m,w,a,b){ return w+' '+gm(a+b); })
       .replace(/[״׳"]/g,'').replace(/[▤↗←→]/g,'').replace(/\s+/g,' ').trim();
   }
-  /* reading queue: [{el (to highlight), text}] — long texts split at sentence ends (some engines stop after ~15s) */
+  function plain(t){ return t.replace(/[\u0001\u0002]/g,''); }
+  /* split text into runs: [{t, r:true|false}] (r = rabbinic) */
+  function runs(t){ var out=[], cur='', inq=false; for(var k=0;k<t.length;k++){ var ch=t[k];
+      if(ch===A||ch===Z){ if(cur) out.push({t:cur,r:inq}); cur=''; inq=(ch===A); } else cur+=ch; }
+    if(cur) out.push({t:cur,r:inq}); return out; }
+  /* ---- Dicta Nakdan (simple CORS POST, no preflight) + a per-browser cache ---- */
+  var NK_URL='https://nakdan-2-0.loadbalancer.dicta.org.il/api', CK='nk1:'+location.pathname, cache={};
+  try{cache=JSON.parse(localStorage.getItem(CK)||'{}')||{}}catch(e){cache={}}
+  function saveCache(){ try{localStorage.setItem(CK,JSON.stringify(cache))}catch(e){ try{ Object.keys(localStorage).filter(function(k){return k.indexOf('nk1:')===0&&k!==CK}).forEach(function(k){localStorage.removeItem(k)}); localStorage.setItem(CK,JSON.stringify(cache)); }catch(e2){} } }
+  function nakdan(lines,genre){
+    return fetch(NK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify({task:'nakdan',genre:genre,data:lines.join('\n'),keepmetagim:false,keepqq:true})})
+      .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+      .then(function(ws){ var out=ws.map(function(w){ return (w.options&&w.options.length?w.options[0]:w.word).replace(/\|/g,''); }).join('').split('\n');
+        if(out.length!==lines.length) throw 'lines'; return out; });
+  }
+  function vocalize(items){
+    var need={m:[],r:[]};
+    items.forEach(function(it){ if(it.say) return; it.rs=it.rs||runs(it.text); it.rs.forEach(function(x){ var k=(x.r?'r:':'m:')+x.t.trim(); if(x.t.trim()&&!(k in cache)&&need[x.r?'r':'m'].indexOf(x.t.trim())<0) need[x.r?'r':'m'].push(x.t.trim()); }); });
+    function batch(list,genre){ var jobs=[], cur=[], len=0; list.forEach(function(t){ if(len+t.length>2500&&cur.length){ jobs.push(cur); cur=[]; len=0; } cur.push(t); len+=t.length+1; }); if(cur.length) jobs.push(cur);
+      return Promise.all(jobs.map(function(j){ return nakdan(j,genre).then(function(v){ j.forEach(function(t,i){ cache[(genre==='rabbinic'?'r:':'m:')+t]=v[i]; }); }); })); }
+    return Promise.all([batch(need.m,'modern'),batch(need.r,'rabbinic')]).then(function(){ saveCache(); },function(){ saveCache(); throw 'nk'; })
+      .then(function(){ items.forEach(function(it){ it.say=it.rs.map(function(x){ var v=cache[(x.r?'r:':'m:')+x.t.trim()]; return v?x.t.replace(x.t.trim(),v):x.t; }).join(''); }); });
+  }
+  /* reading queue: one entry per element; long texts are split at sentence ends when spoken (some engines stop after ~15s) */
   function chunks(t){ var out=[], cur=''; t.split(/(?<=[.?!:;])\s+/).forEach(function(s){ if((cur+' '+s).length>220&&cur){out.push(cur); cur=s} else cur=(cur+' '+s).trim(); }); if(cur) out.push(cur); return out; }
   var Q=[];
   art.querySelectorAll('section.sugya').forEach(function(sec,si){
-    var h=sec.querySelector('h3'), fl=sec.querySelector('.explain.flow'), add=function(el,t,lead){ chunks((lead||'')+t).forEach(function(x){ Q.push({el:el,sec:sec,si:si,text:x}); }); };
+    var h=sec.querySelector('h3'), fl=sec.querySelector('.explain.flow'), add=function(el,t,lead){ if(t) Q.push({el:el,sec:sec,si:si,text:(lead||'')+t}); };
     if(h) add(h,clean(h),'סוגיה. ');
     if(fl) add(fl,clean(fl),'בקצרה. ');
     sec.querySelectorAll('ol.steps > li').forEach(function(li){
       var tg=li.querySelector('.tag'), bd=li.querySelector('.body'); if(!bd) return;
-      add(li, clean(bd), tg?clean(tg).replace(/\d.*$/,'').trim()+'. ':'');
+      add(li, clean(bd), tg?plain(clean(tg)).replace(/\d.*$/,'').trim()+'. ':'');
     });
   });
   if(!Q.length) return;
+  var secQ={}; Q.forEach(function(q){ (secQ[q.si]=secQ[q.si]||[]).push(q); });
+  var nkP={}, nkOff=false;
+  function ready(si){ if(!secQ[si]||nkOff) return Promise.resolve(); return nkP[si]||(nkP[si]=vocalize(secQ[si]).catch(function(){ nkOff=true; st.textContent='ללא ניקוד (אין חיבור לדיקטה)'; })); }
   var b=document.createElement('button'); b.type='button'; b.className='btn btn-ic'; b.dataset.role='listen'; b.textContent='🔊'; b.title='הקראת הסוגיות בקול'; b.setAttribute('aria-label','הקראה בקול');
   var gear=ctr.querySelector('[data-role="prefs"]'); if(gear) gear.after(b); else ctr.appendChild(b);
   var bar=document.createElement('div'); bar.className='tts-bar'; bar.hidden=true; bar.setAttribute('role','region'); bar.setAttribute('aria-label','הקראה');
@@ -729,28 +758,35 @@
     it.el.classList.add('tts-on'); if(lastEl!==it.el){ var d=it.el.closest('details'); if(d&&!d.open) d.open=true; it.el.scrollIntoView({block:'center',behavior:'smooth'}); }
     lastEl=it.el;
     var steps=it.sec.querySelectorAll('ol.steps > li'), k=[].indexOf.call(steps,it.el);
-    st.textContent='סוגיה '+(it.si+1)+(k>=0?' · שלב '+(k+1):'');
+    st.textContent='סוגיה '+(it.si+1)+(k>=0?' · שלב '+(k+1):'')+(nkOff?' · ללא ניקוד':'');
   }
+  var j=0;
   function speak(){
     if(!playing) return;
     if(i>=Q.length){ stop(); st.textContent='סוף הדף'; return; }
     var it=Q[i], my=++gen; mark(it);
-    var u=new SpeechSynthesisUtterance(it.text); u.lang='he-IL'; if(voice) u.voice=voice; u.rate=+rate.value||1;
-    u.onend=function(){ if(my!==gen) return; i++; speak(); };
-    u.onerror=function(e){ if(my!==gen||e.error==='interrupted'||e.error==='canceled') return; i++; speak(); };
-    S.speak(u);
+    ready(it.si+1);                                       /* vocalize the next sugya while this one is read */
+    ready(it.si).then(function(){
+      if(my!==gen||!playing) return;
+      var parts=chunks(plain(it.say||it.text));
+      if(j>=parts.length){ j=0; i++; return speak(); }
+      var u=new SpeechSynthesisUtterance(parts[j]); u.lang='he-IL'; if(voice) u.voice=voice; u.rate=+rate.value||1;
+      u.onend=function(){ if(my!==gen) return; j++; speak(); };
+      u.onerror=function(e){ if(my!==gen||e.error==='interrupted'||e.error==='canceled') return; j++; speak(); };
+      S.speak(u);
+    });
   }
   function play(){ playing=true; main.textContent='⏸'; main.setAttribute('aria-label','השהה'); S.cancel(); speak(); }
   function pause(){ playing=false; gen++; S.cancel(); main.textContent='▶'; main.setAttribute('aria-label','המשך'); }
   function stop(){ pause(); if(lastEl) lastEl.classList.remove('tts-on'); lastEl=null; }
-  function jump(dir){ var si=Q[Math.min(i,Q.length-1)].si+dir; var n=Q.findIndex(function(q){return q.si===si}); if(n<0) return; i=n; if(playing) play(); else mark(Q[i]); }
+  function jump(dir){ var si=Q[Math.min(i,Q.length-1)].si+dir; var n=Q.findIndex(function(q){return q.si===si}); if(n<0) return; i=n; j=0; if(playing) play(); else mark(Q[i]); }
   function fromView(){ var secs=art.querySelectorAll('section.sugya'); for(var k=0;k<secs.length;k++){ if(secs[k].getBoundingClientRect().bottom>innerHeight*0.3){ var n=Q.findIndex(function(q){return q.sec===secs[k]}); return n<0?0:n; } } return 0; }
-  b.addEventListener('click',function(){ if(!bar.hidden&&playing){ pause(); return; } bar.hidden=false; document.body.classList.add('tts-open'); if(!lastEl) i=fromView(); play(); if(!voice) setTimeout(function(){ if(!voice) st.textContent='אין קול עברי מותקן במכשיר — אפשר להוסיף בהגדרות המכשיר'; },1500); });
+  b.addEventListener('click',function(){ if(!bar.hidden&&playing){ pause(); return; } bar.hidden=false; document.body.classList.add('tts-open'); if(!lastEl){ i=fromView(); j=0; } play(); if(!voice) setTimeout(function(){ if(!voice) st.textContent='אין קול עברי מותקן במכשיר — אפשר להוסיף בהגדרות המכשיר'; },1500); });
   bar.addEventListener('click',function(e){ var a=e.target.closest('[data-a]'); if(!a) return; var w=a.dataset.a;
     if(w==='play') playing?pause():play(); else if(w==='next') jump(1); else if(w==='prev') jump(-1);
     else if(w==='close'){ stop(); bar.hidden=true; document.body.classList.remove('tts-open'); } });
   rate.addEventListener('change',function(){ try{P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; P.ttsRate=+rate.value; localStorage.setItem('dafPrefs',JSON.stringify(P))}catch(e){} if(playing) play(); });
   /* tap a step while the bar is open → read from there */
-  art.addEventListener('click',function(e){ if(bar.hidden||e.target.closest('button,a,.gq,.term')) return; var li=e.target.closest('ol.steps > li'); if(!li) return; var n=Q.findIndex(function(q){return q.el===li}); if(n>=0){ i=n; play(); } });
+  art.addEventListener('click',function(e){ if(bar.hidden||e.target.closest('button,a,.gq,.term')) return; var li=e.target.closest('ol.steps > li'); if(!li) return; var n=Q.findIndex(function(q){return q.el===li}); if(n>=0){ i=n; j=0; play(); } });
   window.addEventListener('pagehide',function(){ S.cancel(); });
 })();
