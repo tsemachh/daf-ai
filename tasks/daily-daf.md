@@ -32,6 +32,9 @@ missing or the API fails, note it in the report and continue with §2.
      `{status:"fixed", reply:"<what changed>", commit_sha:"<sha>"}`.
    - **Feature request** (site behaviour, not content) → `{status:"feature", reply:"נרשם כהצעה לשיפור האתר."}`.
    - **Not valid** → `{status:"rejected", reply:"<the source quote that shows why>"}`.
+   - **No change needed** (thanks / praise / "all good", or a question already answered on the page) → never
+     `fixed`: `{status:"rejected", reply:"<short thanks or answer>"}`. `fixed` only with a real commit (`commit_sha`) —
+     the page shows "✓ תוקן בעקבות הערת קורא" only for fixed notes that have one.
    - **Page already correct** (the reader misread, e.g. the Gemara itself orders it so) → change NOTHING on
      the page and do not add an explanatory note to it; only answer: `{status:"rejected", reply:"<short
      explanation with the source>"}`.
