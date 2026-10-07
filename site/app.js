@@ -682,3 +682,75 @@
   },{passive:false});
 })();
 
+
+/* listen mode: the browser's own Hebrew voice reads the sugyot — title, "בקצרה", then each step — with the
+   step being read highlighted. No server, works offline with the device's voice. */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art||!('speechSynthesis' in window)) return;
+  var ctr=art.querySelector('.controls'); if(!ctr) return;
+  var S=window.speechSynthesis, voice=null, P={};
+  try{P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}}catch(e){}
+  function pick(){ var vs=S.getVoices()||[]; voice=vs.filter(function(v){return /^(he|iw)/i.test(v.lang)}).sort(function(a,b){return (b.localService?1:0)-(a.localService?1:0)})[0]||null; }
+  pick(); if(S.onvoiceschanged!==undefined) S.onvoiceschanged=pick;
+  function clean(el){
+    var c=el.cloneNode(true);
+    c.querySelectorAll('.sec-tools,.fb-sec,.cv,.tn,.pg-mk,.vref,.fb-badge,script').forEach(function(x){x.remove()});
+    c.querySelectorAll('p,li,br,div').forEach(function(x){ x.after(' '); });
+    var NUM={'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,'י':10,'כ':20,'ל':30,'מ':40,'נ':50,'ס':60,'ע':70,'פ':80,'צ':90,'ק':100,'ר':200,'ש':300,'ת':400};
+    var gm=function(w){ var n=0; for(var k=0;k<w.length;k++) n+=NUM[w[k]]||0; return n; };
+    return c.textContent.replace(/ה׳/g,'השם').replace(/ע״א/g,'עמוד א').replace(/ע״ב/g,'עמוד ב')
+      .replace(/(דף|דפים|דפי|פרק)\s+([א-ת]{0,2})[״׳]?([א-ת])['׳]?(?![א-ת])/g,function(m,w,a,b){ return w+' '+gm(a+b); })
+      .replace(/[״׳"]/g,'').replace(/[▤↗←→]/g,'').replace(/\s+/g,' ').trim();
+  }
+  /* reading queue: [{el (to highlight), text}] — long texts split at sentence ends (some engines stop after ~15s) */
+  function chunks(t){ var out=[], cur=''; t.split(/(?<=[.?!:;])\s+/).forEach(function(s){ if((cur+' '+s).length>220&&cur){out.push(cur); cur=s} else cur=(cur+' '+s).trim(); }); if(cur) out.push(cur); return out; }
+  var Q=[];
+  art.querySelectorAll('section.sugya').forEach(function(sec,si){
+    var h=sec.querySelector('h3'), fl=sec.querySelector('.explain.flow'), add=function(el,t,lead){ chunks((lead||'')+t).forEach(function(x){ Q.push({el:el,sec:sec,si:si,text:x}); }); };
+    if(h) add(h,clean(h),'סוגיה. ');
+    if(fl) add(fl,clean(fl),'בקצרה. ');
+    sec.querySelectorAll('ol.steps > li').forEach(function(li){
+      var tg=li.querySelector('.tag'), bd=li.querySelector('.body'); if(!bd) return;
+      add(li, clean(bd), tg?clean(tg).replace(/\d.*$/,'').trim()+'. ':'');
+    });
+  });
+  if(!Q.length) return;
+  var b=document.createElement('button'); b.type='button'; b.className='btn btn-ic'; b.dataset.role='listen'; b.textContent='🔊'; b.title='הקראת הסוגיות בקול'; b.setAttribute('aria-label','הקראה בקול');
+  var gear=ctr.querySelector('[data-role="prefs"]'); if(gear) gear.after(b); else ctr.appendChild(b);
+  var bar=document.createElement('div'); bar.className='tts-bar'; bar.hidden=true; bar.setAttribute('role','region'); bar.setAttribute('aria-label','הקראה');
+  bar.innerHTML='<button type="button" data-a="prev" aria-label="הסוגיה הקודמת">⏭</button><button type="button" data-a="play" class="tts-main" aria-label="השהה">⏸</button><button type="button" data-a="next" aria-label="הסוגיה הבאה">⏮</button>'+
+    '<span class="tts-st" aria-live="polite"></span><select data-a="rate" aria-label="מהירות"><option value="0.8">0.8×</option><option value="1">1×</option><option value="1.2">1.2×</option><option value="1.5">1.5×</option></select><button type="button" data-a="close" aria-label="סגור">×</button>';
+  document.body.appendChild(bar);
+  var st=bar.querySelector('.tts-st'), main=bar.querySelector('.tts-main'), rate=bar.querySelector('select');
+  rate.value=String(P.ttsRate||1); if(!rate.value) rate.value='1';
+  var i=0, playing=false, gen=0, lastEl=null;
+  function mark(it){
+    if(lastEl&&lastEl!==it.el) lastEl.classList.remove('tts-on');
+    it.el.classList.add('tts-on'); if(lastEl!==it.el){ var d=it.el.closest('details'); if(d&&!d.open) d.open=true; it.el.scrollIntoView({block:'center',behavior:'smooth'}); }
+    lastEl=it.el;
+    var steps=it.sec.querySelectorAll('ol.steps > li'), k=[].indexOf.call(steps,it.el);
+    st.textContent='סוגיה '+(it.si+1)+(k>=0?' · שלב '+(k+1):'');
+  }
+  function speak(){
+    if(!playing) return;
+    if(i>=Q.length){ stop(); st.textContent='סוף הדף'; return; }
+    var it=Q[i], my=++gen; mark(it);
+    var u=new SpeechSynthesisUtterance(it.text); u.lang='he-IL'; if(voice) u.voice=voice; u.rate=+rate.value||1;
+    u.onend=function(){ if(my!==gen) return; i++; speak(); };
+    u.onerror=function(e){ if(my!==gen||e.error==='interrupted'||e.error==='canceled') return; i++; speak(); };
+    S.speak(u);
+  }
+  function play(){ playing=true; main.textContent='⏸'; main.setAttribute('aria-label','השהה'); S.cancel(); speak(); }
+  function pause(){ playing=false; gen++; S.cancel(); main.textContent='▶'; main.setAttribute('aria-label','המשך'); }
+  function stop(){ pause(); if(lastEl) lastEl.classList.remove('tts-on'); lastEl=null; }
+  function jump(dir){ var si=Q[Math.min(i,Q.length-1)].si+dir; var n=Q.findIndex(function(q){return q.si===si}); if(n<0) return; i=n; if(playing) play(); else mark(Q[i]); }
+  function fromView(){ var secs=art.querySelectorAll('section.sugya'); for(var k=0;k<secs.length;k++){ if(secs[k].getBoundingClientRect().bottom>innerHeight*0.3){ var n=Q.findIndex(function(q){return q.sec===secs[k]}); return n<0?0:n; } } return 0; }
+  b.addEventListener('click',function(){ if(!bar.hidden&&playing){ pause(); return; } bar.hidden=false; document.body.classList.add('tts-open'); if(!lastEl) i=fromView(); play(); if(!voice) setTimeout(function(){ if(!voice) st.textContent='אין קול עברי מותקן במכשיר — אפשר להוסיף בהגדרות המכשיר'; },1500); });
+  bar.addEventListener('click',function(e){ var a=e.target.closest('[data-a]'); if(!a) return; var w=a.dataset.a;
+    if(w==='play') playing?pause():play(); else if(w==='next') jump(1); else if(w==='prev') jump(-1);
+    else if(w==='close'){ stop(); bar.hidden=true; document.body.classList.remove('tts-open'); } });
+  rate.addEventListener('change',function(){ try{P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; P.ttsRate=+rate.value; localStorage.setItem('dafPrefs',JSON.stringify(P))}catch(e){} if(playing) play(); });
+  /* tap a step while the bar is open → read from there */
+  art.addEventListener('click',function(e){ if(bar.hidden||e.target.closest('button,a,.gq,.term')) return; var li=e.target.closest('ol.steps > li'); if(!li) return; var n=Q.findIndex(function(q){return q.el===li}); if(n>=0){ i=n; play(); } });
+  window.addEventListener('pagehide',function(){ S.cancel(); });
+})();
