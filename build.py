@@ -45,6 +45,7 @@ SOURCES = [
     ("כולל עיון הדף — dafyomi.co.il", "https://www.dafyomi.co.il/", "סיכומי נקודות וטבלאות עזר"),
     ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
     ("״דף מאיר״ — הרב אורי בריליאנט, אתר סיני", "https://www.sinai.org.il/", "חוברת לבדיקת מסכת בכורות (דפים ב–טז)"),
+    ("דיקטה — הנקדן", "https://nakdan.dicta.org.il/", "ניקוד אוטומטי של הטקסט לפני ההקראה בקול"),
 ]
 
 
