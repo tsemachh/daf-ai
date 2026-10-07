@@ -92,6 +92,16 @@
       }
     });
   }
+  /* the verse shown at the top of a sugya: the verse itself is the source link (like verse quotes in the steps) */
+  function verseHeads(art){
+    art.querySelectorAll('section.sugya > blockquote').forEach(function(bq){
+      var c=bq.querySelector('cite'), a=c&&c.querySelector('.src'); if(!a) return;
+      var ref=a.textContent.trim(); a.textContent=''; a.classList.add('q-src'); a.title=ref;
+      while(bq.firstChild&&bq.firstChild!==c) a.appendChild(bq.firstChild);
+      a.setAttribute('aria-label',a.textContent+' — '+ref); bq.insertBefore(a,c);
+      c.textContent=ref; c.classList.add('vref');
+    });
+  }
   function amudLinks(art){
     var tr=art.dataset.tractate, daf=parseInt(art.dataset.daf,10); if(!tr||!daf) return;
     art.querySelectorAll('.sugya > .amud').forEach(function(el){
@@ -150,7 +160,7 @@
     var am=amudim(key); if(!am) return Promise.reject('ref');
     return ST[key]=Promise.all(am.map(function(r){
       return Promise.all([getJ(SEF+'api/texts/'+r+'?lang=he&context=0&commentary=0'),getJ(SEF+'api/texts/Steinsaltz_on_'+r+'?lang=he&context=0&pad=0')])
-        .then(function(x){var g=x[0].he||[], s=x[1].he||[]; return g.map(function(t,i){return {n:norm(t), s:s[i]||''}})});
+        .then(function(x){var g=x[0].he||[], s=x[1].he||[]; return g.map(function(t,i){return {n:norm(t), s:s[i]||'', a:r, i:i}})});
     })).then(function(l){return [].concat.apply([],l)}).catch(function(e){delete ST[key]; throw e});
   }
   function alignPara(segs,text){
@@ -171,16 +181,26 @@
   }
 
   /* tap a Gemara quote in the steps → Steinsaltz for those words (from the section's own amud text) */
+  /* Rashi on the Gemara (Sefaria): one list of comments per Gemara segment */
+  var RS={};
+  function loadRashi(amud){ return RS[amud]||(RS[amud]=getJ(SEF+'api/texts/Rashi_on_'+amud+'?lang=he&context=0&pad=0').then(function(x){return x.he||[]}).catch(function(e){delete RS[amud]; throw e})); }
+  function cmtPref(){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; return P.rashi?'rashi':'st'; }catch(e){ return 'st'; } }
+  function setCmtPref(m){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; P.rashi=(m==='rashi'); localStorage.setItem('dafPrefs',JSON.stringify(P)); }catch(e){} document.dispatchEvent(new CustomEvent('daf:cmt',{detail:m})); }
+  /* tap a Gemara quote in the steps → Steinsaltz or Rashi for those words (tabs; the default is a setting) */
   function stPop(q){
     var sec=q.closest('section.sugya'), am=sec&&sec.querySelector(':scope > .amud'), key=am&&am.dataset.ref;
-    closePop(); pop.innerHTML=''; var pk=document.createElement('div'); pk.className='pk'; pk.textContent='ביאור שטיינזלץ';
-    var pd=document.createElement('div'); pd.className='st-pd'; pd.textContent='טוען…'; pop.append(pk,pd);
-    var cr=document.createElement('div'); cr.className='st-cr'; cr.textContent='CC-BY-NC · ספריא'; pop.append(cr);
+    closePop(); pop.innerHTML='';
+    var tabs=document.createElement('div'); tabs.className='cm-tabs'; tabs.setAttribute('role','tablist');
+    var T={}; [['st','שטיינזלץ'],['rashi','רש״י']].forEach(function(x){ var t=document.createElement('button'); t.type='button'; t.className='cm-tab'; t.setAttribute('role','tab'); t.textContent=x[1]; t.dataset.m=x[0]; T[x[0]]=t; tabs.appendChild(t); });
+    var pd=document.createElement('div'); pd.className='st-pd'; pd.textContent='טוען…';
+    var cr=document.createElement('div'); cr.className='st-cr';
+    pop.append(tabs,pd,cr);
     pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
-    var r=q.getBoundingClientRect(), w=Math.min(320,innerWidth-32); pop.style.width=w+'px';
+    var r=q.getBoundingClientRect(), w=Math.min(340,innerWidth-32); pop.style.width=w+'px';
     var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px';
     if(!key){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
-    var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean);
+    var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean), set={};
+    qw.forEach(function(x){ if(x.length>1) set[x]=1; });
     /* the section's own amudim first, then the neighbouring amudim (a sugya often quotes the previous daf) */
     var art=q.closest('article.daf'), tr=art.dataset.tractate, dn=+art.dataset.daf, keys=[key];
     [[dn-1,'b'],[dn,'a'],[dn,'b'],[dn+1,'a']].forEach(function(x){ if(x[0]>1) keys.push(tr+'.'+x[0]+x[1]); });
@@ -194,18 +214,45 @@
       if(k>=keys.length) return Promise.resolve(null);
       return loadSt(keys[k]).then(function(segs){ return find(segs)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
     }
-    tryKey(0).then(function(seg){
-      if(cur!==q) return;
-      if(!seg){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+    var found=tryKey(0);
+    function showSt(seg){
+      cr.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא';
       /* the run of chunks whose Gemara words are the quote's words: start at the quote's first word, extend while they overlap */
-      var ch=chunks(seg.s), set={}, gws=ch.map(function(c){return norm(c.g).split(' ').filter(Boolean)});
-      qw.forEach(function(x){set[x]=1});
+      var ch=chunks(seg.s), gws=ch.map(function(c){return norm(c.g).split(' ').filter(Boolean)});
       var ov=function(ci){return gws[ci].filter(function(x){return set[x]}).length};
       var from=-1; for(var a=0;a<Math.min(3,qw.length)&&from<0;a++){ for(var ci=0;ci<ch.length;ci++){ if(gws[ci].indexOf(qw[a])>=0){from=ci;break} } }
       if(from<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
       var to=from, got=ov(from); while(to+1<ch.length&&got<qw.length&&ov(to+1)>0&&to-from<6){ to++; got+=ov(to); }
       pd.textContent=''; for(var i=from;i<=to;i++){ renderParts(pd,ch[i]); pd.appendChild(document.createTextNode(' ')); }
-    }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'; });
+    }
+    function showRashi(seg){
+      cr.textContent='רש״י · ספריא';
+      return loadRashi(seg.a).then(function(all){
+        if(cur!==q) return;
+        var list=(all[seg.i]||[]).filter(Boolean);
+        if(!list.length){ pd.textContent='אין רש״י על קטע זה.'; return; }
+        /* the comments whose dibbur hamatchil is in the quote; otherwise every comment on that line */
+        var dh=function(c){ var m=c.match(/<b>([\s\S]*?)<\/b>/); return norm(m?m[1]:c.split(/\s[-–—]\s/)[0]).split(' ').filter(Boolean); };
+        var hit=list.filter(function(c){ return dh(c).some(function(x){return set[x]}); });
+        var show=hit.length?hit:list;
+        pd.textContent='';
+        if(!hit.length){ var n=document.createElement('p'); n.className='cm-note'; n.textContent='רש״י על השורה:'; pd.appendChild(n); }
+        show.forEach(function(c){ var p=document.createElement('p'); p.className='cm-r';
+          var h=c.replace(/<(?!\/?b>)[^>]+>/g,''); if(h.indexOf('<b>')<0) h=h.replace(/^([^]*?)(\s[-–—]\s)/,'<b>$1</b>$2');
+          var tmp=document.createElement('div'); tmp.innerHTML=h; p.append.apply(p,[].slice.call(tmp.childNodes)); pd.appendChild(p); });
+      });
+    }
+    function show(m){
+      Object.keys(T).forEach(function(k){ T[k].setAttribute('aria-selected',k===m); T[k].classList.toggle('on',k===m); });
+      pd.textContent='טוען…';
+      found.then(function(seg){
+        if(cur!==q) return;
+        if(!seg){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+        return m==='rashi'?showRashi(seg):showSt(seg);
+      }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
+    }
+    Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); setCmtPref(k); show(k); }; });
+    show(cmtPref());
   }
   document.addEventListener('click',function(e){
     if(e.target.closest&&e.target.closest('.info,button,a')) return;
@@ -272,7 +319,7 @@
   },true);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSrc()});
   window.addEventListener('hashchange',closeSrc);
-  window.__enrichDaf=function(art){ if(art.dataset.enriched) return; art.dataset.enriched=1; quotes(art); linkify(art); amudLinks(art); glossify(art); };
+  window.__enrichDaf=function(art){ if(art.dataset.enriched) return; art.dataset.enriched=1; quotes(art); linkify(art); verseHeads(art); amudLinks(art); glossify(art); };
 })();
 
 (function(){
@@ -345,7 +392,7 @@
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
       var DEF={tree:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
-      var OPTS=[['open','תקצירים, הקדמה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל']];
+      var OPTS=[['open','תקצירים, הקדמה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל'],['rashi','הקשה על ציטוט פותחת את רש״י (במקום שטיינזלץ)']];
       function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids').forEach(function(d){d.open=on})}
       function setBtn(role,on){var b=art.querySelector('.controls [data-role="'+role+'"]'); if(b&&(b.getAttribute('aria-pressed')==='true')!==on) b.click();}
       function apply(k,on){ if(k==='open') setOpen(on); if(k==='tree') setBtn('tree',on); if(k==='chav') setBtn('mode',on); }
@@ -356,6 +403,7 @@
       OPTS.forEach(function(o){
         var l=document.createElement('label'); var c=document.createElement('input'); c.type='checkbox'; c.checked=val(o[0]);
         c.addEventListener('change',function(){P[o[0]]=c.checked; save(); apply(o[0],c.checked);});
+        if(o[0]==='rashi') document.addEventListener('daf:cmt',function(e){ P.rashi=e.detail==='rashi'; c.checked=P.rashi; });
         l.append(c,document.createTextNode(' '+o[1])); pn.appendChild(l);
       });
       gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});

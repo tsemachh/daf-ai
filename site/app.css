@@ -47,8 +47,8 @@ nav.map h2,.sec-h{font-family:var(--serif);font-size:26px;margin:0 0 12px}
 section.sugya{margin-top:36px;padding-top:24px;border-top:1px solid var(--line)}
 .sugya .amud{font-size:13px;letter-spacing:.05em;color:var(--gold);font-weight:700}
 .sugya h3{font-family:var(--serif);font-size:30px;line-height:1.25;margin:4px 0 14px;text-wrap:balance}
-blockquote{margin:0 0 16px;padding:14px 20px;background:var(--gold-soft);border-radius:4px 12px 12px 4px;font-family:var(--serif);font-size:22px;line-height:1.6}
-blockquote cite{display:block;font-family:var(--sans);font-style:normal;font-size:14px;color:var(--gold);margin-top:6px}
+blockquote{margin:0 0 14px;padding:10px 16px;background:var(--gold-soft);border-radius:4px 12px 12px 4px;font-family:var(--serif);font-size:19px;line-height:1.55}
+blockquote cite{display:inline-block;font-family:var(--sans);font-style:normal;font-size:13px;color:var(--gold);margin-inline-start:10px;white-space:nowrap}
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .steps li{display:grid;grid-template-columns:78px 1fr;gap:12px;align-items:start}
 .tag{font-size:13px;font-weight:800;text-align:center;border-radius:6px;padding:3px 0;margin-top:4px;background:var(--accent-soft);color:var(--accent)}
@@ -588,3 +588,14 @@ a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
 .acct-row{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap}
 .acct-row .thesis{flex:1 1 220px;margin-block:0}
 .acct-row .acct{margin-inline-start:auto}
+
+/* commentary popup: Steinsaltz / Rashi tabs */
+.cm-tabs{display:flex;gap:6px;margin-bottom:8px}
+.cm-tab{font:inherit;font-size:13px;font-weight:700;padding:3px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
+.cm-tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.pop .cm-r{margin:0 0 8px}
+.pop .cm-r b{color:var(--accent)}
+.pop .cm-note{margin:0 0 6px;font-size:12px;color:var(--muted)}
+blockquote .q-src{font:inherit;color:inherit;padding:0!important;margin:0!important;line-height:inherit}
+blockquote cite.vref{display:inline;font-size:12px;margin-inline-start:8px}
+@media (max-width:480px){blockquote cite.vref{display:none}}
