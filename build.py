@@ -248,7 +248,7 @@ def cont_link(d, s, way):
 
 
 HEB_L = "\u05d0-\u05ea"
-def split_paras(t, target=200):
+def split_paras(t, target=150):
     """Split a "בקצרה" paragraph into short paragraphs (~2 sentences) at sentence ends outside parentheses."""
     sents, buf, q, par, i = [], "", False, 0, 0
     tags = re.compile(r"<[^>]+>")
@@ -258,22 +258,22 @@ def split_paras(t, target=200):
         c = t[i]; buf += c
         if c == "(": par += 1
         elif c == ")": par = max(0, par - 1)
-        elif c in ".?!" and not par and (i + 1 == len(t) or t[i+1] == " "):
+        elif c in ".?!;" and not par and (i + 1 == len(t) or t[i+1] == " "):
             sents.append(buf.strip()); buf = ""
         i += 1
     if buf.strip(): sents.append(buf.strip())
     paras, cur = [], ""
     L = lambda z: len(re.sub(r"<[^>]+>", "", z))
     for x in sents:
-        if cur and L(cur) + L(x) > target and L(cur) >= 60: paras.append(cur); cur = x
+        if cur and L(cur) + L(x) > target and L(cur) >= 50: paras.append(cur); cur = x
         else: cur = (cur + " " + x).strip()
     if cur:
-        if paras and len(re.sub(r"<[^>]+>", "", cur)) < 60: paras[-1] += " " + cur
+        if paras and len(re.sub(r"<[^>]+>", "", cur)) < 40: paras[-1] += " " + cur
         else: paras.append(cur)
     return paras
 
 
-def flow_paras(t, target=200):
+def flow_paras(t, target=150):
     return '<div class="explain flow">' + "".join(f"<p>{x}</p>" for x in split_paras(t, target)) + "</div>"
 
 def render_section(d, s):
@@ -342,7 +342,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     eyebrow = " · ".join(rest)
     mins = esc(mins[0].replace("דקות לימוד", "דק׳").replace("דקות", "דק׳")) if mins else ""
     nav = "\n".join(f'    <li><a href="#{key}-{n["id"]}"><span class="amud">{n["amud"]}</span>{n["title"]}</a></li>' for n in d["nav"])
-    story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary>{"".join(f"<p>{x}</p>" for x in split_paras(d["storyline"], 240))}</details>'
+    story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary>{"".join(f"<p>{x}</p>" for x in split_paras(d["storyline"], 160))}</details>'
              if d.get("storyline") else "")
     sections = "\n\n".join(render_section(d, s) for s in d["sections"])
     links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in d.get("links", []))
