@@ -735,7 +735,13 @@
   function bare(w){ return w.replace(/[֑-ׇ]/g,''); }
   function fix(v){   /* v: Dicta output with prefix|stem marks → apply LEX / name vocalizations to the stem */
     return v.replace(/[א-ת֑-ׇ|]+/g,function(tok){ var parts=tok.split('|'), stem=parts.pop(), b=bare(stem);
-      var r=LEX[b]||cache['n:'+b]; return parts.join('')+(r||stem); });
+      var r=LEX[b]||cache['n:'+b]; if(r) return parts.join('')+r;
+      /* Dicta read a prefixed form as one word (לכהן → לְכַהֵן): split the prefix ourselves */
+      if(!parts.length&&b.length>2&&/^[והבכלמשד]/.test(b)){ var rest=b.slice(1), rv=LEX[rest]||cache['n:'+rest];
+        if(rv){ var nm=!/^(ברייתא|גמרא|תנא|מימרא|רישא|סיפא|תיובתא|איבעיא|קושיה|תירוץ|בכור|בכורה|דרשה|מסקנה|סוגיה|בהמה|משנה|מתניתין|כהן)$/.test(rest);
+          var PF=nm?{'ו':'וְ','ה':'הַ','ב':'בְּ','כ':'כְּ','ל':'לְ','מ':'מֵ','ש':'שֶׁ','ד':'דְּ'}:{'ו':'וְ','ה':'הַ','ב':'בַּ','כ':'כַּ','ל':'לַ','מ':'מֵ','ש':'שֶׁ','ד':'דְּ'};
+          return PF[b[0]]+rv; } }
+      return parts.join('')+stem; });
   }
   function vocalize(items){
     var need={m:[],r:[]};
