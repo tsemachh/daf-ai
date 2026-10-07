@@ -748,7 +748,10 @@ def main():
     render_lab(glossary, sources)
     about_p = os.path.join(ROOT, "content", "home_about.html")
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
-    latest = sorted(alld, key=lambda d: d.get("order", d["daf"]), reverse=True)[:7]
+    # newest by Daf Yomi date; dapim prepared far ahead (the "ahead" queue) stay off the home page until their week
+    horizon = (il_today() + dt.timedelta(days=7)).isoformat()
+    dated = [(yomi_date(d["slug"], d["daf"]) or "", d) for d in alld]
+    latest = [d for y, d in sorted(dated, key=lambda x: x[0], reverse=True) if y and y <= horizon][:7]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
     # quiz bank for spaced review (fetched by progress.js on /review/ and for the "yesterday" opener)
     json.dump({f"{d['slug']}/{d['daf']}": d["quiz"] for d in alld}, open(os.path.join(DIST, "quiz.json"), "w", encoding="utf8"),
