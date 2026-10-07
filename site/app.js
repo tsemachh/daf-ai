@@ -222,20 +222,31 @@
     function showSt(seg){
       cr.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא';
       var parts=String(seg.s||'').replace(/<(?!\/?(b|strong)>)[^>]+>/g,'').split(/<\/?(?:b|strong)>/);
-      var bw=parts.map(function(t,i){ return i%2?norm(t).split(' ').filter(Boolean):null; });
-      var start=-1, end=-1, first=qw.slice(0,2), last=qw.slice(-2);
-      for(var i=1;i<parts.length&&start<0;i+=2){ if(bw[i].some(function(w){return first.some(function(x){return wEq(x,w)})})) start=i; }
-      if(start<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
-      for(var j=start;j<parts.length&&j<=start+20;j+=2){ if(bw[j].some(function(w){return last.some(function(x){return wEq(x,w)})})) { end=j; if(bw[j].some(function(w){return wEq(qw[qw.length-1],w)})) break; } }
-      if(end<0){ end=start; for(var k=start+2;k<parts.length&&bw[k].some(inQ);k+=2) end=k; }
-      /* a bold run can hold the end of the previous phrase too: start it at the quote's first word */
-      var sw=parts[start].split(/(\s+)/), cut=0;
-      for(var z=0;z<sw.length;z++){ var nw=norm(sw[z]); if(nw&&first.some(function(x){return wEq(x,nw)})){ cut=z; break; } }
-      parts=parts.slice(); parts[start]=sw.slice(cut).join('');
-      /* …and if it runs on into the next phrase, end it at the quote's last word (the explanation after it is for the next phrase) */
-      var ew=parts[end].split(/(\s+)/), lastAt=-1, after=0, stop=end+1;
-      for(var y=0;y<ew.length;y++){ var nv=norm(ew[y]); if(!nv) continue; if(wEq(qw[qw.length-1],nv)){ lastAt=y; after=0; } else if(lastAt>=0) after++; }
-      if(lastAt>=0&&after>3){ parts[end]=ew.slice(0,lastAt+1).join(''); stop=end; }
+      /* every bold (Gemara) word with its run and its token index in that run */
+      var bw=[], sp=parts.map(function(t){ return t.split(/(\s+)/); });
+      for(var i=1;i<parts.length;i+=2) sp[i].forEach(function(tk,z){ norm(tk).split(' ').forEach(function(w){ if(w) bw.push({w:w,i:i,z:z}); }); });
+      /* start where the most of the quote's opening words follow in order (a word like ״בידי״ can occur in an earlier phrase too) */
+      var k0=-1, best=0;
+      for(var k=0;k<bw.length;k++){ var n=0; while(n<qw.length&&k+n<bw.length&&wEq(qw[n],bw[k+n].w)) n++; if(n>best){ best=n; k0=k; if(n===qw.length) break; } }
+      if(k0<0) for(var k1=0;k1<bw.length&&k0<0;k1++){ if(qw.slice(0,2).some(function(x){return wEq(x,bw[k1].w)})) k0=k1; }
+      if(k0<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+      /* end at the quote's last word (Steinsaltz may insert words between the quoted ones) */
+      var e0=k0+Math.max(best,1)-1, lw=qw[qw.length-1];
+      if(best<qw.length) for(var e=Math.max(e0,k0+1);e<bw.length&&e<=k0+qw.length+12;e++){ if(wEq(lw,bw[e].w)){ e0=e; break; } }
+      var start=bw[k0].i, end=bw[e0].i, stop=end+1;
+      parts=parts.slice();
+      /* the end run runs on into the next phrase: cut it at the quote's last word */
+      var ew=sp[end], after=0; for(var y=bw[e0].z+1;y<ew.length;y++){ if(norm(ew[y])) after++; }
+      if(after>3){ parts[end]=ew.slice(0,bw[e0].z+1).join(''); stop=end; }
+      /* the start run can hold the end of the previous phrase too: start it at the quote's first word */
+      parts[start]=(start===end&&stop===end?ew.slice(0,bw[e0].z+1):sp[start]).slice(bw[k0].z).join('');
+      /* the explanation after the quote: finish its sentence, and leave out the lead-in to the next phrase */
+      if(stop===end+1&&stop<parts.length){
+        var tail=parts[stop], dot=Math.max(tail.lastIndexOf('.'),tail.lastIndexOf('?'),tail.lastIndexOf('!'));
+        if(/[.?!][\s\)\]]*$/.test(tail)||stop+1>=parts.length){ }
+        else if(dot>=0) parts[stop]=tail.slice(0,dot+1);
+        else for(var f=stop+1;f<parts.length&&f<=stop+4;f++){ stop=f; if(f%2===0){ var d2=parts[f].search(/[.?!]/); if(d2>=0){ parts[f]=parts[f].slice(0,d2+1); break; } } }
+      }
       pd.textContent='';
       for(var m=start;m<=stop&&m<parts.length;m++){ var t=parts[m]; if(!t) continue;
         if(m%2){ var bb=document.createElement('b'); bb.textContent=t; pd.appendChild(bb); } else pd.appendChild(document.createTextNode(t)); }
