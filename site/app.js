@@ -215,29 +215,50 @@
       return loadSt(keys[k]).then(function(segs){ return find(segs)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
     }
     var found=tryKey(0);
+    function wEq(a,b){ return a===b||(a.length>2&&b.length>2&&(a===b.slice(1)||b===a.slice(1)||a===b.slice(2)||b===a.slice(2))); }  /* ו/ה/ש prefixes */
+    function inQ(w){ return qw.some(function(x){return wEq(x,w)}); }
+    /* Steinsaltz: from the bold run holding the quote's first word to the run holding its last word,
+       plus the explanation right after it — nothing from neighbouring phrases */
     function showSt(seg){
       cr.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא';
-      /* the run of chunks whose Gemara words are the quote's words: start at the quote's first word, extend while they overlap */
-      var ch=chunks(seg.s), gws=ch.map(function(c){return norm(c.g).split(' ').filter(Boolean)});
-      var ov=function(ci){return gws[ci].filter(function(x){return set[x]}).length};
-      var from=-1; for(var a=0;a<Math.min(3,qw.length)&&from<0;a++){ for(var ci=0;ci<ch.length;ci++){ if(gws[ci].indexOf(qw[a])>=0){from=ci;break} } }
-      if(from<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
-      var to=from, got=ov(from); while(to+1<ch.length&&got<qw.length&&ov(to+1)>0&&to-from<6){ to++; got+=ov(to); }
-      pd.textContent=''; for(var i=from;i<=to;i++){ renderParts(pd,ch[i]); pd.appendChild(document.createTextNode(' ')); }
+      var parts=String(seg.s||'').replace(/<(?!\/?(b|strong)>)[^>]+>/g,'').split(/<\/?(?:b|strong)>/);
+      var bw=parts.map(function(t,i){ return i%2?norm(t).split(' ').filter(Boolean):null; });
+      var start=-1, end=-1, first=qw.slice(0,2), last=qw.slice(-2);
+      for(var i=1;i<parts.length&&start<0;i+=2){ if(bw[i].some(function(w){return first.some(function(x){return wEq(x,w)})})) start=i; }
+      if(start<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+      for(var j=start;j<parts.length&&j<=start+20;j+=2){ if(bw[j].some(function(w){return last.some(function(x){return wEq(x,w)})})) { end=j; if(bw[j].some(function(w){return wEq(qw[qw.length-1],w)})) break; } }
+      if(end<0){ end=start; for(var k=start+2;k<parts.length&&bw[k].some(inQ);k+=2) end=k; }
+      /* a bold run can hold the end of the previous phrase too: start it at the quote's first word */
+      var sw=parts[start].split(/(\s+)/), cut=0;
+      for(var z=0;z<sw.length;z++){ var nw=norm(sw[z]); if(nw&&first.some(function(x){return wEq(x,nw)})){ cut=z; break; } }
+      parts=parts.slice(); parts[start]=sw.slice(cut).join('');
+      /* …and if it runs on into the next phrase, end it at the quote's last word (the explanation after it is for the next phrase) */
+      var ew=parts[end].split(/(\s+)/), lastAt=-1, after=0, stop=end+1;
+      for(var y=0;y<ew.length;y++){ var nv=norm(ew[y]); if(!nv) continue; if(wEq(qw[qw.length-1],nv)){ lastAt=y; after=0; } else if(lastAt>=0) after++; }
+      if(lastAt>=0&&after>3){ parts[end]=ew.slice(0,lastAt+1).join(''); stop=end; }
+      pd.textContent='';
+      for(var m=start;m<=stop&&m<parts.length;m++){ var t=parts[m]; if(!t) continue;
+        if(m%2){ var bb=document.createElement('b'); bb.textContent=t; pd.appendChild(bb); } else pd.appendChild(document.createTextNode(t)); }
+    }
+    /* Rashi: only the comments whose dibbur hamatchil is taken from the quote */
+    function rashiFor(seg){
+      return loadRashi(seg.a).then(function(all){
+        var qn=' '+qw.join(' ')+' ';
+        return (all[seg.i]||[]).filter(Boolean).filter(function(c){
+          var m=c.match(/<b>([\s\S]*?)<\/b>/), d=norm(m?m[1]:c.split(/\s[-–—]\s/)[0]).split(' ').filter(Boolean).slice(0,3);
+          if(!d.length) return false;
+          if(qn.indexOf(' '+d.join(' ')+' ')>=0) return true;
+          return d.every(inQ)&&d.length>=(qw.length>1?2:1);
+        });
+      });
     }
     function showRashi(seg){
       cr.textContent='רש״י · ספריא';
-      return loadRashi(seg.a).then(function(all){
+      return rashiFor(seg).then(function(list){
         if(cur!==q) return;
-        var list=(all[seg.i]||[]).filter(Boolean);
-        if(!list.length){ pd.textContent='אין רש״י על קטע זה.'; return; }
-        /* the comments whose dibbur hamatchil is in the quote; otherwise every comment on that line */
-        var dh=function(c){ var m=c.match(/<b>([\s\S]*?)<\/b>/); return norm(m?m[1]:c.split(/\s[-–—]\s/)[0]).split(' ').filter(Boolean); };
-        var hit=list.filter(function(c){ return dh(c).some(function(x){return set[x]}); });
-        var show=hit.length?hit:list;
+        if(!list.length){ pd.textContent='אין רש״י על ציטוט זה.'; return; }
         pd.textContent='';
-        if(!hit.length){ var n=document.createElement('p'); n.className='cm-note'; n.textContent='רש״י על השורה:'; pd.appendChild(n); }
-        show.forEach(function(c){ var p=document.createElement('p'); p.className='cm-r';
+        list.forEach(function(c){ var p=document.createElement('p'); p.className='cm-r';
           var h=c.replace(/<(?!\/?b>)[^>]+>/g,''); if(h.indexOf('<b>')<0) h=h.replace(/^([^]*?)(\s[-–—]\s)/,'<b>$1</b>$2');
           var tmp=document.createElement('div'); tmp.innerHTML=h; p.append.apply(p,[].slice.call(tmp.childNodes)); pd.appendChild(p); });
       });
@@ -252,7 +273,14 @@
       }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
     }
     Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); setCmtPref(k); show(k); }; });
-    show(cmtPref());
+    T.rashi.hidden=true;
+    var want=cmtPref();
+    found.then(function(seg){ return seg?rashiFor(seg):[]; }).then(function(list){
+      if(cur!==q) return;
+      if(list.length){ T.rashi.hidden=false; if(want==='rashi') show('rashi'); }
+      else if(want==='rashi') show('st');
+    }).catch(function(){ if(cur===q&&want==='rashi') show('st'); });
+    if(want!=='rashi') show('st'); else pd.textContent='טוען…';
   }
   document.addEventListener('click',function(e){
     if(e.target.closest&&e.target.closest('.info,button,a')) return;
