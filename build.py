@@ -118,7 +118,7 @@ CSS = " ".join(open(os.path.join(ROOT, "site", "app.css"), encoding="utf8").read
 # cache-busting version for the scripts: a new deploy never runs against a stale cached copy
 import hashlib  # noqa: E402
 ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
-                                for f in ("app.js", "progress.js"))).hexdigest()[:8]
+                                for f in ("app.js", "progress.js", "pwa.js", "sw.js", "app.css"))).hexdigest()[:8]
 
 
 def page(title, body, desc="", depth=0, og="site.png", canonical=""):
@@ -126,6 +126,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical=""):
     ogi = f"{SITE_URL}/og/{og}"
     canon = f'<link rel="canonical" href="{canonical}">\n' if canonical else ""
     body = re.sub(r'((?:app|progress)\.js)(")', rf'\1?v={ASSET_V}\2', body)
+    body += f'\n<script src="/pwa.js?v={ASSET_V}" defer></script>'
     return f"""<!doctype html>
 <html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -134,7 +135,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical=""):
 <meta property="og:site_name" content="דפי חזרה ולימוד"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:image" content="{ogi}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ogi}">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#2B4C7E"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <style>{CSS}</style>
@@ -657,11 +658,45 @@ def render_notes(by_slug):
     return page("הערות קוראים · " + SITE_TITLE, body, "הערות הקוראים שטופלו והתגובות להן", depth=1)
 
 
+
+def write_pwa():
+    """Installable app + offline reading: manifest, service worker (versioned with the assets), /offline/ page."""
+    sw = open(os.path.join(ROOT, "site", "sw.js"), encoding="utf8").read().replace("__ASSET_V__", ASSET_V)
+    open(os.path.join(DIST, "sw.js"), "w", encoding="utf8").write(sw)
+    man = {"name": SITE_TITLE, "short_name": "דף יומי", "lang": "he", "dir": "rtl", "start_url": "/?source=pwa", "scope": "/",
+           "display": "standalone", "background_color": "#F3F4EF", "theme_color": "#2B4C7E",
+           "description": "דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה. עובד גם בלי חיבור.",
+           "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
+                     {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
+                     {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]}
+    json.dump(man, open(os.path.join(DIST, "manifest.webmanifest"), "w", encoding="utf8"), ensure_ascii=False)
+    os.makedirs(os.path.join(DIST, "offline"), exist_ok=True)
+    body = """<div class="wrap" id="app"><section><header><h1>אין חיבור לאינטרנט</h1>
+<p class="thesis">הדף הזה עוד לא נשמר במכשיר. אלה הדפים שכבר שמורים וזמינים לקריאה:</p></header>
+<ul class="offline-list" id="saved"><li class="fb-muted">בודק…</li></ul>
+<p class="fb-muted">כל דף שפותחים נשמר אוטומטית, וגם שבעת הדפים האחרונים נשמרים מראש כשיש חיבור.</p>
+<p><a class="back" href="/">→ דף הבית</a></p></section></div>
+<script>
+(function(){var ul=document.getElementById('saved'), H={};
+try{JSON.parse(document.getElementById('catalog').textContent).pages.forEach(function(p){H['/'+p.k+'/']=p})}catch(e){}
+if(!window.caches){ul.innerHTML='<li>הדפדפן אינו תומך בשמירה.</li>';return}
+caches.open('pages-v1').then(function(c){return c.keys()}).then(function(ks){
+  var re=/^\\/([a-z_]+)\\/(\\d+)\\/$/, items=[];
+  ks.forEach(function(r){var u=new URL(r.url), m=u.pathname.match(re); if(m) items.push({h:u.pathname, s:m[1], d:+m[2]})});
+  items.sort(function(a,b){return a.s.localeCompare(b.s)||a.d-b.d});
+  ul.innerHTML=''; if(!items.length){ul.innerHTML='<li>עוד אין דפים שמורים.</li>';return}
+  items.forEach(function(it){var li=document.createElement('li'), a=document.createElement('a'); a.href=it.h; var c=H[it.h]; a.textContent=c?c.h:(it.s+' '+it.d); if(c&&c.t){var t=document.createElement('span'); t.className='fb-muted'; t.textContent=' — '+c.t; li.append(a,t); ul.appendChild(li); return} li.appendChild(a); ul.appendChild(li)});
+}).catch(function(){ul.innerHTML='<li>לא ניתן לקרוא את הדפים השמורים.</li>'});})();
+</script>"""
+    open(os.path.join(DIST, "offline", "index.html"), "w", encoding="utf8").write(
+        page("אין חיבור · " + SITE_TITLE, catalog_json() + body, "קריאה בלי חיבור", depth=1))
+
+
 def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
     os.makedirs(DIST)
-    for f in ("app.css", "app.js", "progress.js"):
+    for f in ("app.css", "app.js", "progress.js", "pwa.js"):
         shutil.copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
     shutil.copytree(os.path.join(ROOT, "site", "fonts"), os.path.join(DIST, "fonts"))
     if os.path.isdir(os.path.join(ROOT, "site", "og")):
@@ -680,7 +715,7 @@ def main():
     for slug, ds in by_slug.items():
         for he, sef, sl, first, last in dafyomi.MASECHTOT:
             if sl == slug:
-                CATALOG["mas"][slug] = {"he": he, "first": first, "last": last,
+                CATALOG["mas"][slug] = {"he": he, "tr": sef, "first": first, "last": last,
                                         "p": [[x["he"], x["from"], x["to"]] for x in perakim.get(slug, [])]}
         for d in sorted(ds, key=lambda x: x["daf"]):
             CATALOG["pages"].append({"k": f"{slug}/{d['daf']}", "s": slug, "d": d["daf"],
@@ -774,6 +809,7 @@ def main():
         "הדף לא נמצא · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><header><h1>הדף לא נמצא</h1>'
         f'<p class="thesis">הכתובת אינה קיימת. <a href="/">לדף הבית</a></p></header></section></div>', "הדף לא נמצא"))
+    write_pwa()
     print(f"built {len(alld)} dafim in {len(by_slug)} masechtot -> {DIST}")
 
 

@@ -599,3 +599,8 @@ a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
 blockquote .q-src{font:inherit;color:inherit;padding:0!important;margin:0!important;line-height:inherit}
 blockquote cite.vref{display:inline;font-size:12px;margin-inline-start:8px}
 @media (max-width:480px){blockquote cite.vref{display:none}}
+/* offline */
+#offline-note{position:fixed;inset-inline:12px;bottom:12px;z-index:70;background:var(--ink);color:var(--paper);font-size:14px;line-height:1.5;padding:10px 14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.offline-list{list-style:none;padding:0;margin:16px 0;display:grid;gap:8px}
+.offline-list a{font-weight:700}
+.offline-list a{color:var(--accent)}
