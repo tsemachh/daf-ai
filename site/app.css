@@ -614,3 +614,5 @@ blockquote cite.vref{display:inline;font-size:12px;margin-inline-start:8px}
 .tts-on{background:var(--accent-soft);border-radius:8px;box-shadow:0 0 0 4px var(--accent-soft)}
 body.tts-open{padding-bottom:84px}
 body.tts-open #offline-note{bottom:76px}
+.tts-sec{font:inherit;font-size:15px;line-height:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 8px;margin-inline:6px;cursor:pointer;vertical-align:middle}
+.tts-sec:hover{border-color:var(--accent)}

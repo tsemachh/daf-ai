@@ -733,6 +733,7 @@
   var Q=[];
   art.querySelectorAll('section.sugya').forEach(function(sec,si){
     var h=sec.querySelector('h3'), fl=sec.querySelector('.explain.flow'), add=function(el,t,lead){ if(t) Q.push({el:el,sec:sec,si:si,text:(lead||'')+t}); };
+    if(!sec.querySelector('ol.steps')&&!fl) return;
     if(h) add(h,clean(h),'סוגיה. ');
     if(fl) add(fl,clean(fl),'בקצרה. ');
     sec.querySelectorAll('ol.steps > li').forEach(function(li){
@@ -744,8 +745,14 @@
   var secQ={}; Q.forEach(function(q){ (secQ[q.si]=secQ[q.si]||[]).push(q); });
   var nkP={}, nkOff=false;
   function ready(si){ if(!secQ[si]||nkOff) return Promise.resolve(); return nkP[si]||(nkP[si]=vocalize(secQ[si]).catch(function(){ nkOff=true; st.textContent='ללא ניקוד (אין חיבור לדיקטה)'; })); }
-  var b=document.createElement('button'); b.type='button'; b.className='btn btn-ic'; b.dataset.role='listen'; b.textContent='🔊'; b.title='הקראת הסוגיות בקול'; b.setAttribute('aria-label','הקראה בקול');
-  var gear=ctr.querySelector('[data-role="prefs"]'); if(gear) gear.after(b); else ctr.appendChild(b);
+  /* a 🔊 on each sugya (in its amud row): read from that sugya on */
+  var secBtns=[];
+  art.querySelectorAll('section.sugya').forEach(function(sec,si){
+    if(!secQ[si]) return; var host=sec.querySelector(':scope > .amud')||sec.querySelector('h3'); if(!host) return;
+    var sb=document.createElement('button'); sb.type='button'; sb.className='tts-sec'; sb.textContent='🔊'; sb.title='הקראת הסוגיה בקול'; sb.setAttribute('aria-label','הקראת הסוגיה בקול');
+    sb.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); startAt(si); });
+    host.insertBefore(sb, host.querySelector('.amud-t')?host.querySelector('.amud-t').nextSibling:host.firstChild); secBtns.push(sb);
+  });
   var bar=document.createElement('div'); bar.className='tts-bar'; bar.hidden=true; bar.setAttribute('role','region'); bar.setAttribute('aria-label','הקראה');
   bar.innerHTML='<button type="button" data-a="prev" aria-label="הסוגיה הקודמת">⏭</button><button type="button" data-a="play" class="tts-main" aria-label="השהה">⏸</button><button type="button" data-a="next" aria-label="הסוגיה הבאה">⏮</button>'+
     '<span class="tts-st" aria-live="polite"></span><select data-a="rate" aria-label="מהירות"><option value="0.8">0.8×</option><option value="1">1×</option><option value="1.2">1.2×</option><option value="1.5">1.5×</option></select><button type="button" data-a="close" aria-label="סגור">×</button>';
@@ -781,7 +788,12 @@
   function stop(){ pause(); if(lastEl) lastEl.classList.remove('tts-on'); lastEl=null; }
   function jump(dir){ var si=Q[Math.min(i,Q.length-1)].si+dir; var n=Q.findIndex(function(q){return q.si===si}); if(n<0) return; i=n; j=0; if(playing) play(); else mark(Q[i]); }
   function fromView(){ var secs=art.querySelectorAll('section.sugya'); for(var k=0;k<secs.length;k++){ if(secs[k].getBoundingClientRect().bottom>innerHeight*0.3){ var n=Q.findIndex(function(q){return q.sec===secs[k]}); return n<0?0:n; } } return 0; }
-  b.addEventListener('click',function(){ if(!bar.hidden&&playing){ pause(); return; } bar.hidden=false; document.body.classList.add('tts-open'); if(!lastEl){ i=fromView(); j=0; } play(); if(!voice) setTimeout(function(){ if(!voice) st.textContent='אין קול עברי מותקן במכשיר — אפשר להוסיף בהגדרות המכשיר'; },1500); });
+  function startAt(si){
+    var n=Q.findIndex(function(q){return q.si===si}); if(n<0) return;
+    if(!bar.hidden&&playing&&Q[i]&&Q[i].si===si){ pause(); return; }
+    bar.hidden=false; document.body.classList.add('tts-open'); i=n; j=0; play();
+    if(!voice) setTimeout(function(){ if(!voice) st.textContent='אין קול עברי מותקן במכשיר — אפשר להוסיף בהגדרות המכשיר'; },1500);
+  }
   bar.addEventListener('click',function(e){ var a=e.target.closest('[data-a]'); if(!a) return; var w=a.dataset.a;
     if(w==='play') playing?pause():play(); else if(w==='next') jump(1); else if(w==='prev') jump(-1);
     else if(w==='close'){ stop(); bar.hidden=true; document.body.classList.remove('tts-open'); } });

@@ -9,7 +9,8 @@
     var C={pages:[]}; try{C=JSON.parse(document.getElementById('catalog').textContent)}catch(e){}
     var cn=navigator.connection, save=cn&&(cn.saveData||/2g/.test(cn.effectiveType||''));
     /* the latest dapim (today and the next days, as prepared), so they open on the train */
-    var latest=(C.pages||[]).slice().sort(function(a,b){return (b.y||'').localeCompare(a.y||'')}).slice(0,save?2:7);
+    var hz=new Date(Date.now()+7*864e5).toISOString().slice(0,10);
+    var latest=(C.pages||[]).filter(function(p){return p.y&&p.y<=hz}).sort(function(a,b){return (b.y||'').localeCompare(a.y||'')}).slice(0,save?2:7);
     var msg={type:'warm', pages:latest.map(function(p){return '/'+p.k+'/'}), sefaria:[]};
     var art=document.querySelector('article.daf');
     if(art&&art.dataset.tractate) msg.sefaria=sefUrls(art.dataset.tractate,art.dataset.daf);            /* the daf being read */
