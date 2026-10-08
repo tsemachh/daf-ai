@@ -616,3 +616,14 @@ body.tts-open{padding-bottom:84px}
 body.tts-open #offline-note{bottom:76px}
 .tts-sec{font:inherit;font-size:15px;line-height:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 8px;margin-inline:6px;cursor:pointer;vertical-align:middle}
 .tts-sec:hover{border-color:var(--accent)}
+/* home: how to use it */
+details.howto{margin:18px 0 6px;padding:12px 16px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+details.howto>summary{cursor:pointer;font-weight:700;font-size:17px;color:var(--accent);list-style:none}
+details.howto>summary::-webkit-details-marker{display:none}
+details.howto>summary::before{content:"◂ ";display:inline-block;transition:transform .15s}
+details.howto[open]>summary::before{transform:rotate(-90deg)}
+details.howto ol{margin:10px 0 2px;padding-inline-start:22px;display:grid;gap:8px;font-size:16px;line-height:1.6}
+/* first visit: חברותא hint */
+.cv-hint{margin:12px 0 0;padding:10px 14px;background:var(--accent-soft);border-radius:12px;font-size:15px;line-height:1.55}
+.cv-hint-x{font:inherit;font-size:14px;font-weight:700;margin-inline-start:8px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:2px 12px;cursor:pointer}
+details.howto .howto-lead{margin:10px 0 4px;font-size:16px;line-height:1.6}

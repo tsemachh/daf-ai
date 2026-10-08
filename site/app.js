@@ -430,6 +430,10 @@
       try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){P={}}
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
       var DEF={tree:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
+      /* a first-time visitor starts in חברותא (answers hidden — think first, then tap); explained once, easy to turn off */
+      var fresh=false;
+      try{ if(localStorage.getItem(KEY)===null){ var pr=JSON.parse(localStorage.getItem('dafProgress')||'null'), pk=pr&&pr.pages?Object.keys(pr.pages):[];
+        if(pk.length<=1){ P.chav=true; save(); fresh=true; } } }catch(e){}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
       var OPTS=[['open','תקצירים, הקדמה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל'],['rashi','הקשה על ציטוט פותחת את רש״י (במקום שטיינזלץ)']];
       function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids').forEach(function(d){d.open=on})}
@@ -448,6 +452,10 @@
       gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
       if(newGb) ctr.appendChild(gb); ctr.after(pn);
       setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
+      if(fresh){ var hint=document.createElement('p'); hint.className='cv-hint'; hint.setAttribute('role','note');
+        hint.innerHTML='<b>מצב חברותא פועל:</b> התשובות בכל סוגיה מוסתרות — חשבו מה עונים, ואז הקישו על השלב כדי לגלות. לכיבוי: כפתור ״חברותא״ למעלה.';
+        var hx=document.createElement('button'); hx.type='button'; hx.className='cv-hint-x'; hx.setAttribute('aria-label','הבנתי'); hx.textContent='הבנתי'; hx.onclick=function(){hint.remove()}; hint.appendChild(hx);
+        ctr.after(hint); }
     })();
     var Q=[]; try{Q=JSON.parse(art.querySelector('.qdata').textContent)}catch(e){}
     var box=art.querySelector('[data-role="quizBox"]'), scoreEl=art.querySelector('[data-role="score"]');
