@@ -481,6 +481,24 @@ def whatsnew(limit=None, link=True):
     return f'<section class="wn"><h2 class="sec-h">מה חדש באתר</h2><ul class="wn-l">{"".join(out)}</ul>{more}</section>'
 
 
+
+def howto_block():
+    """Home: a short "how to use it in three minutes" guide, open for first-time visitors."""
+    return """<details class="howto" id="howto">
+  <summary>איך משתמשים — בשלוש דקות</summary>
+  <p class="howto-lead">שני דברים עושים את ההבדל: <b>חזרה שבודקת שבאמת הבנתם</b>, ו<b>חלוקה לסוגיות עם מעקב התקדמות</b> — כך יודעים בדיוק מה כבר יושב ומה עוד לא.</p>
+  <ol>
+    <li><b>בוחרים דף ומתקדמים סוגיה אחר סוגיה.</b> דף היום מופיע ראשון. כל סוגיה שקראתם מסומנת ✓ ב״מהלך הדף״, וסרגל בצד מראה איפה אתם.</li>
+    <li><b>קוראים את מהלך הסוגיה.</b> כל שלב מתויג — משנה, קושיה, תירוץ, מסקנה — ובתצוגת עץ כל שלב מוזח תחת השלב שעליו הוא עונה. ״בקצרה״ נותן את התמונה במשפט־שניים.</li>
+    <li><b>חושבים לפני שמגלים.</b> במצב חברותא התשובות מוסתרות: עוצרים, מנסים לענות, ומקישים על השלב כדי לגלות ולסמן אם ידעתם.</li>
+    <li><b>נעזרים במקור.</b> הקשה על ציטוט מהגמרא מביאה את ביאור שטיינזלץ (ורש״י כשיש); הקשה על שם או מונח מסומן מסבירה מי ומה; כפתור ״הגמרא״ פותח את לשון הגמרא.</li>
+    <li><b>בודקים את עצמכם.</b> שאלות החזרה בסוף הדף בודקות שהבנתם, לא רק שקראתם; שאלה שטעיתם בה חוזרת אליכם אחרי יום, ואחר כך אחרי 3, 7 ו־21 ימים. 🔊 בכל סוגיה מקריא אותה בקול.</li>
+  </ol>
+</details>
+<script>(function(){var d=document.getElementById('howto');try{if(!localStorage.getItem('howto-seen'))d.open=true;}catch(e){}
+d.addEventListener('toggle',function(){if(!d.open){try{localStorage.setItem('howto-seen','1')}catch(e){}}});})();</script>"""
+
+
 def lab_banner():
     if not LAB:
         return ""
@@ -504,6 +522,7 @@ def render_home(by_slug, latest, about):
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
+{howto_block()}
 {lab_banner()}
 <div id="progress-home"></div>
 <h2 class="sec-h" style="margin-top:28px">הדפים האחרונים</h2>
