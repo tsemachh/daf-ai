@@ -144,6 +144,13 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   in חברותא mode the site hides exactly the `a`/`c` steps (answers, rejections, conclusions) and shows
   the `q` and source steps as prompts. Never leave a segment as "לא הורחב כאן" — give at least a
   one-line gist. Verdict cards use neutral colours (no ok/no class for a halachic side).
+- **Explain, don't transcribe (reader feedback on Bechorot 18):** each step says in clear modern Hebrew what is
+  argued and why (the logic, the assumption, what the questioner thinks), using Steinsaltz/Rashi to understand it,
+  and anchors itself with a SHORT Gemara key-phrase in ״…״ (usually 2–8 words: the term or the decisive words) —
+  not whole sentences. Gemara quotes stay ≤ ~30% of all step text (a Mishnah line or a decisive ruling may be
+  quoted longer). Model page: `data/bechorot/18.json`. If sinai.org.il (״דף מאיר״, הרב אורי בריליאנט) has a
+  written summary for the daf (pages like `https://www.sinai.org.il/בכורות-יט/`), you may use it to check the
+  flow and the explanations (the site agreed); the Gemara text itself stays the source of truth.
 - **Visual aids ("עזרים") — only when they make the sugya clearer, and never invent anything:** every cell,
   line and arrow must state what the Gemara (or a fetched verse) says; where it says nothing, write ״לא נאמר״
   or leave the aid out. Most sugyot need none. The menu: `table`, `decide`, `chain` (below), `calc` (worked
