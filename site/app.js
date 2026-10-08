@@ -107,7 +107,8 @@
     art.querySelectorAll('.sugya > .amud').forEach(function(el){
       if(el.firstChild&&el.firstChild.nodeType===3&&el.firstChild.nodeValue.trim()){var at=document.createElement('span'); at.className='amud-t'; at.textContent=el.firstChild.nodeValue.trim(); at.title=at.textContent; el.replaceChild(at,el.firstChild)}
       if(el.dataset.ref){var sb=mkSrc(SEF+el.dataset.ref+'?lang=he','לשון הגמרא'); if(sb.tagName==='BUTTON') sb.innerHTML='<span class="m-hide">לשון </span>הגמרא'; el.appendChild(sb);
-        if(sb.tagName==='BUTTON'){var st=mkSrc(SEF+el.dataset.ref+'?lang=he','שטיינזלץ'); st.dataset.st='1'; st.classList.add('st'); el.appendChild(st)} return;}
+        if(sb.tagName==='BUTTON'){var st=mkSrc(SEF+el.dataset.ref+'?lang=he','שטיינזלץ'); st.dataset.st='1'; st.classList.add('st'); el.appendChild(st);
+          var rs=mkSrc(SEF+el.dataset.ref+'?lang=he','רש״י'); rs.dataset.rs='1'; rs.classList.add('st'); el.appendChild(rs)} return;}
       var t=el.textContent, m=t.match(new RegExp('\\((['+H+']{1,3})([.:])\\)')), ref=null;
       if(m){ref=tr+'.'+gem(m[1])+(m[2]===':'?'b':'a')}
       else{var a=t.match(/עמוד ([אב])/); if(a) ref=tr+'.'+daf+(a[1]==='א'?'a':'b')}
@@ -169,7 +170,7 @@
     if(!seg&&n.length>8) segs.some(function(x){var a=n.slice(0,30), b=x.n.slice(0,30); if(x.n.indexOf(a)===0||n.indexOf(b)===0){seg=x;return true}});
     if(!seg) return null;
     var ch=chunks(seg.s), bw=[]; ch.forEach(function(c,ci){norm(c.g).split(' ').forEach(function(w){if(w) bw.push({w:w,c:ci})})});
-    return {ch:ch, bw:bw};
+    return {ch:ch, bw:bw, seg:seg};
   }
   function mapTokens(al,toks){
     var j=0, last=-1;
@@ -310,7 +311,7 @@
     var h=document.createElement('header'); var h4=document.createElement('h4'); h4.textContent=it.t; var x=document.createElement('button'); x.type='button'; x.className='x'; x.setAttribute('aria-label','סגור'); x.textContent='×'; x.onclick=closeSrc; h.append(h4,x);
     var isGem=/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key); if(isGem) d.classList.add('gem');
     var b=document.createElement('div'); b.className='body'; var paras=[];
-    var stFirst=isGem&&!!a.dataset.st, hold=stFirst?document.createDocumentFragment():b;
+    var stFirst=isGem&&!!(a.dataset.st||a.dataset.rs), hold=stFirst?document.createDocumentFragment():b;
     (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'; p.textContent=t}
       else if(isGem){ t.split(/(\s+)/).forEach(function(w){ if(/\S/.test(w)){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; p.appendChild(sp)} else p.appendChild(document.createTextNode(w)) }); paras.push({el:p,text:t}) }
       else p.textContent=t;
@@ -325,6 +326,29 @@
       var credit=function(){sp.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא'};
       var ready=function(){ return loadSt(key).then(function(segs){ paras.forEach(function(P){ if(P.al!==undefined) return; P.al=alignPara(segs,P.text); var ws=P.el.querySelectorAll('.w'); P.ws=ws; P.map=P.al?mapTokens(P.al,[].map.call(ws,function(w){return w.textContent})):[] }); credit(); return segs }) };
       var fail=function(){card.hidden=false; card.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'};
+      /* רש״י on the sugya: each Gemara paragraph followed by Rashi's comments on that segment (dibbur hamatchil bold) */
+      var rtog=document.createElement('button'); rtog.type='button'; rtog.className='st-tog'; rtog.textContent='רש״י'; rtog.setAttribute('aria-pressed','false'); h.insertBefore(rtog,x);
+      rtog.onclick=function(){
+        var on=rtog.getAttribute('aria-pressed')!=='true'; rtog.setAttribute('aria-pressed',on);
+        if(!on){ b.querySelectorAll('.rsx').forEach(function(e){e.remove()}); return }
+        rtog.classList.add('busy');
+        ready().then(function(){ var segs={}, jobs=[];
+          paras.forEach(function(P){ if(P.al&&P.al.seg) segs[P.al.seg.a]=1; });
+          Object.keys(segs).forEach(function(am){ jobs.push(loadRashi(am).then(function(l){ segs[am]=l; })); });
+          return Promise.all(jobs).then(function(){
+            var any=false;
+            paras.forEach(function(P){ var sg=P.al&&P.al.seg; if(!sg) return; var cm=((segs[sg.a]||[])[sg.i]||[]).filter(Boolean); if(!cm.length) return;
+              var dv=document.createElement('div'); dv.className='rsx';
+              cm.forEach(function(c){ var m=String(c).match(/^\s*(?:<b>([\s\S]*?)<\/b>)?([\s\S]*)$/), q=document.createElement('p');
+                var dh=m&&m[1]?m[1]:String(c).split(/\s[-–—]\s/)[0], rest=m&&m[1]?m[2]:String(c).slice(dh.length);
+                var bb=document.createElement('b'); bb.textContent=dh.replace(/<[^>]+>/g,'').trim(); q.appendChild(bb); q.appendChild(document.createTextNode(' '+rest.replace(/<[^>]+>/g,'').replace(/^\s*[-–—]\s*/,'— ').trim())); dv.appendChild(q); });
+              var after=P.el; while(after.nextElementSibling&&after.nextElementSibling.classList.contains('stx')) after=after.nextElementSibling;
+              after.after(dv); any=true; });
+            sp.textContent='רש״י · ספריא'; rtog.classList.remove('busy'); flush();
+            if(!any){ card.hidden=false; card.textContent='לא נמצאו דברי רש״י לקטע זה.'; }
+          });
+        }).catch(function(){ flush(); rtog.classList.remove('busy'); rtog.setAttribute('aria-pressed','false'); card.hidden=false; card.textContent='לא ניתן לטעון את רש״י מספריא כרגע.'; });
+      };
       tog.onclick=function(){
         var on=tog.getAttribute('aria-pressed')!=='true'; tog.setAttribute('aria-pressed',on);
         if(!on){ b.querySelectorAll('.stx').forEach(function(e){e.remove()}); return }
@@ -350,6 +374,7 @@
     d.append(h,b); if(card) d.append(card); d.append(f); bg.appendChild(d); document.body.appendChild(bg);
     bg.addEventListener('click',function(e){if(e.target===bg)closeSrc()}); x.focus();
     if(isGem&&a.dataset.st) d.querySelector('.st-tog').click();
+    if(isGem&&a.dataset.rs) d.querySelectorAll('.st-tog')[1].click();
     return true;
   }
   document.addEventListener('click',function(e){
