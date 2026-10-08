@@ -362,7 +362,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span class="perek">{esc(perek)}</span>' if perek else ''}{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
   <div class="meta">{meta}</div>
-  <div class="legend"><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
+  <div class="legend"><span class="lg-gem">״לשון הגמרא״</span><span>ביאור</span><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
   <div class="controls">
     <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>
     <button class="btn" data-role="mode" aria-pressed="false" type="button" title="מצב חברותא: התשובות מוסתרות — הקש על שלב לגילוי">חברותא</button>

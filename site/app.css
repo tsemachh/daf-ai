@@ -577,6 +577,10 @@ button.src.q-src{border-bottom:1px dashed var(--accent);color:inherit;font-weigh
 button.src.q-src::after,a.src.q-src::after{content:"";}
 a.src.q-src{color:inherit;border-bottom:1px dashed var(--accent)}
 .gq{cursor:pointer;border-radius:4px;transition:background .15s}
+/* the Gemara's own words look different from the explanation: serif "page" type in the daf's brown */
+.gq,.lg-gem{font-family:var(--serif);color:var(--gold);font-size:1.06em;letter-spacing:.005em}
+.gq b,.gq strong{color:inherit}
+.legend .lg-gem{font-weight:700}
 .gq:hover,.gq[aria-expanded="true"]{background:var(--accent-soft)}
 .gq:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .pop .st-pd{font-size:15px;line-height:1.6}
