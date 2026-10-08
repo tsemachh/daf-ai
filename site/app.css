@@ -521,6 +521,8 @@ details.aids[open]>summary{margin-bottom:4px}
 
 /* model comparison lab */
 .wrap.wide{max-width:1500px}
+.lab-sync{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:15px;margin:12px 0 0;cursor:pointer}
+.lab-sync input{width:18px;height:18px;accent-color:var(--accent)}
 .lab-link{font-family:var(--sans);font-size:15px;margin:10px 0 0}
 .lab-link a{color:var(--accent);font-weight:700}
 .lab-tabs{display:none;gap:8px;margin:12px 0}
