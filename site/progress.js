@@ -432,6 +432,7 @@
     else { r.n=0; r.due=addDays(today(),1); } markDay(); touch(); save(); }
   /* one multiple-choice question: shuffled options, explanation (and why the chosen option is wrong, when the data has it) */
   function renderQ(w,item,p,cb){
+    if(p){ var cx=el('div','q-ctx'); var ca=el('a',null,p.h+(item.st?' · '+item.st:'')); ca.href=url(p)+(item.s?'#'+p.s+p.d+'-'+item.s:''); cx.appendChild(ca); w.appendChild(cx); }
     w.appendChild(el('p',null,item.q)); var opts=el('div','opts'), fb=el('div','fb'); fb.setAttribute('aria-live','polite');
     var order=item.o.map(function(_,j){return j}); for(var x=order.length-1;x>0;x--){var r=Math.floor(Math.random()*(x+1)),t=order[x];order[x]=order[r];order[r]=t;}
     var btns={}, done=false;
