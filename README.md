@@ -122,7 +122,7 @@ account with that file as the prompt and give it write access to this repo.
 - `cont`: `"next"` / `"prev"` for a sugya split across dapim (otherwise inferred from the amud label).
 
 ### What's new
-`data/changelog.json` — newest first, `[{"date": "YYYY-MM-DD", "items": ["…"]}]`. Home shows the latest 5 items;
+`data/changelog.json` — newest first (new days at the top, and new items at the TOP of the day's list), `[{"date": "YYYY-MM-DD", "items": ["…"]}]`. Home shows the latest 5 items;
 `/changes/` lists everything. Add an entry for every site improvement.
 
 ## Model comparison lab
