@@ -62,7 +62,7 @@ missing or the API fails, note it in the report and continue with §2.
   `python tools/dafyomi.py <date>`) in `card.date` / `meta`. In the commit that adds a backfilled daf, also
   remove its line from `tasks/backfill.txt`. Calendar targets always come first.
 - **Refresh queue:** then take up to 2 lines from `tasks/refresh.txt` (published dapim made before the
-  current quiz/חברותא rules). For each: rewrite the `quiz` per §4 (mix of item types, real distractors,
+  current quiz/חברותא rules). For each: rewrite the `quiz` per §4 (understanding, self-contained stems, `s` on every item, real distractors,
   balanced lengths, `w` lines), add missing `flow` (בקצרה) summaries, replace any "לא הורחב כאן" step with
   a gist, and check step `type`s (answers = a/c). Keep every section id and all correct content; verify
   with one sub-agent against the cache; commit "Refresh Bechorot N: quiz and summaries" and remove the line.
@@ -180,10 +180,16 @@ Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
   cantillation stripped, nikud kept. Never paste text you did not fetch; never change existing entries.
 - Citation formats in text: "<ספר> <פרק>, <פסוק>" in Hebrew letters; "שו״ע יו״ד <סימן>, <סעיף>";
   "רמב״ם מאכלות אסורות <פרק>, <הלכה>".
-- `quiz`: exactly 8 {q, o:[3–4], a, e, w?}. The quiz feeds spaced review, so it must test understanding:
-  - Mix per daf: 2 recall (who/what), 3 reasoning ("why was the ראיה rejected?", "what is the הו״א and why
-    is it wrong?"), 2 application to a new case in the spirit of the sugya, 1 ordering/structure question
-    (which move comes after which, or what answers what).
+- `quiz`: exactly 8 {q, o:[3–4], a, e, w?, s}. The quiz feeds spaced review — a learner meets each question
+  again days later, out of context — so every question tests understanding of the sugya's substance, not memory:
+  - `s` = the id of the section the question is about (the review screen shows its title and links to it).
+  - Self-contained stem: open with the case in a few words so it reads on its own days later
+    ("בסוגיית צאן ברזל — מדוע הוולדות פטורים?", "בהמה שנולדו לה שני זכרים כאחת — …"). Never "מה אמר הוא",
+    "בברייתא הנ״ל", or a bare name/quote with no setting.
+  - Ask about the essence: the reasoning (why this ruling / why the proof was rejected / what the הו״א was and
+    why it fails), the principle behind a מחלוקת, what distinguishes two cases, and applying the principle to a
+    new case. Mix per daf: 4 reasoning, 2 principle/distinction, 2 application. At most 1 "who said" question,
+    and only for a sugya's central view — never trivia (who said a phrase, numbers, order of speakers).
   - Distractors are real misconceptions: a rejected proof, the other side of the מחלוקת, the הו״א, a
     neighbouring sugya's ruling. No implausible fillers. Use 4 options when there are 3 good distractors.
   - All options of similar length and form (the correct one must not be the longest or the only one with

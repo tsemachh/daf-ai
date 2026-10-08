@@ -93,6 +93,8 @@ def check(path, glossary):
             continue
         if "w" in it and not (isinstance(it["w"], dict) and all(str(k).isdigit() and int(k) < len(o) and int(k) != it["a"] for k in it["w"])):
             E(f"quiz item {i}: 'w' must map wrong-option indexes to short explanations")
+        if "s" in it and it["s"] not in {sec.get("id") for sec in d["sections"]}:
+            E(f"quiz item {i}: 's' must be a section id of this daf")
         lens = [len(x) for x in o]
         if lens[it["a"]] == max(lens) and lens.count(max(lens)) == 1 and max(lens) > 1.4 * sorted(lens)[-2]:
             longest += 1

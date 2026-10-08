@@ -627,3 +627,5 @@ details.howto ol{margin:10px 0 2px;padding-inline-start:22px;display:grid;gap:8p
 .cv-hint{margin:12px 0 0;padding:10px 14px;background:var(--accent-soft);border-radius:12px;font-size:15px;line-height:1.55}
 .cv-hint-x{font:inherit;font-size:14px;font-weight:700;margin-inline-start:8px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:2px 12px;cursor:pointer}
 details.howto .howto-lead{margin:10px 0 4px;font-size:16px;line-height:1.6}
+.q-ctx{font-size:13px;margin-bottom:4px}
+.q-ctx a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line)}

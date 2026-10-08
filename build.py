@@ -773,7 +773,10 @@ def main():
     latest = [d for y, d in sorted(dated, key=lambda x: x[0], reverse=True) if y and y <= horizon][:7]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
     # quiz bank for spaced review (fetched by progress.js on /review/ and for the "yesterday" opener)
-    json.dump({f"{d['slug']}/{d['daf']}": d["quiz"] for d in alld}, open(os.path.join(DIST, "quiz.json"), "w", encoding="utf8"),
+    def quiz_ctx(d):   # each review question knows its sugya's title, so it makes sense days later
+        titles = {n["id"]: re.sub("<[^>]+>", "", n["title"]) for n in d["nav"]}
+        return [dict(q, st=titles[q["s"]]) if q.get("s") in titles else q for q in d["quiz"]]
+    json.dump({f"{d['slug']}/{d['daf']}": quiz_ctx(d) for d in alld}, open(os.path.join(DIST, "quiz.json"), "w", encoding="utf8"),
               ensure_ascii=False, separators=(",", ":"))
     os.makedirs(os.path.join(DIST, "review"), exist_ok=True)
     open(os.path.join(DIST, "review", "index.html"), "w", encoding="utf8").write(page(
