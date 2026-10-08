@@ -711,7 +711,7 @@
   }
   /* pronunciation fixes. LEX: words the voice must say one way (sages' names, study terms). Other sages' names
      (from the glossary) are vocalized once in rabbinic mode and used wherever they appear. */
-  var LEX={'רבי':'רַבִּי','רב':'רַב','רבה':'רַבָּה','חייא':'חִיָּיא','כהן':'כֹּהֵן','טרפון':'טַרְפוֹן','משנה':'מִשְׁנָה','אמי':'אַמִּי','אסי':'אַסִּי',
+  var LEX={'רבי':'רַבִּי','רב':'רַב','רבה':'רַבָּה','חייא':'חִיָּא','כהן':'כֹּהֵן','טרפון':'טַרְפוֹן','משנה':'מִשְׁנָה','אמי':'אַמִּי','אסי':'אַסִּי',
     'הונא':'הוּנָא','יוחנן':'יוֹחָנָן','אביי':'אַבַּיֵּי','רבא':'רָבָא','נחמן':'נַחְמָן','יהודה':'יְהוּדָה','מאיר':'מֵאִיר','עקיבא':'עֲקִיבָא',
     'שמעון':'שִׁמְעוֹן','אלעזר':'אֶלְעָזָר','אליעזר':'אֱלִיעֶזֶר','ישמעאל':'יִשְׁמָעֵאל','יוסי':'יוֹסֵי','פפא':'פָּפָּא','אשי':'אָשֵׁי','רבינא':'רָבִינָא',
     'זירא':'זֵירָא','חסדא':'חִסְדָּא','ששת':'שֵׁשֶׁת','יוסף':'יוֹסֵף','אושעיא':'אוֹשַׁעְיָא','חנינא':'חֲנִינָא','גמליאל':'גַּמְלִיאֵל','עמרם':'עַמְרָם',
@@ -740,7 +740,45 @@
           return PF[b[0]]+rv; } }
       return parts.join('')+stem; });
   }
+  /* Gemara quotes: take the vocalized words straight from Sefaria (William Davidson, vocalized Aramaic) — the
+     sugya's own amudim and their neighbours; Dicta (rabbinic) only for a quote not found there */
+  var SEFU='https://www.sefaria.org/api/texts/', VOC={}, VE='William_Davidson_Edition_-_Vocalized_Aramaic';
+  function nrm(t){ return (t||'').replace(/<[^>]+>/g,' ').replace(/[֑-ׇ]/g,'').replace(/[^א-ת\s]/g,' ').replace(/\s+/g,' ').trim(); }
+  function vocAmud(r){ return VOC[r]||(VOC[r]=fetch(SEFU+r+'?lang=he&context=0&commentary=0&vhe='+VE).then(function(x){ if(!x.ok) throw x.status; return x.json(); })
+      .then(function(j){ if(!/Vocalized/.test(j.heVersionTitle||'')) return []; var out=[];
+        (j.he||[]).forEach(function(t){ String(t).replace(/<[^>]+>/g,' ').split(/[\s\u05BE]+/).forEach(function(v){ var n=nrm(v); if(n&&n.indexOf(' ')<0) out.push({v:v.replace(/[^א-ת֑-ׇ]/g,''),n:n}); }); }); return out; })
+      .catch(function(){ delete VOC[r]; return []; })); }
+  function amudsFor(sec){
+    var am=sec.querySelector(':scope > .amud'), key=am&&am.dataset.ref, tr=art.dataset.tractate, dn=+art.dataset.daf, out=[];
+    var m=key&&key.match(/^(.+)\.(\d+)([ab])(?:\.\d+)?(?:-(?:(\d+)([ab])\.)?\d+)?$/);
+    if(m){ var d=+m[2], a=m[3], ed=m[4]?+m[4]:d, ea=m[5]||a; for(var g=0;g<6;g++){ out.push(m[1]+'.'+d+a); if(d===ed&&a===ea) break; if(a==='a') a='b'; else { a='a'; d++; } } tr=tr||m[1]; }
+    if(tr&&dn) [[dn,'a'],[dn,'b'],[dn-1,'b'],[dn+1,'a']].forEach(function(x){ var r=tr+'.'+x[0]+x[1]; if(x[0]>1&&out.indexOf(r)<0) out.push(r); });
+    return out;
+  }
+  function weq(a,b){ return a===b||(a.length>2&&b.length>2&&(a===b.slice(1)||b===a.slice(1))); }
+  function sefQuote(words,q){   /* q: the quote text → vocalized text, or null */
+    var qw=nrm(q).split(' ').filter(Boolean); if(qw.length<2||!words.length) return null;
+    var best=-1, bk=0;
+    for(var k=0;k<words.length;k++){ if(!weq(qw[0],words[k].n)&&!weq(qw[1],words[k].n)) continue;
+      var j=k, hit=0; for(var w=0;w<qw.length;w++){ for(var z=j;z<Math.min(words.length,j+3);z++){ if(weq(qw[w],words[z].n)){ hit++; j=z+1; break; } } }
+      if(hit>best){ best=hit; bk=k; if(hit===qw.length) break; } }
+    if(best<Math.max(2,Math.ceil(qw.length*0.75))) return null;
+    /* swap word by word, keeping the quote's own punctuation (— : ?) so the voice pauses where the text does */
+    var j=bk;
+    return q.replace(/[א-ת]+/g,function(w){ for(var z=j;z<Math.min(words.length,j+3);z++){ if(weq(w,words[z].n)){ j=z+1; return words[z].v; } } return w; });
+  }
+  function sefVoc(items){
+    var sec=items[0]&&items[0].sec; if(!sec) return Promise.resolve();
+    var rr=[]; items.forEach(function(it){ if(it.say) return; it.rs=it.rs||runs(it.text); it.rs.forEach(function(x){ if(x.r&&!x.l&&x.t.trim()) rr.push(x); }); });
+    if(!rr.length) return Promise.resolve();
+    return Promise.all(amudsFor(sec).map(vocAmud)).then(function(ls){
+      rr.forEach(function(x){ for(var a=0;a<ls.length;a++){ var v=sefQuote(ls[a],x.t); if(v){ x.t=v; x.l=true; return; } } });
+    });
+  }
   function vocalize(items){
+    return sefVoc(items).then(function(){ return vocalize2(items); });
+  }
+  function vocalize2(items){
     var need={m:[],r:[]};
     var names=[];
     items.forEach(function(it){ if(it.say) return; (it.text.match(/[\u05D0-\u05EA]+/g)||[]).forEach(function(w){ [w,w.slice(1)].forEach(function(x){ if(NAMEW[x]&&!(('n:'+x) in cache)&&names.indexOf(x)<0) names.push(x); }); }); });
@@ -761,7 +799,7 @@
     if(fl) add(fl,clean(fl),'בקצרה. ');
     sec.querySelectorAll('ol.steps > li').forEach(function(li){
       var tg=li.querySelector('.tag'), bd=li.querySelector('.body'); if(!bd) return;
-      add(li, clean(bd), tg?plain(clean(tg)).replace(/\d.*$/,'').trim()+'. ':'');
+      add(li, clean(bd), tg?A+plain(clean(tg)).replace(/\d.*$/,'').trim()+Z+'. ':'');   /* the side tag is often a Gemara phrase (אמאי יחלוקו?) → rabbinic */
     });
   });
   if(!Q.length) return;
