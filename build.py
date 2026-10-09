@@ -147,7 +147,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical=""):
 
 
 # ---------------------------------------------------------------- daf page
-def render_steps(steps):
+def render_steps(steps, ref=None):
     out = ['  <ol class="steps">']
     for k, s in enumerate(steps):
         cls = ""  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
@@ -157,7 +157,10 @@ def render_steps(steps):
         if " · " in tg:  # "קושיה · רב אשי" → type, then the speaker on its own smaller line
             a_, b_ = tg.split(" · ", 1)
             tg = f'{a_}<span class="tsp">{b_}</span>'
-        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{s["body"]}</span></li>')
+        body = s["body"]
+        if ref and "לא הורחב כאן" in body:  # the full Gemara wording is always one tap away
+            body += f' <a class="src-full" href="https://www.sefaria.org/{ref}?lang=he" target="_blank" rel="noopener">לשון הגמרא המלאה בספריא ↗</a>'
+        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{body}</span></li>')
     out.append("  </ol>")
     return "\n".join(out)
 
@@ -293,7 +296,7 @@ def render_section(d, s):
             parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary>{flow_paras(s["flow"])}</details>')
         if s.get("pre"):
             parts.append("  " + s["pre"])
-        parts.append(render_steps(s["steps"]))
+        parts.append(render_steps(s["steps"], s.get("ref")))
         aids, names = [], []
         if s.get("table"):
             aids.append(render_table(s["table"])); names.append("טבלת שיטות")
