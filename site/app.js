@@ -312,7 +312,7 @@
     var isGem=/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key); if(isGem) d.classList.add('gem');
     var b=document.createElement('div'); b.className='body'; var paras=[];
     var stFirst=isGem&&!!(a.dataset.st||a.dataset.rs), hold=stFirst?document.createDocumentFragment():b;
-    (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'; p.textContent=t}
+    (it.p||[]).forEach(function(t){var p=document.createElement('p'); if(t==='…'){p.className='gap'; var gl=document.createElement('a'); gl.href=a.dataset.url; gl.target='_blank'; gl.rel='noopener'; gl.dataset.external='1'; gl.textContent='… המשך לשון הגמרא בספריא ↗'; p.appendChild(gl)}
       else if(isGem){ t.split(/(\s+)/).forEach(function(w){ if(/\S/.test(w)){var sp=document.createElement('span'); sp.className='w'; sp.textContent=w; p.appendChild(sp)} else p.appendChild(document.createTextNode(w)) }); paras.push({el:p,text:t}) }
       else p.textContent=t;
       hold.appendChild(p)});
