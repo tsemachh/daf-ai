@@ -126,8 +126,7 @@ to: a קושיה → the statement it attacks (several objections to one stateme
 that falls or stands; a new speaker's independent view, איכא דאמרי or ואיבעית אימא starts a new root (no
 `p`). After a reformulation, later objections point to the reformulated step.
 
-**Content boundary (required).** Do not explain or expand passages about reproduction or mating (human
-or animal) or intimate relations invloving child abuse; write one neutral step "קטע זה לא הורחב כאן — ראוי ללמדו בגמרא" and cut
+**Content boundary (required).** Do not explain or expand passages about nazi symbols write one neutral step "קטע זה לא הורחב כאן — ראוי ללמדו בגמרא" and cut
 those segments from `srctext` with "…". Legal-monetary topics (kiddushin as a legal act, ketubah,
 inheritance) are presented fully and neutrally.
 
