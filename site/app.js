@@ -7,10 +7,10 @@
   var reG=keys.length?new RegExp('(^|[^'+H+'])([והבכלמשד]{0,2})('+keys.map(esc).join('|')+')(?!['+H+'])'):null;
   var NUM={'א':1,'ב':2,'ג':3,'ד':4,'ה':5,'ו':6,'ז':7,'ח':8,'ט':9,'י':10,'כ':20,'ך':20,'ל':30,'מ':40,'ם':40,'נ':50,'ן':50,'ס':60,'ע':70,'פ':80,'ף':80,'צ':90,'ץ':90,'ק':100,'ר':200,'ש':300,'ת':400};
   function gem(w){var n=0;for(var i=0;i<w.length;i++){n+=NUM[w[i]]||0}return n}
-  var BOOKS={'בראשית':'Genesis','שמות':'Exodus','ויקרא':'Leviticus','במדבר':'Numbers','דברים':'Deuteronomy','משלי':'Proverbs','ישעיהו':'Isaiah','תהלים':'Psalms','עזרא':'Ezra','נחמיה':'Nehemiah','יחזקאל':'Ezekiel','ירמיהו':'Jeremiah'};
+  var BOOKS={'בראשית':'Genesis','שמות':'Exodus','ויקרא':'Leviticus','במדבר':'Numbers','דברים':'Deuteronomy','משלי':'Proverbs','ישעיהו':'Isaiah','תהלים':'Psalms','עזרא':'Ezra','נחמיה':'Nehemiah','יחזקאל':'Ezekiel','ירמיהו':'Jeremiah','שמואל א':'I_Samuel','שמואל ב':'II_Samuel','מלכים א':'I_Kings','מלכים ב':'II_Kings','דברי הימים א':'I_Chronicles','דברי הימים ב':'II_Chronicles','יהושע':'Joshua','שופטים':'Judges','הושע':'Hosea','יואל':'Joel','עמוס':'Amos','מיכה':'Micah','חבקוק':'Habakkuk','זכריה':'Zechariah','מלאכי':'Malachi','איוב':'Job','קהלת':'Ecclesiastes','איכה':'Lamentations','אסתר':'Esther','דניאל':'Daniel','רות':'Ruth','שיר השירים':'Song_of_Songs'};
   var SEF='https://www.sefaria.org/';
   var RULES=[
-    {re:new RegExp('('+Object.keys(BOOKS).join('|')+')\\s+(['+H+']{1,3})[׳\']?,\\s*(['+H+']{1,3})[׳\']?'),url:function(m){return SEF+BOOKS[m[1]]+'.'+gem(m[2])+'.'+gem(m[3])+'?lang=he'}},
+    {re:new RegExp('('+Object.keys(BOOKS).sort(function(a,b){return b.length-a.length}).join('|')+')\\s+(['+H+']{1,3})[׳\']?,\\s*(['+H+']{1,3})[׳\']?'),url:function(m){return SEF+BOOKS[m[1]]+'.'+gem(m[2])+'.'+gem(m[3])+'?lang=he'}},
     {re:new RegExp('שו״ע יו״ד (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+"Shulchan_Arukh,_Yoreh_De'ah."+gem(m[1])+'.'+gem(m[2])+'?lang=he'}},
     {re:new RegExp('רמב״ם מאכלות אסורות (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+'Mishneh_Torah,_Forbidden_Foods.'+gem(m[1])+'.'+gem(m[2])+'?lang=he'}}
   ];
