@@ -370,9 +370,10 @@ article.daf header .legend span:last-child{overflow:hidden;text-overflow:ellipsi
 .topnav .ai-badge{word-spacing:3px}
 article.daf header{padding-top:28px}
 
-/* amud row: the daf/amud label always shows in full; buttons wrap to a 2nd line if needed */
-.sugya > .amud{flex-wrap:wrap;row-gap:2px;min-width:0}
-.sugya > .amud .amud-t{flex-shrink:0;white-space:nowrap}
+/* amud row: one line; the daf/amud label always shows in full, the buttons get compact on phones */
+.sugya > .amud{flex-wrap:nowrap;min-width:0}
+.sugya > .amud .amud-t{flex:0 1 auto;min-width:0;line-height:1.3}
+.sugya > .amud .m-show{display:none}
 .sugya > .amud .src{white-space:nowrap;flex-shrink:0}
 .sugya > .amud .sec-tools{flex-shrink:0}
 @media (max-width:480px){
@@ -380,6 +381,12 @@ article.daf header{padding-top:28px}
   .sugya > .amud .src{margin-inline-start:6px}
   .sec-tools .fb-sec{width:38px;height:40px}
   .sugya > .amud .sec-tools{gap:0}
+  .sugya > .amud{letter-spacing:0;column-gap:2px}
+  .sugya > .amud .m-show{display:inline}
+  .sugya > .amud .src,.sugya > .amud .src.st{margin-inline-start:6px}
+  .sugya > .amud .src::after{display:none}
+  .sugya > .amud .tts-sec{padding:3px 6px;margin-inline:3px;font-size:13px;flex-shrink:0}
+  .sugya > .amud .sec-tools .fb-sec,.sugya > .amud .sec-tools button{width:30px}
 }
 
 /* underline hugs the text (borders sat below the enlarged tap padding) */
