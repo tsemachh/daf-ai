@@ -39,6 +39,11 @@ missing or the API fails, note it in the report and continue with §2.
      the page and do not add an explanatory note to it; only answer: `{status:"rejected", reply:"<short
      explanation with the source>"}`.
    - **Unclear** → `{status:"needs-info", reply:"<what exact line / quote is needed>"}`.
+   - **General note** (about the whole site — design, mobile layout, behaviour, all pages, the build or the
+     rules — not one daf's content): handle it as above (fix it if it is clearly right and small; otherwise
+     `feature`), and ALSO send `owner_note` in the same `POST /update`: 2–4 Hebrew sentences — what the reader
+     asked, what you changed (files, which pages) or why nothing changed. The server emails the site owner
+     (response field `owner.sent`). Add a `data/changelog.json` item for every site change.
 4. Email is automatic: send `status` and `reply` in the SAME `POST /update` call. When a note with
    `notify` reaches fixed / feature / rejected, the server emails the author the reply and page link once
    and clears the address (response field `mail.sent`). Never email readers yourself.

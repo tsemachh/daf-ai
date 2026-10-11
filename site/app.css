@@ -639,3 +639,18 @@ details.howto .howto-lead{margin:10px 0 4px;font-size:16px;line-height:1.6}
 .srcdlg .rsx p{margin:0 0 6px}.srcdlg .rsx b{font-family:var(--serif)}
 .src-full{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--accent);white-space:nowrap}
 .srcdlg p.gap a{color:var(--accent);font-family:var(--sans);font-size:15px}
+/* phones: opinion tables become one card per case (label: value), worked numbers wrap — no sideways scrolling */
+@media (max-width:640px){
+  .mtx-s{overflow-x:visible}
+  .mtx table,.mtx tbody,.mtx tr,.mtx th,.mtx td{display:block;width:auto}
+  .mtx thead{display:none}
+  .mtx tbody tr{border-bottom:1px solid var(--line);padding:4px 0 8px}
+  .mtx tr:last-child{border-bottom:0}
+  .mtx tbody th{white-space:normal;border:0;padding:8px 12px 2px;font-size:15px}
+  .mtx td{border:0;padding:3px 12px;overflow-wrap:anywhere}
+  .mtx td[data-l]::before{content:attr(data-l) ": ";font-weight:700;color:var(--muted);font-size:13px}
+  .cl li{flex-wrap:wrap}
+  .cl-l{min-width:0;overflow-wrap:anywhere}
+  .cl-v{white-space:normal;overflow-wrap:anywhere;margin-inline-start:auto}
+}
+

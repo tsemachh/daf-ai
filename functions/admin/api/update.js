@@ -1,7 +1,8 @@
-// POST /admin/api/update {id, status?, reply?, commit_sha?, notified?:true, clear_email?:true}
+// POST /admin/api/update {id, status?, reply?, commit_sha?, notified?:true, clear_email?:true, owner_note?}
+// owner_note: for a general note (the whole site, not one daf) — a short summary of what changed; emailed to the owner.
 // Set reply before (or with) the final status: the author is emailed automatically on the first final status.
 import { json, clean, STATUSES } from "../../_lib.js";
-import { sendNoteUpdate } from "../../_mail.js";
+import { sendNoteUpdate, sendOwnerNote } from "../../_mail.js";
 
 export async function onRequestPost({ request, env }) {
   if (!env.DB) return json({ ok: false, error: "not_configured" }, 503);
@@ -18,8 +19,8 @@ export async function onRequestPost({ request, env }) {
   if (b.commit_sha !== undefined) { set.push("commit_sha = ?"); args.push(clean(b.commit_sha, 40).replace(/[^0-9a-f]/gi, "")); }
   if (b.notified) set.push("notified_at = strftime('%Y-%m-%dT%H:%M:%SZ','now')");
   if (b.clear_email) set.push("email = '', notify = 0");
-  if (!set.length) return json({ ok: false, error: "nothing_to_update" }, 400);
-  set.push("updated_at = strftime('%Y-%m-%dT%H:%M:%SZ','now')");
+  if (!set.length && !b.owner_note) return json({ ok: false, error: "nothing_to_update" }, 400);
+  set.push("updated_at = strftime('%Y-%m-%dT%H:%M:%SZ','now')");  // (also when only owner_note is sent)
   const r = await env.DB.prepare(`UPDATE feedback SET ${set.join(", ")} WHERE id = ? RETURNING id, status, reply, commit_sha, updated_at`)
     .bind(...args, id).first();
   if (!r) return json({ ok: false, error: "not_found" }, 404);
@@ -30,5 +31,7 @@ export async function onRequestPost({ request, env }) {
     mail = await sendNoteUpdate(env, n);
     if (mail.sent) await env.DB.prepare("UPDATE feedback SET notified_at = strftime('%Y-%m-%dT%H:%M:%SZ','now'), email = '', notify = 0 WHERE id = ?").bind(id).run();
   }
-  return json({ ok: true, note: r, mail });
+  let owner = { sent: false };
+  if (b.owner_note && n) owner = await sendOwnerNote(env, n, clean(b.owner_note, 2000), r.commit_sha);
+  return json({ ok: true, note: r, mail, owner });
 }
