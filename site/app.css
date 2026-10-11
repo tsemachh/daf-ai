@@ -370,9 +370,9 @@ article.daf header .legend span:last-child{overflow:hidden;text-overflow:ellipsi
 .topnav .ai-badge{word-spacing:3px}
 article.daf header{padding-top:28px}
 
-/* amud row: keep label, links and the two icons on one line on phones */
-.sugya > .amud{flex-wrap:nowrap;min-width:0}
-.sugya > .amud .amud-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* amud row: the daf/amud label always shows in full; buttons wrap to a 2nd line if needed */
+.sugya > .amud{flex-wrap:wrap;row-gap:2px;min-width:0}
+.sugya > .amud .amud-t{flex-shrink:0;white-space:nowrap}
 .sugya > .amud .src{white-space:nowrap;flex-shrink:0}
 .sugya > .amud .sec-tools{flex-shrink:0}
 @media (max-width:480px){
