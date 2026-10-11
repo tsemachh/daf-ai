@@ -168,8 +168,13 @@ def render_steps(steps, ref=None):
 def render_table(t):
     """Opinions × cases matrix: {"title", "cols": [corner, opinion…], "rows": [[case, cell…], …]}."""
     head = "".join(f"<th>{c}</th>" for c in t["cols"])
-    rows = "".join("<tr>" + "".join((f"<th>{c}</th>" if i == 0 else f"<td>{c}</td>") for i, c in enumerate(r)) + "</tr>"
-                   for r in t["rows"])
+    labels = [re.sub(r"<[^>]+>", "", str(c)).replace('"', "&quot;").strip() for c in t["cols"]]
+    def cell(i, c):
+        if i == 0:
+            return f"<th>{c}</th>"
+        lab = labels[i] if i < len(labels) else ""
+        return f'<td data-l="{lab}">{c}</td>' if lab else f"<td>{c}</td>"
+    rows = "".join("<tr>" + "".join(cell(i, c) for i, c in enumerate(r)) + "</tr>" for r in t["rows"])
     title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
     note = f'<p class="ch-n mtx-n">{t["note"]}</p>' if t.get("note") else ""
     return f'  <div class="mtx">{title}<div class="mtx-s"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div>{note}</div>'

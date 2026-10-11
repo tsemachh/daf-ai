@@ -33,3 +33,26 @@ ${n.reply ? `<p><b>תגובה:</b> ${esc(n.reply)}</p>` : ""}
   }).catch(() => null);
   return { sent: !!(r && r.ok), status: r ? r.status : 0 };
 }
+
+// General reader notes (about the whole site, not one daf): the nightly agent sends a short summary of what it
+// changed (or why not) as `owner_note`, and the site owner gets it by email. Env: OWNER_EMAIL (optional).
+export async function sendOwnerNote(env, n, summary, sha) {
+  const to = env.OWNER_EMAIL || "tsemachh@shefing.com";
+  if (!env.RESEND_API_KEY || !summary) return { sent: false };
+  const link = noteLink(n);
+  const commit = sha ? `https://github.com/tsemachh/daf-ai/commit/${encodeURIComponent(sha)}` : "";
+  const html = `<div dir="rtl" style="font-family:Arial,sans-serif;font-size:16px;line-height:1.6;color:#1C2230">
+<p><b>הערה כללית מקורא טופלה</b> (${esc(n.page)}${n.section_title ? " — " + esc(n.section_title) : ""})</p>
+<p style="color:#5B6272">ההערה: ״${esc(String(n.text).slice(0, 600))}״</p>
+<p><b>מה נעשה:</b> ${esc(summary)}</p>
+<p><b>סטטוס:</b> ${esc(n.status)}${n.reply ? " · <b>תגובה לקורא:</b> " + esc(n.reply) : ""}</p>
+${commit ? `<p><a href="${commit}">השינוי ב־GitHub</a></p>` : ""}
+<p><a href="${link}">הדף שממנו נשלחה ההערה</a></p></div>`;
+  const text = `הערה כללית מקורא (${n.page})\nההערה: ${String(n.text).slice(0, 600)}\nמה נעשה: ${summary}\nסטטוס: ${n.status}\n${commit}\n${link}`;
+  const r = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, "content-type": "application/json" },
+    body: JSON.stringify({ from: FROM, to: [to], subject: `הערה כללית טופלה — ${String(n.text).slice(0, 50)}`, html, text }),
+  }).catch(() => null);
+  return { sent: !!(r && r.ok), status: r ? r.status : 0 };
+}
