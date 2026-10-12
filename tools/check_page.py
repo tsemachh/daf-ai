@@ -84,7 +84,8 @@ def main():
             want[f'{daf}{am}.{i}'] = [k.strip() for k in MARKERS if k in clean(g[i - 1])]
     seen = {}
     secs = [s for s in d['sections'] if s.get('kind', 'sugya') == 'sugya' and s.get('ref')]
-    for s in secs:
+    covers = [s for s in d['sections'] if s.get('ref')]   # raw sections (tables, riddles) with a ref also cover their segments
+    for s in covers:
         for k in expand(s['ref'], a.cache, slug):
             if k in seen:
                 errs.append(f'{k} in both {seen[k]} and {s["id"]}')
