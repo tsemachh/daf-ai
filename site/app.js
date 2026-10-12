@@ -66,7 +66,7 @@
       var pairs=[], open=-1;
       for(var i=0;i<flat.length;i++){ if(flat[i]!=='״') continue;
         var pl=HL.test(flat[i-1]||' '), nl=HL.test(flat[i+1]||' ');
-        if(open<0){ if(nl&&(!pl||/[ומשהכלב]/.test(flat[i-1])&&!HL.test(flat[i-2]||' '))) open=i; }
+        if(open<0){ if(nl&&(!pl||/[ומשהכלב]/.test(flat[i-1])&&!HL.test(flat[i-2]||' ')&&HL.test(flat[i+2]||' '))) open=i; }  /* כ״ה, ש״מ: a number or abbreviation, not a quote */
         else if(pl||/[?!.׳]/.test(flat[i-1])){ if(!nl){ pairs.push([open,i]); open=-1; } }
       }
       for(var k=pairs.length-1;k>=0;k--){
@@ -205,52 +205,87 @@
     /* the section's own amudim first, then the neighbouring amudim (a sugya often quotes the previous daf) */
     var art=q.closest('article.daf'), tr=art.dataset.tractate, dn=+art.dataset.daf, keys=[key];
     [[dn-1,'b'],[dn,'a'],[dn,'b'],[dn+1,'a']].forEach(function(x){ if(x[0]>1) keys.push(tr+'.'+x[0]+x[1]); });
-    function find(segs){
-      var probe=full.split(' ').slice(0,3).join(' '), seg=null;
-      segs.some(function(x){ if(full.length>3&&x.n.indexOf(full)>=0){seg=x;return true} });
-      if(!seg&&probe.split(' ').length>=2) segs.some(function(x){ if(x.n.indexOf(probe)>=0){seg=x;return true} });
-      return seg;
+    /* the section's own Gemara segments (its ref range), searched in the order the steps quote them:
+       a phrase that occurs twice (״היינו גוזז״) maps to the occurrence after the previous quote */
+    var rm=key.match(/^(.+)\.(\d+[ab])\.(\d+)(?:-(?:(\d+[ab])\.)?(\d+))?$/);
+    function inRange(x){ if(!rm) return false; var ea=rm[4]||rm[2], ei=rm[5]?+rm[5]:+rm[3], a=x.a.split('.').pop();
+      var after=a!==rm[2]||x.i+1>=+rm[3], before=a!==ea||x.i+1<=ei; return (a===rm[2]||a===ea)&&after&&before; }
+    function qtext(el){ return norm(el.textContent.split(/\.\.\.|…/)[0]); }
+    function locate(segs){
+      var own=segs.filter(inRange), all=[].slice.call(sec.querySelectorAll('.gq')), cs=0, co=0;
+      for(var j=0;j<all.length&&all[j]!==q;j++) step(qtext(all[j]));
+      return step(full);
+      function step(t){
+        if(t.length<4) return null;
+        for(var x=cs;x<own.length;x++){ var o=own[x].n.indexOf(t,x===cs?co:0); if(o>=0){ cs=x; co=o+t.length; return {seg:own[x],o:o,list:segs}; } }
+        for(var y=Math.min(cs,own.length-1);y>=0;y--){ var o2=y===cs?own[y].n.lastIndexOf(t,Math.max(co-t.length-1,0)):own[y].n.lastIndexOf(t); if(o2>=0) return {seg:own[y],o:o2,list:segs}; }
+        return null;
+      }
+    }
+    function find(segs,k){
+      if(k===0&&sec){ var l=locate(segs); if(l) return l; }
+      var probe=full.split(' ').slice(0,3).join(' '), seg=null, o=-1;
+      segs.some(function(x){ if(full.length>3&&(o=x.n.indexOf(full))>=0){seg=x;return true} });
+      if(!seg&&probe.split(' ').length>=2) segs.some(function(x){ if((o=x.n.indexOf(probe))>=0){seg=x;return true} });
+      return seg&&{seg:seg,o:o,list:segs};
     }
     function tryKey(k){
       if(k>=keys.length) return Promise.resolve(null);
-      return loadSt(keys[k]).then(function(segs){ return find(segs)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
+      return loadSt(keys[k]).then(function(segs){ return find(segs,k)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
     }
     var found=tryKey(0);
-    function wEq(a,b){ return a===b||(a.length>2&&b.length>2&&(a===b.slice(1)||b===a.slice(1)||a===b.slice(2)||b===a.slice(2))); }  /* ו/ה/ש prefixes */
+    function wEq(a,b){ return a===b||a+'בי'===b||b+'בי'===a||(a.length>2&&b.length>2&&(a===b.slice(1)||b===a.slice(1)||a===b.slice(2)||b===a.slice(2))); }  /* ו/ה/ש prefixes; ר׳ for רבי */
     function inQ(w){ return qw.some(function(x){return wEq(x,w)}); }
     /* Steinsaltz: from the bold run holding the quote's first word to the run holding its last word,
        plus the explanation right after it — nothing from neighbouring phrases */
-    function showSt(seg){
+    function showSt(f){
       cr.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא';
+      /* Steinsaltz's segments do not always break where the Gemara's do: look in the neighbours too */
+      var li=f.list.indexOf(f.seg), r=0, o=-1;
+      if(full.length>3) while((o=f.seg.n.indexOf(full,o+1))>=0&&o<f.o) r++;
+      var tries=[[f.seg,r]]; if(li>0&&f.list[li-1].a===f.seg.a) tries.push([f.list[li-1],1e4]); if(li>=0&&li+1<f.list.length) tries.push([f.list[li+1],0]);
+      for(var t=0;t<tries.length;t++){ if(stIn(tries[t][0],tries[t][1],t===tries.length-1)) return; }
+    }
+    function stIn(seg,r,last){
       var parts=String(seg.s||'').replace(/<(?!\/?(b|strong)>)[^>]+>/g,'').split(/<\/?(?:b|strong)>/);
-      /* every bold (Gemara) word with its run and its token index in that run */
+      /* every word with its run and its token index in that run; odd runs are bold (Gemara) */
       var bw=[], sp=parts.map(function(t){ return t.split(/(\s+)/); });
-      for(var i=1;i<parts.length;i+=2) sp[i].forEach(function(tk,z){ norm(tk).split(' ').forEach(function(w){ if(w) bw.push({w:w,i:i,z:z}); }); });
-      /* start where the most of the quote's opening words follow in order (a word like ״בידי״ can occur in an earlier phrase too) */
-      var k0=-1, best=0;
-      for(var k=0;k<bw.length;k++){ var n=0; while(n<qw.length&&k+n<bw.length&&wEq(qw[n],bw[k+n].w)) n++; if(n>best){ best=n; k0=k; if(n===qw.length) break; } }
-      if(k0<0) for(var k1=0;k1<bw.length&&k0<0;k1++){ if(qw.slice(0,2).some(function(x){return wEq(x,bw[k1].w)})) k0=k1; }
-      if(k0<0){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
-      /* end at the quote's last word (Steinsaltz may insert words between the quoted ones) */
-      var e0=k0+Math.max(best,1)-1, lw=qw[qw.length-1];
-      if(best<qw.length) for(var e=Math.max(e0,k0+1);e<bw.length&&e<=k0+qw.length+12;e++){ if(wEq(lw,bw[e].w)){ e0=e; break; } }
-      var start=bw[k0].i, end=bw[e0].i, stop=end+1;
+      for(var i=0;i<parts.length;i++) sp[i].forEach(function(tk,z){ norm(tk).split(' ').forEach(function(w){ if(w) bw.push({w:w,i:i,z:z,b:i%2}); }); });
+      /* a start: the most quote words in order (Steinsaltz inserts up to a few words between them and
+         abbreviates some, כר׳ for כרבי), bold matches first; of equal starts the r-th, as in the Gemara */
+      var cands=[], best=0;
+      for(var k=0;k<bw.length;k++){ var q0=-1; for(var x=0;x<Math.min(3,qw.length);x++){ if(wEq(qw[x],bw[k].w)){ q0=x; break; } } if(q0<0) continue;
+        var n=1, sc=bw[k].b, l=k, miss=q0;
+        for(var qi=q0+1;qi<qw.length&&miss<=Math.max(2,qw.length/3);qi++){ var hit=-1; for(var y=l+1;y<bw.length&&y<=l+12;y++){ if(wEq(qw[qi],bw[y].w)){ hit=y; break; } } if(hit<0){ miss++; continue; } n++; sc+=bw[hit].b; l=hit; }
+        var score=n*2+sc-miss; if(score>best) best=score; cands.push({k:k,e:l,s:score});
+      }
+      cands=cands.filter(function(c){ return c.s===best; });
+      var c0=cands.length?cands[Math.min(r,cands.length-1)]:null, k0=c0?c0.k:-1, e0=c0?c0.e:-1;
+      if(k0<0){ if(last) pd.textContent='לא נמצא ביאור לציטוט זה.'; return false; }
+      var start=bw[k0].i, end=bw[e0].i, stop=end+1, ew=sp[end];
       parts=parts.slice();
-      /* the end run runs on into the next phrase: cut it at the quote's last word */
-      var ew=sp[end], after=0; for(var y=bw[e0].z+1;y<ew.length;y++){ if(norm(ew[y])) after++; }
-      if(after>3){ parts[end]=ew.slice(0,bw[e0].z+1).join(''); stop=end; }
+      if(end%2){
+        /* the end run runs on into the next phrase: cut it at the quote's last word */
+        var after=0; for(var y2=bw[e0].z+1;y2<ew.length;y2++){ if(norm(ew[y2])) after++; }
+        if(after>3){ parts[end]=ew.slice(0,bw[e0].z+1).join(''); stop=end; }
+      } else {
+        /* the quote ends in Steinsaltz's own words: keep them to the end of the sentence */
+        var rest=ew.slice(bw[e0].z+1).join(''), d0=rest.search(/[.?!]/);
+        if(d0>=0){ parts[end]=ew.slice(0,bw[e0].z+1).join('')+rest.slice(0,d0+1); stop=end; }
+      }
       /* the start run can hold the end of the previous phrase too: start it at the quote's first word */
-      parts[start]=(start===end&&stop===end?ew.slice(0,bw[e0].z+1):sp[start]).slice(bw[k0].z).join('');
+      parts[start]=(start===end?(stop===end?parts[end]:ew.join('')).split(/(\s+)/):sp[start]).slice(bw[k0].z).join('');
       /* the explanation after the quote: finish its sentence, and leave out the lead-in to the next phrase */
       if(stop===end+1&&stop<parts.length){
         var tail=parts[stop], dot=Math.max(tail.lastIndexOf('.'),tail.lastIndexOf('?'),tail.lastIndexOf('!'));
         if(/[.?!][\s\)\]]*$/.test(tail)||stop+1>=parts.length){ }
         else if(dot>=0) parts[stop]=tail.slice(0,dot+1);
-        else for(var f=stop+1;f<parts.length&&f<=stop+4;f++){ stop=f; if(f%2===0){ var d2=parts[f].search(/[.?!]/); if(d2>=0){ parts[f]=parts[f].slice(0,d2+1); break; } } }
+        else for(var f=stop+1;f<parts.length&&f<=stop+4;f++){ stop=f; var d2=parts[f].search(/[.?!]/); if(d2>=0){ parts[f]=parts[f].slice(0,d2+1); break; } }
       }
       pd.textContent='';
-      for(var m=start;m<=stop&&m<parts.length;m++){ var t=parts[m]; if(!t) continue;
-        if(m%2){ var bb=document.createElement('b'); bb.textContent=t; pd.appendChild(bb); } else pd.appendChild(document.createTextNode(t)); }
+      for(var m=start;m<=stop&&m<parts.length;m++){ var tx=parts[m]; if(!tx) continue;
+        if(m%2){ var bb=document.createElement('b'); bb.textContent=tx; pd.appendChild(bb); } else pd.appendChild(document.createTextNode(tx)); }
+      return true;
     }
     /* Rashi: only the comments whose dibbur hamatchil is taken from the quote */
     function rashiFor(seg){
@@ -281,13 +316,13 @@
       found.then(function(seg){
         if(cur!==q) return;
         if(!seg){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
-        return m==='rashi'?showRashi(seg):showSt(seg);
+        return m==='rashi'?showRashi(seg.seg):showSt(seg);
       }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
     }
     Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); setCmtPref(k); show(k); }; });
     T.rashi.hidden=true;
     var want=cmtPref();
-    found.then(function(seg){ return seg?rashiFor(seg):[]; }).then(function(list){
+    found.then(function(seg){ return seg?rashiFor(seg.seg):[]; }).then(function(list){
       if(cur!==q) return;
       if(list.length){ T.rashi.hidden=false; if(want==='rashi') show('rashi'); }
       else if(want==='rashi') show('st');
