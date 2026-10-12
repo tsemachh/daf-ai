@@ -183,6 +183,28 @@
 
   /* tap a Gemara quote in the steps → Steinsaltz for those words (from the section's own amud text) */
   /* Rashi on the Gemara (Sefaria): one list of comments per Gemara segment */
+  /* מורחב: under each step, the Gemara line it explains (its data-seg) and Steinsaltz on that line, from Sefaria */
+  var DS={};
+  function amudTexts(r){ return DS[r]||(DS[r]=Promise.all([getJ(SEF+'api/texts/'+r+'?lang=he&context=0&commentary=0'),getJ(SEF+'api/texts/Steinsaltz_on_'+r+'?lang=he&context=0&pad=0')])
+    .then(function(x){return {g:x[0].he||[], s:x[1].he||[]}}).catch(function(e){delete DS[r]; throw e})); }
+  function safeInto(el,html){ var doc=new DOMParser().parseFromString('<div>'+(html||'')+'</div>','text/html');
+    (function walk(src,dst){ [].forEach.call(src.childNodes,function(n){ if(n.nodeType===3) dst.appendChild(document.createTextNode(n.nodeValue));
+      else if(n.nodeType===1){ if(n.tagName==='B'||n.tagName==='STRONG'){var b=document.createElement('b'); dst.appendChild(b); walk(n,b);} else if(n.tagName==='BR') dst.appendChild(document.createElement('br')); else walk(n,dst);} }); })(doc.body.firstChild, el); }
+  window.dafDeep=function(art,on){
+    art.classList.toggle('lvl-deep',!!on); if(!on||art.dataset.deepDone) return; art.dataset.deepDone='1';
+    var tr=art.dataset.tractate;
+    art.querySelectorAll('ol.steps').forEach(function(ol){ var prev=null;
+      [].forEach.call(ol.children,function(li){ var sg=li.dataset.seg; if(!sg||sg===prev) return; prev=sg;
+        var m=sg.match(/^(\d+[ab])\.(\d+)$/); if(!m) return;
+        var box=document.createElement('div'); box.className='seg-src';
+        var g=document.createElement('p'); g.className='seg-gm'; g.textContent='טוען את לשון הגמרא…';
+        var st=document.createElement('details'); st.className='seg-st'; var su=document.createElement('summary'); su.textContent='ביאור שטיינזלץ לשורה זו'; var sp=document.createElement('p'); st.append(su,sp);
+        box.append(g,st); li.appendChild(box);
+        amudTexts(tr+'.'+m[1]).then(function(t){ var i=+m[2]-1; if(!t.g[i]){ box.remove(); return; } g.textContent=''; safeInto(g,t.g[i]); if(t.s[i]) safeInto(sp,t.s[i]); else st.remove(); })
+          .catch(function(){ g.textContent=''; var a=document.createElement('a'); a.href=SEF+tr+'.'+sg+'?lang=he'; a.target='_blank'; a.rel='noopener'; a.textContent='לשון הגמרא בספריא ↗'; g.appendChild(a); st.remove(); });
+      });
+    });
+  };
   var RS={};
   function loadRashi(amud){ return RS[amud]||(RS[amud]=getJ(SEF+'api/texts/Rashi_on_'+amud+'?lang=he&context=0&pad=0').then(function(x){return x.he||[]}).catch(function(e){delete RS[amud]; throw e})); }
   function cmtPref(){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; return P.rashi?'rashi':'st'; }catch(e){ return 'st'; } }
@@ -507,6 +529,24 @@
       });
       gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
       if(newGb) ctr.appendChild(gb); ctr.after(pn);
+      /* reading level: תמצית (summaries + conclusions) · רגיל · מורחב (the Gemara line and Steinsaltz under each step) */
+      var LV=[['short','תמצית'],['norm','רגיל'],['deep','מורחב']], lvb={};
+      var lv=document.createElement('div'); lv.className='lvl'; lv.setAttribute('role','radiogroup'); lv.setAttribute('aria-label','רמת פירוט');
+      var lvh=document.createElement('span'); lvh.className='lvl-h'; lvh.textContent='רמת פירוט'; lv.appendChild(lvh);
+      LV.forEach(function(x){ var b=document.createElement('button'); b.type='button'; b.setAttribute('role','radio'); b.dataset.lv=x[0]; b.textContent=x[1]; lvb[x[0]]=b; lv.appendChild(b);
+        b.addEventListener('click',function(){ setLevel(x[0],true); }); });
+      function keepLast(){ art.querySelectorAll('ol.steps').forEach(function(ol){ if(!ol.querySelector(':scope > li > .tag.c')&&ol.lastElementChild) ol.lastElementChild.classList.add('lv-keep'); }); }
+      function setLevel(v,user){
+        if(!lvb[v]) v='norm';
+        if(user){ P.lvl=v; save(); }
+        LV.forEach(function(x){ lvb[x[0]].setAttribute('aria-checked', x[0]===v?'true':'false'); });
+        art.classList.toggle('lvl-short', v==='short');
+        if(window.dafDeep) window.dafDeep(art, v==='deep');
+        if(v==='short'){ keepLast(); setBtn('mode',false); }
+        setOpen(v!=='norm' || val('open'));
+      }
+      pn.after(lv);
+      setTimeout(function(){ setLevel(P.lvl||'norm',false); },0);
       setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
     })();
     var Q=[]; try{Q=JSON.parse(art.querySelector('.qdata').textContent)}catch(e){}

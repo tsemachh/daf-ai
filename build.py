@@ -152,6 +152,8 @@ def render_steps(steps, ref=None):
     for k, s in enumerate(steps):
         cls = ""  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
         p = f' data-p="{s["p"]}"' if "p" in s else ""
+        if s.get("seg"):   # the Gemara segment this step explains (מורחב shows it under the step)
+            p += f' data-seg="{s["seg"]}"'
         t = f' {s["type"]}' if s.get("type") else ""
         tg = s["tag"]
         if " · " in tg:  # "קושיה · רב אשי" → type, then the speaker on its own smaller line
