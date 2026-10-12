@@ -13,6 +13,8 @@ import dafyomi  # noqa: E402  (local Daf Yomi calendar)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
+_dsp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "dafspoiler.json")
+DAFSPOILER = json.load(open(_dsp, encoding="utf8")) if os.path.exists(_dsp) else {}
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
 FOOT = ("נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. "
@@ -45,6 +47,7 @@ SOURCES = [
     ("כולל עיון הדף — dafyomi.co.il", "https://www.dafyomi.co.il/", "סיכומי נקודות וטבלאות עזר"),
     ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
     ("אתר סיני — שיעורי הדף היומי של הרב אורי בריליאנט", "https://www.sinai.org.il/", "שיעורים, סיכומים, תרשימים וחוברות ״דף מאיר״ — לבדיקת מהלך הסוגיות וההסברים"),
+    ("Daf Spoiler — הכנה לדף היומי, הרב נפתלי רמתי", "https://dafspoiler.com/", "סיכום והכנה לכל דף בשאלות ותשובות — לבדיקת הרקע והמקרה של כל סוגיה (ברשות הכותב)"),
     ("דיקטה — הנקדן", "https://nakdan.dicta.org.il/", "ניקוד אוטומטי של הטקסט לפני ההקראה בקול"),
 ]
 
@@ -357,7 +360,12 @@ def render_daf(d, prev, nxt, glossary, sources):
     story = (f'<details class="storyline"><summary class="sl-h">הקדמה — הסיפור של הדף</summary>{"".join(f"<p>{x}</p>" for x in split_paras(d["storyline"], 160))}</details>'
              if d.get("storyline") else "")
     sections = "\n\n".join(render_section(d, s) for s in d["sections"])
-    links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in d.get("links", []))
+    lk = list(d.get("links", []))
+    ds = DAFSPOILER.get(d["slug"])
+    if ds and d["daf"] in ds.get("dapim", []) and not any("dafspoiler.com" in l["href"] for l in lk):
+        lk.append({"href": f'https://dafspoiler.com/index.html?masechta={ds["id"]}&daf={d["daf"]}',
+                   "text": "הכנה לדף — Daf Spoiler (הרב נפתלי רמתי)"})
+    links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in lk)
     pn = []
     if prev:
         pn.append(f'<a class="back" href="../{prev}/">→ דף {heb_num(prev)}</a>')

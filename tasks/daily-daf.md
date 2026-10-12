@@ -13,7 +13,7 @@ Pages on every push to `main`). Work autonomously; nobody is watching. Do not as
 - Runs as a Claude Code **routine** (claude.ai/code/routines) with this repo selected; the repo is
   already cloned on the default branch. Read `README.md` (data schema) and this file.
 - Network: the routine's environment must allow `www.sefaria.org`, `www.hebcal.com`,
-  `www.dafyomi.co.il`, `www.daf-yomi.com`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
+  `www.dafyomi.co.il`, `www.daf-yomi.com`, `dafspoiler.com`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
   `host_not_allowed`), say which host in the report and stop — do not publish unverified content.
 - `TZ=Asia/Jerusalem date` → today + Hebrew date. On Shabbat / Yom Tov in Israel: end with one line.
 - Git identity: leave the routine's default (your GitHub user).
@@ -104,7 +104,9 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
 2. **Pack the daf** — the writer reads ONLY this, never the raw cache files:
    `python tools/pack_daf.py --cache <cache> --slug <slug> --daf <daf>` → `<cache>/<slug>/<daf>/pack.md`
    (per segment: Gemara without niqqud, Hebrew Steinsaltz, Rashi, detected moves; plus the next daf's
-   opening, the previous daf's last sugya and the Sinai summary when `sinai.txt` is cached). If the
+   opening, the previous daf's last sugya, the Sinai summary when `sinai.txt` is cached, and the Daf Spoiler
+   summary — Rav Naftali Ramati, with permission — when `dafspoiler.txt` is cached; `data/dafspoiler.json` lists the
+   dapim his site covers). If the
    cache lacks the daf, run `tools/fetch_sources.py` for its date first (§3.1).
 3. The cache is private: paraphrase commentary, never copy it. Only verbatim Gemara segments (public
    domain, filled by script) and fetched verse/halacha texts go into the public repo (`srctext`,

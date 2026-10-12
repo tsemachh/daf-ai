@@ -87,6 +87,10 @@ def build(cache, slug, daf):
         out += [f'## Previous daf ({daf-1}) — its last sugya', f'title: {clean(last["title"])}',
                 f'ref: {last.get("ref", "")}  ends_next: {bool(last.get("ends_next"))}  cont: {last.get("cont", "")}',
                 f'flow: {clean(last.get("flow", ""))}', f'last step: {clean(last["steps"][-1]["body"])}', '']
+    dsp = os.path.join(cache, slug, str(daf), 'dafspoiler.txt')
+    if os.path.exists(dsp):
+        out += ['## Daf Spoiler summary (Rav Naftali Ramati, used with permission) — a case framing per topic; use it to check `unlock` and to find application cases; paraphrase, never copy',
+                re.sub(r'\n{2,}', '\n', re.sub(r'[ \t]{2,}', ' ', open(dsp, encoding='utf-8').read().strip())), '']
     sinai = os.path.join(cache, slug, str(daf), 'sinai.txt')
     if os.path.exists(sinai):
         out += ['## Sinai summary (cross-check of flow and conclusions; paraphrase, never copy)',

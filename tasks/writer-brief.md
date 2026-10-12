@@ -48,7 +48,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    field). Then add 1–2 plain sentences that set up that background so the give-and-take makes sense: what the
    case is, in which area of halacha, and what is at stake. It is NOT a summary of the moves (that is `flow`) and
    not the conclusion. Leave it out when the first step already makes the case clear. Draw it from S/R (Steinsaltz
-   often opens a sugya with exactly this) — paraphrased, never copied. Models:
+   often opens a sugya with exactly this) — paraphrased, never copied. When the pack has a Daf Spoiler block, its
+   opening question for each topic is a good check that you framed the case right (and a source of application
+   cases for the quiz) — never copy its wording. Models:
    - בכורות כב, ״אין לנפלים פתיחת הקבר״: ״פתיחת הקבר״ הוא דין בטומאת מת: אשה שעוברה מת במעיה — משעה שרחמה נפתח
      ללידה, הבית כבר טמא כאילו נולד המת בתוכו, גם אם הוולד עדיין לא יצא. נפל קטן אינו גורם לכך עד שראשו הגיע
      לשיעור ״פיקה״ — ועל השיעור הזה נסובה הסוגיה.

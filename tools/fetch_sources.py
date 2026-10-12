@@ -4,6 +4,7 @@
 Fetches only sources that allow plain HTTP clients:
   - Sefaria API: Vilna Hebrew (per segment), Hebrew Steinsaltz, Rashi and English Steinsaltz, both amudim
   - dafyomi.co.il: "points" and Hebrew tables pages
+  - dafspoiler.com (Rav Naftali Ramati, with permission): the per-daf summary PDF → dafspoiler.txt
 yeshiva.org.il (פרשני wiki) blocks automated clients with a Cloudflare challenge, so it is not
 fetched; a yeshiva_<amud>.txt saved by hand is used when present. Existing files are kept unless
 --refresh.
@@ -16,6 +17,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dafyomi import daf_for  # noqa: E402
 
 UA = "daf-ai source cache (+https://daf.tsemach.dev)"
+_DSP = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "dafspoiler.json")
+DAFSPOILER = json.load(open(_DSP, encoding="utf8")) if os.path.exists(_DSP) else {}
 # slug -> (dafyomi.co.il directory, file prefix)
 DAFYOMI_CO_IL = {"bechorot": ("bechoros", "be"), "arachin": ("erchin", "er"), "temurah": ("temurah", "tm"),
                  "keritot": ("kerisus", "kr"), "meilah": ("meilah", "ml"), "niddah": ("nidah", "ni")}
@@ -96,6 +99,22 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
                 except Exception as e:  # missing page is fine
                     log[p] = f"skip ({e})"
                 time.sleep(0.5)
+    # Daf Spoiler (dafspoiler.com, Rav Naftali Ramati — used with his permission): a one-page Q&A summary per daf.
+    # Kept privately as text, read only as a cross-check of each sugya's case/background (never copied).
+    ds = DAFSPOILER.get(slug)
+    if ds and daf in ds.get("dapim", []):
+        p = os.path.join(out, "dafspoiler.txt")
+        if refresh or not os.path.exists(p):
+            try:
+                raw, _ = get(f"https://dafspoiler.com/{ds['id']}/{daf}.pdf", binary=True)
+                pdf = os.path.join(out, "dafspoiler.pdf")
+                save(pdf, raw, True)
+                import subprocess
+                txt = subprocess.run(["pdftotext", "-layout", pdf, "-"], capture_output=True, text=True).stdout
+                txt = re.sub(r"[\u200e\u200f\u202a-\u202e\u2066-\u2069]", "", txt)
+                log[p] = save(p, f"# https://dafspoiler.com/{ds['id']}/{daf}.pdf\n\n" + txt.strip(), True) if txt.strip() else "skip (no text)"
+            except Exception as e:  # host blocked or daf not published yet
+                log[p] = f"skip ({e})"
     for amud in "ab":
         p = os.path.join(out, f"yeshiva_{amud}.txt")
         if os.path.exists(p):
