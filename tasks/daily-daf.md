@@ -134,7 +134,7 @@ Then, with scripts only:
   GLOSSARY CANDIDATES. Errors go back to the writer (SendMessage to the same subagent, listing them) once.
 - `links`: add as on earlier pages (daf-yomi.com day page, dafyomi.co.il charts/points for the daf).
   `footer`: copy from the previous daf.
-- Glossary: write entries ONLY for the printed candidates that are real names/terms (types תנא / אמורא /
+- Glossary (site format `{"<key>": {"t": "תנא|אמורא|מושג|מונח|מקום", "d": "<text>"}}`, general — never page-specific): write entries ONLY for the printed candidates that are real names/terms (types תנא / אמורא /
   מושג / מונח / מקום; a sage gets generation, Tanna/Amora, Eretz Yisrael/Bavel and one identifying fact;
   every compound or epithet name its own key, e.g. "רבי יוסי הגלילי"). Add them with a short script that
   loads, updates and saves `data/glossary.json` — never read the whole file into context.
@@ -150,7 +150,7 @@ the fuller explanation. It returns ONLY patches, never a rewritten page:
 `[{"where": "s3.steps[4].body" | "quiz[2].o[1]" | …, "severity": "ERROR|OMISSION|THIN|DOUBTFUL",
 "why": "<source quote>", "new": "<corrected Hebrew / new step object>"}]`, and writes the source log.
 
-**c. Apply** every ERROR, OMISSION and THIN patch with a script (insert new steps without renumbering
+**c. Apply** every ERROR, OMISSION and THIN patch with `python tools/apply_review.py data/<slug>/<daf>.json <cache>/<slug>/<daf>/review.json` (the reviewer writes its patches and glossary entries there) (insert new steps without renumbering
 section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re-run `fill_srctext.py`
 (if refs changed, with `--force`) and `check_page.py` until it exits 0. Count fixes.
 
