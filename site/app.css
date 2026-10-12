@@ -682,3 +682,7 @@ article.daf:not(.lvl-deep) .seg-src{display:none}
 .seg-st{margin-top:6px}
 .seg-st summary{cursor:pointer;color:var(--accent);font-size:.9em}
 .seg-st p{margin:6px 0 0;line-height:1.7}
+
+/* key to the sugya: the background case or concept the Gemara assumes */
+.unlock{margin:6px 0 10px;padding:9px 12px;background:var(--accent-soft);border-radius:10px;line-height:1.7}
+.unlock-h{font-weight:700;color:var(--accent);margin-inline-end:4px;white-space:nowrap}

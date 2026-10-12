@@ -16,6 +16,7 @@ summary is only a cross-check of the flow — paraphrase, never copy any comment
  "sections":[{"id":"s1","kind":"sugya","amud":"עמוד א · משנה","ref":"Berakhot.2a.1-4","title":"…",
    "flow":"<בקצרה 1–3 sentences: the question, why it arises, how it ends>",
    "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>"}],
+   "unlock"?:"<optional, 1–2 sentences: the case or concept the sugya assumes the learner already knows>",
    "post":"<optional think box, EXACTLY this HTML — question visible, answer collapsed: <div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>QUESTION</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">ANSWER from the Gemara</div></div>>",
    "table"?:{…},"decide"?:{…},"chain"?:{…},"calc"?:{…},"seq"?:{…},
    "skip"?:["2a.5"], "ends_next"?:true, "cont"?:"prev"|"next"}],
@@ -42,6 +43,18 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
   Only if it is longer: end with one step on where it is heading, say so in `flow`, set `"cont":"next"`.
 
 ## Writing rules (all required)
+0. **Key to the sugya (`unlock`, optional).** Many sugyot assume the learner already knows a case or concept —
+   especially when the Gemara jumps to a new topic (״תנן התם״, a Mishnah from another tractate, a new halachic
+   field). Then add 1–2 plain sentences that set up that background so the give-and-take makes sense: what the
+   case is, in which area of halacha, and what is at stake. It is NOT a summary of the moves (that is `flow`) and
+   not the conclusion. Leave it out when the first step already makes the case clear. Draw it from S/R (Steinsaltz
+   often opens a sugya with exactly this) — paraphrased, never copied. Models:
+   - בכורות כב, ״אין לנפלים פתיחת הקבר״: ״פתיחת הקבר״ הוא דין בטומאת מת: אשה שעוברה מת במעיה — משעה שרחמה נפתח
+     ללידה, הבית כבר טמא כאילו נולד המת בתוכו, גם אם הוולד עדיין לא יצא. נפל קטן אינו גורם לכך עד שראשו הגיע
+     לשיעור ״פיקה״ — ועל השיעור הזה נסובה הסוגיה.
+   - בכורות כג, ציר שנפלו לתוכו מים: רקע בדיני טהרות: משקים של עם הארץ בחזקת טמאים, אבל ציר דגים עצמו אינו מקבל
+     טומאה — רק המים שעורבו בו. כשהמים מיעוט הם בטלים והציר טהור; כשהם רוב — הציר טמא. לכן כל השאלה היא כמה מים
+     עם הארץ חשוד לערב, וכמה צריך להוסיף כדי שיהיו רוב.
 1. **Complete shakla vetarya.** Every move is its OWN step: every question (מיתיבי, ורמינהו, מאי טעמא,
    מנא הני מילי, בשלמא…אלא, והא, ולא?, פשיטא), answer (אלא, הכא במאי עסקינן, לא קשיא, שאני, מהו דתימא…קא משמע לן),
    rejection (דלמא, ממאי), איכא דאמרי / לישנא אחרינא, ראיה (תא שמע, תניא נמי הכי), תיובתא / קשיא / שמע מינה,

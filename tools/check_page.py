@@ -115,6 +115,14 @@ def main():
         post = s.get('post') or ''
         if 'think' in post and (post.count('class="think"') + post.count("class='think'")) > post.count('class="ans"'):
             errs.append(f'{s["id"]}: think box without a collapsed answer (div.ans hidden + button.reveal)')
+    for s in secs:   # a sugya that opens with a passage from elsewhere usually needs its background set up
+        segs0 = nseg(a.cache, slug, int(re.match(r'^[A-Za-z_]+\.(\d+)', s['ref'])[1]), re.match(r'^[A-Za-z_]+\.\d+([ab])', s['ref'])[1])[1]
+        try:
+            first = clean(segs0[int(re.match(r'^[A-Za-z_]+\.\d+[ab]\.(\d+)', s['ref'])[1]) - 1])
+        except (IndexError, TypeError):
+            first = ''
+        if not s.get('unlock') and re.match(r'^(תנן התם|תניא התם)', first):
+            warn.append(f'{s["id"]}: opens with ״{first[:12]}…״ (a new topic) but has no `unlock` — add the background case in 1–2 sentences')
     q = d.get('quiz', [])
     ids = {s['id'] for s in d['sections']}
     if len(q) != 8:
