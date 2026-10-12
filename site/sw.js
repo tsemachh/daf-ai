@@ -5,7 +5,7 @@
    - our own /api/*: network only (progress sync, notes, auth) */
 var V = '__ASSET_V__';
 var STATIC = 'static-' + V, PAGES = 'pages-v1', SEF = 'sefaria-v1';
-var PRE = ['/', '/offline/', '/app.css', '/app.js?v=' + V, '/progress.js?v=' + V, '/pwa.js?v=' + V, '/manifest.webmanifest',
+var PRE = ['/', '/offline/', '/app.css', '/app.js?v=' + V, '/progress.js?v=' + V, '/pwa.js?v=' + V, '/nav.js?v=' + V, '/manifest.webmanifest',
   '/fonts/assistant-hebrew.woff2', '/fonts/frank-hebrew.woff2', '/favicon.svg', '/icon-192.png', '/quiz.json'];
 var LIMIT = {}; LIMIT[PAGES] = 80; LIMIT[SEF] = 500;
 
