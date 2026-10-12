@@ -220,13 +220,24 @@
     }
     paint.w=box; syncEls.push(paint); paint();
   })();
-  api('/api/auth/me').then(function(j){ if(j&&j.user){SY.user=j.user; paintSync(); pull()} }).catch(function(){});
+  api('/api/auth/me').then(function(j){ SY.checked=true; if(j&&j.user){SY.user=j.user; paintSync(); pull()} else paintSync(); }).catch(function(){});
   var toastEl=null, toastT=null;
   function toast(msg,undo){
     if(!toastEl){toastEl=el('div','pg-toast'); toastEl.setAttribute('role','status'); toastEl.setAttribute('aria-live','polite'); document.body.appendChild(toastEl);}
     toastEl.innerHTML=''; toastEl.appendChild(el('span',null,msg));
     if(undo){var u=el('button',null,'בטל'); u.type='button'; u.onclick=function(){undo(); toastEl.hidden=true;}; toastEl.appendChild(u);}
     toastEl.hidden=false; clearTimeout(toastT); toastT=setTimeout(function(){toastEl.hidden=true},5000);
+  }
+
+  /* after a finished daf, readers who are not signed in get one invitation (at most every 5 days) */
+  function nudge(){
+    if(SY.user||!SY.checked) return; var k='daf-signin-nudge', t=0; try{t=+localStorage.getItem(k)||0}catch(e){}
+    if(Date.now()-t<5*864e5) return; try{localStorage.setItem(k,String(Date.now()))}catch(e){}
+    var n=el('div','pg-toast signin-nudge'); n.setAttribute('role','status');
+    n.append(el('span',null,'כל הכבוד על הדף! ההתקדמות נשמרת רק בדפדפן הזה — התחברו כדי לא לאבד אותה ולהמשיך בכל מכשיר.'));
+    var b=el('button',null,'התחברות'); b.type='button'; b.onclick=function(){ n.remove(); var a=document.querySelector('.acct-btn'); if(a){ window.scrollTo({top:0,behavior:'smooth'}); a.click(); } };
+    var x=el('button',null,'×'); x.type='button'; x.setAttribute('aria-label','סגור'); x.onclick=function(){n.remove()};
+    n.append(b,x); document.body.appendChild(n); setTimeout(function(){n.remove()},20000);
   }
 
   /* ---------- daf page: tracking is passive — a sugya viewed long enough counts as learned ---------- */
@@ -348,7 +359,7 @@
         if(!st&&acc[id]>=3000){E.s[id]='opened'; st='opened'; ch=true}
         if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)){E.s[id]='learned'; markDay(); ch=true}
       });
-      if(ch){ E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); }
+      if(ch){ var was=E.done; E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); if(E.done&&!was) nudge(); }
     }
     if(!RM) setInterval(tick,1000);
     document.addEventListener('visibilitychange',function(){lastT=Date.now()});
@@ -365,7 +376,7 @@
     if(allB) allB.addEventListener('click',function(){
       var all=nLearned(P)===P.n.length, snap=JSON.stringify({s:E.s,done:E.done,later:S.later});
       P.n.forEach(function(id){ if(all) E.s[id]='opened'; else { E.s[id]='learned'; delete S.later[P.k+'#'+id]; } });
-      if(!all) markDay(); E.done=all?null:(E.done||today()); touch(); save(); paint();
+      if(!all) markDay(); var was=E.done; E.done=all?null:(E.done||today()); touch(); save(); paint(); if(E.done&&!was) setTimeout(nudge,5500);
       toast(all?'הסימון בוטל':'סומנו '+P.n.length+' סוגיות כנלמדו',function(){ var o=JSON.parse(snap); E.s=o.s; E.done=o.done; S.later=o.later; save(); paint(); });
     });
     /* quiz: best score + missed questions for later review (not needed for "learned") */
@@ -446,41 +457,67 @@
   function laterRow(x){ var a=el('a','pg-row-l'); a.href=url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id; var bk=el('span','pg-bk'); bk.innerHTML=BOOK;
     a.append(bk,document.createTextNode(' '+x.p.h+' · סוגיה '+(x.i+1))); return a; }
 
-  /* ---------- home ---------- */
+  /* ---------- home: today's daf (hero), a sign-in invitation, then personal tiles ---------- */
   var home=document.getElementById('progress-home');
   if(home){
+    var HD={}; try{HD=JSON.parse(document.getElementById('home-data').textContent)}catch(e){}
+    function tile(cls,href,icon,k,big,sub){
+      var t=el(href?'a':href===false?'div':'button','tl'+(cls?' '+cls:'')); if(href) t.href=href; else if(href!==false) t.type='button';
+      var hd=el('span','tl-k'); hd.append(el('span','tl-i',icon),document.createTextNode(k)); t.appendChild(hd);
+      if(big!=null) t.appendChild(el('span','tl-n',big)); if(sub) t.appendChild(el('span','tl-s',sub)); return t; }
     function paintHome(){
       home.innerHTML=''; home.className='pg-home';
-      var pl=plan(), tp=pl.today, card=el('a','pg-today');
-      card.appendChild(el('div','pg-k',S.pace.mode==='plan'?'לפי הקצב שלך — היום':'הדף היומי — היום'));
-      if(tp){ card.href=url(tp); var hh=el('div','pg-h',tp.h+' '); var tk=ticks(stateOf(tp)); if(tk) hh.appendChild(tk); card.appendChild(hh); card.appendChild(el('div','pg-t',tp.t));
-        var c=nLearned(tp), qz=S.pages[tp.k]&&S.pages[tp.k].quiz; card.appendChild(el('div','pg-m',tp.n.length+' סוגיות'+(c&&c<tp.n.length?' · '+c+' נלמדו':'')+(qz?' · חזרה '+qz.best+'/'+qz.of:''))); }
-      else card.appendChild(el('div','pg-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף להיום'));
-      home.appendChild(card);
-      var side=el('div','pg-side');
-      if(S.first||S.review.length){ var dl=dueList(), rc=el('a','pg-review'); rc.href='/review/';
-        if(dl.length){ rc.append(el('b',null,'חזרה היום · '+dl.length+(dl.length===1?' שאלה':' שאלות')), el('span',null,'כ־'+Math.max(1,Math.round(dl.length*0.4))+' דק׳ · לפני הדף החדש')); }
-        else { rc.classList.add('done'); rc.append(el('b',null,'✓ אין חזרות להיום'), el('span',null,'השאלות הבאות יחזרו לפי הלוח')); }
-        side.appendChild(rc);
-        if(dow(today())>=4&&dow(today())<=5){ var wr=el('a','pg-review done'); wr.href='/review/?week'; wr.append(el('b',null,'חזרה שבועית לקראת שבת'), el('span',null,'10 שאלות מעורבות מהדפים של השבוע')); side.appendChild(wr); } }
-      if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section), a=el('a','pg-resume-b');
-        a.href=url(lp)+(i>0?'#'+lp.s+lp.d+'-'+S.last.section:''); a.append(el('b',null,'↩ המשך מהמקום שעצרת'),el('span',null,lp.h+(i>=0?' · סוגיה '+(i+1):''))); side.appendChild(a); } }
-      if(S.first){ var bh=behind(), st=el('p','pg-status');
-        if(!bh.length) st.append(el('span','pg-ok','✓'),document.createTextNode(' במסלול'));
-        else { st.append(el('span','pg-warn','●'),document.createTextNode(' מאחר ב־'+bh.length+(bh.length===1?' דף · ':' דפים · '))); var go=el('a',null,'השלם את '+bh[0].h); go.href=url(bh[0]); st.appendChild(go); }
-        side.appendChild(st); }
-      var sk=streak(); if(sk>0) side.appendChild(el('p','pg-streak','🔥 '+sk+(sk===1?' יום':' ימים')+' ברצף'));
-      var ll=laterList(); if(ll.length){ var lw=el('div','pg-laterbox'); lw.appendChild(el('b',null,'ללמוד אחר כך ('+ll.length+')')); ll.slice(0,3).forEach(function(x){lw.appendChild(laterRow(x))}); side.appendChild(lw); }
-      Object.keys(C.mas).forEach(function(slug){ var m=C.mas[slug], tot=m.last-m.first+1,
-        done=0; for(var dd=m.first; dd<=m.last; dd++){ var pp=byKey(slug+'/'+dd); if(dafState(slug,dd,pp)==='learned') done++; } if(!done&&!S.first) return;
-        var w=el('a','pg-mas'); w.href='/'+slug+'/#map'; w.appendChild(el('span',null,'מסכת '+m.he+' · '+done+' מתוך '+tot+' דפים'));
-        var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; bar.appendChild(f); w.appendChild(bar); side.appendChild(w); });
-      var gb=el('button','btn pg-gear','⚙ קצב והתחברות'); gb.type='button'; gb.setAttribute('aria-expanded','false');
+      var pl=plan(), tp=pl.today, hero=el('a','hero');
+      hero.appendChild(el('div','hero-k',S.pace.mode==='plan'?'לפי הקצב שלך · היום':'הדף היומי · היום'));
+      if(tp){ hero.href=url(tp); var hh=el('div','hero-h',tp.h+' '); var tk=ticks(stateOf(tp)); if(tk) hh.appendChild(tk); hero.appendChild(hh);
+        hero.appendChild(el('p','hero-t',tp.t));
+        var c=nLearned(tp), qz=S.pages[tp.k]&&S.pages[tp.k].quiz, ft=el('div','hero-f');
+        var meta=el('span','hero-m',tp.n.length+' סוגיות'+(c?' · '+c+' נלמדו':'')+(qz?' · חזרה '+qz.best+'/'+qz.of:''));
+        var go=el('span','hero-go',c===tp.n.length&&c?'✓ נלמד · לחזרה ←':c?'להמשיך ←':'להתחיל ללמוד ←'); ft.append(meta,go); hero.appendChild(ft);
+        if(c){ var bar=el('span','pg-bar'), f=el('i'); f.style.width=Math.round(100*c/tp.n.length)+'%'; bar.appendChild(f); hero.appendChild(bar); } }
+      else { hero.classList.add('empty'); hero.appendChild(el('p','hero-t',pl.beyond?'הדף הבא עוד לא פורסם באתר — מתעדכן כל לילה':'אין דף להיום')); }
+      home.appendChild(hero);
+
+      /* sign-in invitation: progress lives only in this browser until the reader connects an account */
+      if(SY.checked&&!SY.user){
+        var sg=el('div','signin'), tx=el('div','signin-x');
+        tx.append(el('b',null,S.first?'ההתקדמות שלך שמורה רק בדפדפן הזה':'שמרו את הלימוד שלכם'),
+          el('span',null,'התחברו עם Google — ותמשיכו מאותה נקודה בטלפון ובמחשב, בלי לאבד רצף, סימונים ושאלות לחזרה.'));
+        var slot=el('div','pg-gbtn'); sg.append(tx,slot); gButton(slot); home.appendChild(sg); }
+
+      var g=el('div','tiles'), hw=document.getElementById('howto'), seen=false; try{seen=!!localStorage.getItem('howto-seen')}catch(e){}
+      function howTile(){ var ht=tile(seen?'':'new',null,'💡','איך משתמשים','3 דקות','חזרה, תצוגת עץ, חברותא ומקורות'); ht.onclick=function(){ if(hw.showModal) hw.showModal(); else hw.setAttribute('open',''); }; return ht; }
+      if(hw&&!seen) g.appendChild(howTile());   /* first visit: the guide comes first */
+      if(S.first||S.review.length){
+      var dl=dueList(), rv;
+      if(dl.length) rv=tile('hot','/review/','🔁','חזרה היום',dl.length+(dl.length===1?' שאלה':' שאלות'),'כ־'+Math.max(1,Math.round(dl.length*0.4))+' דק׳ · לפני הדף החדש');
+      else rv=tile('','/review/','🔁','חזרה היום',S.review.length?'✓ הכול':'—',S.review.length?'השאלות הבאות יחזרו לפי הלוח':'שאלה שטעיתם בה תחזור לכאן');
+      g.appendChild(rv);
+      var sk=streak(); g.appendChild(tile(sk?'warm':'',false,'🔥','רצף',sk?sk+(sk===1?' יום':' ימים'):'0',sk?'ימי לימוד ברציפות (שבת לא שוברת)':'לומדים כל יום? הרצף נספר כאן'));
+      }
+      if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section);
+        g.appendChild(tile('',url(lp)+(i>0?'#'+lp.s+lp.d+'-'+S.last.section:''),'↩','המשך מהמקום',lp.h,i>=0?'סוגיה '+(i+1):'')); } }
+      var ms=tp?tp.s:Object.keys(C.mas)[0];
+      if(ms&&C.mas[ms]){ var m=C.mas[ms], tot=m.last-m.first+1, done=0; for(var dd=m.first; dd<=m.last; dd++){ if(dafState(ms,dd,byKey(ms+'/'+dd))==='learned') done++; }
+        var bh=S.first?behind():[], pt=tile(bh.length?'hot':'','/'+ms+'/#map','📖','מסכת '+m.he,done+' / '+tot,bh.length?'מאחר ב־'+bh.length+(bh.length===1?' דף':' דפים')+' · להשלים':(S.first?'✓ במסלול':'כל הדפים לפי פרקים'));
+        var pb=el('span','pg-bar'), pf=el('i'); pf.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; pb.appendChild(pf); pt.appendChild(pb); g.appendChild(pt); }
+      var ll=laterList(); if(ll.length){ var x=ll[0]; g.appendChild(tile('',url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id,'🔖','ללמוד אחר כך',String(ll.length),x.p.h+' · סוגיה '+(x.i+1))); }
+      if(dow(today())>=4&&dow(today())<=5&&S.first) g.appendChild(tile('','/review/?week','🗓','חזרה שבועית','10 שאלות','מהדפים של השבוע — לקראת שבת'));
+      var mt=tile('mas',false,'📚','מסכתות'), mlist=el('span','tl-l');
+      Object.keys(C.mas).sort(function(a,b){return C.mas[a].o-C.mas[b].o}).forEach(function(s){ var a=el('a',null,C.mas[s].he); a.href='/'+s+'/'; mlist.appendChild(a); });
+      mt.appendChild(mlist); g.appendChild(mt);
+      if(hw&&seen) g.appendChild(howTile());
+      if(HD.lab){ var lk=HD.lab.page, voted=false; try{voted=!!(localStorage.getItem('lab-vote-'+lk)||localStorage.getItem('lab-hide-'+lk))}catch(e){}
+        if(!voted) g.appendChild(tile('','/lab/'+lk+'/','🧪','ניסוי',HD.lab.title,'שני מודלים, אותו דף — השוו והצביעו')); }
+      if(HD.wn) g.appendChild(tile('','/changes/','✨','מה חדש · '+HD.wn.d,null,HD.wn.x+'…'));
+      var gb=tile('',null,'⚙','קצב והגדרות',null,S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי'); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
+      if(window.__fbTile) g.appendChild(window.__fbTile);
+      home.appendChild(g);
       var sp=settings(); sp.hidden=true; sp.classList.add('prefs');
-      gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden)};
-      side.appendChild(gb); home.append(side,sp);
+      gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden); if(!sp.hidden) sp.scrollIntoView({block:'nearest',behavior:'smooth'})};
+      home.appendChild(sp);
     }
-    painters.push(paintHome); paintHome();
+    painters.push(paintHome); paintHome.w=home; syncEls.push(paintHome); paintHome();
   }
 
   /* ---------- masechet page: summary + what matters now; all dapim by perek in a dialog ---------- */
@@ -613,7 +650,7 @@
     var ns=(j.notes||[]).slice(0,3); if(!ns.length) return;
     var box=el('div','fb-recent'); box.append(el('div','fb-recent-h','תוקן בעקבות הערות קוראים'));
     var ul=el('ul'); ns.forEach(function(n){var li=el('li'), a=el('a',null,name(n.page)+(n.section_title?' · '+n.section_title:'')); a.href=link(n); li.append(a); if(n.reply) li.append(el('span',null,' — '+n.reply)); ul.append(li)});
-    box.append(ul); var al=document.querySelector('#home .about-link'); if(al) al.before(box); else home.after(box);
+    box.append(ul); box.className='tl fb-recent'; window.__fbTile=box; var tl=home.querySelector('.tiles'); if(tl) tl.appendChild(box); else home.after(box);
   }).catch(function(){});
 })();
 

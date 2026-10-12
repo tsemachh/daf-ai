@@ -114,6 +114,11 @@ def yomi_date(slug, daf):
     return base.isoformat()
 
 
+def short(t, n):
+    """Cut at a word boundary, with an ellipsis."""
+    return t if len(t) <= n else t[:n].rsplit(" ", 1)[0].rstrip(" ,;:—–-") + "…"
+
+
 def catalog_json():
     return jscript(CATALOG, id="catalog")
 
@@ -548,9 +553,9 @@ def whatsnew(limit=None, link=True):
 
 
 def howto_block():
-    """Home: a short "how to use it in three minutes" guide, open for first-time visitors."""
-    return """<details class="howto" id="howto">
-  <summary>איך משתמשים — בשלוש דקות</summary>
+    """Home: the "how to use it in three minutes" guide, in a dialog opened from its tile (progress.js)."""
+    return """<dialog class="howto pg-dlg" id="howto" aria-label="איך משתמשים">
+  <div class="pg-dlg-h"><h2>איך משתמשים — בשלוש דקות</h2><button class="btn" type="button" data-close>סגור</button></div>
   <p class="howto-lead">מה עושה את ההבדל: <b>חזרה שבודקת שבאמת הבנתם</b>, ו<b>חלוקה לסוגיות עם מעקב התקדמות</b> — כך יודעים בדיוק מה כבר יושב ומה עוד לא. ואפשר לחזור <b>בכל רגע פנוי</b>: בתור בסופר, באוטובוס — מהטלפון, גם בלי חיבור. מתחברים עם Google — ומתחילים במחשב וממשיכים בטלפון מאותה נקודה.</p>
   <ol>
     <li><b>בוחרים דף ומתקדמים סוגיה אחר סוגיה.</b> דף היום מופיע ראשון. כל סוגיה שקראתם מסומנת ✓ ב״מהלך הדף״, וסרגל בצד מראה איפה אתם.</li>
@@ -559,56 +564,40 @@ def howto_block():
     <li><b>נעזרים במקור.</b> הקשה על ציטוט מהגמרא מביאה את ביאור שטיינזלץ (ורש״י כשיש); הקשה על שם או מונח מסומן מסבירה מי ומה; כפתור ״הגמרא״ פותח את לשון הגמרא.</li>
     <li><b>בודקים את עצמכם.</b> שאלות החזרה בסוף הדף בודקות שהבנתם, לא רק שקראתם; שאלה שטעיתם בה חוזרת אליכם אחרי יום, ואחר כך אחרי 3, 7 ו־21 ימים. 🔊 בכל סוגיה מקריא אותה בקול.</li>
   </ol>
-</details>
-<script>(function(){var d=document.getElementById('howto');try{if(!localStorage.getItem('howto-seen'))d.open=true;}catch(e){}
-d.addEventListener('toggle',function(){if(!d.open){try{localStorage.setItem('howto-seen','1')}catch(e){}}});})();</script>"""
+</dialog>
+<script>(function(){var d=document.getElementById('howto');d.querySelector('[data-close]').onclick=function(){d.close()};
+d.addEventListener('click',function(e){if(e.target===d)d.close()});d.addEventListener('close',function(){try{localStorage.setItem('howto-seen','1')}catch(e){}});})();</script>"""
 
 
-def lab_banner():
-    if not LAB:
-        return ""
-    e = list(LAB.values())[-1]
-    pg = f"{e['slug']}/{e['daf']}"
-    return f"""<div class="lab-ban" id="lab-ban" data-page="{pg}" hidden>
-  <a href="/lab/{pg}/"><b>🧪 ניסוי חדש:</b> אותו דף, שני מודלים — {esc(e['title'])} בשתי גרסאות. איזו עוזרת יותר? <span>השוו והצביעו ←</span></a>
-  <button type="button" class="lab-x" aria-label="הסתר">×</button>
-</div>
-<script>(function(){{var b=document.getElementById('lab-ban'),p=b.dataset.page;try{{if(localStorage.getItem('lab-vote-'+p)||localStorage.getItem('lab-hide-'+p))return}}catch(e){{}}
-b.hidden=false;b.querySelector('.lab-x').onclick=function(){{b.remove();try{{localStorage.setItem('lab-hide-'+p,'1')}}catch(e){{}}}}}})();</script>"""
+def home_data():
+    """What the home tiles need from the build: the latest site change and the active lab comparison."""
+    log = changelog()
+    wn = {"d": fmt_day(log[0]["date"]), "x": re.sub("<[^>]+>", "", log[0]["items"][0])[:90]} if log and log[0]["items"] else None
+    lab = None
+    if LAB:
+        e = list(LAB.values())[-1]
+        lab = {"page": f"{e['slug']}/{e['daf']}", "title": e["title"]}
+    return jscript({"wn": wn, "lab": lab}, id="home-data")
 
 
 def render_home(by_slug, latest, about):
-    cards = "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in latest[:3])
-    rest = latest[3:]
-    more = (f'<details class="more-pages"><summary>לכל הדפים ({len(latest)}) ↓</summary>\n<div class="cards">\n'
-            + "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in rest) + '\n</div></details>') if rest else ""
-    mas = "\n".join(f'  <a class="card" href="./{s}/"><div class="top"><h3>מסכת {ds[0]["tractate_he"]}</h3>'
-                    f'<span class="date">{len(ds)} דפים</span></div></a>' for s, ds in by_slug.items())
+    mas = " ".join(f'<a href="./{s}/">מסכת {ds[0]["tractate_he"]}</a>' for s, ds in by_slug.items())
     body = f"""<div class="wrap" id="app"><section id="home">
-<header>
+<header class="home-h">
   <h1>{SITE_TITLE}</h1>
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 {navbar()}
-{howto_block()}
-{lab_banner()}
 <div id="progress-home"></div>
-<h2 class="sec-h" style="margin-top:28px">הדפים האחרונים</h2>
-<div class="cards">
-{cards}
-</div>
-{more}
-<h2 class="sec-h" style="margin-top:28px">מסכתות</h2>
-<div class="cards">
-{mas}
-</div>
-{whatsnew(5)}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים ומה נבדק ←</a> <a class="back" href="./ideas/">רעיונות לשיפור ←</a> <a class="back" href="./notes/">הערות קוראים ←</a> <a class="back" href="./stats/">נתוני ביקורים ←</a> <a class="back" href="./changes/">כל השינויים ←</a> <a class="back" href="./privacy/">פרטיות ←</a></p>
+<noscript><p class="home-mas">{mas}</p></noscript>
+{howto_block()}
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./privacy/">פרטיות</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
 {catalog_json()}
+{home_data()}
 <script src="progress.js"></script>"""
     return page(SITE_TITLE, body, "דפי חזרה ולימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
 
@@ -842,7 +831,7 @@ def main():
         for d in sorted(ds, key=lambda x: x["daf"]):
             CATALOG["pages"].append({"k": f"{slug}/{d['daf']}", "s": slug, "d": d["daf"],
                                      "h": f"{d['tractate_he']} {heb_num(d['daf'])}",
-                                     "t": re.sub("<[^>]+>", "", d["thesis"])[:110],
+                                     "t": short(re.sub("<[^>]+>", "", d["thesis"]), 130),
                                      "n": [n["id"] for n in d["nav"]], "y": yomi_date(slug, d["daf"])})
     DAFS.clear()
     for slug, ds in by_slug.items():
