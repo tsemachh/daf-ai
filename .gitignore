@@ -5,3 +5,12 @@ __pycache__/
 .env.*
 .idea/
 .wrangler/
+
+# local working files — never commit
+.exp/
+.sefall/
+.srccache/
+.srcpack/
+.vo/
+*.tgz
+._*

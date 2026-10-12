@@ -10,6 +10,7 @@
   var S; try{S=norm(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){S=blank()}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} if(SY.user) SY.push()}
   var SY={user:null,push:function(){}};
+  window.dafUser=function(){return SY.user};   // the note form (app.js) pre-fills name + email when signed in
 
   /* ---------- helpers ---------- */
   function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}

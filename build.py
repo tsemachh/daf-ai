@@ -521,7 +521,10 @@ b.hidden=false;b.querySelector('.lab-x').onclick=function(){{b.remove();try{{loc
 
 
 def render_home(by_slug, latest, about):
-    cards = "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in latest)
+    cards = "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in latest[:3])
+    rest = latest[3:]
+    more = (f'<details class="more-pages"><summary>לכל הדפים ({len(latest)}) ↓</summary>\n<div class="cards">\n'
+            + "\n".join(card(d, f"./{d['slug']}/{d['daf']}/") for d in rest) + '\n</div></details>') if rest else ""
     mas = "\n".join(f'  <a class="card" href="./{s}/"><div class="top"><h3>מסכת {ds[0]["tractate_he"]}</h3>'
                     f'<span class="date">{len(ds)} דפים</span></div></a>' for s, ds in by_slug.items())
     body = f"""<div class="wrap" id="app"><section id="home">
@@ -537,6 +540,7 @@ def render_home(by_slug, latest, about):
 <div class="cards">
 {cards}
 </div>
+{more}
 <h2 class="sec-h" style="margin-top:28px">מסכתות</h2>
 <div class="cards">
 {mas}
@@ -802,7 +806,7 @@ def main():
     # newest by Daf Yomi date; dapim prepared far ahead (the "ahead" queue) stay off the home page until their week
     horizon = (il_today() + dt.timedelta(days=7)).isoformat()
     dated = [(yomi_date(d["slug"], d["daf"]) or "", d) for d in alld]
-    latest = [d for y, d in sorted(dated, key=lambda x: x[0], reverse=True) if y and y <= horizon][:7]
+    latest = [d for y, d in sorted(dated, key=lambda x: x[0], reverse=True) if y and y <= horizon]
     open(os.path.join(DIST, "index.html"), "w", encoding="utf8").write(render_home(by_slug, latest, about))
     # quiz bank for spaced review (fetched by progress.js on /review/ and for the "yesterday" opener)
     def quiz_ctx(d):   # each review question knows its sugya's title, so it makes sense days later

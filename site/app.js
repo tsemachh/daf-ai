@@ -614,6 +614,8 @@
     var ts=el('div','fb-ts');
     var note=el('p','fb-muted','ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
     var who=el('div','fb-who'); who.append(nm,em);
+    var me=window.dafUser&&window.dafUser();   // signed in → default name and email from the account (editable)
+    if(me){ nm.value=(me.name||'').slice(0,80); em.value=(me.email||'').slice(0,160); nc.checked=!!em.value; note.textContent='השם והמייל מולאו מהחשבון שלך — אפשר לשנות או למחוק. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.' }
     var st=el('p','fb-status'); st.setAttribute('aria-live','polite');
     var sb=el('button','btn fb-send','שליחה'); sb.type='submit';
     f.append(fs,ta,who,nl,pl,hp,ts,sb,st,note);

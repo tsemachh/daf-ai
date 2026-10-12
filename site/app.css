@@ -661,3 +661,7 @@ details.howto .howto-lead{margin:10px 0 4px;font-size:16px;line-height:1.6}
   .cl-v{white-space:normal;overflow-wrap:anywhere;margin-inline-start:auto}
 }
 
+details.more-pages{margin-top:14px}
+details.more-pages>summary{cursor:pointer;list-style:none;display:inline-block;padding:8px 16px;border:1px solid var(--line,#ccc);border-radius:999px;font-weight:600;user-select:none}
+details.more-pages>summary::-webkit-details-marker{display:none}
+details.more-pages[open]>summary{margin-bottom:4px}

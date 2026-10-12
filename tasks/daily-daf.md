@@ -96,143 +96,64 @@ The routine clones a second repo, `tsemachh/daf-ai-sources` (private), next to t
    Texts are cleaned on save (legacy 7-bit Hebrew fonts decoded, niqqud and bidi marks stripped). If a
    `_dyc/<id>.txt` is still unreadable (mostly Latin letters or broken words), skip it and log it as
    `unreadable` in `sources_used.json` (below).
-2. Read everything for a target from `<cache>/<slug>/<daf>/` — `sefaria_he_{a,b}.json` (verbatim
-   segments; the page and `srctext` use these), `steinsaltz_he_*`, `rashi_he_*`, `steinsaltz_en_*`,
-   `dafyomi_co_il_*.txt`, `yeshiva_*.txt` if someone saved it by hand, and the daf-yomi.com aids listed in
-   `dafyomi_com.json` (read only the part of each `_dyc/<id>.txt` that covers this daf: סיכומי סוגיות /
-   תמצית מסקנות / דרך ישרה / שינון for conclusions, גמרא סדורה for the flow, שאלות חזרה / מחודדים בפיך
-   for what learners are asked — don't copy their questions). Verse and halacha texts:
-   `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`.
+2. **Pack the daf** — the writer reads ONLY this, never the raw cache files:
+   `python tools/pack_daf.py --cache <cache> --slug <slug> --daf <daf>` → `<cache>/<slug>/<daf>/pack.md`
+   (per segment: Gemara without niqqud, Hebrew Steinsaltz, Rashi, detected moves; plus the next daf's
+   opening, the previous daf's last sugya and the Sinai summary when `sinai.txt` is cached). If the
+   cache lacks the daf, run `tools/fetch_sources.py` for its date first (§3.1).
 3. The cache is private: paraphrase commentary, never copy it. Only verbatim Gemara segments (public
-   domain) and fetched verse/halacha texts go into the public repo (`srctext`, `data/sources.json`).
+   domain, filled by script) and fetched verse/halacha texts go into the public repo (`srctext`,
+   `data/sources.json`). Verse and halacha texts: `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`.
 4. If the cache repo is missing or a file can't be fetched, work from the Sefaria API directly and say
    so in the report. Never scrape sites that block automated clients (yeshiva.org.il; daf-yomi.com only
    via WebFetch as in 1b).
 
-**Source log (required).** Write `<cache>/<slug>/<daf>/sources_used.json` and commit it with the cache
-(private repo — never in the public repo). One entry per source file you opened or skipped:
-`{"source": "sefaria_he_a" | "steinsaltz_he_b" | "rashi_he_a" | "dafyomi_co_il_tables" | "dyc:<id>" …,
-"status": "used" | "skimmed" | "skipped" | "unreadable", "contributed": ["s2: attribution of ניחזי אנן",
-"quiz 5 distractor", …], "corrections": <how many claims it changed or confirmed against your draft>,
-"note": "<why skipped / what was missing>"}`. Be concrete and honest: `contributed` names the section
-and what the source changed; an empty list means it added nothing. The fact-check subagent (§5a)
-appends its own entries with `"by": "factcheck"`. Update the file after §5c with the final counts.
+**Token budget (learned from the stopped Berachot bulk run, 2026-10-11: ten parallel agents each loaded
+the full prompt, a 73 KB model page, raw sources and the glossary — 2.4M tokens in 20 minutes, 14 partial
+pages lost).** One daf at a time, never parallel writers. At most two subagents per daf (writer, reviewer).
+Nobody reads `data/glossary.json`, a whole model page, English Steinsaltz or raw Sefaria dumps — scripts
+do that work. If a daf is not verified after one review round plus one fix round, stop, report, leave it
+for the next run.
 
-**Coverage map (required).** Before writing, list EVERY Sefaria segment on both amudim → the step that
-covers it. Every question move (מיתיבי, איתיביה, ולא?,
-והא, ורמינהו, מאי טעמא, מנא הני מילי, למאי נפקא מינה, וליגמר מיניה, בשלמא… אלא…), every answer (אלא,
-הכא במאי עסקינן, לא קשיא, שאני), every דחייה (לא, דלמא, ממאי), every איכא דאמרי / לישנא אחרינא, every
-ראיה (תא שמע, תניא דמסייע), every תיובתא / קשיא / שמע מינה, and every ואיבעית אימא is its OWN step.
-Never merge two moves; never summarise a chain with "ונדחה".
+**Source log (required, short).** The reviewer (§5a) writes `<cache>/<slug>/<daf>/sources_used.json`
+(private repo only): one entry per source it used — `{"source": "pack:G" | "pack:S" | "pack:R" | "sinai" |
+"dyc:<id>" …, "status": "used" | "skimmed" | "skipped" | "unreadable", "contributed": ["s2: …"],
+"corrections": <n>, "by": "review"}`. Commit it with the cache.
 
-**Argument tree (required).** Each step's `p` = the earlier step (index in the same sugya) it responds
-to: a קושיה → the statement it attacks (several objections to one statement are siblings); a תירוץ /
-דחייה → the קושיה or ראיה it answers; a ראיה → the claim it supports; a מסקנה / תיובתא → the statement
-that falls or stands; a new speaker's independent view, איכא דאמרי or ואיבעית אימא starts a new root (no
-`p`). After a reformulation, later objections point to the reformulated step.
-
-**Content boundary (required).** Do not explain or expand passages about nazi symbols write one neutral step "קטע זה לא הורחב כאן — ראוי ללמדו בגמרא" and cut
-those segments from `srctext` with "…". Legal-monetary topics (kiddushin as a legal act, ketubah,
-inheritance) are presented fully and neutrally.
-
-## 4. Write `data/<slug>/<daf>.json`
-Follow the schema in `README.md` and copy the shape of `data/bechorot/12.json`:
-- Section ids (`s1`, `s2`, …) are learners' progress keys (saved in their browsers): never renumber or
-  reuse the ids of a published daf when fixing it — append new sections with new ids instead.
-- `nav` (מהלך הדף) listing every section; `storyline` (הקדמה): one paragraph of flowing prose on how the
-  daf moves from sugya to sugya.
-- One section per sugya: `ref` like `Bekhorot.12a.5-9` or `Bekhorot.12a.20-12b.1` covering exactly its
-  segments; `title`; optional `quote` {text, cite}; `flow` (בקצרה, 1–3 sentences: the question, why it
-  arises, how it ends) for every sugya with give-and-take; `steps` with `tag`, `type` (q/a/c/""),
-  `p`, `body`; optional verdicts/think boxes in `post` (1–3 think boxes per daf). Set `type` carefully:
-  in חברותא mode the site hides exactly the `a`/`c` steps (answers, rejections, conclusions) and shows
-  the `q` and source steps as prompts. Never leave a segment as "לא הורחב כאן" — give at least a
-  one-line gist. Verdict cards use neutral colours (no ok/no class for a halachic side).
-- **Explain, don't transcribe (reader feedback on Bechorot 18):** each step says in clear modern Hebrew what is
-  argued and why (the logic, the assumption, what the questioner thinks), using Steinsaltz/Rashi to understand it,
-  and anchors itself with a SHORT Gemara key-phrase in ״…״ (usually 2–8 words: the term or the decisive words) —
-  not whole sentences. Gemara quotes stay ≤ ~30% of all step text (a Mishnah line or a decisive ruling may be
-  quoted longer). Model page: `data/bechorot/18.json`. If sinai.org.il (״דף מאיר״, הרב אורי בריליאנט) has a
-  written summary for the daf (pages like `https://www.sinai.org.il/בכורות-יט/`), you may use it to check the
-  flow and the explanations (the site agreed); the Gemara text itself stays the source of truth.
-- **Visual aids ("עזרים") — only when they make the sugya clearer, and never invent anything:** every cell,
-  line and arrow must state what the Gemara (or a fetched verse) says; where it says nothing, write ״לא נאמר״
-  or leave the aid out. Most sugyot need none. The menu: `table`, `decide`, `chain` (below), `calc` (worked
-  numbers: `{"title", "rows": [[label, value, cite?]], "lines": [[label, value, cite?]], "note"?}`, e.g.
-  `data/bechorot/5.json` s3) and `seq` (order of events in a story or a process: `{"title", "items": [...]}`).
-  The fact-check subagent checks every aid like a step.
-- **Table of opinions** (optional `table` on a section): when a sugya has ≥2 opinions over ≥2 cases (or ≥3
-  cases with different outcomes), add `{"title", "cols": ["", "<שיטה>", …], "rows": [["<מקרה>", "<תשובה>", …], …]}`
-  — short cells (״כן״ / ״לא — ״אותה״ ממעט״ / ״לא נאמר״), never a claim the Gemara doesn't make. At most 2 per
-  daf; the steps stay as they are. Example: `data/bechorot/14.json` s8. The fact-check subagent checks every cell.
-- **If → then cards** (optional `decide`): a ruling that turns on conditions (what came first, which status)
-  → `{"title", "branches": [{"if": "<תנאי>", "then": ["<דין>", …]}, …]}`, 2–3 branches. **Source chain**
-  (optional `chain`): a derivation that runs verse → דרשה → rule → result → `{"title", "links": [{"k": "פסוק",
-  "t": …}, {"k": "דרשה", …}, {"k": "דין", …}, {"k": "תוצאה", …}]}`. Use each only where it makes the sugya
-  clearer (examples in `data/bechorot/14.json` s2, s8); verses quoted only as fetched. A chain may end with a
-  `note` for the other opinion (e.g. that it has no source of its own, or that the verse stays a קושיא for it)
-  — never invent a derivation the Gemara doesn't give. The site groups table/decide/chain in a collapsed
-  ״עזרים״ panel per sugya. The fact-check subagent
-  checks them like any step.
-- **A sugya split across dapim:**
-  - Continues into the next daf: never stop a sugya at the page break mid-argument (an open קושיה, a
-    half-quoted proof, an unanswered "מאי?"). If the rest of the SAME give-and-take on the next daf is up to
-    ~8 segments, finish it on this page: append its steps with tags like "תירוץ · דף X", extend the
-    section `ref` across the break (e.g. "Bekhorot.16b.9-17a.3") and its `srctext`, write the real ending in
-    `flow`, and set `"ends_next": true` (the next daf still covers those segments in full, with its רקע
-    step). Only when the continuation is long (a new layer of argument, many segments) end with one step
-    on where it is heading, mention it in `flow`, and set `"cont": "next"`.
-  - A sugya spanning both amudim: amud label "עמוד א–ב" (short; never "סוף עמוד א – תחילת עמוד ב").
-  - Continues from the previous daf: amud label "עמוד א · המשך מדף X׳" (or `"cont": "prev"`) and open with a
-    one-line רקע step recapping where the sugya stands. `build.py` adds the links between the two parts.
-- `srctext`: an entry for EVERY section ref (t = "בכורות י״ב ע״א", p = verbatim segments, a lone "…"
-  where skipped). New Tanakh/halacha citations go into `data/sources.json` keyed by Sefaria ref
-  ("Leviticus.11.4"), text fetched from `https://www.sefaria.org/api/texts/<ref>?lang=he&context=0`,
-  cantillation stripped, nikud kept. Never paste text you did not fetch; never change existing entries.
-- Citation formats in text: "<ספר> <פרק>, <פסוק>" in Hebrew letters; "שו״ע יו״ד <סימן>, <סעיף>";
-  "רמב״ם מאכלות אסורות <פרק>, <הלכה>".
-- `quiz`: exactly 8 {q, o:[3–4], a, e, w?, s}. The quiz feeds spaced review — a learner meets each question
-  again days later, out of context — so every question tests understanding of the sugya's substance, not memory:
-  - `s` = the id of the section the question is about (the review screen shows its title and links to it).
-  - Self-contained stem: open with the case in a few words so it reads on its own days later
-    ("בסוגיית צאן ברזל — מדוע הוולדות פטורים?", "בהמה שנולדו לה שני זכרים כאחת — …"). Never "מה אמר הוא",
-    "בברייתא הנ״ל", or a bare name/quote with no setting.
-  - Ask about the essence: the reasoning (why this ruling / why the proof was rejected / what the הו״א was and
-    why it fails), the principle behind a מחלוקת, what distinguishes two cases, and applying the principle to a
-    new case. Mix per daf: 4 reasoning, 2 principle/distinction, 2 application. At most 1 "who said" question,
-    and only for a sugya's central view — never trivia (who said a phrase, numbers, order of speakers).
-  - Distractors are real misconceptions: a rejected proof, the other side of the מחלוקת, the הו״א, a
-    neighbouring sugya's ruling. No implausible fillers. Use 4 options when there are 3 good distractors.
-  - All options of similar length and form (the correct one must not be the longest or the only one with
-    a quote); `a` may be any index (the site shuffles options anyway).
-  - `e` explains the correct answer from the Gemara; `w` (optional) maps a wrong option's index to one
-    short line on why it is wrong, e.g. {"0": "זו הו״א שנדחתה: …"}.
-  - Don't reuse a "חשבו לפני שממשיכים" question as a quiz item.
-- `links` (להעמקה); `card` {topics, date}; `meta` incl. Hebrew date (+ holiday), "עמודים א–ב", and an
-  honest time estimate ("~25 דקות לימוד" for ~40 steps, "~35" for ~70).
-- `data/glossary.json`: add concise Hebrew entries for every missing sage/concept (types תנא / אמורא /
-  מושג / מונח / מקום; a sage gets generation, Tanna/Amora, Eretz Yisrael/Bavel and one identifying fact),
-  exact spelling as in the text. Every compound or epithet name gets its own key so a shorter key never
-  marks part of it ("רבי יהושע הגרסי", "רב נחמיה בריה דרב יוסף", "רבי יוסי הגלילי"); where a short form is
-  ambiguous, write the full name. Never add common words; don't change existing entries unless wrong.
+## 4. Write `data/<slug>/<daf>.json` — Sonnet writer subagent
+Spawn ONE subagent with **model `sonnet`** (general-purpose). Prompt: "Read `tasks/writer-brief.md` and
+follow it exactly. Input: `<cache>/<slug>/<daf>/pack.md`. Write `data/<slug>/<daf>.json`. Hebrew date
+for `meta`/`card`: <date> (+ holiday). Read no other file." All writing rules (complete shakla vetarya,
+explain-don't-transcribe, `seg`/`p`/`type`, aids, amud labels, continuation, quiz, content boundary)
+live in `tasks/writer-brief.md` — it is the single source for them; the refresh queue (§2) uses its quiz rules too.
+Then, with scripts only:
+- `python tools/fill_srctext.py --cache <cache> data/<slug>/<daf>.json` — fills `srctext` from the
+  cache for every section ref (never typed by a model; `skip` segments become "…").
+- `python tools/check_page.py --cache <cache> data/<slug>/<daf>.json` — coverage (every segment in one
+  section, every detected move has a step, every step has `seg`), `p`, quiz shape, quote share, and
+  GLOSSARY CANDIDATES. Errors go back to the writer (SendMessage to the same subagent, listing them) once.
+- `links`: add as on earlier pages (daf-yomi.com day page, dafyomi.co.il charts/points for the daf).
+  `footer`: copy from the previous daf.
+- Glossary: write entries ONLY for the printed candidates that are real names/terms (types תנא / אמורא /
+  מושג / מונח / מקום; a sage gets generation, Tanna/Amora, Eretz Yisrael/Bavel and one identifying fact;
+  every compound or epithet name its own key, e.g. "רבי יוסי הגלילי"). Add them with a short script that
+  loads, updates and saves `data/glossary.json` — never read the whole file into context.
 
 ## 5. Verify, then publish
-**a. Fact-check subagent** (general-purpose, in parallel with b). Point it at the cache folder for the
-daf (authoritative sources) and give it the page's visible text
-(Playwright innerText of `dist/<slug>/<daf>/` with all details opened and answers shown), the quiz, the
-new glossary/sources entries and the rendered marked terms (each `button.term` + the 15 chars after it).
-It checks against Sefaria Hebrew and Steinsaltz (and, as a cross-check of each sugya's conclusion, the
-daf-yomi.com summaries in the cache — the Gemara wins any disagreement; it reports which cached
-files it actually used, for the source log): attributions, rulings, amud placement, quotes, every
-intermediate קושיה/תירוץ and each FINAL conclusion, storyline and בקצרה accuracy, every quiz answer,
-glossary identities in context, `srctext` vs Sefaria and ref ranges. Returns ERRORS / DOUBTFUL /
-OMISSIONS with a source quote and corrected Hebrew.
+**a. Review subagent** (model: this run's main model — Fable/Opus; ONE subagent). Give it `pack.md` and
+the page JSON (not rendered text). It checks against the Gemara (G) with S/R and the Sinai summary as
+cross-checks — the Gemara wins any disagreement: attributions, rulings, amud placement, quotes, every
+intermediate קושיה/תירוץ and each FINAL conclusion, merged or missing moves, `p` and `type`, storyline
+and בקצרה accuracy, every aid cell, every quiz answer and distractor, new glossary entries in context.
+It also flags THIN steps (a move stated without its reasoning) — Sonnet's typical weakness — and supplies
+the fuller explanation. It returns ONLY patches, never a rewritten page:
+`[{"where": "s3.steps[4].body" | "quiz[2].o[1]" | …, "severity": "ERROR|OMISSION|THIN|DOUBTFUL",
+"why": "<source quote>", "new": "<corrected Hebrew / new step object>"}]`, and writes the source log.
 
-**b. Coverage & tree subagent.** Give it your coverage map, the visible text, each step's index/`p`, and
-the cached `sefaria_he_*` / `steinsaltz_he_*` files. Segment by segment it reports (1) every move with no step of its own, (2) every wrong
-`p`, (3) any section whose ref range doesn't match its steps.
+**c. Apply** every ERROR, OMISSION and THIN patch with a script (insert new steps without renumbering
+section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re-run `fill_srctext.py`
+(if refs changed, with `--force`) and `check_page.py` until it exits 0. Count fixes.
 
-**c. Apply** every ERROR and OMISSION; fix or flag DOUBTFUL; count fixes.
 
 **d. Checks:** `python validate.py` exits 0 (no new compound-name warnings); `python build.py`;
 Playwright on `dist/<slug>/<daf>/index.html` (serve `dist` with `python -m http.server`) at 390 and
