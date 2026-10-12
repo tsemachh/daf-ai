@@ -124,6 +124,9 @@ def main():
             first = ''
         if not s.get('unlock') and re.match(r'^(תנן התם|תניא התם)', first):
             warn.append(f'{s["id"]}: opens with ״{first[:12]}…״ (a new topic) but has no `unlock` — add the background case in 1–2 sentences')
+    nu = sum(1 for s in secs if s.get('unlock'))
+    if secs and nu > max(1, len(secs) // 3):
+        warn.append(f'{nu} of {len(secs)} sugyot have an `unlock` — keep it only where a learner jumping in would miss the case (aim ≤ 1/3)')
     q = d.get('quiz', [])
     ids = {s['id'] for s in d['sections']}
     if len(q) != 8:
