@@ -16,7 +16,7 @@ summary is only a cross-check of the flow — paraphrase, never copy any comment
  "sections":[{"id":"s1","kind":"sugya","amud":"עמוד א · משנה","ref":"Berakhot.2a.1-4","title":"…",
    "flow":"<בקצרה 1–3 sentences: the question, why it arises, how it ends>",
    "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>"}],
-   "post":"<optional think box: <div class='think'><b>חשבו לפני שממשיכים:</b> …</div>>",
+   "post":"<optional think box, EXACTLY this HTML — question visible, answer collapsed: <div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>QUESTION</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">ANSWER from the Gemara</div></div>>",
    "table"?:{…},"decide"?:{…},"chain"?:{…},"calc"?:{…},"seq"?:{…},
    "skip"?:["2a.5"], "ends_next"?:true, "cont"?:"prev"|"next"}],
  "quiz":[{"s":"s2","q":"…","o":["…","…","…","…"],"a":1,"e":"…","w":{"0":"…"}}],
