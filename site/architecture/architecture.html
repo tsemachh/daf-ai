@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inside daf-ai</title>
+<meta name="description" content="How an AI agent writes one interactive Talmud study page every night, checks it against the Gemara, and stays within a token budget.">
+<link rel="canonical" href="https://daf.tsemach.dev/architecture">
+<meta property="og:type" content="article"><meta property="og:title" content="Inside daf-ai">
+<meta property="og:description" content="The nightly agent pipeline behind daf.tsemach.dev: architecture, model and token measurements, and what broke.">
+<meta property="og:url" content="https://daf.tsemach.dev/architecture"><meta property="og:image" content="https://daf.tsemach.dev/og/site.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/frank-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Assistant';font-weight:400 800;font-display:swap;src:url(/fonts/assistant-latin.woff2) format('woff2')}
+@font-face{font-family:'Frank Ruhl Libre';font-weight:400 900;font-display:swap;src:url(/fonts/frank-latin.woff2) format('woff2')}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}
+/* Layout: one reading column; the nightly pipeline is the centrepiece, drawn as a vertical rail of model vs script steps */
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --ink:#17212c; --muted:#5a6675; --line:#dde2e8;
+  --accent:#1f5f8b; --accent-soft:#e3eef6; --model:#7a4b9c; --model-soft:#f1e9f7;
+  --good:#2e7d4f; --bad:#b23b3b;
+  --display:"Frank Ruhl Libre", Georgia, "Times New Roman", serif;
+  --body:"Assistant", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --surface:#18202a; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#6fb0dd; --accent-soft:#1b2c3a; --model:#c49be3; --model-soft:#2a2135;
+  --good:#6cc392; --bad:#e27a7a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --surface:#18202a; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#6fb0dd; --accent-soft:#1b2c3a; --model:#c49be3; --model-soft:#2a2135;
+  --good:#6cc392; --bad:#e27a7a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);padding-inline:16px;padding-block:32px 64px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:56px}
+h1,h2{font-family:var(--display);font-weight:700;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem)}
+h2{font-size:1.6rem}
+h3{font-size:1rem;margin:0;font-weight:600}
+p{margin:0;max-width:65ch}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:500 .75rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+section{display:grid;gap:18px}
+header{display:grid;gap:16px}
+.lede{font-size:1.15rem;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 24px;font:500 .9rem var(--mono);color:var(--muted)}
+.facts b{color:var(--ink);font-weight:500}
+.he{font-family:var(--display);direction:rtl;unicode-bidi:isolate}
+
+/* pipeline rail */
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot.s{background:var(--accent)} .dot.m{background:var(--model)}
+ol.rail{list-style:none;margin:0;padding:0;display:grid;gap:0;position:relative}
+ol.rail li{display:grid;grid-template-columns:28px 1fr;gap:14px;position:relative;padding-bottom:16px}
+ol.rail li::before{content:"";position:absolute;left:13px;top:22px;bottom:0;width:2px;background:var(--line)}
+ol.rail li:last-child::before{display:none}
+.node{width:14px;height:14px;border-radius:50%;margin:6px 0 0 7px;background:var(--accent);box-shadow:0 0 0 4px var(--bg)}
+li.m .node{background:var(--model);border-radius:3px}
+.step{min-width:0;display:grid;gap:2px}
+.step code{font:500 .9rem var(--mono);color:var(--accent)}
+li.m .step code{color:var(--model)}
+.step p{color:var(--muted);font-size:.95rem}
+li.m .step{background:var(--model-soft);padding:8px 12px;border-radius:6px}
+
+/* rules */
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:r}
+.rules li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.rules li::before{counter-increment:r;content:counter(r);font:500 .85rem var(--mono);color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:4px}
+
+/* table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+.ok{color:var(--good);font-weight:600} .no{color:var(--bad);font-weight:600}
+.note{font-size:.9rem;color:var(--muted)}
+
+/* glitches */
+.glitches{display:grid;gap:0;border-top:1px solid var(--line)}
+.g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px 24px;padding:14px 0;border-bottom:1px solid var(--line)}
+.g h3{grid-column:1/-1}
+.g p{font-size:.93rem;color:var(--muted)}
+.g p.fix{color:var(--ink)}
+@media (max-width:560px){.g{grid-template-columns:1fr}}
+
+/* stack */
+.stack{display:flex;flex-wrap:wrap;gap:8px}
+.stack span{font:500 .85rem var(--mono);border:1px solid var(--line);background:var(--surface);padding:4px 10px;border-radius:999px}
+footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px solid var(--line);padding-top:20px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Architecture notes · October 2026</div>
+  <h1>Inside daf-ai</h1>
+  <p class="eyebrow"><a href="/">← daf.tsemach.dev</a></p>
+  <p class="lede">How an AI agent writes one interactive Talmud study page every night, checks it against the Gemara, and stays within a token budget. Written by Tsemach Hadad, two weeks and 189 commits in.</p>
+  <div class="facts">
+    <span><b>53</b> pages</span>
+    <span><b>799</b> glossary entries</span>
+    <span><b>248</b> source texts</span>
+    <span><b>172 / 189</b> commits by Claude</span>
+  </div>
+  <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://github.com/tsemachh/daf-ai" target="_blank" rel="noopener">github.com/tsemachh/daf-ai</a></p>
+</header>
+
+<section>
+  <div class="eyebrow">The core idea</div>
+  <h2>The model is not the hard part. The pipeline is.</h2>
+  <p>The first version was one shared HTML file that a scheduled task rewrote each day. It worked until it didn't: every run read and republished everything. The second version moved to a repo with JSON per daf and a nightly Claude Code routine. The third version, running today, gives models only two jobs: write and judge. Everything mechanical is a script.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Nightly run, one daf</div>
+  <h2>The pipeline</h2>
+  <div class="legend"><span><i class="dot s"></i>Script, deterministic</span><span><i class="dot m"></i>Model call</span></div>
+  <ol class="rail">
+    <li><i class="node"></i><div class="step"><code>reader notes (D1)</code><p>Every note gets an answer. A fix that recurs becomes a writing or review rule.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>calendar + queue</code><p>Hebcal decides which daf is next.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>fetch_sources.py</code><p>Fills a private cache: Sefaria Gemara, Steinsaltz, Rashi, the Sinai summary.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>pack_daf.py</code><p>One compact pack, segment by segment: about 37 KB instead of about 300 KB of raw inputs.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>Sonnet · writer</code><p>Produces the page JSON. No verbatim text and no glossary, so no expensive output tokens on copying.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>fill_srctext.py</code><p>Copies the vocalized Gemara from the cache. It reproduced 137 existing blocks exactly; the 45 that differed were model errors.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>check_page.py</code><p>Every segment covered, argument-tree links valid, quote share at most 30%, quiz shape, glossary candidates.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>Fable · reviewer</code><p>Returns patches only, tagged ERROR, OMISSION or THIN. Never a rewritten page.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>apply_review.py</code><p>Applies the patches.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>validate · build · Playwright · push</code><p>Phone and desktop screenshots, a share image, then Cloudflare Pages.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <div class="eyebrow">Learned the hard way</div>
+  <h2>Five design rules</h2>
+  <ol class="rules">
+    <li><p><b>Scripts do anything mechanical.</b> Models only write and judge.</p></li>
+    <li><p><b>Every format rule has a check.</b> If nothing enforces it, it drifts.</p></li>
+    <li><p><b>One daf per run, with a budget,</b> and work saved as it goes so a stopped run loses nothing.</p></li>
+    <li><p><b>Reviews return patches,</b> never rewritten pages.</p></li>
+    <li><p><b>Reader notes are data, not instructions.</b> They get answered, and a fix that recurs becomes a rule.</p></li>
+  </ol>
+</section>
+
+<section>
+  <div class="eyebrow">Same pages, measured</div>
+  <h2>Models and tokens</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Writer</th><th>Daf</th><th>Tokens</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Haiku</td><td>Bechorot 18</td><td class="num">~175k · 10.6 min</td><td><span class="no">Failed.</span> Split the sugya mid-argument and padded every step with a repeated quote.</td></tr>
+      <tr><td>Sonnet</td><td>Bechorot 18</td><td class="num">~121k · 2.8 min</td><td><span class="ok">Good structure,</span> explanations about half as deep.</td></tr>
+      <tr><td>Sonnet + Fable review</td><td>Berachot 2</td><td class="num">~280k</td><td><span class="ok">Live.</span> Review caught 13 errors and deepened 6 thin steps.</td></tr>
+      <tr><td>Fable alone</td><td>Berachot 2</td><td class="num">~134k</td><td>40 steps, no review. In the blind reader vote.</td></tr>
+      <tr><td>10 Fable agents in parallel</td><td>Berachot</td><td class="num">2.4M · ~20 min</td><td><span class="no">Nothing published.</span> Each agent reloaded the full prompt and sources.</td></tr>
+    </tbody>
+  </table></div>
+  <p>A cheap writer plus a strong reviewer is not automatically cheaper. On Berachot 2, a strong model writing alone used about half the tokens. The real saving comes from what the model reads and writes, not from which model it is.</p>
+  <p class="note">Token counts are per-agent totals reported by the tools, not billing figures. Blind votes are open at <a href="https://daf.tsemach.dev/lab/bechorot/18/" target="_blank" rel="noopener">Bechorot 18</a> and <a href="https://daf.tsemach.dev/lab/berachot/2/" target="_blank" rel="noopener">Berachot 2</a>; no winner yet.</p>
+</section>
+
+<section>
+  <div class="eyebrow">What broke, and what it changed</div>
+  <h2>Glitches</h2>
+  <div class="glitches">
+    <div class="g"><h3>Transcribing instead of explaining</h3><p>Early pages were about 60% Gemara quotes. Readers said they didn't help.</p><p class="fix">An "explain, don't transcribe" rule plus a quote-share check. Bechorot 18 went from 60% to 24%.</p></div>
+    <div class="g"><h3>A content rule applied too broadly</h3><p>The agent stretched a content rule over legitimate halachic discussion and silently dropped steps of the argument. Readers noticed the gaps.</p><p class="fix">The rule was narrowed, then emptied. A content policy is code: it needs scope, tests and an owner.</p></div>
+    <div class="g"><h3>Confident wrong cases</h3><p>Sonnet described a Mishnah case with the wrong mix of animals, fluently.</p><p class="fix">Every page gets one review pass by a stronger model.</p></div>
+    <div class="g"><h3>The bulk-run token burn</h3><p>Ten parallel agents, 2.4M tokens, the session limit hit, 14 unverified partial pages.</p><p class="fix">One daf per run, a budget, sugya-by-sugya saves, and no reading files a script can query.</p></div>
+    <div class="g"><h3>Retyping what a script can copy</h3><p>A fifth of every page was vocalized Gemara, retyped as output tokens, the most expensive kind.</p><p class="fix"><code>fill_srctext.py</code> copies it from the cache.</p></div>
+    <div class="g"><h3>Format drift</h3><p>New pages lost hidden answers and the quote marks the site uses to style and link the Gemara.</p><p class="fix">The exact HTML is in the brief, and <code>check_page.py</code> rejects pages that break it.</p></div>
+    <div class="g"><h3>The human slip</h3><p>I pushed private source material to the public repo.</p><p class="fix">The agent flagged it on the next push. History rewritten, <code>.gitignore</code> tightened.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stack</div>
+  <div class="stack"><span>Claude Code routines</span><span>Sonnet</span><span>Fable</span><span>Python</span><span>Vanilla JS</span><span>Sefaria API</span><span>Hebcal</span><span>Cloudflare Pages</span><span>D1</span><span>Turnstile</span><span>Access</span><span>Playwright</span></div>
+</section>
+
+<section>
+  <div class="eyebrow">Accountability</div>
+  <h2>The human signs the page</h2>
+  <p>A model doesn't answer for what it writes. I do. Every page says it is a study aid, and every reader note gets a reply.</p>
+</section>
+
+<footer>
+  <p>Texts from Sefaria and Steinsaltz. Summaries from Rav Uri Brilliant and the Sinai site. Tokens from Shefing.</p>
+  <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://tsemach.dev" target="_blank" rel="noopener">tsemach.dev</a></p>
+</footer>
+</div>
+
+</body>
+</html>

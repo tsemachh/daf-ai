@@ -624,14 +624,21 @@ var C=JSON.parse(document.getElementById('lab-cfg').textContent), V=C.versions.s
 var ord; try{ord=JSON.parse(localStorage.getItem('lab-order-'+C.page))}catch(e){}
 if(!ord||ord.length!==V.length){ord=V.map(function(v){return v.id}); for(var q=ord.length-1;q>0;q--){var r=Math.floor(Math.random()*(q+1)), t=ord[q]; ord[q]=ord[r]; ord[r]=t} try{localStorage.setItem('lab-order-'+C.page,JSON.stringify(ord))}catch(e){}}
 V.sort(function(a,b){return ord.indexOf(a.id)-ord.indexOf(b.id)});
-var tabs=document.querySelector('.lab-tabs'), fr=document.querySelector('.lab-frames'); fr.style.setProperty('--n',V.length); var btns=document.querySelector('.lab-btns'), res=document.querySelector('.lab-res');
+var tabs=document.querySelector('.lab-tabs'), fr=document.querySelector('.lab-frames'), cur=0; fr.style.setProperty('--n',V.length);
+/* more than two versions: one page at a time, tabs switch between them (keeping the same sugya in view) */
+if(V.length>2) document.getElementById('lab').classList.add('lab-tabbed');
+var btns=document.querySelector('.lab-btns'), res=document.querySelector('.lab-res');
 var voted=null; try{voted=localStorage.getItem('lab-vote-'+C.page)}catch(e){}
 function name(i){return voted?V[i].model:'גרסה '+L[i]}
 var panes=V.map(function(v,i){var w=document.createElement('div'); w.className='lab-pane'+(i?'':' on');
   var h=document.createElement('div'); h.className='lab-h'; w.appendChild(h);
   var f=document.createElement('iframe'); f.src=v.id+'/'; f.loading='eager'; f.title='גרסה '+L[i]; w.appendChild(f); fr.appendChild(w); return {w:w,h:h,v:v}});
 var tb=V.map(function(v,i){var b=document.createElement('button'); b.type='button'; b.className='btn'+(i?'':' on'); b.setAttribute('role','tab');
-  b.onclick=function(){tb.forEach(function(x,j){x.classList.toggle('on',j===i)}); panes.forEach(function(p,j){p.w.classList.toggle('on',j===i)})}; tabs.appendChild(b); return b});
+  b.onclick=function(){ if(i===cur) return; var pos=null; try{pos=where(panes[cur].w.querySelector('iframe').contentWindow)}catch(e){}
+    tb.forEach(function(x,j){x.classList.toggle('on',j===i)}); panes.forEach(function(p,j){p.w.classList.toggle('on',j===i)}); cur=i;
+    /* the pane was display:none: wait two frames so its iframe lays out at full width before scrolling it */
+    /* the pane was hidden: its page re-lays out at full width over the next moments, so re-apply the position a few times */
+    if(link&&pos){var tw=panes[i].w.querySelector('iframe').contentWindow; [0,80,200,450,900].forEach(function(ms){setTimeout(function(){try{go(tw,pos)}catch(e){}},ms)})} }; tabs.appendChild(b); return b});
 function paint(){V.forEach(function(v,i){tb[i].textContent=name(i); panes[i].h.textContent=name(i)+(voted&&v.note?' — '+v.note:'')})}
 function show(c){fetch('/api/lab/votes?page='+encodeURIComponent(C.page)).then(function(r){return r.json()}).then(function(j){
   var n=j.counts||{}, t=0; Object.keys(n).forEach(function(k){t+=n[k]});
@@ -654,7 +661,7 @@ function where(win){var doc=win.document, y=win.scrollY, a=anchors(doc), best=nu
 function go(win,p){var doc=win.document, el=p.id?doc.getElementById(p.id):null;
   var y=el?el.getBoundingClientRect().top+win.scrollY+p.f*el.offsetHeight:(p.abs||0);
   win.__lab=Date.now(); win.scrollTo(0,Math.max(0,y));}
-function others(i){return panes.filter(function(p,j){return j!==i})}
+function others(i){return panes.filter(function(p,j){return j!==i&&p.w.offsetParent!==null})}   /* hidden tabs sync when shown */
 panes.forEach(function(p,i){var f=p.w.querySelector('iframe');
   f.addEventListener('load',function(){var w; try{w=f.contentWindow; w.document}catch(e){return}
     var raf=0; w.addEventListener('scroll',function(){ if(!link||Date.now()-(w.__lab||0)<250) return; if(raf) return;
@@ -664,8 +671,6 @@ panes.forEach(function(p,i){var f=p.w.querySelector('iframe');
       var k=[].indexOf.call(sec.querySelectorAll('details'),d);
       others(i).forEach(function(o){try{var od=o.w.querySelector('iframe').contentWindow.document.getElementById(sec.id); var t=od&&od.querySelectorAll('details')[k]; if(t&&t.open!==d.open) t.open=d.open;}catch(e){}});},true);
   });});
-/* phone tabs: switching keeps the same sugya in view */
-tb.forEach(function(b,i){b.addEventListener('click',function(){var from=panes.filter(function(p,j){return j!==i&&p.w.classList.contains('on')})[0]||panes.filter(function(p,j){return j!==i})[0]; try{var fw=from.w.querySelector('iframe').contentWindow; var tw=panes[i].w.querySelector('iframe').contentWindow; if(link) go(tw,where(fw));}catch(e){}})});
 paint(); if(voted){btns.hidden=true; document.querySelector('.lab-q').textContent='הגרסאות נחשפו:'; show(false)}
 })();"""
 

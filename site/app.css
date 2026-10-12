@@ -542,6 +542,7 @@ details.aids[open]>summary{margin-bottom:4px}
 .lab-q{font-weight:800;font-size:18px;margin:0 0 10px}
 .lab-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .lab-res{margin:10px 0 0;color:var(--muted)}
+.lab-tabbed .lab-tabs{display:flex}.lab-tabbed .lab-frames{grid-template-columns:1fr}.lab-tabbed .lab-pane{display:none}.lab-tabbed .lab-pane.on{display:flex}
 @media (max-width:1000px){.lab-tabs{display:flex}.lab-frames{grid-template-columns:1fr}.lab-pane{display:none}.lab-pane.on{display:flex}.lab-pane iframe{height:75vh}}
 html.lab .fb-sec[aria-label],html.lab [data-role=fb],html.lab .lab-link{display:none!important}
 
