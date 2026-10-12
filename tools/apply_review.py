@@ -39,7 +39,10 @@ def main(page, review):
         if p.get('op', 'replace') == 'insert_after':
             inserts.append(p); continue
         obj, key = resolve(d, p['where'])
-        obj[key] = p['new']
+        if p['new'] is None and isinstance(obj, dict):   # a null patch removes the field (e.g. a dropped unlock)
+            obj.pop(key, None)
+        else:
+            obj[key] = p['new']
         done[p['severity']] += 1
     for p in sorted(inserts, key=lambda p: [int(x) for x in re.findall(r'\d+', p['where'])], reverse=True):
         obj, key = resolve(d, p['where'])
