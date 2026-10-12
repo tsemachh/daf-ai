@@ -107,7 +107,7 @@
     art.querySelectorAll('.sugya > .amud').forEach(function(el){
       if(el.firstChild&&el.firstChild.nodeType===3&&el.firstChild.nodeValue.trim()){var at=document.createElement('span'); at.className='amud-t'; at.textContent=el.firstChild.nodeValue.trim(); at.title=at.textContent; el.replaceChild(at,el.firstChild)}
       if(el.dataset.ref){var sb=mkSrc(SEF+el.dataset.ref+'?lang=he','לשון הגמרא'); if(sb.tagName==='BUTTON') sb.innerHTML='<span class="m-hide">לשון </span>הגמרא'; el.appendChild(sb);
-        if(sb.tagName==='BUTTON'){var st=mkSrc(SEF+el.dataset.ref+'?lang=he','שטיינזלץ'); st.dataset.st='1'; st.classList.add('st'); if(st.tagName==='BUTTON'){st.setAttribute('aria-label','שטיינזלץ'); st.innerHTML='שטיינ<span class="m-hide">זלץ</span><span class="m-show">׳</span>'} el.appendChild(st);
+        if(sb.tagName==='BUTTON'){var st=mkSrc(SEF+el.dataset.ref+'?lang=he','שטיינזלץ'); st.dataset.st='1'; st.classList.add('st'); if(st.tagName==='BUTTON'){st.setAttribute('aria-label','שטיינזלץ'); st.textContent='שטיינזלץ'} el.appendChild(st);
           var rs=mkSrc(SEF+el.dataset.ref+'?lang=he','רש״י'); rs.dataset.rs='1'; rs.classList.add('st'); el.appendChild(rs)} return;}
       var t=el.textContent, m=t.match(new RegExp('\\((['+H+']{1,3})([.:])\\)')), ref=null;
       if(m){ref=tr+'.'+gem(m[1])+(m[2]===':'?'b':'a')}
