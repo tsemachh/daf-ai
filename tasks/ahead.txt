@@ -1,4 +1,3 @@
-berachot/3
 berachot/4
 berachot/5
 berachot/6
