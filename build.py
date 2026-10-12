@@ -300,7 +300,7 @@ def render_section(d, s):
         if s.get("quote"):
             parts.append(f'  <blockquote>{s["quote"]["text"]}<cite>{s["quote"]["cite"]}</cite></blockquote>')
         if s.get("unlock"):   # the case / concept the Gemara assumes the learner knows — shown at every reading level
-            parts.append(f'  <p class="unlock"><span class="unlock-h">🔑 מפתח לסוגיה</span> {s["unlock"]}</p>')
+            parts.append(f'  <details class="unlock"><summary class="unlock-h">🔑 מפתח לסוגיה</summary><p>{s["unlock"]}</p></details>')
         if s.get("flow"):
             parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary>{flow_paras(s["flow"])}</details>')
         if s.get("pre"):
