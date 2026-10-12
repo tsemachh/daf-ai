@@ -255,7 +255,7 @@
       if(k>=keys.length) return Promise.resolve(null);
       return loadSt(keys[k]).then(function(segs){ return find(segs,k)||tryKey(k+1); }, function(e){ if(k===0) throw e; return tryKey(k+1); });
     }
-    var found=tryKey(0);
+    var found=tryKey(0), thin=false, rl=null, picked=false;
     function wEq(a,b){ return a===b||a+'בי'===b||b+'בי'===a||(a.length>2&&b.length>2&&(a===b.slice(1)||b===a.slice(1)||a===b.slice(2)||b===a.slice(2))); }  /* ו/ה/ש prefixes; ר׳ for רבי */
     function inQ(w){ return qw.some(function(x){return wEq(x,w)}); }
     /* Steinsaltz: from the bold run holding the quote's first word to the run holding its last word,
@@ -304,6 +304,9 @@
         else if(dot>=0) parts[stop]=tail.slice(0,dot+1);
         else for(var f=stop+1;f<parts.length&&f<=stop+4;f++){ stop=f; var d2=parts[f].search(/[.?!]/); if(d2>=0){ parts[f]=parts[f].slice(0,d2+1); break; } }
       }
+      /* Steinsaltz that only repeats the Gemara's words (a stray ה, ״אלו הם״) adds nothing: say so, and open Rashi when there is one */
+      var own=0; for(var m0=start;m0<=stop&&m0<parts.length;m0++){ if(!(m0%2)) own+=norm(parts[m0]).split(' ').filter(function(w){return w.length>1}).length; }
+      if(own<3){ thin=true; pd.textContent='שטיינזלץ מביא כאן את לשון הגמרא כמות שהיא, בלי ביאור נוסף.'; if(rl&&rl.length&&!picked) show('rashi'); return true; }
       pd.textContent='';
       for(var m=start;m<=stop&&m<parts.length;m++){ var tx=parts[m]; if(!tx) continue;
         if(m%2){ var bb=document.createElement('b'); bb.textContent=tx; pd.appendChild(bb); } else pd.appendChild(document.createTextNode(tx)); }
@@ -341,12 +344,13 @@
         return m==='rashi'?showRashi(seg.seg):showSt(seg);
       }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
     }
-    Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); setCmtPref(k); show(k); }; });
+    Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); picked=true; setCmtPref(k); show(k); }; });
     T.rashi.hidden=true;
     var want=cmtPref();
     found.then(function(seg){ return seg?rashiFor(seg.seg):[]; }).then(function(list){
       if(cur!==q) return;
-      if(list.length){ T.rashi.hidden=false; if(want==='rashi') show('rashi'); }
+      rl=list;
+      if(list.length){ T.rashi.hidden=false; if(want==='rashi'||(thin&&!picked)) show('rashi'); }
       else if(want==='rashi') show('st');
     }).catch(function(){ if(cur===q&&want==='rashi') show('st'); });
     if(want!=='rashi') show('st'); else pd.textContent='טוען…';
