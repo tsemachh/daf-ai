@@ -17,6 +17,19 @@ from fill_srctext import REF  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAG = re.compile(r'<[^>]+>')
+SAGE = re.compile(r'^(רבי|רב|רבן|רבה|רבא|ר׳|ר\'|מר|אביי|שמואל|עולא|בן|בר|אבא|חכמים|רש״י|ת״ק)( |$)')
+# a bold phrase of ≥2 words, not already inside ״…״, that is not a sage's name → a Gemara quote missing its marks
+BARE = re.compile(r'(?<!״)<b>((?:(?!</b>).)+? (?:(?!</b>).)+?)</b>(?!״)')
+
+
+def _fix(m):
+    return m.group(0) if SAGE.match(m.group(1)) else f'״<b>{m.group(1).replace("״", "")}</b>״'
+
+
+def fix_quotes(raw):
+    return BARE.sub(_fix, raw)
+
+
 NAME = re.compile(r'(?<![א-ת])((?:רבי|רב|רבן|רבה|רבא|מר|אבא|בר|בן) [א-ת״׳\']+(?: (?:בר|בן|בריה דרב|בריה דרבי|ברבי) [א-ת״׳\']+)?)')
 
 
@@ -48,9 +61,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--cache', required=True)
     ap.add_argument('--no-seg', action='store_true', help='older pages without step seg fields')
+    ap.add_argument('--fix-quotes', action='store_true', help='wrap bare multi-word <b> Gemara phrases in ״…״ and save')
     ap.add_argument('page')
     a = ap.parse_args()
     d = json.load(open(a.page, encoding='utf-8'))
+    if a.fix_quotes:
+        n = 0
+        for s in d['sections']:
+            for st in s.get('steps', []):
+                new = fix_quotes(st.get('body', ''))
+                n += new != st.get('body', '')
+                st['body'] = new
+        json.dump(d, open(a.page, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        open(a.page, 'a', encoding='utf-8').write('\n')
+        print('fixed quote marks in', n, 'steps')
     slug, daf = d['slug'], d['daf']
     errs, warn = [], []
     want = {}
@@ -77,7 +101,10 @@ def main():
                 stepsegs.add(st['seg'])
             elif not a.no_seg:
                 errs.append(f'{s["id"]} step {i}: no seg')
-            t = TAG.sub('', st.get('body', ''))
+            raw = st.get('body', '')
+            if any(not SAGE.match(m.group(1)) for m in BARE.finditer(raw)):
+                errs.append(f'{s["id"]} step {i}: Gemara phrase in <b> without ״…״ — write ״<b>…</b>״ (or run with --fix-quotes)')
+            t = TAG.sub('', raw)
             body += len(t)
             quoted += sum(len(q) for q in re.findall(r'״([^״]{2,})״', t))
     if not a.no_seg:

@@ -134,7 +134,7 @@ live in `tasks/writer-brief.md` — it is the single source for them; the refres
 Then, with scripts only:
 - `python tools/fill_srctext.py --cache <cache> data/<slug>/<daf>.json` — fills `srctext` from the
   cache for every section ref (never typed by a model; `skip` segments become "…").
-- `python tools/check_page.py --cache <cache> data/<slug>/<daf>.json` — coverage (every segment in one
+- `python tools/check_page.py --fix-quotes --cache <cache> data/<slug>/<daf>.json` — first wraps bare multi-word `<b>` Gemara phrases in ״…״ (the site styles and links quotes only by ״…״), then checks coverage (every segment in one
   section, every detected move has a step, every step has `seg`), `p`, quiz shape, quote share, and
   GLOSSARY CANDIDATES. Errors go back to the writer (SendMessage to the same subagent, listing them) once.
 - `links`: add as on earlier pages (daf-yomi.com day page, dafyomi.co.il charts/points for the daf).
