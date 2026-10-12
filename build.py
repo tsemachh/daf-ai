@@ -599,10 +599,10 @@ def render_lab(glossary, sources):
 <a class="back" href="/{slug}/{daf}/">→ חזרה ל{esc(e["title"])}</a>
 <header>
   <div class="eyebrow">ניסוי · השוואת מודלים</div>
-  <h1>{esc(e["title"])}: שתי גרסאות</h1>
-  <p class="thesis">אותו דף, אותם מקורות ואותה בדיקה אוטומטית — שני מודלים שונים כתבו אותו. שמות המודלים מוסתרים עד שתבחרו איזו גרסה עזרה לכם יותר.</p>
+  <h1>{esc(e["title"])}: {NVER.get(len(e["versions"]), str(len(e["versions"])))} גרסאות</h1>
+  <p class="thesis">אותו דף ואותם מקורות — מודלים שונים או תהליכי כתיבה שונים כתבו אותו. שמות הגרסאות מוסתרים עד שתבחרו איזו גרסה עזרה לכם יותר.</p>
 </header>
-<label class="lab-sync"><input type="checkbox" checked> גלילה משותפת — שתי הגרסאות נגללות יחד לאותה סוגיה</label>
+<label class="lab-sync"><input type="checkbox" checked> גלילה משותפת — כל הגרסאות נגללות יחד לאותה סוגיה</label>
 <div class="lab-tabs" role="tablist"></div>
 <div class="lab-frames"></div>
 <div class="lab-vote">
@@ -617,12 +617,14 @@ def render_lab(glossary, sources):
         open(os.path.join(base, "index.html"), "w", encoding="utf8").write(page(f"השוואת גרסאות · {e['title']} · " + SITE_TITLE, body, "שתי גרסאות של אותו דף, שכתבו מודלים שונים — השוו והצביעו", depth=3))
 
 
+NVER = {2: "שתי", 3: "שלוש", 4: "ארבע"}
+
 LAB_JS = r"""(function(){
-var C=JSON.parse(document.getElementById('lab-cfg').textContent), V=C.versions.slice(), L='אב';
+var C=JSON.parse(document.getElementById('lab-cfg').textContent), V=C.versions.slice(), L='אבגד', SAME=V.length>2?'כולן דומות':'שתיהן דומות';
 var ord; try{ord=JSON.parse(localStorage.getItem('lab-order-'+C.page))}catch(e){}
-if(!ord||ord.length!==V.length){ord=V.map(function(v){return v.id}); if(Math.random()<.5) ord.reverse(); try{localStorage.setItem('lab-order-'+C.page,JSON.stringify(ord))}catch(e){}}
+if(!ord||ord.length!==V.length){ord=V.map(function(v){return v.id}); for(var q=ord.length-1;q>0;q--){var r=Math.floor(Math.random()*(q+1)), t=ord[q]; ord[q]=ord[r]; ord[r]=t} try{localStorage.setItem('lab-order-'+C.page,JSON.stringify(ord))}catch(e){}}
 V.sort(function(a,b){return ord.indexOf(a.id)-ord.indexOf(b.id)});
-var tabs=document.querySelector('.lab-tabs'), fr=document.querySelector('.lab-frames'), btns=document.querySelector('.lab-btns'), res=document.querySelector('.lab-res');
+var tabs=document.querySelector('.lab-tabs'), fr=document.querySelector('.lab-frames'); fr.style.setProperty('--n',V.length); var btns=document.querySelector('.lab-btns'), res=document.querySelector('.lab-res');
 var voted=null; try{voted=localStorage.getItem('lab-vote-'+C.page)}catch(e){}
 function name(i){return voted?V[i].model:'גרסה '+L[i]}
 var panes=V.map(function(v,i){var w=document.createElement('div'); w.className='lab-pane'+(i?'':' on');
@@ -633,10 +635,10 @@ var tb=V.map(function(v,i){var b=document.createElement('button'); b.type='butto
 function paint(){V.forEach(function(v,i){tb[i].textContent=name(i); panes[i].h.textContent=name(i)+(voted&&v.note?' — '+v.note:'')})}
 function show(c){fetch('/api/lab/votes?page='+encodeURIComponent(C.page)).then(function(r){return r.json()}).then(function(j){
   var n=j.counts||{}, t=0; Object.keys(n).forEach(function(k){t+=n[k]});
-  res.textContent=(c?'תודה! ':'')+'בחרת: '+(voted==='same'?'שתיהן דומות':V.filter(function(v){return v.id===voted})[0].model)+(t?' · עד עכשיו '+t+' הצבעות: '+V.map(function(v){return v.model+' '+(n[v.id]||0)}).join(' · ')+(n.same?' · דומות '+n.same:''):'');
+  res.textContent=(c?'תודה! ':'')+'בחרת: '+(voted==='same'?SAME:V.filter(function(v){return v.id===voted})[0].model)+(t?' · עד עכשיו '+t+' הצבעות: '+V.map(function(v){return v.model+' '+(n[v.id]||0)}).join(' · ')+(n.same?' · דומות '+n.same:''):'');
 }).catch(function(){})}
-[[0],[1],['same']].forEach(function(a){var b=document.createElement('button'); b.type='button'; b.className='btn';
-  b.textContent=a[0]==='same'?'שתיהן דומות':'גרסה '+L[a[0]];
+V.map(function(v,i){return [i]}).concat([['same']]).forEach(function(a){var b=document.createElement('button'); b.type='button'; b.className='btn';
+  b.textContent=a[0]==='same'?SAME:'גרסה '+L[a[0]];
   b.onclick=function(){var id=a[0]==='same'?'same':V[a[0]].id, vid='';try{vid=localStorage.getItem('daf-vid')||''}catch(e){}
     fetch('/api/lab/vote',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:C.page,choice:id,vid:vid})}).then(function(){
       voted=id; try{localStorage.setItem('lab-vote-'+C.page,id)}catch(e){} paint(); show(true); btns.hidden=true; document.querySelector('.lab-q').textContent='הגרסאות נחשפו:'});};
@@ -663,7 +665,7 @@ panes.forEach(function(p,i){var f=p.w.querySelector('iframe');
       others(i).forEach(function(o){try{var od=o.w.querySelector('iframe').contentWindow.document.getElementById(sec.id); var t=od&&od.querySelectorAll('details')[k]; if(t&&t.open!==d.open) t.open=d.open;}catch(e){}});},true);
   });});
 /* phone tabs: switching keeps the same sugya in view */
-tb.forEach(function(b,i){b.addEventListener('click',function(){var from=panes.filter(function(p,j){return j!==i})[0]; try{var fw=from.w.querySelector('iframe').contentWindow; var tw=panes[i].w.querySelector('iframe').contentWindow; if(link) go(tw,where(fw));}catch(e){}})});
+tb.forEach(function(b,i){b.addEventListener('click',function(){var from=panes.filter(function(p,j){return j!==i&&p.w.classList.contains('on')})[0]||panes.filter(function(p,j){return j!==i})[0]; try{var fw=from.w.querySelector('iframe').contentWindow; var tw=panes[i].w.querySelector('iframe').contentWindow; if(link) go(tw,where(fw));}catch(e){}})});
 paint(); if(voted){btns.hidden=true; document.querySelector('.lab-q').textContent='הגרסאות נחשפו:'; show(false)}
 })();"""
 

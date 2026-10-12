@@ -32,6 +32,12 @@
     "model": "Claude Opus 5.5",
     "file": "bechorot-18-opus.json",
     "note": "אותן הוראות, אותם מקורות ואותה בדיקת עובדות — מודל אחר"
+   },
+   {
+    "id": "sonnet",
+    "model": "Claude Sonnet + ביקורת Fable",
+    "file": "bechorot-18-sonnet.json",
+    "note": "התהליך החסכוני החדש: Sonnet כותב, בדיקות אוטומטיות, וסבב ביקורת אחד של Fable מול הגמרא"
    }
   ]
  }

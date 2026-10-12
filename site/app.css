@@ -534,7 +534,7 @@ details.aids[open]>summary{margin-bottom:4px}
 .lab-link a{color:var(--accent);font-weight:700}
 .lab-tabs{display:none;gap:8px;margin:12px 0}
 .lab-tabs .btn.on{background:var(--accent);color:var(--paper);border-color:var(--accent)}
-.lab-frames{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.lab-frames{display:grid;grid-template-columns:repeat(var(--n,2),1fr);gap:14px;margin-top:14px}
 .lab-pane{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
 .lab-h{font-family:var(--sans);font-weight:800;padding:10px 14px;border-bottom:1px solid var(--line);font-size:15px}
 .lab-pane iframe{border:0;width:100%;height:78vh;background:var(--paper)}
