@@ -40,5 +40,23 @@
     "note": "התהליך החסכוני החדש: Sonnet כותב, בדיקות אוטומטיות, וסבב ביקורת אחד של Fable מול הגמרא"
    }
   ]
+ },
+ {
+  "slug": "berachot",
+  "daf": 2,
+  "title": "ברכות ב׳",
+  "versions": [
+   {
+    "id": "sonnet",
+    "model": "Claude Sonnet + ביקורת Fable",
+    "note": "הגרסה שבאתר — Sonnet כותב, בדיקות אוטומטיות וסבב ביקורת של Fable מול הגמרא (~280 אלף טוקנים)"
+   },
+   {
+    "id": "fable",
+    "model": "Claude Fable 5.1 לבד",
+    "file": "berachot-2-fable.json",
+    "note": "אותם מקורות ואותן הוראות — Fable כותב לבד, בלי סבב ביקורת (~135 אלף טוקנים)"
+   }
+  ]
  }
 ]

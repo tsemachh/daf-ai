@@ -33,7 +33,7 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
   site hides a/c steps and shows q as prompts — type carefully.
 - `p` = index (in the section) of the earlier step this one responds to: objection → the claim it attacks
   (several objections to one claim are siblings); answer/rejection → the objection; proof → the claim;
-  conclusion → the statement that falls or stands. איכא דאמרי, ואיבעית אימא, an independent new view → no `p`.
+  conclusion → the statement that falls or stands. איכא דאמרי, ואיבעית אימא, an independent new view → no `p`. "No `p`" means the key is omitted (never `p: 0` on a root).
 - `amud` labels: "עמוד א · משנה", "עמוד א · גמרא", "עמוד א–ב" (spans both), "עמוד א · המשך מדף X׳"
   (continues from the previous daf: open with one רקע step recapping where it stands — see the pack's
   "Previous daf" block; set `"cont":"prev"`).
