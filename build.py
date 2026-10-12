@@ -118,11 +118,52 @@ def catalog_json():
     return jscript(CATALOG, id="catalog")
 
 
+ORDER = {sl: i for i, (_, _, sl, _, _) in enumerate(dafyomi.MASECHTOT)}
+BOUNDS = {sl: (he, first, last) for he, _, sl, first, last in dafyomi.MASECHTOT}
+HAVE = set()   # (slug, daf) of every published page; filled in main()
+
+
+def neighbour(slug, daf, step):
+    """The next (step=1) / previous (step=-1) daf in Shas order, across a masechet's end — if published."""
+    he, first, last = BOUNDS[slug]
+    if first <= daf + step <= last:
+        k = (slug, daf + step)
+    else:
+        i = ORDER[slug] + step
+        if not 0 <= i < len(dafyomi.MASECHTOT):
+            return None
+        _, _, sl, f2, l2 = dafyomi.MASECHTOT[i]
+        k = (sl, f2 if step > 0 else l2)
+    return k if k in HAVE else None
+
+
+def navbar(slug="", daf=0, up=""):
+    """Sticky bar on every page: → previous · [masechet daf ▾] (opens the jump panel, nav.js) · next ← · היום."""
+    def link(k, cls, arrow):
+        if not k:
+            return f'<span class="dn-arrow {cls}" aria-hidden="true"></span>'
+        lbl = (f"דף {heb_num(k[1])}" if k[0] == slug else f"{BOUNDS[k[0]][0]} {heb_num(k[1])}")
+        return (f'<a class="dn-arrow {cls}" href="{up}{k[0]}/{k[1]}/" rel="{"next" if cls == "dn-next" else "prev"}" '
+                f'title="{lbl}" aria-label="{lbl}">{arrow}<span class="dn-lbl">{lbl}</span></a>')
+    if slug and daf:
+        cur = f"{BOUNDS[slug][0]} {heb_num(daf)}"
+    elif slug:
+        cur = f"מסכת {BOUNDS[slug][0]}"
+    else:
+        cur = "מעבר לדף"
+    prev = link(neighbour(slug, daf, -1), "dn-prev", "→") if daf else ""
+    nxt = link(neighbour(slug, daf, 1), "dn-next", "←") if daf else ""
+    return (f'<nav class="dnav" data-slug="{slug}" data-daf="{daf or ""}" aria-label="ניווט בין דפים">'
+            f'{prev}<button class="dn-pick" type="button" aria-haspopup="dialog" aria-expanded="false">'
+            f'<span>{cur}</span><span class="dn-car" aria-hidden="true">▾</span></button>{nxt}'
+            f'<a class="dn-today" href="#" hidden>היום</a></nav>')
+
+
 CSS = " ".join(open(os.path.join(ROOT, "site", "app.css"), encoding="utf8").read().split())
 # cache-busting version for the scripts: a new deploy never runs against a stale cached copy
 import hashlib  # noqa: E402
 ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
-                                for f in ("app.js", "progress.js", "pwa.js", "sw.js", "app.css"))).hexdigest()[:8]
+                                for f in ("app.js", "progress.js", "pwa.js", "nav.js", "sw.js", "app.css"))).hexdigest()[:8]
 
 
 def page(title, body, desc="", depth=0, og="site.png", canonical=""):
@@ -130,6 +171,8 @@ def page(title, body, desc="", depth=0, og="site.png", canonical=""):
     ogi = f"{SITE_URL}/og/{og}"
     canon = f'<link rel="canonical" href="{canonical}">\n' if canonical else ""
     body = re.sub(r'((?:app|progress)\.js)(")', rf'\1?v={ASSET_V}\2', body)
+    if 'class="dnav"' in body:
+        body += f'\n<script src="/nav.js?v={ASSET_V}" defer></script>'
     body += f'\n<script src="/pwa.js?v={ASSET_V}" defer></script>'
     return f"""<!doctype html>
 <html lang="he" dir="rtl"><head>
@@ -367,15 +410,16 @@ def render_daf(d, prev, nxt, glossary, sources):
                    "text": "הכנה לדף — Daf Spoiler (הרב נפתלי רמתי)"})
     links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in lk)
     pn = []
-    if prev:
-        pn.append(f'<a class="back" href="../{prev}/">→ דף {heb_num(prev)}</a>')
-    if nxt:
-        pn.append(f'<a class="back" href="../{nxt}/">דף {heb_num(nxt)} ←</a>')
+    for k, fmt in ((neighbour(d["slug"], d["daf"], -1), '→ {}'), (neighbour(d["slug"], d["daf"], 1), '{} ←')):
+        if k:
+            lbl = f"דף {heb_num(k[1])}" if k[0] == d["slug"] else f"{BOUNDS[k[0]][0]} {heb_num(k[1])}"
+            pn.append(f'<a class="back" href="../../{k[0]}/{k[1]}/">{fmt.format(lbl)}</a>')
     tree_btn = ('    <button class="btn" data-role="tree" aria-pressed="false" type="button" title="תצוגת עץ: כל שלב מוזח תחת השלב שעליו הוא עונה">עץ</button>\n'
                 if any(s.get("steps") for s in d["sections"]) else "")
     pager = f'<div class="pager">{"".join(pn)}</div>' if pn else ""
     article = f"""<article class="daf" id="{key}" data-tractate="{d['tractate']}" data-daf="{d['daf']}">
 <div class="topnav"><span><a class="back" href="../../">דף הבית</a> · <a class="back" href="../">מסכת {d['tractate_he']}</a></span></div>
+{navbar(d['slug'], d['daf'], '../../')}
 
 <header>
   {f'<div class="eyebrow">{esc(eyebrow)}</div>' if eyebrow else ''}
@@ -460,6 +504,7 @@ def render_masechet(slug, dafim):
     cards = "\n".join(card(d, f"./{d['daf']}/") for d in sorted(dafim, key=lambda x: -x["daf"]))
     body = f"""<div class="wrap" id="app"><section>
 <a class="back" href="../">→ דף הבית</a>
+{navbar(slug, 0, '../')}
 <header>
   <div class="eyebrow">דפי חזרה ולימוד · נוצר על ידי סוכן AI</div>
   <h1>מסכת {first['tractate_he']}</h1>
@@ -545,6 +590,7 @@ def render_home(by_slug, latest, about):
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
+{navbar()}
 {howto_block()}
 {lab_banner()}
 <div id="progress-home"></div>
@@ -771,7 +817,7 @@ def main():
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
     os.makedirs(DIST)
-    for f in ("app.css", "app.js", "progress.js", "pwa.js"):
+    for f in ("app.css", "app.js", "progress.js", "pwa.js", "nav.js"):
         shutil.copy(os.path.join(ROOT, "site", f), os.path.join(DIST, f))
     shutil.copytree(os.path.join(ROOT, "site", "fonts"), os.path.join(DIST, "fonts"))
     if os.path.isdir(os.path.join(ROOT, "site", "og")):
@@ -784,13 +830,14 @@ def main():
     for f in sorted(glob.glob(os.path.join(ROOT, "data", "*", "*.json"))):
         d = json.load(open(f, encoding="utf8"))
         by_slug.setdefault(d["slug"], []).append(d)
-    CATALOG["pages"].clear(); CATALOG["mas"].clear()
+    CATALOG["pages"].clear(); CATALOG["mas"].clear(); HAVE.clear()
     pk_path = os.path.join(ROOT, "data", "perakim.json")
     perakim = json.load(open(pk_path, encoding="utf8")) if os.path.exists(pk_path) else {}
     for slug, ds in by_slug.items():
+        HAVE.update((slug, d["daf"]) for d in ds)
         for he, sef, sl, first, last in dafyomi.MASECHTOT:
             if sl == slug:
-                CATALOG["mas"][slug] = {"he": he, "tr": sef, "first": first, "last": last,
+                CATALOG["mas"][slug] = {"he": he, "tr": sef, "first": first, "last": last, "o": ORDER[slug],
                                         "p": [[x["he"], x["from"], x["to"]] for x in perakim.get(slug, [])]}
         for d in sorted(ds, key=lambda x: x["daf"]):
             CATALOG["pages"].append({"k": f"{slug}/{d['daf']}", "s": slug, "d": d["daf"],
