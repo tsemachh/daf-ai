@@ -55,6 +55,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    - בכורות כג, ציר שנפלו לתוכו מים: הסוגיה עוסקת ב״טומאה שבטלה ברוב״: משקים של עם הארץ בחזקת טמאים, ועם הארץ
      נוהג לערב מים בציר הדגים. כל עוד המים הטמאים הם מיעוט — הם בטלים ברוב הציר והציר טהור; אם נוספו מים והם נעשו
      רוב — הציר טמא. לכן השאלה היא כמה מים עם הארץ חשוד לערב, וכמה צריך להוסיף כדי שיהיו רוב.
+   It must add what the first step does not already say — never a restatement of the sugya's opening line or of
+   Steinsaltz on it, and never the answer. In the first backfill, half the proposed keys failed exactly this test.
    Every claim in `unlock` must be stated in S or R — background that "everyone knows" but the sources don't say is
    where errors creep in.
 1. **Complete shakla vetarya.** Every move is its OWN step: every question (מיתיבי, ורמינהו, מאי טעמא,
