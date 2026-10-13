@@ -1028,3 +1028,11 @@
   var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(all,120); });
   if(document.readyState!=='loading') setTimeout(all,50); else document.addEventListener('DOMContentLoaded',function(){ setTimeout(all,50); });
 })();
+
+/* "יש מפת שיטות" hint: open the section's aids and bring the map into view */
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-open-aid]'); if(!b) return;
+  var sec=b.closest('section'), d=sec&&sec.querySelector('details.aids'); if(!d) return;
+  d.open=true; var m=d.querySelector('.vmap')||d;
+  setTimeout(function(){ m.scrollIntoView({behavior:'smooth',block:'start'}); },60);
+});

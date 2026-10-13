@@ -400,6 +400,8 @@ def render_section(d, s):
             parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary>{flow_paras(s["flow"])}</details>')
         if s.get("pre"):
             parts.append("  " + s["pre"])
+        if s.get("map"):   # say up front that a map exists — it helps most before learning the sugya
+            parts.append('  <button class="aid-hint" type="button" data-open-aid="map">🗺️ יש מפת שיטות לסוגיה — מי אמר מה ואיך זה מתכנס. הצג ←</button>')
         parts.append(render_steps(s["steps"], s.get("ref")))
         aids, names = [], []
         if s.get("table"):
