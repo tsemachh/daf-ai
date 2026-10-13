@@ -996,7 +996,6 @@
   function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); return e; }
   function draw(m){
     var body=m.querySelector('.vm-body'), svg=m.querySelector('.vm-svg'); if(!body||!svg||!body.offsetWidth) return;
-    if(innerWidth<600){ svg.innerHTML=''; m.classList.remove('drawn'); return; }   /* narrow: the words under each card carry the links */
     var L; try{L=JSON.parse(m.getAttribute('data-links')||'[]')}catch(e){L=[]}
     var B=body.getBoundingClientRect(), box={}; svg.innerHTML='';
     body.querySelectorAll('.vm-node').forEach(function(n){ var r=n.getBoundingClientRect(); box[n.getAttribute('data-id')]={x:r.left-B.left,y:r.top-B.top,w:r.width,h:r.height}; });
@@ -1017,7 +1016,8 @@
           labels.push(tx); }
       });
     });
-    var placed=[];   /* nudge labels apart so none covers another */
+    var placed=[];   /* nudge labels apart so none covers another or a tier heading */
+    body.querySelectorAll('.vm-lbl').forEach(function(h){ var r=h.getBoundingClientRect(); placed.push({x:r.left-B.left,y:r.top-B.top,width:r.width,height:r.height}); });
     labels.forEach(function(tx){ svg.appendChild(tx); var bb=tx.getBBox(), g=0;
       while(g++<8&&placed.some(function(q){return bb.x<q.x+q.width+6&&q.x<bb.x+bb.width+6&&bb.y<q.y+q.height+2&&q.y<bb.y+bb.height+2})){ tx.setAttribute('y',+tx.getAttribute('y')+(g%2?14*g:-14*g)); bb=tx.getBBox(); }
       placed.push(bb); svg.insertBefore(el('rect',{x:bb.x-4,y:bb.y-1,width:bb.width+8,height:bb.height+2,rx:4,fill:bg,class:'lbl-bg'}),tx); });

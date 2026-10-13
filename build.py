@@ -282,7 +282,7 @@ def render_map(m):
     for l in m.get("links", []):
         tos = l["to"] if isinstance(l["to"], list) else [l["to"]]
         out_links.setdefault(l["from"], []).append((l["k"], [names.get(t, t) for t in tos], l.get("note", "")))
-    tiers = []
+    tiers, tones = [], []
     for t in m["tiers"]:
         nodes = []
         for n in t["nodes"]:
@@ -291,11 +291,22 @@ def render_map(m):
             cls = "vm-node rej" if n.get("rejected") else "vm-node"
             nodes.append(f'<div class="{cls}" data-id="{esc(n["id"])}"><b class="vm-name">{n["name"]}</b>'
                          f'<span class="vm-say">{n["say"]}</span>{f"<ul class=vm-rel>{rel}</ul>" if rel else ""}</div>')
-        tiers.append(f'<div class="vm-tier"><div class="vm-lbl">{t["label"]}</div><div class="vm-row">{"".join(nodes)}</div></div>')
+        tone = t.get("tone") or ("a" if "אמורא" in t["label"] else "t1" if "יסוד" in t["label"] else "t2" if "תנא" in t["label"] else "a")
+        tones.append((tone, t["label"]))
+        tiers.append(f'<div class="vm-tier tone-{tone}"><div class="vm-lbl">{t["label"]}</div><div class="vm-row">{"".join(nodes)}</div></div>')
     links = json.dumps([{"f": l["from"], "t": l["to"] if isinstance(l["to"], list) else [l["to"]], "k": l["k"],
                          "c": MAP_KINDS.get(l["k"], "exp")} for l in m.get("links", [])], ensure_ascii=False)
     title = f'<div class="mtx-h">{m["title"]}</div>' if m.get("title") else ""
     end = f'<div class="vm-end"><b>לאן זה מתכנס</b> {m["end"]}</div>' if m.get("end") else ""
+    kinds = []
+    for l in m.get("links", []):
+        c = MAP_KINDS.get(l["k"], "exp")
+        if (l["k"], c) not in kinds:
+            kinds.append((l["k"], c))
+    leg = ("".join(f'<span class="lg-n tone-{t}"><i></i>{esc(lb)}</span>' for t, lb in tones)
+           + ('<span class="lg-n tone-rej"><i></i>הצעה שנדחתה</span>' if any(n.get("rejected") for t in m["tiers"] for n in t["nodes"]) else "")
+           + "".join(f'<span class="lg-k k-{c}"><i></i>{esc(k)}</span>' for k, c in kinds))
+    title += f'<div class="vm-leg">{leg}</div>'
     return (f'  <div class="vmap" data-links="{esc(links)}">{title}<div class="vm-body">{"".join(tiers)}'
             f'<svg class="vm-svg" aria-hidden="true"></svg></div>{end}</div>')
 
