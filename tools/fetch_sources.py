@@ -97,7 +97,12 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
             if refresh or not os.path.exists(p):
                 try:
                     raw, cs = get(url, binary=True)
-                    text = raw.decode(cs or "windows-1255", "replace")
+                    # The server sends no charset header; the pages are UTF-8 with a BOM (declared only
+                    # in <meta>). Keep windows-1255 as the fallback for any older page that isn't UTF-8.
+                    try:
+                        text = raw.decode(cs or "utf-8-sig")
+                    except UnicodeDecodeError:
+                        text = raw.decode("windows-1255", "replace")
                     log[p] = save(p, f"# {url}\n\n" + strip_tags(text), True)
                 except Exception as e:  # missing page is fine
                     log[p] = f"skip ({e})"
