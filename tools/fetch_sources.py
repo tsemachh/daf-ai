@@ -70,6 +70,9 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
             seg = [strip_tags(x) for x in j.get("he", [])]
             log[p] = save(p, json.dumps({"ref": ref, "segments": seg}, ensure_ascii=False, indent=1), True)
             time.sleep(0.5)
+        # A tractate that ends on amud a (e.g. Bekhorot 61a) has no b: Sefaria's v1 API returns empty
+        # Hebrew for it, while the v3 English call fails outright — so save an empty English file instead.
+        no_amud = amud == "b" and not json.load(open(p, encoding="utf8"))["segments"]
         for name, book in (("steinsaltz_he", "Steinsaltz_on_"), ("rashi_he", "Rashi_on_")):
             p = os.path.join(out, f"{name}_{amud}.json")
             if refresh or not os.path.exists(p):
@@ -79,7 +82,7 @@ def fetch_daf(he, sef, slug, daf, cache, refresh):
                 time.sleep(0.5)
         p = os.path.join(out, f"steinsaltz_en_{amud}.json")
         if refresh or not os.path.exists(p):
-            j = json.loads(get(f"https://www.sefaria.org/api/v3/texts/{ref}?version=english"))
+            j = {} if no_amud else json.loads(get(f"https://www.sefaria.org/api/v3/texts/{ref}?version=english"))
             vers = j.get("versions") or [{}]
             txt = vers[0].get("text", [])
             seg = [strip_tags(x) if isinstance(x, str) else x for x in txt]
