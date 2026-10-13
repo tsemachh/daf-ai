@@ -776,3 +776,28 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .dn-leg i.is-today{box-shadow:0 0 0 2px var(--accent) inset}
 .dn-leg i.is-off{border-style:dashed;opacity:.6}
 @media print{.dnav{display:none}}
+
+/* מפת השיטות (map aid): tiers of cards, arrows drawn by app.js */
+.vmap{margin:10px 0 4px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.vm-body{position:relative}
+.vm-tier{position:relative;z-index:1;margin-bottom:46px}
+.vm-tier:last-child{margin-bottom:6px}
+.vm-lbl{display:inline-block;font-size:13px;font-weight:800;color:var(--muted);margin-bottom:6px;padding:0 6px;background:var(--card);border-radius:6px;position:relative;z-index:2}
+.vm-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.vm-node{flex:1 1 150px;max-width:230px;background:var(--paper);border:1.5px solid var(--accent);border-radius:10px;padding:8px 10px;font-size:15px;line-height:1.45}
+.vm-node.rej{border-style:dashed;border-color:var(--muted);opacity:.85}
+.vm-node.rej .vm-name{text-decoration:line-through;text-decoration-thickness:1px}
+.vm-name{display:block;font-size:16px;color:var(--accent);margin-bottom:2px}
+.vm-say{display:block;color:var(--ink)}
+.vm-rel{list-style:none;margin:6px 0 0;padding:6px 0 0;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+.vm-rel li b{font-weight:800}
+.vm-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.vm-svg path{fill:none;stroke-width:1.8}
+.vm-svg text{font-size:12px;font-weight:700;font-family:var(--sans)}
+.vm-svg .lbl-bg{stroke:none}
+.k-exp{--k:var(--accent)} .k-dis{--k:var(--no)} .k-rej{--k:#B4691F} .k-hal{--k:var(--ok)} .k-sup{--k:var(--ok)} .k-pro{--k:var(--muted)}
+.vm-rel li b{color:var(--k)}
+.vm-end{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--ok-soft);color:var(--ink);font-size:15px;line-height:1.5}
+.vm-end b{color:var(--ok);margin-inline-end:6px}
+@media (min-width:600px){.vmap.drawn .vm-rel{display:none}}
+.vmap:not(.drawn) .vm-tier{margin-bottom:14px}

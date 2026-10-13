@@ -268,6 +268,38 @@ def render_seq(t):
     return f'  <div class="ch sq">{title}<ol>{items}</ol></div>'
 
 
+MAP_KINDS = {"מבאר": "exp", "מעמיד": "exp", "חולק": "dis", "דוחה": "rej", "מקשה": "rej", "פוסק כ": "hal", "הלכה כ": "hal",
+             "מסייע": "sup", "מוכיח": "sup", "מציע": "pro"}
+
+
+def render_map(m):
+    """Map of views — who said what, who explains / disputes / rules like whom, and where it ends up.
+    {"title", "tiers": [{"label", "nodes": [{"id", "name", "say", "rejected"?}]}],
+     "links": [{"from", "to": id | [ids], "k": "מבאר|חולק|דוחה|מקשה|הלכה כ|מסייע|מציע|…", "note"?}], "end"?}
+    Arrows are drawn by app.js over the cards; each card also lists its links in words (narrow screens, no JS)."""
+    names = {n["id"]: n["name"] for t in m["tiers"] for n in t["nodes"]}
+    out_links = {}
+    for l in m.get("links", []):
+        tos = l["to"] if isinstance(l["to"], list) else [l["to"]]
+        out_links.setdefault(l["from"], []).append((l["k"], [names.get(t, t) for t in tos], l.get("note", "")))
+    tiers = []
+    for t in m["tiers"]:
+        nodes = []
+        for n in t["nodes"]:
+            rel = "".join(f'<li class="k-{MAP_KINDS.get(k, "exp")}"><b>{esc(k)}</b> {esc(", ".join(ts))}{(" — " + esc(nt)) if nt else ""}</li>'
+                          for k, ts, nt in out_links.get(n["id"], []))
+            cls = "vm-node rej" if n.get("rejected") else "vm-node"
+            nodes.append(f'<div class="{cls}" data-id="{esc(n["id"])}"><b class="vm-name">{n["name"]}</b>'
+                         f'<span class="vm-say">{n["say"]}</span>{f"<ul class=vm-rel>{rel}</ul>" if rel else ""}</div>')
+        tiers.append(f'<div class="vm-tier"><div class="vm-lbl">{t["label"]}</div><div class="vm-row">{"".join(nodes)}</div></div>')
+    links = json.dumps([{"f": l["from"], "t": l["to"] if isinstance(l["to"], list) else [l["to"]], "k": l["k"],
+                         "c": MAP_KINDS.get(l["k"], "exp")} for l in m.get("links", [])], ensure_ascii=False)
+    title = f'<div class="mtx-h">{m["title"]}</div>' if m.get("title") else ""
+    end = f'<div class="vm-end"><b>לאן זה מתכנס</b> {m["end"]}</div>' if m.get("end") else ""
+    return (f'  <div class="vmap" data-links="{esc(links)}">{title}<div class="vm-body">{"".join(tiers)}'
+            f'<svg class="vm-svg" aria-hidden="true"></svg></div>{end}</div>')
+
+
 def cont_link(d, s, way):
     """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
     amud = s.get("amud", "")
@@ -369,6 +401,8 @@ def render_section(d, s):
             aids.append(render_calc(s["calc"])); names.append("חשבון")
         if s.get("seq"):
             aids.append(render_seq(s["seq"])); names.append("סדר האירועים")
+        if s.get("map"):
+            aids.append(render_map(s["map"])); names.append("מפת השיטות")
         if aids:
             parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):

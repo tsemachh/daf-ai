@@ -73,7 +73,12 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
-   {"title","rows":[[label,value,cite?]],"lines":[…]}; `seq` {"title","items":[…]}. Every cell is stated
+   {"title","rows":[[label,value,cite?]],"lines":[…]}; `seq` {"title","items":[…]};
+   `map` (מפת השיטות) when a sugya layers views — tannaim disputing WHERE/WHY others disagree, amoraim explaining,
+   rejecting, ruling, supporting — so the learner sees who answers whom and where it ends: {"title","tiers":[{"label":
+   "תנאים|אמוראים|המחלוקת היסודית…","nodes":[{"id","name","say":"<their position in ≤20 words>","rejected"?:true}]}],
+   "links":[{"from","to":id|[ids],"k":"מבאר|מעמיד|חולק|דוחה|מקשה|הלכה כ|מסייע|מציע"}],"end":"<where it converges>"};
+   3–8 nodes, links point from the later speaker to the earlier view. Every cell is stated
    by the Gemara; else ״לא נאמר״ or leave the aid out.
 4. **Quiz: exactly 8**, testing understanding: 4 reasoning (why the ruling / why a proof failed / what the
    הו״א was), 2 principle or distinction, 2 application to a new case. At most 1 "who said". Stem opens

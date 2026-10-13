@@ -50,6 +50,15 @@ def check(path, glossary):
         cl = s.get("calc")
         if cl is not None and (not isinstance(cl, dict) or not cl.get("rows") or any(len(r) < 2 for r in cl["rows"])):
             E(f"{where}: calc needs rows of [label, value, cite?]")
+        mp = s.get("map")
+        if mp is not None:
+            ids = {n.get("id") for t in mp.get("tiers", []) for n in t.get("nodes", [])}
+            if not mp.get("tiers") or not all(n.get("id") and n.get("name") and n.get("say") for t in mp["tiers"] for n in t.get("nodes", [])):
+                E(f"{where}: map needs tiers with nodes {{id, name, say}}")
+            for l in mp.get("links", []):
+                tos = l.get("to") if isinstance(l.get("to"), list) else [l.get("to")]
+                if l.get("from") not in ids or any(t not in ids for t in tos) or not l.get("k"):
+                    E(f"{where}: map link {l} points to an unknown node or has no k")
         sq = s.get("seq")
         if sq is not None and (not isinstance(sq, dict) or len(sq.get("items", [])) < 2):
             E(f"{where}: seq needs ≥2 items")
