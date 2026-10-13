@@ -533,7 +533,7 @@
       });
       gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
       if(newGb) ctr.appendChild(gb); ctr.after(pn);
-      /* reading level: תמצית (summaries + conclusions) · רגיל · מורחב (the Gemara line and Steinsaltz under each step) */
+      /* reading level: תמצית (summaries + every step cut to two lines, conclusions in full) · רגיל · מורחב (the Gemara line and Steinsaltz under each step) */
       var LV=[['short','תמצית'],['norm','רגיל'],['deep','מורחב']], lvb={};
       var lv=document.createElement('div'); lv.className='lvl'; lv.setAttribute('role','radiogroup'); lv.setAttribute('aria-label','רמת פירוט');
       var lvh=document.createElement('span'); lvh.className='lvl-h'; lvh.textContent='רמת פירוט'; lv.appendChild(lvh);
@@ -550,6 +550,8 @@
         setOpen(v!=='norm' || val('open'));
       }
       pn.after(lv);
+      art.addEventListener('click',function(e){ if(!art.classList.contains('lvl-short')||e.target.closest('button,a')) return;
+        var li=e.target.closest('ol.steps>li'); if(li) li.classList.toggle('lv-open'); });
       setTimeout(function(){ setLevel(P.lvl||'norm',false); },0);
       setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
     })();

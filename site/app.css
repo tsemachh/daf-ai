@@ -710,7 +710,9 @@ details.more-pages[open]>summary{margin-bottom:4px}
 .lvl-h{color:var(--muted);margin-inline-end:4px}
 .lvl button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:5px 14px;min-height:36px;cursor:pointer}
 .lvl button[aria-checked="true"]{background:var(--accent);color:var(--paper);border-color:var(--accent)}
-.lvl-short ol.steps>li:not(:has(>.tag.c)):not(.lv-keep){display:none}
+/* תמצית: every step stays (the full shakla vetarya), each cut to two lines; conclusions in full; tap a step to open it */
+.lvl-short ol.steps>li:not(:has(>.tag.c)):not(.lv-keep):not(.lv-open)>.body{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;cursor:pointer}
+.lvl-short ol.steps>li{padding-block:2px}
 .lvl-short details.aids,.lvl-short .think,.lvl-short .cv-all{display:none}
 article.daf:not(.lvl-deep) .seg-src{display:none}
 .steps li>.seg-src{grid-column:2/-1;min-width:0}
