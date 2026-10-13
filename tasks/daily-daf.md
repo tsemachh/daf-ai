@@ -13,8 +13,8 @@ Pages on every push to `main`). Work autonomously; nobody is watching. Do not as
 - Runs as a Claude Code **routine** (claude.ai/code/routines) with this repo selected; the repo is
   already cloned on the default branch. Read `README.md` (data schema) and this file.
 - Network: the routine's environment must allow `www.sefaria.org`, `www.hebcal.com`,
-  `www.dafyomi.co.il`, `www.daf-yomi.com`, `dafspoiler.com`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
-  `host_not_allowed`), say which host in the report and stop — do not publish unverified content.
+  `www.dafyomi.co.il`, `www.daf-yomi.com`, `dafspoiler.com`, `www.sinai.org.il`, `daf-ai.pages.dev` (or use Full access). If a fetch is blocked (403
+  `host_not_allowed`), say which host in the report and stop (for dafspoiler.com / sinai.org.il: skip that source, note it, continue) — do not publish unverified content.
 - `TZ=Asia/Jerusalem date` → today + Hebrew date. On Shabbat / Yom Tov in Israel: end with one line.
 - Git identity: leave the routine's default (your GitHub user).
 
@@ -83,6 +83,23 @@ missing or the API fails, note it in the report and continue with §2.
   then the same §3–§5 process, with that date in `card.date` / `meta`. Remove the line in the commit that
   adds the daf. The home page only lists dapim within the coming week, so early dapim stay out of sight
   until their time; their masechet page shows them.
+- **Recheck tomorrow's page (and today's) against late sources** — pages built ahead were often made before
+  Daf Spoiler or Sinai covered them. Every run, for TOMORROW's daf and TODAY's daf (by the calendar; skip any whose
+  JSON does not exist):
+  1. Refresh the cache for that date: `python tools/fetch_sources.py --start <date> --days 1 --cache <cache>`
+     (adds `dafspoiler.txt` when Daf Spoiler now has the daf; update `data/dafspoiler.json` `dapim` from
+     `https://dafspoiler.com/site-data.json` if the daf is missing there). Sinai publishes on the day itself: for
+     TODAY's daf, WebFetch `https://www.sinai.org.il/<מסכת>-<daf in Hebrew letters>/` (e.g. `בכורות-כד`) with the
+     prompt "Return the daf summary text as is" and save it to `<cache>/<slug>/<daf>/sinai.txt` (first line: the URL).
+     Private cache only — paraphrase, never copy to the public repo.
+  2. New source? = `dafspoiler.txt` or `sinai.txt` exists but the daf's `sources_used.json` has no entry for it. If
+     none is new, skip (no tokens spent).
+  3. Otherwise re-run `tools/pack_daf.py` and ONE review subagent (§5a) told to focus on what the new source adds:
+     framing of each sugya (`unlock` — add where the new source shows a learner needs the case; drop restating ones),
+     omissions, wrong conclusions, and quiz application cases. Patches only, applied with `tools/apply_review.py`;
+     the reviewer appends `{"source": "dafspoiler" | "sinai", …}` to `sources_used.json`. Then fill_srctext /
+     check_page / validate / build as in §5, commit `Recheck <masechet> <daf> with <Daf Spoiler | Sinai>` and push.
+     Cap: one review round per daf; at most ~150k tokens for the recheck. Calendar targets still come first.
 - Nothing left (no calendar targets, empty queues) → report "הכול מוכן מראש" and go to §6.
 
 ## 3. Research — from the private source cache
