@@ -133,6 +133,15 @@ def main():
             first = ''
         if not s.get('unlock') and re.match(r'^(תנן התם|תניא התם)', first):
             warn.append(f'{s["id"]}: opens with ״{first[:12]}…״ (a new topic) but has no `unlock` — add the background case in 1–2 sentences')
+    ns = [st for s in secs for st in s.get('steps', [])]
+    miss = sum(1 for st in ns if not st.get('short'))
+    if ns and miss and miss < len(ns):
+        errs.append(f'{miss} of {len(ns)} steps have no `short` (one-line summary for תמצית)')
+    elif ns and miss and not a.no_seg:
+        warn.append('no step has `short` (one-line summary for תמצית) — new pages must have it')
+    long_ = [st['short'] for st in ns if len((st.get('short') or '').split()) > 14]
+    if long_:
+        warn.append(f'{len(long_)} `short` lines over 14 words, e.g. ״{long_[0][:40]}…״')
     nu = sum(1 for s in secs if s.get('unlock'))
     if secs and nu > max(1, len(secs) // 3):
         warn.append(f'{nu} of {len(secs)} sugyot have an `unlock` — keep it only where a learner jumping in would miss the case (aim ≤ 1/3)')

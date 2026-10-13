@@ -15,7 +15,7 @@ summary is only a cross-check of the flow — paraphrase, never copy any comment
  "storyline":"<one paragraph of prose: how the daf moves from sugya to sugya>",
  "sections":[{"id":"s1","kind":"sugya","amud":"עמוד א · משנה","ref":"Berakhot.2a.1-4","title":"…",
    "flow":"<בקצרה 1–3 sentences: the question, why it arises, how it ends>",
-   "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>"}],
+   "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>","short":"<the move in ≤12 words>"}],
    "unlock"?:"<optional, 1–2 sentences: the case or concept the sugya assumes the learner already knows>",
    "post":"<optional think box, EXACTLY this HTML — question visible, answer collapsed: <div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>QUESTION</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">ANSWER from the Gemara</div></div>>",
    "table"?:{…},"decide"?:{…},"chain"?:{…},"calc"?:{…},"seq"?:{…},
@@ -85,6 +85,10 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    ללמדו בגמרא" and their segments go in `skip`. Everything else — including legal-monetary and intimate
    halachic topics — is presented fully and neutrally, as the Gemara does.
 6. Hebrew content, no niqqud, nothing that G/S/R do not support.
+7. **`short` on every step** (the תמצית reading level shows it instead of `body`): the move in one line, ≤12 words,
+   plain text (no HTML, no quote marks), standing on its own — who says what and why in a nutshell, e.g.
+   ״רב: רק בבכור תם — בעל מום אינו קדוש לכך״, ״קושיה: אם כן, למה צריך פסוק?״, ״מסקנה: הלכה כרשב״ג״.
+   Never a bare tag ("קושיה"), never more than the body says.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).

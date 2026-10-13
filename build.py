@@ -213,7 +213,8 @@ def render_steps(steps, ref=None):
         body = s["body"]
         if ref and "לא הורחב כאן" in body:  # the full Gemara wording is always one tap away
             body += f' <a class="src-full" href="https://www.sefaria.org/{ref}?lang=he" target="_blank" rel="noopener">לשון הגמרא המלאה בספריא ↗</a>'
-        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{body}</span></li>')
+        short = f'<span class="sbody">{s["short"]}</span>' if s.get("short") else ""   # תמצית: the step in one line
+        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{body}</span>{short}</li>')
     out.append("  </ol>")
     return "\n".join(out)
 
