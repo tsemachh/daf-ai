@@ -27,6 +27,7 @@ def _fix(m):
 
 
 def fix_quotes(raw):
+    raw = raw.replace('״״<b>', '״<b>').replace('</b>״״', '</b>״')   # doubled marks from writers
     return BARE.sub(_fix, raw)
 
 
