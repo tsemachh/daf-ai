@@ -75,7 +75,7 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
    {"title","rows":[[label,value,cite?]],"lines":[…]}; `seq` {"title","items":[…]};
    `map` (מפת השיטות) when a sugya layers views — tannaim disputing WHERE/WHY others disagree, amoraim explaining,
-   rejecting, ruling, supporting — so the learner sees who answers whom and where it ends: {"title","tiers":[{"label","tone"?: "t1" (earlier tannaim) | "t2" (later tannaim) | "a" (amoraim),"label":
+   rejecting, ruling, supporting — so the learner sees who answers whom and where it ends: {"title","tiers":[{"tone"?: "t1" (earlier tannaim) | "t2" (later tannaim) | "a" (amoraim),"label":
    "תנאים|אמוראים|המחלוקת היסודית…","nodes":[{"id","name","say":"<their position in ≤20 words>","rejected"?:true}]}],
    "links":[{"from","to":id|[ids],"k":"מבאר|מעמיד|חולק|דוחה|מקשה|הלכה כ|מסייע|מציע"}],"end":"<where it converges>"};
    3–8 nodes, links point from the later speaker to the earlier view. Every cell is stated
