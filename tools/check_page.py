@@ -90,6 +90,14 @@ def main():
             if k in seen:
                 errs.append(f'{k} in both {seen[k]} and {s["id"]}')
             seen[k] = s['id']
+    prevcov = set()
+    prev_p = os.path.join(os.path.dirname(os.path.abspath(a.page)), f'{daf - 1}.json')
+    if os.path.exists(prev_p):   # the previous daf may finish a sugya into this one (ends_next) — those segments are covered there
+        for s in json.load(open(prev_p, encoding='utf-8'))['sections']:
+            if s.get('ref'):
+                for k in expand(s['ref'], a.cache, slug):
+                    if k not in seen:
+                        seen[k] = f'daf {daf - 1} {s["id"]}'; prevcov.add(k)
     for k in want:
         if k not in seen:
             errs.append(f'segment {k} is in no section')
@@ -110,7 +118,7 @@ def main():
             quoted += sum(len(q) for q in re.findall(r'״([^״]{2,})״', t))
     if not a.no_seg:
         for k, m in want.items():
-            if m and k not in stepsegs:
+            if m and k not in stepsegs and k not in prevcov:
                 errs.append(f'segment {k} has moves ({", ".join(m)}) but no step')
     for s in d['sections']:   # think boxes: question + collapsed answer
         post = s.get('post') or ''
