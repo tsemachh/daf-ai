@@ -99,3 +99,6 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
 every step has `seg`. Fix and stop. Reply with: sections, steps, and one line per segment you were unsure of.
+8. **Mishnah steps are explained too** (reader note, Bechorot 26): every clause gets its reason or what it
+   means in practice (from S/R), and every step names who acts and on what — never a bare restatement or a
+   sentence that leans on the previous step ("שוב מחדש", "עליהן") for its subject.
