@@ -72,6 +72,7 @@
       for(var k=pairs.length-1;k>=0;k--){
         var a=pairs[k][0], b=pairs[k][1], after=flat.slice(b+1), vm=after.match(VREF);
         var txt=flat.slice(a+1,b); if(!vm&&(txt.split(/\s+/).length<2||!body.closest('section.sugya'))) continue;
+        if(!vm&&/^הדרן\s/.test(txt)) continue;  /* ״הדרן עלך…״ only closes the chapter: Steinsaltz and Rashi just repeat it */
         var s0=at(a), s1=at(b); if(!s0||!s1) continue;
         var r=document.createRange(); try{ r.setStart(s0.n,s0.i); r.setEnd(s1.n,s1.i+1); }catch(e){ continue; }
         /* a Gemara quote that cites a verse inside it (׳…׳): the inner verse becomes the link, the outer stays a Gemara quote */
