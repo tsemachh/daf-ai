@@ -662,11 +662,14 @@
   var pre=art.id+'-';
   var cfg=null;
   function getCfg(){return cfg||(cfg=fetch('/api/feedback/config').then(function(r){return r.json()}).catch(function(){return {}}))}
+  function tsRender(box,look){ return window.turnstile.render(box,{sitekey:box.dataset.sk,language:'he',size:'flexible',appearance:look,'refresh-expired':'auto',
+    callback:function(t){box.dataset.tok=t},'expired-callback':function(){box.dataset.tok=''},'error-callback':function(){box.dataset.tok='';return true}}); }
   function turnstile(box){
     return getCfg().then(function(c){
       if(!c.sitekey) return null;
       return new Promise(function(res){
-        function go(){var id=window.turnstile.render(box,{sitekey:c.sitekey,language:'he',size:'flexible',appearance:'interaction-only'});res(id)}
+        /* keep a fresh token: expired tokens (long writing) refresh by themselves; submit waits for one (see waitTok) */
+        function go(){box.dataset.sk=c.sitekey; res(tsRender(box,'interaction-only'))}
         if(window.turnstile) return go();
         var s=document.createElement('script');s.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';s.async=true;s.onload=go;s.onerror=function(){res(null)};document.head.appendChild(s);
       });
@@ -711,7 +714,17 @@
     f.addEventListener('submit',function(e){
       e.preventDefault(); sb.disabled=true; st.textContent='שולח…';
       var kind=(f.querySelector('input[name=kind]:checked')||{}).value||'fix';
-      var tok=(tsId!=null&&window.turnstile)?window.turnstile.getResponse(tsId):'';
+      waitTok().then(function(tok){ if(!tok&&tsId!=null) return manual(); send(kind,tok); });
+    });
+    /* a token that is fresh now: the one from the widget, or wait (up to 6s) for a new one after a reset */
+    function waitTok(){ return new Promise(function(res){ if(tsId==null||!window.turnstile) return res('');
+      var t=window.turnstile.getResponse(tsId)||ts.dataset.tok||''; if(t) return res(t);
+      st.textContent='מאמת שאינך רובוט…'; var n=0, iv=setInterval(function(){ var v=window.turnstile.getResponse(tsId)||ts.dataset.tok||'';
+        if(v||++n>24){ clearInterval(iv); res(v); } },250); }); }
+    /* the invisible check failed or timed out: show the visible check (checkbox) and let the reader send again — the text stays */
+    function manual(){ try{ window.turnstile.remove(tsId); }catch(e){} ts.dataset.tok=''; tsId=tsRender(ts,'always'); ts.classList.add('fb-ts-on');
+      sb.disabled=false; st.textContent='נדרש אימות קצר: סמנו את תיבת האימות שמעל, ואז לחצו ״שליחה״ שוב.'; }
+    function send(kind,tok){ var _t=tok;
       fetch('/api/feedback',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({kind:kind,text:ta.value,name:nm.value,email:em.value,notify:nc.checked,public:pc.checked,website:hp.value,turnstile:tok,page:page,section:section||'',sectionTitle:title||''})})
         .then(function(r){return r.json().catch(function(){return {ok:false}})})
         .then(function(j){
@@ -730,12 +743,13 @@
             }
             var c=el('button','btn','סגירה'); c.type='button'; c.onclick=close; f.append(c); c.focus();
           } else {
-            sb.disabled=false; st.textContent=ERR[j&&j.error]||'ההערה לא נשמרה. נסו שוב מאוחר יותר.';
-            if(tsId!=null&&window.turnstile) window.turnstile.reset(tsId);
+            if(j&&j.error==='captcha'&&tsId!=null&&window.turnstile) return manual();
+            sb.disabled=false; st.textContent=(ERR[j&&j.error]||'ההערה לא נשמרה. נסו שוב מאוחר יותר.')+(j&&j.codes&&j.codes.length?' (קוד: '+j.codes.join(', ')+(tok?'':' · אין אסימון')+')':(j&&j.error==='captcha'&&!tok?' (האימות לא הושלם — ייתכן שחוסם פרסומות חוסם את challenges.cloudflare.com)':''));
+            if(tsId!=null&&window.turnstile){ ts.dataset.tok=''; window.turnstile.reset(tsId); }
           }
         })
         .catch(function(){ sb.disabled=false; st.textContent='אין חיבור. נסו שוב מאוחר יותר.'; });
-    });
+    }
   }
   var ctr=art.querySelector('.controls');
   if(ctr){var b=ctr.querySelector('[data-role="fb"]'); if(!b){b=el('button','btn','הערה'); b.type='button'; ctr.appendChild(b);} b.onclick=function(){open('','')};}

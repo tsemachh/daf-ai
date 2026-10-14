@@ -32,7 +32,7 @@ export async function onRequestPost({ request, env }) {
     if (ip) form.append("remoteip", ip);
     const v = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body: form })
       .then((r) => r.json()).catch(() => ({ success: false }));
-    if (!v.success) return json({ ok: false, error: "captcha" }, 403);
+    if (!v.success) return json({ ok: false, error: "captcha", codes: (v["error-codes"] || []).slice(0, 3), host: v.hostname || "" }, 403);
   }
 
   const ipHash = ip ? await sha256((env.IP_SALT || "daf-ai") + ip) : "";

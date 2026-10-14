@@ -825,3 +825,4 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .vmap{position:relative;scroll-margin-top:70px}
 .vm-share{float:left;min-height:34px;padding:2px 12px;border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--accent);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .vm-share:hover{border-color:var(--accent)}
+.fb-ts.fb-ts-on{margin:8px 0;padding:6px;border:1px dashed var(--gold);border-radius:10px;background:var(--gold-soft)}
