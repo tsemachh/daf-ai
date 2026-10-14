@@ -1036,3 +1036,15 @@ document.addEventListener('click',function(e){
   d.open=true; var m=d.querySelector('.vmap')||d;
   setTimeout(function(){ m.scrollIntoView({behavior:'smooth',block:'start'}); },60);
 });
+
+/* map anchors (#…-map): open its aids panel and bring it into view; "🔗 קישור למפה" shares / copies that link */
+(function(){
+  function openMap(){ var h=location.hash; if(!/-map$/.test(h)) return; var m=document.getElementById(h.slice(1)); if(!m) return;
+    var d=m.closest('details'); if(d) d.open=true; setTimeout(function(){ m.scrollIntoView({block:'start'}); },120); }
+  addEventListener('hashchange',openMap); if(document.readyState!=='loading') setTimeout(openMap,60); else document.addEventListener('DOMContentLoaded',function(){ setTimeout(openMap,60); });
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('[data-share]'); if(!b) return;
+    var url=location.origin+location.pathname+b.getAttribute('data-share'), t=document.title;
+    if(navigator.share){ navigator.share({title:t+' — מפת השיטות',url:url}).catch(function(){}); return; }
+    (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){ b.textContent='הקישור הועתק ✓'; setTimeout(function(){ b.textContent='🔗 קישור למפה'; },2000); }).catch(function(){ prompt('קישור למפה:',url); });
+  });
+})();

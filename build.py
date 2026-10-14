@@ -272,7 +272,7 @@ MAP_KINDS = {"מבאר": "exp", "מעמיד": "exp", "חולק": "dis", "דוח�
              "מסייע": "sup", "מוכיח": "sup", "מציע": "pro"}
 
 
-def render_map(m):
+def render_map(m, mid=""):
     """Map of views — who said what, who explains / disputes / rules like whom, and where it ends up.
     {"title", "tiers": [{"label", "nodes": [{"id", "name", "say", "rejected"?}]}],
      "links": [{"from", "to": id | [ids], "k": "מבאר|חולק|דוחה|מקשה|הלכה כ|מסייע|מציע|…", "note"?}], "end"?}
@@ -307,7 +307,8 @@ def render_map(m):
            + ('<span class="lg-n tone-rej"><i></i>הצעה שנדחתה</span>' if any(n.get("rejected") for t in m["tiers"] for n in t["nodes"]) else "")
            + "".join(f'<span class="lg-k k-{c}"><i></i>{esc(k)}</span>' for k, c in kinds))
     title += f'<div class="vm-leg">{leg}</div>'
-    return (f'  <div class="vmap" data-links="{esc(links)}">{title}<div class="vm-body">{"".join(tiers)}'
+    share = f'<button class="vm-share" type="button" data-share="#{mid}" aria-label="קישור למפה">🔗 קישור למפה</button>' if mid else ""
+    return (f'  <div class="vmap" id="{mid}" data-links="{esc(links)}">{share}{title}<div class="vm-body">{"".join(tiers)}'
             f'<svg class="vm-svg" aria-hidden="true"></svg></div>{end}</div>')
 
 
@@ -415,7 +416,7 @@ def render_section(d, s):
         if s.get("seq"):
             aids.append(render_seq(s["seq"])); names.append("סדר האירועים")
         if s.get("map"):
-            aids.append(render_map(s["map"])); names.append("מפת השיטות")
+            aids.append(render_map(s["map"], f"{sid}-map")); names.append("מפת השיטות")
         if aids:
             parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):

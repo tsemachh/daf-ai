@@ -822,3 +822,6 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .aid-hint:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .lvl-short .aid-hint{display:none}
 .hide-mode section.sugya:not(.cv-done) .aid-hint{display:none}
+.vmap{position:relative;scroll-margin-top:70px}
+.vm-share{float:left;min-height:34px;padding:2px 12px;border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--accent);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.vm-share:hover{border-color:var(--accent)}
