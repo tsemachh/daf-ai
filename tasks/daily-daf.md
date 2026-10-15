@@ -77,8 +77,9 @@ missing or the API fails, note it in the report and continue with §2.
   a gist, and check step `type`s (answers = a/c). Keep every section id and all correct content; verify
   with one sub-agent against the cache; commit "Refresh Bechorot N: quiz and summaries" and remove the line.
 - **Ahead queue:** then take up to 2 lines from `tasks/ahead.txt` (two ahead dapim per run, one after the other — with the 04:47 and 12:47 runs that is 4 a day; if the run nears its limit after the first, leave the second in the queue for the next run) (`<slug>/<daf>` of the next masechtot,
-  prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date by running
-  `python tools/dafyomi.py <date> <date+1> …` forward from today until the slug/daf matches; fetch its
+  prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date with
+  `python -c "import build; print(build.yomi_date('<slug>', <daf>))"` (the cycle nearest today — may be years ahead, e.g. a masechet
+  learned out of order), or `python tools/dafyomi.py <date>` to confirm; fetch its
   sources with `python tools/fetch_sources.py --start <that date> --days 1 --cache <cache path>` before §3;
   then the same §3–§5 process, with that date in `card.date` / `meta`. Remove the line in the commit that
   adds the daf. The home page only lists dapim within the coming week, so early dapim stay out of sight
