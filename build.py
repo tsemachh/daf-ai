@@ -17,6 +17,7 @@ _dsp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "dafspoi
 DAFSPOILER = json.load(open(_dsp, encoding="utf8")) if os.path.exists(_dsp) else {}
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
+BRAND = "דף צמח"   # the site's short name — what people search for
 FOOT = ("נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. "
         "ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.")
 HEB = {1: "א", 2: "ב", 3: "ג", 4: "ד", 5: "ה", 6: "ו", 7: "ז", 8: "ח", 9: "ט", 10: "י", 20: "כ", 30: "ל",
@@ -204,7 +205,7 @@ def ldjson(d):
           "description": re.sub("<[^>]+>", "", d["thesis"]), "inLanguage": "he",
           "learningResourceType": "דף חזרה", "educationalUse": "חזרה ולימוד הדף היומי",
           "about": {"@type": "CreativeWork", "name": f"תלמוד בבלי, {mas}, דף {d['title'].split(' ', 1)[-1]}"},
-          "isPartOf": {"@type": "WebSite", "name": "דפי חזרה ולימוד", "url": f"{SITE_URL}/"},
+          "isPartOf": {"@type": "WebSite", "name": BRAND, "url": f"{SITE_URL}/"},
           "isAccessibleForFree": True}]
     return ('<script type="application/ld+json">' +
             json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False).replace("</", "<\\/") + "</script>")
@@ -223,7 +224,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{esc(title)}</title>
 {canon}{ld}<meta name="description" content="{esc(desc)}">
-<meta property="og:site_name" content="דפי חזרה ולימוד"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
+<meta property="og:site_name" content="{BRAND}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:image" content="{ogi}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ogi}">
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#2B4C7E"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -577,7 +578,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     og = f"{d['slug']}-{d['daf']}.png"
     if not os.path.exists(os.path.join(ROOT, "site", "og", og)):
         og = "site.png"
-    return page(f"{d['title']} · דף חזרה ולימוד", body, desc, depth=2, og=og,
+    return page(f"{d['title']} · דף חזרה ולימוד · {BRAND}", body, desc, depth=2, og=og,
                 canonical=f"{SITE_URL}/{d['slug']}/{d['daf']}/", ld=ldjson(d) + "\n")
 
 
@@ -672,6 +673,7 @@ def render_home(by_slug, latest, about):
     mas = " ".join(f'<a href="./{s}/">מסכת {ds[0]["tractate_he"]}</a>' for s, ds in by_slug.items())
     body = f"""<div class="wrap" id="app"><section id="home">
 <header class="home-h">
+  <div class="eyebrow">{BRAND}</div>
   <h1>{SITE_TITLE}</h1>
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
   <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
@@ -687,7 +689,12 @@ def render_home(by_slug, latest, about):
 {catalog_json()}
 {home_data()}
 <script src="progress.js"></script>"""
-    return page(SITE_TITLE, body, "דפי חזרה ולימוד אינטראקטיביים לדף היומי: מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה")
+    site_ld = {"@context": "https://schema.org", "@type": "WebSite", "name": BRAND, "url": f"{SITE_URL}/",
+               "alternateName": ["דפי חזרה ולימוד", "דף צמח — הדף היומי", "daf.tsemach.dev"], "inLanguage": "he",
+               "description": "דפי חזרה ולימוד אינטראקטיביים לדף היומי"}
+    return page(f"{BRAND} — דפי חזרה ולימוד לדף היומי", body,
+                f"{BRAND}: דפי חזרה ולימוד אינטראקטיביים לדף היומי — מהלך הסוגיה, תצוגת עץ, מקורות ושאלות חזרה",
+                canonical=f"{SITE_URL}/", ld='<script type="application/ld+json">' + json.dumps(site_ld, ensure_ascii=False) + "</script>\n")
 
 
 def render_feedback(by_slug):
@@ -861,7 +868,7 @@ def write_pwa():
     """Installable app + offline reading: manifest, service worker (versioned with the assets), /offline/ page."""
     sw = open(os.path.join(ROOT, "site", "sw.js"), encoding="utf8").read().replace("__ASSET_V__", ASSET_V)
     open(os.path.join(DIST, "sw.js"), "w", encoding="utf8").write(sw)
-    man = {"name": SITE_TITLE, "short_name": "דף יומי", "lang": "he", "dir": "rtl", "start_url": "/?source=pwa", "scope": "/",
+    man = {"name": SITE_TITLE, "short_name": BRAND, "lang": "he", "dir": "rtl", "start_url": "/?source=pwa", "scope": "/",
            "display": "standalone", "background_color": "#F3F4EF", "theme_color": "#2B4C7E",
            "description": "דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה. עובד גם בלי חיבור.",
            "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
