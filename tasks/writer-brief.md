@@ -72,6 +72,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    you use him. Anchor with a SHORT Gemara key-phrase ״<b>…</b>״ (2–8 words, unvocalised). Quotes ≤ 30%
    of step text. Specific tags ("מאי טעמא?", "תא שמע", "תיובתא"), not generic "קושיה/תירוץ" everywhere.
    Never leave a step as a bare quote or "…".
+   Every ״…״ on the page opens Steinsaltz for those words, so ״…״ is ONLY for Gemara words: a term from Rashi
+   or S (״ממון המוטל בספק״) is written and explained unquoted; a 2-word anchor S leaves unexplained (a bare name
+   or place, ״כאילא ביבנה״) is lengthened into the words S does explain.
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
