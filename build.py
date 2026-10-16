@@ -789,7 +789,7 @@ def render_privacy():
 <h2>שיתוף עם אחרים</h2>
 <p>המידע לא נמכר ולא מועבר לאף גורם. הוא נשמר בתשתית של Cloudflare; מיילים נשלחים דרך Resend.</p>
 <h2>מחיקה</h2>
-<p>להתנתקות: בהגדרות (⚙). למחיקת החשבון וההתקדמות השמורה בו, או לכל שאלה: <a href="mailto:tsemachh@gmail.com">tsemachh@gmail.com</a>.</p>
+<p>להתנתקות: בהגדרות (⚙). למחיקת החשבון וההתקדמות השמורה בו, או לכל שאלה: <a href="mailto:me@tsemach.dev">me@tsemach.dev</a>.</p>
 </div>
 {credits('../')}
 <footer>{FOOT}</footer>
