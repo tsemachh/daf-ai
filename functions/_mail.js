@@ -37,7 +37,7 @@ ${n.reply ? `<p><b>תגובה:</b> ${esc(n.reply)}</p>` : ""}
 // General reader notes (about the whole site, not one daf): the nightly agent sends a short summary of what it
 // changed (or why not) as `owner_note`, and the site owner gets it by email. Env: OWNER_EMAIL (optional).
 export async function sendOwnerNote(env, n, summary, sha) {
-  const to = env.OWNER_EMAIL || "tsemachh@shefing.com";
+  const to = env.OWNER_EMAIL || "me@tsemach.dev";
   if (!env.RESEND_API_KEY || !summary) return { sent: false };
   const link = noteLink(n);
   const commit = sha ? `https://github.com/tsemachh/daf-ai/commit/${encodeURIComponent(sha)}` : "";
