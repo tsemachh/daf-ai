@@ -171,7 +171,46 @@ ASSET_V = hashlib.sha1(b"".join(open(os.path.join(ROOT, "site", f), "rb").read()
                                 for f in ("app.js", "progress.js", "pwa.js", "nav.js", "sw.js", "app.css"))).hexdigest()[:8]
 
 
-def page(title, body, desc="", depth=0, og="site.png", canonical=""):
+def git_dates():
+    """last commit date (YYYY-MM-DD) per data/ file — the sitemap's <lastmod>. Empty on a shallow clone
+    (every file would show the same date, which tells Google nothing)."""
+    import subprocess
+    try:
+        if subprocess.run(["git", "rev-parse", "--is-shallow-repository"], cwd=ROOT, capture_output=True,
+                          text=True).stdout.strip() != "false":
+            return {}
+        out = subprocess.run(["git", "log", "--format=@%cs", "--name-only", "--", "data/"], cwd=ROOT,
+                             capture_output=True, text=True, timeout=60).stdout
+    except Exception:
+        return {}
+    dates, cur = {}, None
+    for ln in out.splitlines():
+        if ln.startswith("@"):
+            cur = ln[1:]
+        elif ln and cur:
+            dates.setdefault(ln, cur)
+    return dates
+
+
+def ldjson(d):
+    """schema.org data for a daf page: breadcrumb (home › masechet › daf) and the page as a LearningResource."""
+    url = f"{SITE_URL}/{d['slug']}/{d['daf']}/"
+    mas = f"מסכת {d['tractate_he']}"
+    g = [{"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "דפי חזרה ולימוד", "item": f"{SITE_URL}/"},
+            {"@type": "ListItem", "position": 2, "name": mas, "item": f"{SITE_URL}/{d['slug']}/"},
+            {"@type": "ListItem", "position": 3, "name": d["title"], "item": url}]},
+         {"@type": "LearningResource", "@id": url, "url": url, "name": f"{d['title']} — דף חזרה ולימוד",
+          "description": re.sub("<[^>]+>", "", d["thesis"]), "inLanguage": "he",
+          "learningResourceType": "דף חזרה", "educationalUse": "חזרה ולימוד הדף היומי",
+          "about": {"@type": "CreativeWork", "name": f"תלמוד בבלי, {mas}, דף {d['title'].split(' ', 1)[-1]}"},
+          "isPartOf": {"@type": "WebSite", "name": "דפי חזרה ולימוד", "url": f"{SITE_URL}/"},
+          "isAccessibleForFree": True}]
+    return ('<script type="application/ld+json">' +
+            json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False).replace("</", "<\\/") + "</script>")
+
+
+def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
     up = "../" * depth
     ogi = f"{SITE_URL}/og/{og}"
     canon = f'<link rel="canonical" href="{canonical}">\n' if canonical else ""
@@ -183,7 +222,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical=""):
 <html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{esc(title)}</title>
-{canon}<meta name="description" content="{esc(desc)}">
+{canon}{ld}<meta name="description" content="{esc(desc)}">
 <meta property="og:site_name" content="דפי חזרה ולימוד"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:image" content="{ogi}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ogi}">
@@ -539,7 +578,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     if not os.path.exists(os.path.join(ROOT, "site", "og", og)):
         og = "site.png"
     return page(f"{d['title']} · דף חזרה ולימוד", body, desc, depth=2, og=og,
-                canonical=f"{SITE_URL}/{d['slug']}/{d['daf']}/")
+                canonical=f"{SITE_URL}/{d['slug']}/{d['daf']}/", ld=ldjson(d) + "\n")
 
 
 # ---------------------------------------------------------------- index pages
@@ -966,9 +1005,15 @@ def main():
     os.makedirs(os.path.join(DIST, "notes"), exist_ok=True)
     open(os.path.join(DIST, "notes", "index.html"), "w", encoding="utf8").write(render_notes(by_slug))
     urls = ["", "about/", "ideas/", "changes/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    gd = git_dates()
+    lm = {f"{d['slug']}/{d['daf']}/": gd[f"data/{d['slug']}/{d['daf']}.json"] for d in alld if f"data/{d['slug']}/{d['daf']}.json" in gd}
+    for slug in by_slug:   # a masechet page changes when any of its dapim do
+        ds = [v for k, v in lm.items() if k.startswith(slug + "/")]
+        if ds: lm[f"{slug}/"] = max(ds)
+    if lm: lm[""] = max(lm.values())
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"  <url><loc>{SITE_URL}/{u}</loc></url>\n" for u in urls) + "</urlset>\n")
+        + "".join(f"  <url><loc>{SITE_URL}/{u}</loc>{f'<lastmod>{lm[u]}</lastmod>' if u in lm else ''}</url>\n" for u in urls) + "</urlset>\n")
     open(os.path.join(DIST, "robots.txt"), "w", encoding="utf8").write(
         f"User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: {SITE_URL}/sitemap.xml\n")
     open(os.path.join(DIST, "404.html"), "w", encoding="utf8").write(page(
