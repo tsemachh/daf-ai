@@ -930,7 +930,7 @@ def main():
     open(os.path.join(DIST, "about", "index.html"), "w", encoding="utf8").write(page(
         "איך נבנים הדפים · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
-        f'<div class="eyebrow">לסוקרים ולמתעניינים</div><h1>איך נבנים הדפים ומה נבדק</h1></header>'
+        f'<div class="eyebrow">אודות</div><h1>איך נבנים הדפים</h1></header>'
         f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי החזרה והלימוד", depth=1))
     ideas_p = os.path.join(ROOT, "content", "ideas.html")
     if os.path.exists(ideas_p):
