@@ -44,6 +44,9 @@ missing or the API fails, note it in the report and continue with §2.
      `feature`), and ALSO send `owner_note` in the same `POST /update`: 2–4 Hebrew sentences — what the reader
      asked, what you changed (files, which pages) or why nothing changed. The server emails the site owner
      (response field `owner.sent`). Add a `data/changelog.json` item for every site change.
+   - **מה חדש (`data/changelog.json`) — every fix a reader will notice goes there**, including a content fix to one
+     daf after a note (e.g. "בכורות כ״ח: נוספה טבלת סיכום לשיטות ר׳ יהודה ור׳ מאיר (בעקבות הערת קורא)"): one short Hebrew
+     line under today's date (newest entry first; create the date entry if missing). New dapim are NOT listed there.
 4. Email is automatic: send `status` and `reply` in the SAME `POST /update` call. When a note with
    `notify` reaches fixed / feature / rejected, the server emails the author the reply and page link once
    and clears the address (response field `mail.sent`). Never email readers yourself.
@@ -87,6 +90,11 @@ missing or the API fails, note it in the report and continue with §2.
   then the same §3–§5 process, with that date in `card.date` / `meta`. Remove the line in the commit that
   adds the daf. The home page only lists dapim within the coming week, so early dapim stay out of sight
   until their time; their masechet page shows them.
+- **Queue order (owner, 2026-10-18):** finish Berachot, then the rest of this cycle in Shas order — Temurah, Keritot,
+  Meilah, Kinnim, Tamid, Middot, Niddah — as listed in `tasks/ahead.txt`. A masechet's first daf may need its perakim
+  in `data/perakim.json` (add them from Sefaria's index if missing, e.g. Kinnim, Middot). Kinnim and Middot are Mishnah
+  without Gemara: build the page on the Mishnah text the same way (sugyot = mishnayot, steps explain each clause);
+  if the sources for such a daf cannot be fetched, skip that line, keep it in the queue and say so in the report.
 - **Recheck tomorrow's page (and today's) against late sources** — pages built ahead were often made before
   Daf Spoiler or Sinai covered them. Every run, for TOMORROW's daf and TODAY's daf (by the calendar; skip any whose
   JSON does not exist):
