@@ -87,6 +87,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    "links":[{"from","to":id|[ids],"k":"מבאר|מעמיד|חולק|דוחה|מקשה|הלכה כ|מסייע|מציע"}],"end":"<where it converges>"};
    3–8 nodes, links point from the later speaker to the earlier view. Every cell is stated
    by the Gemara; else ״לא נאמר״ or leave the aid out.
+   A long sugya (≥12 steps) that tries several derivations, each refuted by a פירכא, gets a `table` of the
+   attempts (what is learned from what · the פירכא · result) so the learner can track it.
 4. **Quiz: exactly 8**, testing understanding: 4 reasoning (why the ruling / why a proof failed / what the
    הו״א was), 2 principle or distinction, 2 application to a new case. At most 1 "who said". Stem opens
    with the case so it reads alone days later ("בקריאת שמע של ערבית — …"); never "הנ״ל" or a bare name.
