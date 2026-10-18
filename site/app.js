@@ -1063,3 +1063,32 @@ document.addEventListener('click',function(e){
     (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){ b.textContent='הקישור הועתק ✓'; setTimeout(function(){ b.textContent='🔗 קישור למפה'; },2000); }).catch(function(){ prompt('קישור למפה:',url); });
   });
 })();
+
+/* share: "שתף" in the page controls + a share icon on every sugya → native share sheet, else WhatsApp */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art||document.documentElement.classList.contains('lab')) return;
+  var base=location.origin+location.pathname;
+  var h1=((art.querySelector('header h1')||{}).textContent||'').trim();
+  var th=((art.querySelector('header .thesis')||{}).textContent||'').trim();
+  if(th.length>110) th=th.slice(0,th.lastIndexOf(' ',107))+'…';
+  var ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="17.5" cy="5.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.5" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="18.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.7 10.8l6.6-4M8.7 13.2l6.6 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  function share(title,text,url){
+    var msg=text+'\n'+url;
+    if(navigator.share){ navigator.share({title:title,text:text,url:url}).catch(function(){}); return; }
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
+  }
+  var ctr=art.querySelector('.controls');
+  if(ctr){
+    var b=document.createElement('button'); b.className='btn'; b.type='button'; b.dataset.role='share'; b.title='שליחת הדף לחברותא או לקבוצה'; b.textContent='שתף';
+    var lr=ctr.querySelector('[data-role="learned"]'); lr?ctr.insertBefore(b,lr):ctr.appendChild(b);
+    b.onclick=function(){ share('דף צמח · '+h1, '📖 '+h1+(th?' — '+th:'')+'\nחזרה על הדף היומי, סוגיה אחר סוגיה, עם שאלות הבנה:', base); };
+  }
+  art.querySelectorAll('section.sugya[id]').forEach(function(sec){
+    if(!sec.querySelector('ol.steps')) return;
+    var t=((sec.querySelector('h3')||{}).textContent||'').trim();
+    var s=document.createElement('button'); s.className='fb-sec sh-sec'; s.type='button';
+    s.setAttribute('aria-label','שיתוף סוגיה זו'); s.dataset.tip='שיתוף הסוגיה'; s.innerHTML=ICON;
+    s.onclick=function(){ share('דף צמח · '+h1, '📖 '+h1+' · '+t, base+'#'+sec.id); };
+    var tl=sec.querySelector('.sec-tools'); if(tl) tl.insertBefore(s,tl.firstChild); else sec.appendChild(s);
+  });
+})();

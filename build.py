@@ -535,6 +535,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 {nav}
   </ol>
 </nav>
+<a class="to-quiz" href="#{key}-quiz">✎ בחן את עצמך — שאלות חזרה בסוף הדף ↓</a>
 {story}
 
 {sections}
