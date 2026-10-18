@@ -558,13 +558,12 @@ def render_daf(d, prev, nxt, glossary, sources):
   {f'<div class="eyebrow">{esc(eyebrow)}</div>' if eyebrow else ''}
   <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span class="perek">{esc(perek)}</span>' if perek else ''}{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
-  <div class="meta">{meta}</div>
+  <div class="meta">{meta}<span class="sec-tools pg-tools"></span></div>
   <div class="legend"><span class="lg-gem">״לשון הגמרא״</span><span>ביאור</span><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
   <div class="controls">
     <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>
     <button class="btn" data-role="mode" aria-pressed="false" type="button" title="מצב חברותא: התשובות מוסתרות — הקש על שלב לגילוי">חברותא</button>
-{tree_btn}    <button class="btn" data-role="fb" type="button" title="הערה על הדף">הערה</button>
-    <button class="btn" data-role="learned" aria-pressed="false" type="button" title="סמן את כל הסוגיות בדף כנלמדו">למדתי</button>
+{tree_btn}    <button class="btn" data-role="learned" aria-pressed="false" type="button" title="סמן את כל הסוגיות בדף כנלמדו">למדתי</button>
   </div>
 </header>
 

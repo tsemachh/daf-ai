@@ -532,7 +532,7 @@
         if(o[0]==='rashi') document.addEventListener('daf:cmt',function(e){ P.rashi=e.detail==='rashi'; c.checked=P.rashi; });
         l.append(c,document.createTextNode(' '+o[1])); pn.appendChild(l);
       });
-      gb.addEventListener('click',function(){pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
+      gb.addEventListener('click',function(){if(ctr.nextElementSibling!==pn) ctr.after(pn); pn.hidden=!pn.hidden; gb.setAttribute('aria-expanded',!pn.hidden);});
       if(newGb) ctr.appendChild(gb); ctr.after(pn);
       /* reading level: תמצית (summaries + every step cut to two lines, conclusions in full) · רגיל · מורחב (the Gemara line and Steinsaltz under each step) */
       var LV=[['short','תמצית'],['norm','רגיל'],['deep','מורחב']], lvb={};
@@ -550,7 +550,7 @@
         if(v==='short'){ keepLast(); setBtn('mode',false); }
         setOpen(v!=='norm' || val('open'));
       }
-      pn.after(lv);
+      pn.insertBefore(lv, hd.nextSibling);   /* רמת פירוט lives in the settings panel */
       art.addEventListener('click',function(e){ if(!art.classList.contains('lvl-short')||e.target.closest('button,a')) return;
         var li=e.target.closest('ol.steps>li'); if(li) li.classList.toggle('lv-open'); });
       setTimeout(function(){ setLevel(P.lvl||'norm',false); },0);
@@ -752,7 +752,10 @@
     }
   }
   var ctr=art.querySelector('.controls');
-  if(ctr){var b=ctr.querySelector('[data-role="fb"]'); if(!b){b=el('button','btn','הערה'); b.type='button'; ctr.appendChild(b);} b.onclick=function(){open('','')};}
+  var NOTE_ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 8.5h8M8 11.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  /* page-level note: an icon next to the page meta (same look as the sugya tools), not a button in the controls row */
+  var pgt=art.querySelector('header .pg-tools');
+  if(pgt){var pb=el('button','fb-sec'); pb.type='button'; pb.dataset.role='fb'; pb.setAttribute('aria-label','הערה על הדף'); pb.dataset.tip='הערה על הדף'; pb.innerHTML=NOTE_ICON; pb.onclick=function(){open('','')}; pgt.appendChild(pb);}
   function secTools(sec){var t=sec.querySelector('.sec-tools'); if(t) return t; var host=sec.querySelector(':scope > .amud'); t=document.createElement('span'); t.className='sec-tools'; if(host) host.appendChild(t); else {var h=sec.querySelector('h3'); if(!h) return null; h.insertBefore(t,h.firstChild)} return t}
   var secs={};
   art.querySelectorAll('section.sugya[id]').forEach(function(sec){
@@ -1080,10 +1083,10 @@ document.addEventListener('click',function(e){
     if(navigator.share){ navigator.share({title:title,text:text,url:url}).catch(function(){}); return; }
     window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
   }
-  var ctr=art.querySelector('.controls');
-  if(ctr){
-    var b=document.createElement('button'); b.className='btn'; b.type='button'; b.dataset.role='share'; b.title='שליחת הדף לחברותא או לקבוצה'; b.textContent='שתף';
-    var lr=ctr.querySelector('[data-role="learned"]'); lr?ctr.insertBefore(b,lr):ctr.appendChild(b);
+  var pgt=art.querySelector('header .pg-tools');
+  if(pgt){
+    var b=document.createElement('button'); b.className='fb-sec sh-sec'; b.type='button'; b.dataset.role='share'; b.setAttribute('aria-label','שיתוף הדף'); b.dataset.tip='שיתוף הדף'; b.innerHTML=ICON;
+    pgt.insertBefore(b,pgt.firstChild);
     b.onclick=function(){ share('דף צמח · '+h1, '📖 '+h1+(th?' — '+th:'')+'\nחזרה על הדף היומי, סוגיה אחר סוגיה, עם שאלות הבנה:', base); };
   }
   art.querySelectorAll('section.sugya[id]').forEach(function(sec){

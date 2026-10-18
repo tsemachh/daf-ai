@@ -830,3 +830,10 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 /* top-of-page jump to the quiz at the end */
 .to-quiz{display:flex;align-items:center;min-height:44px;margin:4px 0 12px;padding:6px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--accent);font-weight:700;text-decoration:none}
 .to-quiz:hover{background:var(--accent-soft)}
+
+/* page tools (share + note) at the end of the header meta row, like the sugya tools */
+.meta .pg-tools{margin-inline-start:auto;display:inline-flex;align-items:center;gap:2px}
+.meta .pg-tools:empty{display:none}
+.pg-tools .fb-sec{float:none;margin:0}
+.pg-tools .fb-sec::after{top:calc(100% + 6px);left:0;transform:none}
+.prefs .lvl{margin:2px 0 6px}
