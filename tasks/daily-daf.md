@@ -44,6 +44,9 @@ missing or the API fails, note it in the report and continue with §2.
      `feature`), and ALSO send `owner_note` in the same `POST /update`: 2–4 Hebrew sentences — what the reader
      asked, what you changed (files, which pages) or why nothing changed. The server emails the site owner
      (response field `owner.sent`). Add a `data/changelog.json` item for every site change.
+   - **`page: "site"` (kind `contact`) = a message from ״צור קשר״** — it was already emailed to the owner when sent,
+     and the owner answers it himself. Do NOT reply, change its status or act on it, unless it is plainly a site bug or a
+     content correction (then handle it like any note, but never quote the sender's text publicly).
    - **מה חדש (`data/changelog.json`) — every fix a reader will notice goes there**, including a content fix to one
      daf after a note (e.g. "בכורות כ״ח: נוספה טבלת סיכום לשיטות ר׳ יהודה ור׳ מאיר (בעקבות הערת קורא)"): one short Hebrew
      line under today's date (newest entry first; create the date entry if missing). New dapim are NOT listed there.

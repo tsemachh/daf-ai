@@ -598,7 +598,7 @@
 (function(){
   var LS='daf-fb-notes';
   var ST={'new':'התקבלה, ממתינה לבדיקה','in-progress':'בטיפול','fixed':'טופלה — הדף תוקן ✓','feature':'נרשמה כהצעה לשיפור האתר','rejected':'נבדקה — לא נמצא צורך בשינוי','needs-info':'נדרש פירוט נוסף'};
-  var KN={fix:'תיקון בתוכן',missing:'חסר בדף',feature:'הצעה לשיפור'};
+  var KN={fix:'תיקון בתוכן',missing:'חסר בדף',feature:'הצעה לשיפור',contact:'פנייה'};
   function mine(){try{return JSON.parse(localStorage.getItem(LS)||'[]')}catch(e){return []}}
   function remember(n){try{var a=mine().filter(function(x){return x.id!==n.id});a.push(n);localStorage.setItem(LS,JSON.stringify(a.slice(-50)))}catch(e){}}
   function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
@@ -618,9 +618,9 @@
       if(sum&&all) sum.textContent='התקבלו '+all+' הערות · '+(c.fixed||0)+' תוקנו · '+(c.feature||0)+' הצעות לשיפור · '+(c.rejected||0)+' נבדקו בלי שינוי'+((c['new']||0)+(c['in-progress']||0)?' · '+((c['new']||0)+(c['in-progress']||0))+' בטיפול':'');
       if(!j.notes||!j.notes.length){pl2.append(el('p','fb-muted','עדיין אין הערות שטופלו.'));return}
       j.notes.forEach(function(n){
-        var pg=n.page.split('/'), heb=(pnames[pg[0]]||pg[0])+' '+hebNum(pg[1]);
+        var pg=n.page.split('/'), heb=n.page==='site'?'':(pnames[pg[0]]||pg[0])+' '+hebNum(pg[1]);
         var cd=el('div','fb-note st-'+n.status), h=el('div','fb-note-h');
-        var a=el('a',null,'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href='/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
+        var a=el('a',null,n.page==='site'?'צור קשר':'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href=n.page==='site'?'/':'/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
         h.append(a,el('span',null,KN[n.kind]||''),el('span',null,(n.updated_at||'').slice(0,10)));
         cd.append(h);
         if(n.text)cd.append(el('p','fb-note-t',n.text));
@@ -644,10 +644,10 @@
       list.innerHTML='';
       if(!j.ok||!j.notes.length){list.append(el('p','fb-muted','לא נמצאו הערות.'));return}
       j.notes.sort(function(a,b){return b.id-a.id}).forEach(function(n){
-        var pg=n.page.split('/'), heb=(names[pg[0]]||pg[0])+' '+hebNum(pg[1]);
+        var pg=n.page.split('/'), heb=n.page==='site'?'':(names[pg[0]]||pg[0])+' '+hebNum(pg[1]);
         var c=el('div','fb-note st-'+n.status);
         var h=el('div','fb-note-h');
-        var a=el('a',null,'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href='/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
+        var a=el('a',null,n.page==='site'?'צור קשר':'מסכת '+heb+(n.section_title?' · '+n.section_title:''));a.href=n.page==='site'?'/':'/'+n.page+'/'+(n.section?'#'+pg[0]+pg[1]+'-'+n.section:'');
         h.append(el('b',null,'#'+n.id),a,el('span',null,KN[n.kind]||''),el('span',null,n.created_at.slice(0,10)));
         c.append(h,el('p','fb-note-t',n.text),el('p','fb-note-s',ST[n.status]||n.status));
         if(n.reply)c.append(el('p','fb-note-r',n.reply));
@@ -657,9 +657,11 @@
     return;
   }
 
-  var art=document.querySelector('article.daf'); if(!art) return;
-  var page=location.pathname.replace(/^\/|\/$/g,'');
-  var pre=art.id+'-';
+  var art=document.querySelector('article.daf');
+  /* "צור קשר" (home, about): the same dialog with page "site"; app.js may be loaded lazily by the button (window.dafContact) */
+  var CONTACT=!art;
+  var page=CONTACT?'site':location.pathname.replace(/^\/|\/$/g,'');
+  var pre=art?art.id+'-':'';
   var cfg=null;
   function getCfg(){return cfg||(cfg=fetch('/api/feedback/config').then(function(r){return r.json()}).catch(function(){return {}}))}
   function tsRender(box,look){ return window.turnstile.render(box,{sitekey:box.dataset.sk,language:'he',size:'flexible',appearance:look,'refresh-expired':'auto',
@@ -675,29 +677,30 @@
       });
     });
   }
-  var KINDS=[['fix','תיקון','טעות, ייחוס או ציטוט'],['missing','חסר בדף','סוגיה, שלב או מקור'],['feature','הצעה לאתר','שיפור באתר עצמו']];
+  var KINDS=CONTACT?[['contact','פנייה','שאלה, בקשה או שיתוף פעולה'],['feature','הצעה לאתר','שיפור באתר עצמו'],['fix','טעות בדף','ציינו את המסכת והדף']]
+    :[['fix','תיקון','טעות, ייחוס או ציטוט'],['missing','חסר בדף','סוגיה, שלב או מקור'],['feature','הצעה לאתר','שיפור באתר עצמו']];
   function open(section,title){
     var bg=el('div','srcdlg-bg');
     var d=el('div','srcdlg fb-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
-    var h=el('header'); var h4=el('h4',null,section?('הערה על: '+title):'הערה על הדף');
+    var h=el('header'); var h4=el('h4',null,CONTACT?'צור קשר':section?('הערה על: '+title):'הערה על הדף');
     var x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
     var f=el('form','body fb-form');
     var fs=el('fieldset','fb-kinds'); fs.appendChild(el('legend','fb-sr','סוג ההערה'));
     var ta=el('textarea'); ta.name='text'; ta.required=true; ta.minLength=5; ta.maxLength=2000; ta.rows=8;
-    var PH={fix:'מה לא מדויק? כתבו את התיקון, ואם אפשר — ציטוט מהגמרא או מקור.',missing:'מה חסר? איזו סוגיה, שלב או מקור כדאי להוסיף?',feature:'מה היה משפר את האתר בשבילכם?'};
-    ta.placeholder=PH.fix;
+    var PH={fix:CONTACT?'באיזו מסכת ובאיזה דף? מה לא מדויק?':'מה לא מדויק? כתבו את התיקון, ואם אפשר — ציטוט מהגמרא או מקור.',missing:'מה חסר? איזו סוגיה, שלב או מקור כדאי להוסיף?',feature:'מה היה משפר את האתר בשבילכם?',contact:'כתבו כאן את ההודעה. אם תרצו תשובה — השאירו מייל.'};
+    ta.placeholder=PH[KINDS[0][0]];
     KINDS.forEach(function(k,i){var l=el('label','fb-chip'); l.title=k[2]; var r=document.createElement('input'); r.type='radio'; r.name='kind'; r.value=k[0]; if(!i) r.checked=true;
       r.addEventListener('change',function(){ta.placeholder=PH[k[0]]}); l.append(r,el('span',null,k[1])); fs.appendChild(l);});
     var nm=el('input'); nm.name='name'; nm.maxLength=80; nm.placeholder='שם (לא חובה)';
-    var em=el('input'); em.name='email'; em.type='email'; em.maxLength=160; em.placeholder='מייל לעדכון (לא חובה)'; em.setAttribute('dir','ltr');
+    var em=el('input'); em.name='email'; em.type='email'; em.maxLength=160; em.placeholder=CONTACT?'מייל לתשובה (לא חובה)':'מייל לעדכון (לא חובה)'; em.setAttribute('dir','ltr');
     var nl=el('label','fb-notify'); var nc=document.createElement('input'); nc.type='checkbox'; nc.name='notify';
-    nl.append(nc,document.createTextNode(' אשמח לעדכון במייל כשההערה תטופל'));
+    nl.append(nc,document.createTextNode(' אשמח לעדכון במייל כשההערה תטופל')); if(CONTACT) nl.hidden=true;
     em.addEventListener('input',function(){nc.checked=!!em.value.trim()});
     var pl=el('label','fb-notify'); var pc=document.createElement('input'); pc.type='checkbox'; pc.name='public';
-    pl.append(pc,document.createTextNode(' אפשר להציג את ההערה בדף ההערות הציבורי (בלי שם ומייל)'));
+    pl.append(pc,document.createTextNode(' אפשר להציג את ההערה בדף ההערות הציבורי (בלי שם ומייל)')); if(CONTACT) pl.hidden=true;
     var hp=el('input','fb-hp'); hp.name='website'; hp.tabIndex=-1; hp.autocomplete='off'; hp.setAttribute('aria-hidden','true');
     var ts=el('div','fb-ts');
-    var note=el('p','fb-muted','ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
+    var note=el('p','fb-muted',CONTACT?'ההודעה מגיעה ישירות אליי. המייל (לא חובה) משמש רק כדי לענות לכם. אפשר גם לכתוב ל־me@tsemach.dev':'ההערה נשלחת באופן אנונימי. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.');
     var who=el('div','fb-who'); who.append(nm,em);
     var me=window.dafUser&&window.dafUser();   // signed in → default name and email from the account (editable)
     if(me){ nm.value=(me.name||'').slice(0,80); em.value=(me.email||'').slice(0,160); nc.checked=!!em.value; note.textContent='השם והמייל מולאו מהחשבון שלך — אפשר לשנות או למחוק. המייל משמש רק לעדכון על הטיפול ונמחק אחריו.' }
@@ -732,10 +735,10 @@
             var n={id:j.id,token:j.token,page:page,section:section||'',title:title||'',at:new Date().toISOString().slice(0,10)};
             if(j.id) remember(n);
             f.innerHTML='';
-            var ok=el('p','fb-ok','תודה! ההערה נקלטה'+(j.id?' (מס׳ '+j.id+')':'')+'.');
-            var more=el('p',null,'היא תיבדק מול לשון הגמרא בסבב העדכון הלילי, ואם יש צורך — הדף יתוקן.');
+            var ok=el('p','fb-ok',(CONTACT?'תודה! ההודעה נשלחה':'תודה! ההערה נקלטה')+(j.id?' (מס׳ '+j.id+')':'')+'.');
+            var more=el('p',null,CONTACT?(em.value?'אענה למייל שהשארתם.':'לא השארתם מייל, לכן לא אוכל לענות ישירות.'):'היא תיבדק מול לשון הגמרא בסבב העדכון הלילי, ואם יש צורך — הדף יתוקן.');
             f.append(ok,more);
-            if(j.id){
+            if(j.id&&!CONTACT){
               var tl=el('p','fb-track'); var a=el('a',null,'קישור למעקב אחר ההערה'); a.href=trackUrl(n); a.target='_blank';
               var cp=el('button','btn','העתקת הקישור'); cp.type='button';
               cp.onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(trackUrl(n)):Promise.reject()).then(function(){cp.textContent='הועתק ✓'}).catch(function(){})};
@@ -751,6 +754,9 @@
         .catch(function(){ sb.disabled=false; st.textContent='אין חיבור. נסו שוב מאוחר יותר.'; });
     }
   }
+  if(CONTACT){ window.dafContact=function(){open('','')};
+    document.querySelectorAll('[data-contact]').forEach(function(b){b.onclick=function(e){e.preventDefault();open('','')}});
+    return; }
   var ctr=art.querySelector('.controls');
   var NOTE_ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 8.5h8M8 11.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
   /* page-level note: an icon next to the page meta (same look as the sugya tools), not a button in the controls row */

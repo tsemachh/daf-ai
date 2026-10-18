@@ -250,6 +250,13 @@ def write_feed(alld, glossary, lm):
             "פיד הנתונים · " + BRAND, open(doc, encoding="utf8").read(), "פיד JSON לשותפים: דפי הלימוד של דף צמח", depth=1))
 
 
+# "צור קשר": any [data-contact] link opens the note dialog in contact mode; app.js is loaded on first use. /#contact opens it too.
+CONTACT_JS = ("""<script>(function(){function go(){if(window.dafContact)return window.dafContact();var s=document.createElement('script');"""
+              """s.src="/app.js";s.onload=function(){window.dafContact&&window.dafContact()};document.head.appendChild(s)}"""
+              """document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-contact]');if(!b)return;e.preventDefault();e.stopPropagation();go()},true);"""
+              """if(location.hash==='#contact')go()})();</script>""")
+
+
 def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
     up = "../" * depth
     ogi = f"{SITE_URL}/og/{og}"
@@ -721,13 +728,14 @@ def render_home(by_slug, latest, about):
 <div id="progress-home"></div>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./privacy/">פרטיות</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
 {catalog_json()}
 {home_data()}
-<script src="progress.js"></script>"""
+<script src="progress.js"></script>
+{CONTACT_JS}"""
     site_ld = {"@context": "https://schema.org", "@type": "WebSite", "name": BRAND, "url": f"{SITE_URL}/",
                "alternateName": ["דפי חזרה ולימוד", "דף צמח — הדף היומי", "daf.tsemach.dev"], "inLanguage": "he",
                "description": "דפי חזרה ולימוד אינטראקטיביים לדף היומי"}
@@ -1016,7 +1024,7 @@ def main():
         "איך נבנים הדפים · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
         f'<div class="eyebrow">אודות</div><h1>איך נבנים הדפים</h1></header>'
-        f'{about}{credits("../")}<footer>{FOOT}</footer></section></div>', "תהליך הבנייה והבדיקה של דפי החזרה והלימוד", depth=1))
+        f'{about}<p class="about-link"><a class="back" href="#contact" data-contact>✉ צור קשר</a></p>{credits("../")}<footer>{FOOT}</footer></section></div>{CONTACT_JS}', "תהליך הבנייה והבדיקה של דפי החזרה והלימוד", depth=1))
     ideas_p = os.path.join(ROOT, "content", "ideas.html")
     if os.path.exists(ideas_p):
         os.makedirs(os.path.join(DIST, "ideas"), exist_ok=True)

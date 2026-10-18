@@ -34,7 +34,7 @@ function load(){
     document.getElementById('counts').textContent=Object.keys(j.counts||{}).map(function(k){return (L[k]||k)+': '+j.counts[k]}).join(' · ');
     if(!j.notes||!j.notes.length){box.append(el('p',{className:'msg'},'אין הערות.'));return}
     j.notes.forEach(function(n){
-      var link='/'+n.page+'/'+(n.section?'#'+n.page.split('/')[0]+n.page.split('/')[1]+'-'+n.section:'');
+      var link=n.page==='site'?'/':'/'+n.page+'/'+(n.section?'#'+n.page.split('/')[0]+n.page.split('/')[1]+'-'+n.section:'');
       var h=el('div',{className:'h'},[el('b',null,'#'+n.id),el('span',{className:'st '+n.status},L[n.status]||n.status),
         el('span',null,K[n.kind]||n.kind),el('a',{href:link,target:'_blank'},n.page+(n.section?' · '+(n.section_title||n.section):'')),
         el('span',null,n.created_at.replace('T',' ').slice(0,16)),n.name?el('span',null,n.name):'',

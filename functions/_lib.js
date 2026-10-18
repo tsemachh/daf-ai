@@ -1,4 +1,4 @@
-export const KINDS = { fix: "תיקון בתוכן", missing: "חסר בדף", feature: "הצעה לשיפור" };
+export const KINDS = { fix: "תיקון בתוכן", missing: "חסר בדף", feature: "הצעה לשיפור", contact: "פנייה" };
 export const STATUSES = ["new", "in-progress", "fixed", "feature", "rejected", "needs-info"];
 
 export function json(obj, status = 200) {
@@ -23,7 +23,7 @@ export function newToken() {
   return [...a].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
-export const PAGE_RE = /^[a-z]+\/\d{1,3}$/;
+export const PAGE_RE = /^([a-z]+\/\d{1,3}|site)$/;   // "site" = a message from "צור קשר" (not about one daf)
 
 // Columns added after launch; added lazily so no manual migration is needed.
 let colsOk = false;
