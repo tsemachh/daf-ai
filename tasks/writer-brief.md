@@ -61,6 +61,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    Steinsaltz on it, and never the answer. In the first backfill, half the proposed keys failed exactly this test.
    A sugya that opens by quoting a Mishnah printed on the previous daf (״… כו׳״) needs an `unlock` restating that
    Mishnah's case and what each number or time span in it measures — the learner did not see it on this page.
+   The same holds for a Gemara section on a later amud that dissects a phrase of a Mishnah given in an earlier
+   section (״גמ׳ … אימת?״): restate the Mishnah's rule and what hinges on that phrase — readers jump in by amud.
    Every claim in `unlock` must be stated in S or R — background that "everyone knows" but the sources don't say is
    where errors creep in.
 1. **Complete shakla vetarya.** Every move is its OWN step: every question (מיתיבי, ורמינהו, מאי טעמא,
