@@ -211,6 +211,45 @@ def ldjson(d):
             json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False).replace("</", "<\\/") + "</script>")
 
 
+FEED_V = "v1"
+FEED_TERMS = {
+    "credit": "מקור: דף צמח — daf.tsemach.dev (יש להציג קרדיט עם קישור לדף המקורי בכל דף)",
+    "ai_note": "התוכן נכתב על ידי סוכן AI ונבדק אוטומטית מול לשון הגמרא — יש להציג הערה זו לצד התוכן.",
+    "use": "לשימוש לא מסחרי בלבד, בתיאום עם בעל האתר. יש למשוך מהכתובת באופן שוטף (לפחות פעם ביום) — הדפים מתוקנים כל לילה.",
+    "sources": "לשון הגמרא המנוקדת: ספריא (William Davidson Edition, CC BY-NC). ההסברים: דף צמח, על בסיס שטיינזלץ, רש״י ועזרי לימוד.",
+}
+
+
+def write_feed(alld, glossary, lm):
+    """Read-only JSON feed for partner apps (agreed use): /feed/v1/index.json, /feed/v1/<slug>/<daf>.json,
+    /feed/v1/glossary.json. Same content as the daf pages, plus `_meta` with credit, links and the
+    note-form deep link (?note=1 or ?note=<section id>). CORS-open via _headers."""
+    base = os.path.join(DIST, "feed", FEED_V)
+    os.makedirs(base, exist_ok=True)
+    idx = []
+    for d in alld:
+        k = f"{d['slug']}/{d['daf']}"
+        url = f"{SITE_URL}/{k}/"
+        meta = {"url": url, "json": f"{SITE_URL}/feed/{FEED_V}/{k}.json", "date": yomi_date(d["slug"], d["daf"]),
+                "updated": lm.get(f"{k}/"), "note_url": url + "?note=1", "note_url_section": url + "?note={section_id}",
+                **FEED_TERMS}
+        os.makedirs(os.path.join(base, d["slug"]), exist_ok=True)
+        json.dump({"_meta": meta, **d}, open(os.path.join(base, d["slug"], f"{d['daf']}.json"), "w", encoding="utf8"),
+                  ensure_ascii=False, separators=(",", ":"))
+        idx.append({"slug": d["slug"], "tractate": d["tractate"], "tractate_he": d["tractate_he"], "daf": d["daf"],
+                    "title": d["title"], "thesis": re.sub("<[^>]+>", "", d["thesis"]), "date": meta["date"],
+                    "updated": meta["updated"], "url": url, "json": meta["json"]})
+    json.dump({"version": FEED_V, "site": BRAND, "site_url": f"{SITE_URL}/", "docs": f"{SITE_URL}/feed/",
+               "generated": il_today().isoformat(), "terms": FEED_TERMS, "glossary": f"{SITE_URL}/feed/{FEED_V}/glossary.json",
+               "count": len(idx), "pages": idx},
+              open(os.path.join(base, "index.json"), "w", encoding="utf8"), ensure_ascii=False, indent=1)
+    json.dump(glossary, open(os.path.join(base, "glossary.json"), "w", encoding="utf8"), ensure_ascii=False, separators=(",", ":"))
+    doc = os.path.join(ROOT, "content", "feed.html")
+    if os.path.exists(doc):
+        open(os.path.join(DIST, "feed", "index.html"), "w", encoding="utf8").write(page(
+            "פיד הנתונים · " + BRAND, open(doc, encoding="utf8").read(), "פיד JSON לשותפים: דפי הלימוד של דף צמח", depth=1))
+
+
 def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
     up = "../" * depth
     ogi = f"{SITE_URL}/og/{og}"
@@ -1022,6 +1061,7 @@ def main():
     open(os.path.join(DIST, "sitemap.xml"), "w", encoding="utf8").write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc>{f'<lastmod>{lm[u]}</lastmod>' if u in lm else ''}</url>\n" for u in urls) + "</urlset>\n")
+    write_feed(alld, glossary, lm)
     open(os.path.join(DIST, "robots.txt"), "w", encoding="utf8").write(
         f"User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: {SITE_URL}/sitemap.xml\n")
     open(os.path.join(DIST, "404.html"), "w", encoding="utf8").write(page(

@@ -1,0 +1,29 @@
+<div class="wrap" id="app"><section>
+<a class="back" href="../">→ דף הבית</a>
+<header><div class="eyebrow">לשותפים</div><h1>פיד הנתונים</h1>
+<p class="thesis">דפי הלימוד של דף צמח כ־JSON, להצגה בתוך אפליקציות לימוד — בתיאום מראש.</p></header>
+
+<section class="sugya"><h3>כתובות</h3>
+<ul class="chk">
+<li><span class="mk">✓</span><span><code dir="ltr">/feed/v1/index.json</code> — רשימת כל הדפים: מסכת, דף, כותרת, תאריך בלוח הדף היומי, תאריך עדכון אחרון וכתובת ה־JSON.</span></li>
+<li><span class="mk">✓</span><span><code dir="ltr">/feed/v1/&lt;slug&gt;/&lt;daf&gt;.json</code> — דף אחד, למשל <a dir="ltr" href="v1/bechorot/26.json">/feed/v1/bechorot/26.json</a>.</span></li>
+<li><span class="mk">✓</span><span><code dir="ltr">/feed/v1/glossary.json</code> — מילון החכמים והמושגים (המפתחות מסומנים בטקסט).</span></li>
+</ul></section>
+
+<section class="sugya"><h3>מבנה דף</h3>
+<ul class="chk">
+<li><span class="mk">✓</span><span><code>_meta</code> — כתובת הדף, תאריך, עדכון אחרון, נוסח הקרדיט וההערה על AI, וקישורי ״הערה״.</span></li>
+<li><span class="mk">✓</span><span><code>title</code>, <code>thesis</code>, <code>storyline</code>, <code>nav</code> — כותרת, משפט מרכזי, מהלך הדף ותוכן עניינים.</span></li>
+<li><span class="mk">✓</span><span><code>sections[]</code> — הסוגיות. לכל סוגיה <code>id</code>, <code>title</code>, <code>ref</code> (מקור בספריא), ו־<code>steps[]</code>: לכל שלב <code>body</code> (הסבר, HTML בסיסי: <code>b</code>, <code>i</code>, <code>span</code>), <code>short</code> (שורת תמצית), <code>type</code> (q קושיה · a תירוץ · c מסקנה), <code>p</code> (השלב שאליו הוא עונה). שדות אופציונליים: <code>unlock</code> (מפתח לסוגיה), <code>map</code> (מפת שיטות), <code>post</code> (טבלאות / ״חשבו לפני שממשיכים״).</span></li>
+<li><span class="mk">✓</span><span><code>srctext</code> — לשון הגמרא לפי <code>ref</code>. <code>quiz[]</code> — 8 שאלות חזרה (<code>s</code> = הסוגיה).</span></li>
+</ul></section>
+
+<section class="sugya"><h3>תנאי שימוש</h3>
+<ul class="chk">
+<li><span class="mk w">!</span><span>שימוש לא מסחרי בלבד, ובתיאום עם בעל האתר (<a href="mailto:me@tsemach.dev">me@tsemach.dev</a>).</span></li>
+<li><span class="mk w">!</span><span>בכל דף: קרדיט ״דף צמח״ עם קישור לדף המקורי (<code>_meta.url</code>), וההערה שהתוכן נכתב על ידי AI (<code>_meta.ai_note</code>).</span></li>
+<li><span class="mk w">!</span><span>למשוך באופן שוטף — לפחות פעם ביום (<code>_meta.updated</code>). הדפים מתוקנים כל לילה לפי הערות לומדים.</span></li>
+<li><span class="mk w">!</span><span>כפתור ״דווח על טעות״ שמוביל ל־<code>_meta.note_url</code> (או ל־<code>?note=&lt;section id&gt;</code> לסוגיה מסוימת) — טופס ההערות נפתח מיד.</span></li>
+<li><span class="mk w">!</span><span>לשון הגמרא המנוקדת היא מספריא (William Davidson Edition, CC BY-NC) — יש לציין זאת.</span></li>
+</ul></section>
+</section></div>

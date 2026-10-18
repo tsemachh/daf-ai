@@ -763,6 +763,9 @@
     l.onclick=function(){open(sid,t.trim())};
     var tl=secTools(sec); if(tl) tl.appendChild(l); else sec.appendChild(l); secs[sid]=sec;
   });
+  /* deep link from partner apps (feed): ?note=1 opens the note form for the page, ?note=<section id> for a sugya */
+  (function(){ var q; try{q=new URLSearchParams(location.search).get('note')}catch(e){return} if(!q) return;
+    var sec=secs[q]; if(sec){ sec.scrollIntoView(); open(q,((sec.querySelector('h3')||{}).textContent||'').trim()); } else open('',''); })();
   function badge(sid,cls,txt,reply){
     var sec=secs[sid]||null, host=sec||art.querySelector('.controls');
     if(!host) return;
