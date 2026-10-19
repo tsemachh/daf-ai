@@ -1104,3 +1104,42 @@ document.addEventListener('click',function(e){
     var tl=sec.querySelector('.sec-tools'); if(tl) tl.insertBefore(s,tl.firstChild); else sec.appendChild(s);
   });
 })();
+
+/* milestones of a long sugya (section.stgd, data-stages=[{at,q,a}]): a header before each stage ("שלב 2/4" + its
+   question) and its answer; stages fold to question + answer, the first open. Inside a stage the tree depth is counted
+   from the stage's first step and capped, and on phones each step shows its one-line `short` until tapped. */
+(function(){
+  function init(){
+    document.querySelectorAll('section.sugya.stgd').forEach(function(sec){
+      if(sec.dataset.stgDone) return; sec.dataset.stgDone='1';
+      var S; try{S=JSON.parse(sec.dataset.stages)}catch(e){return} if(!S||!S.length) return;
+      var ol=sec.querySelector('ol.steps'); if(!ol) return;
+      var lis=[].slice.call(ol.querySelectorAll(':scope>li[data-k]'));
+      S.sort(function(a,b){return a.at-b.at});
+      var strip=document.createElement('div'); strip.className='stg-strip';
+      var heads=[];
+      S.forEach(function(st,i){
+        var end=i+1<S.length?S[i+1].at:lis.length, mine=lis.slice(st.at,end); if(!mine.length) return;
+        var base=Math.min.apply(null,mine.map(function(li){return +(li.dataset.d||0)}));
+        mine.forEach(function(li){ li.dataset.stg=i; var d=Math.min(2,Math.max(0,(+(li.dataset.d||0))-base)); li.style.setProperty('--sd',d); });
+        var h=document.createElement('div'); h.className='stg-h'; h.dataset.stg=i; h.setAttribute('role','button'); h.tabIndex=0;
+        h.innerHTML='<span class="stg-n">'+(i+1)+'</span><span class="stg-b"><span class="stg-c">שלב '+(i+1)+' מתוך '+S.length+'</span><span class="stg-q"></span><span class="stg-a"></span></span><span class="stg-x" aria-hidden="true"></span>';
+        h.querySelector('.stg-q').textContent=st.q; h.querySelector('.stg-a').textContent='✓ '+st.a;
+        ol.insertBefore(h,mine[0]);
+        var f=document.createElement('div'); f.className='stg-f'; f.dataset.stg=i; f.textContent='✓ '+st.a;
+        mine[mine.length-1].after(f);
+        function set(open){ h.classList.toggle('open',open); h.setAttribute('aria-expanded',open); mine.forEach(function(li){li.classList.toggle('stg-hid',!open)}); f.classList.toggle('stg-hid',!open); }
+        h.addEventListener('click',function(e){ e.stopPropagation(); set(!h.classList.contains('open')); });
+        h.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault(); h.click();} });
+        set(i===0); heads.push({h:h,set:set});
+      });
+      var all=document.createElement('button'); all.type='button'; all.className='stg-chip stg-all'; all.textContent='פתח את כל השלבים';
+      all.addEventListener('click',function(){ var open=all.dataset.on!=='1'; heads.forEach(function(x){x.set(open)}); all.dataset.on=open?'1':''; all.textContent=open?'קפל את השלבים':'פתח את כל השלבים'; });
+      strip.appendChild(all);
+      var anchor=sec.querySelector('.cv-all')||ol; anchor.before(strip);
+      /* phones: a step shows its one-line summary until tapped */
+      ol.addEventListener('click',function(e){ if(e.target.closest('button,a,.term,.gq,.stg-h')) return; var li=e.target.closest('ol.steps>li'); if(li&&li.querySelector(':scope>.sbody')) li.classList.toggle('stg-full'); });
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(init,0)}); else setTimeout(init,0);
+})();

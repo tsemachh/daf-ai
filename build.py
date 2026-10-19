@@ -485,7 +485,10 @@ def flow_paras(t, target=150):
 def render_section(d, s):
     sid = f'{d["key"]}-{s["id"]}'
     ref = f' data-ref="{s["ref"]}"' if s.get("ref") else ""
-    parts = [f'<section class="sugya" id="{sid}">', f'  <div class="amud"{ref}>{s["amud"]}</div>']
+    stg = ""
+    if s.get("stages"):   # milestones of a long sugya: [{"at": step index, "q": the question of this stage, "a": its answer}]
+        stg = " data-stages='" + json.dumps(s["stages"], ensure_ascii=False).replace("&", "&amp;").replace("'", "&#39;") + "'"
+    parts = [f'<section class="sugya{" stgd" if stg else ""}" id="{sid}"{stg}>', f'  <div class="amud"{ref}>{s["amud"]}</div>']
     if s.get("title"):
         parts.append(f'  <h3>{s["title"]}</h3>')
     if s["kind"] != "raw":
