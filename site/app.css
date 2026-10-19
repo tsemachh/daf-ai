@@ -867,10 +867,7 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
   .stgd .steps li[data-stg]>.tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;justify-self:start;padding:1px 9px;text-align:start}
   .stgd .steps li[data-stg]>.tag .tsp{display:inline}
   .stgd .steps li[data-stg]>.tag .tn{display:inline;margin:0}
-  .stgd .steps li[data-stg]:has(>.sbody):not(.stg-full)>.body{display:none}
-  .stgd .steps li[data-stg]:has(>.sbody):not(.stg-full)>.sbody{display:block;cursor:pointer}
   .stgd .steps li[data-stg]>.sbody,.stgd .steps li[data-stg]>.body{grid-column:1;grid-row:auto}
-  .stgd .steps li[data-stg]:has(>.sbody):not(.stg-full)>.sbody::after{content:" ⌄";color:var(--accent);font-weight:800}
 }
 
 /* a quote where Steinsaltz adds nothing and Rashi is silent: plain לשון הגמרא, not a link */

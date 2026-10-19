@@ -1123,7 +1123,7 @@ document.addEventListener('click',function(e){
 
 /* milestones of a long sugya (section.stgd, data-stages=[{at,q,a}]): a header before each stage ("שלב 2/4" + its
    question) and its answer; stages fold to question + answer, the first open. Inside a stage the tree depth is counted
-   from the stage's first step and capped, and on phones each step shows its one-line `short` until tapped. */
+   from the stage's first step and capped. Steps show in full (the one-line `short` is the תמצית level's). */
 (function(){
   function init(){
     document.querySelectorAll('section.sugya.stgd').forEach(function(sec){
@@ -1156,8 +1156,6 @@ document.addEventListener('click',function(e){
       var fd=sec.querySelector(':scope > details.flowd');
       if(fd){ var row=document.createElement('div'); row.className='stg-row'; fd.before(row); row.append(fd,all); strip.remove(); }
       else { var anchor=sec.querySelector('.cv-all')||ol; anchor.before(strip); }
-      /* phones: a step shows its one-line summary until tapped */
-      ol.addEventListener('click',function(e){ if(e.target.closest('button,a,.term,.gq,.stg-h')) return; var li=e.target.closest('ol.steps>li'); if(li&&li.querySelector(':scope>.sbody')) li.classList.toggle('stg-full'); });
     });
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(init,0)}); else setTimeout(init,0);
