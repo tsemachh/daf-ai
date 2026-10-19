@@ -1122,7 +1122,7 @@ document.addEventListener('click',function(e){
 })();
 
 /* milestones of a long sugya (section.stgd, data-stages=[{at,q,a}]): a header before each stage ("שלב 2/4" + its
-   question) and its answer; stages fold to question + answer, the first open. Inside a stage the tree depth is counted
+   question) and its answer; stages open by default and fold to question + answer. Inside a stage the tree depth is counted
    from the stage's first step and capped. Steps show in full (the one-line `short` is the תמצית level's). */
 (function(){
   function init(){
@@ -1147,9 +1147,9 @@ document.addEventListener('click',function(e){
         function set(open){ h.classList.toggle('open',open); h.setAttribute('aria-expanded',open); mine.forEach(function(li){li.classList.toggle('stg-hid',!open)}); f.classList.toggle('stg-hid',!open); }
         h.addEventListener('click',function(e){ e.stopPropagation(); set(!h.classList.contains('open')); });
         h.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault(); h.click();} });
-        set(i===0); heads.push({h:h,set:set});
+        set(true); heads.push({h:h,set:set});
       });
-      var all=document.createElement('button'); all.type='button'; all.className='stg-chip stg-all'; all.textContent='פתח את כל השלבים';
+      var all=document.createElement('button'); all.type='button'; all.className='stg-chip stg-all'; all.dataset.on='1'; all.textContent='קפל את השלבים';
       all.addEventListener('click',function(){ var open=all.dataset.on!=='1'; heads.forEach(function(x){x.set(open)}); all.dataset.on=open?'1':''; all.textContent=open?'קפל את השלבים':'פתח את כל השלבים'; });
       strip.appendChild(all);
       /* the "open all stages" link sits on the same row as the בקצרה pill when there is one */
