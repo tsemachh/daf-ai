@@ -347,9 +347,23 @@ def render_calc(t):
     return f'  <div class="ch cl">{title}<ul>{body}</ul>{note}</div>'
 
 
+def _seq_split(x):
+    """'move — answer' (or a short 'label: text') → (head, tail) so each card reads as a bold line plus its answer."""
+    if " — " in x:
+        h, t = x.split(" — ", 1)
+        return h, t
+    m = re.match(r"^([^:]{2,45}):\s+(.+)$", x)
+    return (m[1], m[2]) if m and m[1].count("״") % 2 == 0 else ("", x)
+
+
 def render_seq(t):
-    """Order of events (a story or a process): {"title", "items": [str, …]}."""
-    items = "".join(f"<li>{x}</li>" for x in t["items"])
+    """Order of events (a story, a process or a chain of moves): {"title", "items": [str, …]} — numbered cards
+    joined by arrows; an item 'move — answer' shows the move bold and the answer under it."""
+    def card(i, x):
+        h, tl = _seq_split(x)
+        head = f'<span class="sq-h">{h}</span>' if h else ""
+        return f'<li><span class="sq-n">{i}</span><span class="sq-b">{head}<span class="sq-t">{tl}</span></span></li>'
+    items = "".join(card(i, x) for i, x in enumerate(t["items"], 1))
     title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
     return f'  <div class="ch sq">{title}<ol>{items}</ol></div>'
 
