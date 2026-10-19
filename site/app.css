@@ -861,7 +861,8 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .hide-mode .stgd:not(.cv-done) .stg-a,.hide-mode .stgd:not(.cv-done) .stg-f{visibility:hidden}
 .tree-mode .stgd .steps li[data-stg]{margin-inline-start:calc(var(--sd,0)*16px)}
 @media (max-width:600px){
-  .tree-mode .stgd .steps li[data-stg]{margin-inline-start:calc(var(--sd,0)*12px)}
+  .tree-mode .stgd .steps li[data-stg]{margin-inline-start:0}   /* phones: the text starts at the edge; the tag shows what it answers (״על 3״) */
+  .tree-mode .stgd .steps li[data-stg]::before{display:none}
   .stgd .steps li[data-stg]{grid-template-columns:minmax(0,1fr)!important;gap:2px}
   .stgd .steps li[data-stg]>.tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;justify-self:start;padding:1px 9px;text-align:start}
   .stgd .steps li[data-stg]>.tag .tsp{display:inline}
@@ -874,3 +875,8 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 
 /* a quote where Steinsaltz adds nothing and Rashi is silent: plain לשון הגמרא, not a link */
 .gq.gq-flat{cursor:auto;background:none!important}
+
+.stg-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin:0 0 12px}
+.stg-row>details.flowd{margin:0}
+.stg-row>details.flowd[open]{flex-basis:100%;order:2}
+.stg-row>.stg-all{order:1;margin-inline-start:auto}

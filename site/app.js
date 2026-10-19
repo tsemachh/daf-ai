@@ -1152,7 +1152,10 @@ document.addEventListener('click',function(e){
       var all=document.createElement('button'); all.type='button'; all.className='stg-chip stg-all'; all.textContent='פתח את כל השלבים';
       all.addEventListener('click',function(){ var open=all.dataset.on!=='1'; heads.forEach(function(x){x.set(open)}); all.dataset.on=open?'1':''; all.textContent=open?'קפל את השלבים':'פתח את כל השלבים'; });
       strip.appendChild(all);
-      var anchor=sec.querySelector('.cv-all')||ol; anchor.before(strip);
+      /* the "open all stages" link sits on the same row as the בקצרה pill when there is one */
+      var fd=sec.querySelector(':scope > details.flowd');
+      if(fd){ var row=document.createElement('div'); row.className='stg-row'; fd.before(row); row.append(fd,all); strip.remove(); }
+      else { var anchor=sec.querySelector('.cv-all')||ol; anchor.before(strip); }
       /* phones: a step shows its one-line summary until tapped */
       ol.addEventListener('click',function(e){ if(e.target.closest('button,a,.term,.gq,.stg-h')) return; var li=e.target.closest('ol.steps>li'); if(li&&li.querySelector(':scope>.sbody')) li.classList.toggle('stg-full'); });
     });
