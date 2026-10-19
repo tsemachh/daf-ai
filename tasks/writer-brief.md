@@ -103,6 +103,12 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    plain text (no HTML, no quote marks), standing on its own — who says what and why in a nutshell, e.g.
    ״רב: רק בבכור תם — בעל מום אינו קדוש לכך״, ״קושיה: אם כן, למה צריך פסוק?״, ״מסקנה: הלכה כרשב״ג״.
    Never a bare tag ("קושיה"), never more than the body says.
+8. **`stages` on every sugya with 10+ steps** — its milestones, shown as folding headers (״שלב 2 מתוך 4״) with the
+   stage's question and where it lands: `"stages":[{"at":<index of the stage's first step>,"q":"<question>","a":"<answer>"}]`.
+   2–5 stages, the first `at` 0, increasing, each ≥3 steps; break where the sugya turns to a NEW sub-question (a source
+   and its derivation · an objection chain to its answer · ״ולמה…?״ · another opinion · a new case), never between a
+   question and its answer. `q` ≤10 words ending in ״?״ (״האם ״לא יגאל״ מופנה?״); `a` ≤18 words, what the stage
+   concludes — say so when it ends in תיובתא / קשיא / תיקו.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).

@@ -50,6 +50,12 @@ def check(path, glossary):
         cl = s.get("calc")
         if cl is not None and (not isinstance(cl, dict) or not cl.get("rows") or any(len(r) < 2 for r in cl["rows"])):
             E(f"{where}: calc needs rows of [label, value, cite?]")
+        sg = s.get("stages")
+        if sg is not None:
+            n_ = len(s.get("steps", []))
+            ats = [x.get("at") for x in sg] if isinstance(sg, list) else []
+            if not ats or ats[0] != 0 or ats != sorted(set(ats)) or ats[-1] >= n_ or not all(x.get("q") and x.get("a") for x in sg):
+                E(f"{where}: stages need [{{at, q, a}}], first at 0, increasing, within the steps")
         mp = s.get("map")
         if mp is not None:
             ids = {n.get("id") for t in mp.get("tiers", []) for n in t.get("nodes", [])}

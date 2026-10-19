@@ -119,7 +119,7 @@
     var meta=art.querySelector('header .meta');
     if(meta&&!art.querySelector('.sefaria-bar,.tmeta')){var d=document.createElement('div'); d.className='sefaria-bar'; d.innerHTML='<a class="src" target="_blank" rel="noopener" href="'+SEF+tr+'.'+daf+'a?lang=he">פתח את הדף בספריא</a>'; meta.after(d)}
   }
-  var pop=document.createElement('div'); pop.className='pop'; pop.hidden=true; pop.setAttribute('role','dialog'); document.body.appendChild(pop); var cur=null;
+  var pop=document.createElement('div'); pop.className='pop'; pop.hidden=true; pop.setAttribute('role','dialog'); document.body.appendChild(pop); var cur=null; window.__dafPop=pop;
   function closePop(){pop.hidden=true; if(cur){cur.setAttribute('aria-expanded','false'); cur=null}}
   document.addEventListener('click',function(e){
     var b=e.target.closest&&e.target.closest('.info');
@@ -211,18 +211,19 @@
   function cmtPref(){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; return P.rashi?'rashi':'st'; }catch(e){ return 'st'; } }
   function setCmtPref(m){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; P.rashi=(m==='rashi'); localStorage.setItem('dafPrefs',JSON.stringify(P)); }catch(e){} document.dispatchEvent(new CustomEvent('daf:cmt',{detail:m})); }
   /* tap a Gemara quote in the steps → Steinsaltz or Rashi for those words (tabs; the default is a setting) */
-  function stPop(q){
+  function stPop(q,probe){
     var sec=q.closest('section.sugya'), am=sec&&sec.querySelector(':scope > .amud'), key=am&&am.dataset.ref;
-    closePop(); pop.innerHTML='';
+    var pop=probe?document.createElement('div'):window.__dafPop;   /* probe: the same search, off-screen, to learn whether Steinsaltz adds anything */
+    if(!probe){ closePop(); pop.innerHTML=''; }
     var tabs=document.createElement('div'); tabs.className='cm-tabs'; tabs.setAttribute('role','tablist');
     var T={}; [['st','שטיינזלץ'],['rashi','רש״י']].forEach(function(x){ var t=document.createElement('button'); t.type='button'; t.className='cm-tab'; t.setAttribute('role','tab'); t.textContent=x[1]; t.dataset.m=x[0]; T[x[0]]=t; tabs.appendChild(t); });
     var pd=document.createElement('div'); pd.className='st-pd'; pd.textContent='טוען…';
     var cr=document.createElement('div'); cr.className='st-cr';
     pop.append(tabs,pd,cr);
-    pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
+    if(!probe){ pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
     var r=q.getBoundingClientRect(), w=Math.min(340,innerWidth-32); pop.style.width=w+'px';
-    var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px';
-    if(!key){ pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
+    var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px'; }
+    if(!key){ if(probe) return Promise.resolve(null); pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
     var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean), set={};
     qw.forEach(function(x){ if(x.length>1) set[x]=1; });
     /* the section's own amudim first, then the neighbouring amudim (a sugya often quotes the previous daf) */
@@ -345,6 +346,8 @@
         return m==='rashi'?showRashi(seg.seg):showSt(seg);
       }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
     }
+    if(probe) return found.then(function(seg){ if(!seg) return null; showSt(seg);
+      return rashiFor(seg.seg).then(function(l){ return {thin:thin, rashi:l.length}; }, function(){ return {thin:thin, rashi:-1}; }); });
     Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); picked=true; setCmtPref(k); show(k); }; });
     T.rashi.hidden=true;
     var want=cmtPref();
@@ -358,11 +361,24 @@
   }
   document.addEventListener('click',function(e){
     if(e.target.closest&&e.target.closest('.info,button,a')) return;
-    var q=e.target.closest&&e.target.closest('.gq'); if(!q) return;
+    var q=e.target.closest&&e.target.closest('.gq'); if(!q||q.classList.contains('gq-flat')) return;
     var hl=q.closest('li.ans'); if(hl&&hl.closest('.hide-mode')&&!hl.classList.contains('shown')) return;
     if(cur===q){closePop();return} stPop(q);
   });
-  document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('gq')){ e.preventDefault(); stPop(e.target); } });
+  document.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('gq')&&!e.target.classList.contains('gq-flat')){ e.preventDefault(); stPop(e.target); } });
+  /* a Gemara quote that would open no explanation — Steinsaltz only repeats the words and Rashi has nothing, or no
+     matching passage was found at all —
+     show it as plain לשון הגמרא, not as a link. Checked per sugya as it nears the screen (the same Sefaria data the tap would load). */
+  (function(){
+    if(!('IntersectionObserver' in window)) return;
+    function scan(sec){ var qs=[].slice.call(sec.querySelectorAll('.gq')), i=0;
+      (function next(){ if(i>=qs.length) return; var q=qs[i++];
+        var p=stPop(q,true); if(!p||!p.then) return next();
+        p.then(function(r){ if(window.__dafDbg) console.log('probe',q.textContent.slice(0,20),JSON.stringify(r)); if(r===null||(r.thin&&r.rashi===0)){ q.classList.add('gq-flat'); q.removeAttribute('role'); q.removeAttribute('tabindex'); q.removeAttribute('title'); } }, function(){}).then(next); })(); }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); scan(e.target); } }); },{rootMargin:'800px 0px'});
+    function go(){ document.querySelectorAll('article.daf section.sugya').forEach(function(s){ if(s.querySelector('.gq')) io.observe(s); }); }
+    setTimeout(go,300);
+  })();
   var lastFocus=null, bg=null;
   function closeSrc(){ if(bg){bg.remove(); bg=null; if(lastFocus) lastFocus.focus()} }
   function openSrc(a){

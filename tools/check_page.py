@@ -142,6 +142,15 @@ def main():
     long_ = [st['short'] for st in ns if len((st.get('short') or '').split()) > 14]
     if long_:
         warn.append(f'{len(long_)} `short` lines over 14 words, e.g. ״{long_[0][:40]}…״')
+    for s in secs:   # milestones of long sugyot
+        n_ = len(s.get('steps', [])); sg = s.get('stages')
+        if sg:
+            ats = [x.get('at') for x in sg]
+            if ats[0] != 0 or any(not isinstance(a_, int) for a_ in ats) or ats != sorted(set(ats)) or ats[-1] > n_ - 2 \
+                    or any(b_ - a_ < 2 for a_, b_ in zip(ats, ats[1:] + [n_])) or not all(x.get('q') and x.get('a') for x in sg):
+                errs.append(f'{s["id"]}: bad `stages` (first at 0, increasing, ≥2 steps each, q and a) — {ats} of {n_} steps')
+        elif n_ >= 10 and not a.no_seg:
+            errs.append(f'{s["id"]}: {n_} steps but no `stages` (2–5 milestones with q/a)')
     nu = sum(1 for s in secs if s.get('unlock'))
     if secs and nu > max(1, len(secs) // 3):
         warn.append(f'{nu} of {len(secs)} sugyot have an `unlock` — keep it only where a learner jumping in would miss the case (aim ≤ 1/3)')
