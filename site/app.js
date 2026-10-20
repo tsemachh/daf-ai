@@ -770,6 +770,7 @@
         .catch(function(){ sb.disabled=false; st.textContent='אין חיבור. נסו שוב מאוחר יותר.'; });
     }
   }
+  if(!CONTACT) window.dafNote=function(sid,title){open(sid,title)};
   if(CONTACT){ window.dafContact=function(){open('','')};
     document.querySelectorAll('[data-contact]').forEach(function(b){b.onclick=function(e){e.preventDefault();open('','')}});
     return; }
@@ -1169,7 +1170,7 @@ document.addEventListener('click',function(e){
   var ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.7v.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="16.9" r="1.05" fill="currentColor"/></svg>';
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
   var ERR={cap:'הגענו למכסת השאלות היומית של האתר. נסו שוב מחר.',user_cap:'שאלתם הרבה היום 🙂 אפשר לשאול שוב מחר.',too_short:'כתבו שאלה קצת יותר מפורטת.',disabled:'השירות אינו זמין כרגע.'};
-  function open(sid,title){
+  function open(sid,title,stage){
     var hist=[];
     var bg=el('div','srcdlg-bg'), d=el('div','srcdlg ask-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
     var h=el('header'), h4=el('h4',null,'שאל על הסוגיה'), sub=el('span','ask-sub',title); h4.appendChild(sub); x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
@@ -1184,7 +1185,7 @@ document.addEventListener('click',function(e){
     f.addEventListener('submit',function(e){ e.preventDefault(); var q=ta.value.trim(); if(q.length<3) return;
       sb.disabled=true; st.textContent='חושב…';
       var qa=el('div','ask-q'); qa.textContent=q; log.appendChild(qa);
-      fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,section:sid,q:q,history:hist})})
+      fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,section:sid,stage:stage==null?null:stage,q:q,history:hist})})
         .then(function(r){return r.json().catch(function(){return {ok:false}})})
         .then(function(j){ sb.disabled=false;
           if(j&&j.ok){ st.textContent=''; var a=el('div','ask-a'); j.a.split(/\n{2,}/).forEach(function(p){a.appendChild(el('p',null,p))}); log.appendChild(a);
@@ -1202,5 +1203,37 @@ document.addEventListener('click',function(e){
       b.onclick=function(){open(sid,t)};
       var tl=sec.querySelector('.sec-tools'); if(tl) tl.insertBefore(b,tl.firstChild); else sec.appendChild(b);
     });
+    window.dafAsk=function(sid,title,stage){open(sid,title,stage)};
+    document.dispatchEvent(new CustomEvent('daf:ask-on'));
   }).catch(function(){});
+})();
+
+/* small "ask" and "note" tools on each stage header and at the end of each sugya (same dialogs as the sugya icons) */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art||document.documentElement.classList.contains('lab')) return;
+  var pre=art.id+'-';
+  var Q='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.7v.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.9" r="1.1" fill="currentColor"/></svg>';
+  var N='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  function btn(cls,icon,label,fn){ var b=document.createElement('button'); b.type='button'; b.className=cls; b.innerHTML=icon; b.setAttribute('aria-label',label); b.title=label;
+    b.addEventListener('click',function(e){e.stopPropagation(); fn();}); return b; }
+  function sidOf(sec){ return sec.id.slice(pre.length); }
+  function titleOf(sec){ return ((sec.querySelector('h3')||{}).textContent||'').trim(); }
+  function add(withAsk){
+    /* stage headers */
+    art.querySelectorAll('section.stgd .stg-h').forEach(function(h){
+      var sec=h.closest('section.sugya'), i=+h.dataset.stg, q=(h.querySelector('.stg-q')||{}).textContent||'';
+      var box=h.querySelector('.stg-tools'); if(!box){ box=document.createElement('span'); box.className='stg-tools'; h.insertBefore(box,h.querySelector('.stg-x'));
+        box.appendChild(btn('stg-t','<span>'+N+'</span>','הערה על השלב',function(){ if(window.dafNote) window.dafNote(sidOf(sec),'שלב '+(i+1)+': '+q); })); }
+      if(withAsk&&!box.querySelector('.stg-ask')) box.insertBefore(btn('stg-t stg-ask',Q,'שאל על השלב',function(){ window.dafAsk(sidOf(sec),'שלב '+(i+1)+': '+q,i); }),box.firstChild);
+    });
+    /* end of each sugya */
+    art.querySelectorAll('section.sugya[id]').forEach(function(sec){
+      var ol=sec.querySelector('ol.steps'); if(!ol) return;
+      var row=sec.querySelector(':scope > .sug-end'); if(!row){ row=document.createElement('div'); row.className='sug-end'; sec.appendChild(row);
+        var nb=btn('sug-t','<span>'+N+'</span><span>הערה</span>','הערה על הסוגיה',function(){ if(window.dafNote) window.dafNote(sidOf(sec),titleOf(sec)); }); row.appendChild(nb); }
+      if(withAsk&&!row.querySelector('.sug-ask')){ var ab=btn('sug-t sug-ask',Q+'<span>שאלה על הסוגיה</span>','שאל על הסוגיה',function(){ window.dafAsk(sidOf(sec),titleOf(sec)); }); row.insertBefore(ab,row.firstChild); }
+    });
+  }
+  function go(){ add(!!window.dafAsk); }
+  setTimeout(go,120); document.addEventListener('daf:ask-on',function(){ setTimeout(go,60); });
 })();

@@ -888,3 +888,14 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .ask-f textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
 .ask-send{justify-self:start}
 .ask-sub{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
+/* tools on stage headers and at the end of a sugya — small, so they add no height */
+.stg-tools{display:inline-flex;gap:0;align-items:center;margin-inline-start:auto;align-self:flex-start}
+.stg-t{display:inline-grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:8px;background:none;color:var(--muted);cursor:pointer;opacity:.75}
+.stg-t:hover,.stg-t:focus-visible{opacity:1;color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.stg-t span{display:contents}
+.stg-h .stg-x{align-self:flex-start;margin-top:3px}
+.sug-end{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:2px 14px;margin:6px 0 2px}
+.sug-t{display:inline-flex;align-items:center;gap:5px;padding:4px 6px;border:0;border-radius:8px;background:none;color:var(--muted);font:inherit;font-size:13.5px;cursor:pointer}
+.sug-t:hover,.sug-t:focus-visible{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.sug-t span{display:inline}
+html.lab .sug-end,html.lab .stg-tools{display:none}

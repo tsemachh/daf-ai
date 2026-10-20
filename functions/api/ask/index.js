@@ -37,7 +37,7 @@ function context(d, sid) {
   L.push("מהלך הסוגיה, שלב אחר שלב:\n" + (sec.steps || []).map((st, i) =>
     `${i + 1}. [${strip(st.tag)}${st.p != null ? ` · על ${st.p + 1}` : ""}] ${strip(st.body)}`).join("\n"));
   if (sec.post) L.push(`עזרים: ${strip(sec.post).slice(0, 1500)}`);
-  return { text: L.join("\n\n"), title: strip(sec.title) };
+  return { text: L.join("\n\n"), title: strip(sec.title), stages: sec.stages || [] };
 }
 
 const SYSTEM = `אתה עוזר לימוד באתר ״דף צמח״ לחזרה על הדף היומי. לומד שואל שאלה על סוגיה אחת.
@@ -51,7 +51,7 @@ export async function onRequestPost({ request, env }) {
   if (!env.ANTHROPIC_API_KEY || !env.DB) return json({ ok: false, error: "disabled" }, 503);
   let b; try { b = await request.json(); } catch { return json({ ok: false, error: "bad_json" }, 400); }
   const page = clean(b.page, 40).replace(/^\/|\/$/g, ""), section = clean(b.section, 20).replace(/[^a-z0-9_-]/gi, "");
-  const q = clean(b.q, 500);
+  const q = clean(b.q, 500), stage = Number.isInteger(b.stage) ? b.stage : null;
   if (!PAGE.test(page) || !section) return json({ ok: false, error: "bad_page" }, 400);
   if (q.length < 3) return json({ ok: false, error: "too_short" }, 400);
   await ensure(env.DB);
@@ -72,7 +72,8 @@ export async function onRequestPost({ request, env }) {
   const hist = (Array.isArray(b.history) ? b.history : []).slice(-3).flatMap((t) =>
     t && t.q && t.a ? [{ role: "user", content: clean(t.q, 500) }, { role: "assistant", content: clean(t.a, 1500) }] : []);
   const messages = [{ role: "user", content: `החומר של הסוגיה:\n<sugya>\n${ctx.text}\n</sugya>\n\nאענה רק מתוך החומר הזה.` },
-    { role: "assistant", content: "קראתי את החומר של הסוגיה. מה השאלה?" }, ...hist, { role: "user", content: q }];
+    { role: "assistant", content: "קראתי את החומר של הסוגיה. מה השאלה?" }, ...hist,
+    { role: "user", content: stage != null && ctx.stages[stage] ? `(השאלה על שלב ${stage + 1} בסוגיה: ${ctx.stages[stage].q})\n${q}` : q }];
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
