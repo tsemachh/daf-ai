@@ -17,7 +17,7 @@ button{cursor:pointer}button.pri{background:var(--accent);color:var(--paper);bor
 .f .row{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .msg{font-size:14px;color:var(--muted)}a{color:var(--accent)}
 </style></head><body><main>
-<h1>הערות קוראים</h1>
+<h1>הערות קוראים</h1><p><a href="/admin/asks">שאלות לומדים (שאל על הסוגיה) ←</a></p>
 <div class="bar"><label>סטטוס <select id="st">
 <option value="new">חדשות</option><option value="needs-info">חסר מידע</option><option value="in-progress">בטיפול</option>
 <option value="fixed">תוקנו</option><option value="feature">בקשות תכונה</option><option value="rejected">נדחו</option><option value="all">הכל</option>
