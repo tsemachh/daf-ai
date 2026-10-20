@@ -1160,3 +1160,47 @@ document.addEventListener('click',function(e){
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(init,0)}); else setTimeout(init,0);
 })();
+
+/* "שאל על הסוגיה": a question icon on every sugya → a small dialog; Claude answers from that sugya's own material
+   (functions/api/ask). Hidden unless the server has a key (GET /api/ask → enabled). Follow-ups keep the last turns. */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art||document.documentElement.classList.contains('lab')) return;
+  var page=location.pathname.replace(/^\/|\/$/g,''), pre=art.id+'-';
+  var ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.7v.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="16.9" r="1.05" fill="currentColor"/></svg>';
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  var ERR={cap:'הגענו למכסת השאלות היומית של האתר. נסו שוב מחר.',user_cap:'שאלתם הרבה היום 🙂 אפשר לשאול שוב מחר.',too_short:'כתבו שאלה קצת יותר מפורטת.',disabled:'השירות אינו זמין כרגע.'};
+  function open(sid,title){
+    var hist=[];
+    var bg=el('div','srcdlg-bg'), d=el('div','srcdlg ask-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
+    var h=el('header'), h4=el('h4',null,'שאל על הסוגיה'), sub=el('span','ask-sub',title); h4.appendChild(sub); x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
+    var body=el('div','body ask-body'), log=el('div','ask-log');
+    var f=el('form','ask-f'), ta=el('textarea'); ta.rows=2; ta.maxLength=500; ta.placeholder='למשל: למה הגמרא לא מקבלת את התירוץ הראשון?'; ta.required=true;
+    var sb=el('button','btn ask-send','שאל'); sb.type='submit';
+    var st=el('p','fb-muted ask-st'); st.setAttribute('aria-live','polite');
+    var note=el('p','fb-muted','התשובה נכתבת על ידי AI מתוך הסוגיה שבדף — לעזר בלימוד, לא כמקור. להלכה למעשה — יש לשאול רב.');
+    f.append(ta,sb); body.append(log,f,st,note); d.append(h,body); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
+    function close(){bg.remove();document.removeEventListener('keydown',esc)} function esc(e){if(e.key==='Escape')close()}
+    x.onclick=close; bg.addEventListener('click',function(e){if(e.target===bg)close()}); document.addEventListener('keydown',esc);
+    f.addEventListener('submit',function(e){ e.preventDefault(); var q=ta.value.trim(); if(q.length<3) return;
+      sb.disabled=true; st.textContent='חושב…';
+      var qa=el('div','ask-q'); qa.textContent=q; log.appendChild(qa);
+      fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,section:sid,q:q,history:hist})})
+        .then(function(r){return r.json().catch(function(){return {ok:false}})})
+        .then(function(j){ sb.disabled=false;
+          if(j&&j.ok){ st.textContent=''; var a=el('div','ask-a'); j.a.split(/\n{2,}/).forEach(function(p){a.appendChild(el('p',null,p))}); log.appendChild(a);
+            hist.push({q:q,a:j.a}); ta.value=''; ta.placeholder='שאלת המשך…'; a.scrollIntoView({block:'nearest'}); }
+          else { qa.remove(); st.textContent=ERR[j&&j.error]||'לא ניתן לענות כרגע. נסו שוב מאוחר יותר.'; }
+        }).catch(function(){ sb.disabled=false; qa.remove(); st.textContent='אין חיבור. נסו שוב.'; });
+    });
+  }
+  fetch('/api/ask').then(function(r){return r.json()}).then(function(c){
+    if(!c||!c.enabled) return;
+    art.querySelectorAll('section.sugya[id]').forEach(function(sec){
+      if(!sec.querySelector('ol.steps')) return;
+      var sid=sec.id.slice(pre.length), t=((sec.querySelector('h3')||{}).textContent||'').trim();
+      var b=el('button','fb-sec ask-sec'); b.type='button'; b.setAttribute('aria-label','שאל על הסוגיה'); b.dataset.tip='שאל על הסוגיה'; b.innerHTML=ICON;
+      b.onclick=function(){open(sid,t)};
+      var tl=sec.querySelector('.sec-tools'); if(tl) tl.insertBefore(b,tl.firstChild); else sec.appendChild(b);
+    });
+  }).catch(function(){});
+})();

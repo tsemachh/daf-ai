@@ -877,3 +877,14 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .stg-row>details.flowd{margin:0}
 .stg-row>details.flowd[open]{flex-basis:100%;order:2}
 .stg-row>.stg-all{order:1;margin-inline-start:auto}
+/* "שאל על הסוגיה" */
+.ask-dlg .ask-body{display:grid;gap:10px}
+.ask-log{display:grid;gap:8px;max-height:52vh;overflow:auto}
+.ask-log:empty{display:none}
+.ask-q{justify-self:start;max-width:90%;background:var(--accent-soft);color:var(--ink);padding:7px 11px;border-radius:12px 12px 12px 4px;font-weight:600}
+.ask-a{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:12px 12px 4px 12px;line-height:1.6}
+.ask-a p{margin:0}.ask-a p+p{margin-top:6px}
+.ask-f{display:grid;gap:8px}
+.ask-f textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
+.ask-send{justify-self:start}
+.ask-sub{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}

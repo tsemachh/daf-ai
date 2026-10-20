@@ -739,7 +739,7 @@ def render_home(by_slug, latest, about):
   <div class="eyebrow">{BRAND}</div>
   <h1>{SITE_TITLE}</h1>
   <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
-  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
+  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>נבדק גם בקריאה אנושית</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 {navbar()}
 <div id="progress-home"></div>
@@ -897,6 +897,7 @@ def render_privacy():
 <h2>הערות קוראים</h2>
 <p>ההערה נשמרת כדי לבדוק אותה ולתקן את הדף. שם לא חובה. כתובת מייל, אם נמסרה, משמשת רק לעדכון אחד כשההערה טופלה, ונמחקת מיד אחריו. נוסח ההערה מוצג בדף ההערות הציבורי רק אם סימנתם שמותר.</p>
 <h2>שיתוף עם אחרים</h2>
+<p>״שאל על הסוגיה״: השאלה נשלחת יחד עם החומר של הסוגיה ל־Claude (Anthropic) כדי לנסח תשובה. השאלה והתשובה נשמרות בלי שם ובלי כתובת IP, כדי לראות מה לומדים שואלים ולשפר את הדפים.</p>
 <p>המידע לא נמכר ולא מועבר לאף גורם. הוא נשמר בתשתית של Cloudflare; מיילים נשלחים דרך Resend.</p>
 <h2>מחיקה</h2>
 <p>להתנתקות: בהגדרות (⚙). למחיקת החשבון וההתקדמות השמורה בו, או לכל שאלה: <a href="mailto:me@tsemach.dev">me@tsemach.dev</a>.</p>
