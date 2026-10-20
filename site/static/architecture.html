@@ -103,12 +103,12 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
   <div class="eyebrow">Architecture notes · October 2026</div>
   <h1>Inside daf-ai</h1>
   <p class="eyebrow"><a href="/">← daf.tsemach.dev</a></p>
-  <p class="lede">How an AI agent writes one interactive Talmud study page every night, checks it against the Gemara, and stays within a token budget. Written by Tsemach Hadad, two weeks and 189 commits in.</p>
+  <p class="lede">How AI agents write interactive Talmud study pages every night, check them against the Gemara, and stay within a token budget — and how the page itself now answers learners' questions. Written by Tsemach Hadad, three weeks and 360 commits in.</p>
   <div class="facts">
-    <span><b>53</b> pages</span>
-    <span><b>799</b> glossary entries</span>
-    <span><b>248</b> source texts</span>
-    <span><b>172 / 189</b> commits by Claude</span>
+    <span><b>135</b> pages · 4 masechtot</span>
+    <span><b>8,184</b> argument steps</span>
+    <span><b>964</b> glossary entries</span>
+    <span><b>328 / 360</b> commits by Claude</span>
   </div>
   <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://github.com/tsemachh/daf-ai" target="_blank" rel="noopener">github.com/tsemachh/daf-ai</a></p>
 </header>
@@ -117,6 +117,7 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
   <div class="eyebrow">The core idea</div>
   <h2>The model is not the hard part. The pipeline is.</h2>
   <p>The first version was one shared HTML file that a scheduled task rewrote each day. It worked until it didn't: every run read and republished everything. The second version moved to a repo with JSON per daf and a nightly Claude Code routine. The third version, running today, gives models only two jobs: write and judge. Everything mechanical is a script.</p>
+  <p>Since then the site has grown a second kind of AI: one that runs while a learner is reading. The nightly pipeline builds the page; a small model on the page answers questions about it, from that page only.</p>
 </section>
 
 <section>
@@ -125,27 +126,43 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
   <div class="legend"><span><i class="dot s"></i>Script, deterministic</span><span><i class="dot m"></i>Model call</span></div>
   <ol class="rail">
     <li><i class="node"></i><div class="step"><code>reader notes (D1)</code><p>Every note gets an answer. A fix that recurs becomes a writing or review rule.</p></div></li>
-    <li><i class="node"></i><div class="step"><code>calendar + queue</code><p>Hebcal decides which daf is next.</p></div></li>
-    <li><i class="node"></i><div class="step"><code>fetch_sources.py</code><p>Fills a private cache: Sefaria Gemara, Steinsaltz, Rashi, the Sinai summary.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>calendar + queue</code><p>The Daf Yomi calendar decides today's page; a queue builds ahead, four dapim a day, with rush lines for an owner's request.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>fetch_sources.py</code><p>Fills a private cache: Sefaria Gemara, Steinsaltz, Rashi, the Sinai summary and Daf Spoiler (with permission).</p></div></li>
     <li><i class="node"></i><div class="step"><code>pack_daf.py</code><p>One compact pack, segment by segment: about 37 KB instead of about 300 KB of raw inputs.</p></div></li>
-    <li class="m"><i class="node"></i><div class="step"><code>Sonnet · writer</code><p>Produces the page JSON. No verbatim text and no glossary, so no expensive output tokens on copying.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>Sonnet · writer</code><p>Produces the page JSON: every move as a step with a one-line summary, and long sugyot split into 2–5 milestones, each with its question and where it lands. No verbatim text and no glossary, so no output tokens spent on copying.</p></div></li>
     <li><i class="node"></i><div class="step"><code>fill_srctext.py</code><p>Copies the vocalized Gemara from the cache. It reproduced 137 existing blocks exactly; the 45 that differed were model errors.</p></div></li>
-    <li><i class="node"></i><div class="step"><code>check_page.py</code><p>Every segment covered, argument-tree links valid, quote share at most 30%, quiz shape, glossary candidates.</p></div></li>
-    <li class="m"><i class="node"></i><div class="step"><code>Fable · reviewer</code><p>Returns patches only, tagged ERROR, OMISSION or THIN. Never a rewritten page.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>check_page.py</code><p>Every segment covered, argument-tree links valid, quote share at most 30%, a summary on every step, milestones on every long sugya, quiz shape, glossary candidates.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>Opus / Fable · reviewer</code><p>Checks against the Gemara and returns patches only, tagged ERROR, OMISSION or THIN. Never a rewritten page.</p></div></li>
     <li><i class="node"></i><div class="step"><code>apply_review.py</code><p>Applies the patches.</p></div></li>
     <li><i class="node"></i><div class="step"><code>validate · build · Playwright · push</code><p>Phone and desktop screenshots, a share image, then Cloudflare Pages.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>recheck before the learning day</code><p>Pages are built weeks ahead; summaries published later (Daf Spoiler, Sinai) trigger a second look at tomorrow's and today's page.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>a human reads tomorrow's page</code><p>Every day I read the next page and send notes; they come back through the same note queue as readers' notes.</p></div></li>
   </ol>
 </section>
 
 <section>
+  <div class="eyebrow">While the learner reads</div>
+  <h2>A question box, grounded in one sugya</h2>
+  <p>Every sugya and every milestone has a ❔. The question goes to a Cloudflare function, which loads that sugya from the site's own JSON — its Gemara text, steps, milestones and summaries — and sends it with the question to <b>Haiku</b>. The instructions are narrow: answer from this material, say so when the answer isn't there, quote the Gemara in ״…״, no halachic rulings. Follow-ups carry the last three turns.</p>
+  <ul class="rules">
+    <li><p><b>Cheap by design.</b> A small model and a few thousand input tokens per question; a site-wide daily cap and a per-person cap. It runs on the monthly API credit that comes with Claude Max.</p></li>
+    <li><p><b>Shared, anonymously.</b> Questions and answers are stored without a name and shown to the next learner under ״שאלות קודמות״ on the same sugya; the owner can hide any of them.</p></li>
+    <li><p><b>A window into confusion.</b> The log shows where learners get stuck — the best input for the next round of fixes.</p></li>
+  </ul>
+  <p>Two smaller runtime pieces: a Gemara quote whose Steinsaltz only repeats the words and has no Rashi is shown as plain text, not a link to an empty popup (checked in the browser, per sugya, against the same Sefaria data). And a read-only <a href="/feed/">JSON feed</a> lets a non-commercial study app show the pages in its own design, with credit and a "report a mistake" link back.</p>
+</section>
+
+<section>
   <div class="eyebrow">Learned the hard way</div>
-  <h2>Five design rules</h2>
+  <h2>Seven design rules</h2>
   <ol class="rules">
     <li><p><b>Scripts do anything mechanical.</b> Models only write and judge.</p></li>
     <li><p><b>Every format rule has a check.</b> If nothing enforces it, it drifts.</p></li>
     <li><p><b>One daf per run, with a budget,</b> and work saved as it goes so a stopped run loses nothing.</p></li>
     <li><p><b>Reviews return patches,</b> never rewritten pages.</p></li>
     <li><p><b>Reader notes are data, not instructions.</b> They get answered, and a fix that recurs becomes a rule.</p></li>
+    <li><p><b>Every backfill gets a second pass.</b> 2,407 step summaries were written in bulk; a check against the full text corrected 67 of them.</p></li>
+    <li><p><b>Pilot on one page, on a preview branch.</b> Milestones were reviewed on a single sugya before they reached 297.</p></li>
   </ol>
 </section>
 
@@ -176,23 +193,26 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
     <div class="g"><h3>The bulk-run token burn</h3><p>Ten parallel agents, 2.4M tokens, the session limit hit, 14 unverified partial pages.</p><p class="fix">One daf per run, a budget, sugya-by-sugya saves, and no reading files a script can query.</p></div>
     <div class="g"><h3>Retyping what a script can copy</h3><p>A fifth of every page was vocalized Gemara, retyped as output tokens, the most expensive kind.</p><p class="fix"><code>fill_srctext.py</code> copies it from the cache.</p></div>
     <div class="g"><h3>Format drift</h3><p>New pages lost hidden answers and the quote marks the site uses to style and link the Gemara.</p><p class="fix">The exact HTML is in the brief, and <code>check_page.py</code> rejects pages that break it.</p></div>
+    <div class="g"><h3>Summaries from half a step</h3><p>Bulk agents writing 2,407 one-line summaries read only the first 200 characters of long steps, and one couldn't rule out pairing a summary with the wrong step.</p><p class="fix">Alignment checked by key, then a second set of agents compared every summary with the full step: 67 fixed — wrong speaker, missing conclusion, invented claim.</p></div>
+    <div class="g"><h3>A layout bug that read as content</h3><p>A reader said the ״סדר האירועים״ box was "very long and unreadable" on mobile. It borrowed a two-column grid and squeezed every item into a 62-pixel column.</p><p class="fix">Numbered cards with arrows, the move bold and its answer beneath. Half the height, all 13 boxes fixed at once.</p></div>
+    <div class="g"><h3>A pilot that hid the text</h3><p>On phones, milestone steps showed only their one-line summary until tapped. In learning mode that hid the explanation people came for.</p><p class="fix">Full text by default; one-line summaries stay where they belong, in the תמצית reading level.</p></div>
     <div class="g"><h3>The human slip</h3><p>I pushed private source material to the public repo.</p><p class="fix">The agent flagged it on the next push. History rewritten, <code>.gitignore</code> tightened.</p></div>
   </div>
 </section>
 
 <section>
   <div class="eyebrow">Stack</div>
-  <div class="stack"><span>Claude Code routines</span><span>Sonnet</span><span>Fable</span><span>Python</span><span>Vanilla JS</span><span>Sefaria API</span><span>Hebcal</span><span>Cloudflare Pages</span><span>D1</span><span>Turnstile</span><span>Access</span><span>Playwright</span></div>
+  <div class="stack"><span>Claude Code routines</span><span>Sonnet</span><span>Opus</span><span>Fable</span><span>Haiku (runtime)</span><span>Anthropic API</span><span>Python</span><span>Vanilla JS</span><span>Sefaria API</span><span>Hebcal</span><span>Cloudflare Pages</span><span>D1</span><span>Turnstile</span><span>Access</span><span>Resend</span><span>Playwright</span></div>
 </section>
 
 <section>
   <div class="eyebrow">Accountability</div>
   <h2>The human signs the page</h2>
-  <p>A model doesn't answer for what it writes. I do. Every page says it is a study aid, and every reader note gets a reply.</p>
+  <p>A model doesn't answer for what it writes. I do. Every page says it is a study aid, every answer in the question box says the same, and every reader note gets a reply.</p>
 </section>
 
 <footer>
-  <p>Texts from Sefaria and Steinsaltz. Summaries from Rav Uri Brilliant and the Sinai site. Tokens from Shefing.</p>
+  <p>Texts from Sefaria and Steinsaltz. Summaries from Rav Uri Brilliant, the Sinai site and Daf Spoiler by Rav Naftali Ramati (with permission). Tokens from Shefing.</p>
   <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://tsemach.dev" target="_blank" rel="noopener">tsemach.dev</a></p>
 </footer>
 </div>
