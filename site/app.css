@@ -877,17 +877,6 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .stg-row>details.flowd{margin:0}
 .stg-row>details.flowd[open]{flex-basis:100%;order:2}
 .stg-row>.stg-all{order:1;margin-inline-start:auto}
-/* "שאל על הסוגיה" */
-.ask-dlg .ask-body{display:grid;gap:10px}
-.ask-log{display:grid;gap:8px;max-height:52vh;overflow:auto}
-.ask-log:empty{display:none}
-.ask-q{justify-self:start;max-width:90%;background:var(--accent-soft);color:var(--ink);padding:7px 11px;border-radius:12px 12px 12px 4px;font-weight:600}
-.ask-a{background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:12px 12px 4px 12px;line-height:1.6}
-.ask-a p{margin:0}.ask-a p+p{margin-top:6px}
-.ask-f{display:grid;gap:8px}
-.ask-f textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
-.ask-send{justify-self:start}
-.ask-sub{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
 /* tools on stage headers and at the end of a sugya — small, so they add no height */
 .stg-tools{display:inline-flex;gap:0;align-items:center;margin-inline-start:auto;align-self:flex-start}
 .stg-t{display:inline-grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:8px;background:none;color:var(--muted);cursor:pointer;opacity:.75}
@@ -899,8 +888,43 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .sug-t:hover,.sug-t:focus-visible{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
 .sug-t span{display:inline}
 html.lab .sug-end,html.lab .stg-tools{display:none}
-.ask-prev{border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card)}
-.ask-prev>summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:14.5px}
-.ask-plist{display:grid;gap:10px;margin-top:8px;max-height:40vh;overflow:auto}
-.ask-pi{display:grid;gap:4px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
-.ask-pi:last-child{border-bottom:0}
+
+/* "שאל על הסוגיה" dialog — a bottom sheet on phones, a centred panel on wide screens; header and composer fixed, the middle scrolls */
+.ask-bg{padding:0}
+@media (min-width:700px){.ask-bg{padding:24px}}
+.ask-dlg{max-width:560px;height:min(88vh,720px);max-height:none;border-radius:18px 18px 0 0;font-family:var(--sans)}
+@media (min-width:700px){.ask-dlg{border-radius:16px;height:min(80vh,680px)}}
+.ask-dlg header{padding:12px 16px;align-items:flex-start}
+.ask-hd{min-width:0;display:grid;gap:2px}
+.ask-dlg h4{font-size:19px}
+.ask-sub{font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ask-body{flex:1;min-height:0;overflow:auto;padding:12px 16px;display:grid;align-content:start;gap:12px;font-size:16px;line-height:1.6}
+.ask-prev{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden}
+.ask-prev-h{width:100%;display:flex;align-items:center;gap:8px;padding:10px 12px;border:0;background:none;color:var(--accent);font:700 15px var(--sans);cursor:pointer;text-align:start}
+.ask-n{font-size:12px;font-weight:800;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 8px}
+.ask-chev{margin-inline-start:auto;color:var(--accent);font-weight:800;transition:transform .15s;line-height:1}
+.ask-prev.open>.ask-prev-h .ask-chev,.ask-pi[open]>summary .ask-chev{transform:rotate(180deg)}
+.ask-plist{border-top:1px solid var(--line);max-height:42vh;overflow:auto}
+.ask-pi{border-bottom:1px solid var(--line)}
+.ask-pi:last-of-type{border-bottom:0}
+.ask-pi>summary{list-style:none;display:flex;align-items:flex-start;gap:8px;padding:9px 12px;cursor:pointer;font-weight:600;color:var(--ink)}
+.ask-pi>summary::-webkit-details-marker{display:none}
+.ask-pq{flex:1;min-width:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+.ask-pi[open] .ask-pq{display:block}
+.ask-pi>summary .ask-chev{font-size:14px;margin-top:2px}
+.ask-pa{padding:0 12px 10px;color:var(--ink)}
+.ask-pa p,.ask-a p{margin:0}.ask-pa p+p,.ask-a p+p{margin-top:6px}
+.ask-more{display:block;width:100%;padding:9px;border:0;border-top:1px solid var(--line);background:none;color:var(--accent);font:600 14px var(--sans);cursor:pointer}
+.ask-log{display:grid;gap:10px}
+.ask-log:empty{display:none}
+.ask-q{justify-self:start;max-width:88%;background:var(--accent);color:var(--paper);padding:8px 12px;border-radius:14px 14px 14px 4px;font-weight:600}
+.ask-a{justify-self:end;max-width:94%;background:var(--paper);border:1px solid var(--line);padding:9px 12px;border-radius:14px 14px 4px 14px}
+.ask-foot{border-top:1px solid var(--line);padding:8px 12px calc(10px + env(safe-area-inset-bottom));display:grid;gap:6px;background:var(--card);border-radius:0 0 16px 16px}
+.ask-f{display:flex;align-items:flex-end;gap:8px}
+.ask-f textarea{flex:1;min-width:0;font:16px/1.45 var(--sans);padding:9px 12px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink);resize:none;max-height:120px}
+.ask-f textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.ask-send{flex:0 0 42px;height:42px;border-radius:50%;border:0;background:var(--accent);color:var(--paper);display:grid;place-items:center;cursor:pointer}
+.ask-send:disabled{opacity:.5;cursor:default}
+.ask-st{margin:0;font-size:13.5px;color:var(--muted)}
+.ask-st:empty{display:none}
+.ask-note{margin:0;font-size:12px;line-height:1.4;color:var(--muted)}

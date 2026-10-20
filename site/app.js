@@ -1173,33 +1173,60 @@ document.addEventListener('click',function(e){
   var COUNTS={};
   function open(sid,title,stage,showPrev){
     var hist=[];
-    var bg=el('div','srcdlg-bg'), d=el('div','srcdlg ask-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
-    var h=el('header'), h4=el('h4',null,'שאל על הסוגיה'), sub=el('span','ask-sub',title); h4.appendChild(sub); x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(h4,x);
-    var body=el('div','body ask-body'), log=el('div','ask-log');
-    var f=el('form','ask-f'), ta=el('textarea'); ta.rows=2; ta.maxLength=500; ta.placeholder='למשל: למה הגמרא לא מקבלת את התירוץ הראשון?'; ta.required=true;
-    var sb=el('button','btn ask-send','שאל'); sb.type='submit';
-    var st=el('p','fb-muted ask-st'); st.setAttribute('aria-live','polite');
-    var note=el('p','fb-muted','התשובה נכתבת על ידי AI מתוך הסוגיה שבדף — לעזר בלימוד, לא כמקור. להלכה למעשה — יש לשאול רב. השאלות והתשובות מוצגות ללומדים אחרים בסוגיה, בלי שם.');
-    var prev=null, n=COUNTS[sid]||0;
-    if(n){ prev=el('details','ask-prev'); var sm=el('summary',null,'שאלות קודמות על הסוגיה ('+n+')'); var pl=el('div','ask-plist'); prev.append(sm,pl);
-      prev.addEventListener('toggle',function(){ if(!prev.open||pl.dataset.done) return; pl.dataset.done='1'; pl.textContent='טוען…';
-        fetch('/api/ask?page='+encodeURIComponent(page)+'&section='+encodeURIComponent(sid)).then(function(r){return r.json()}).then(function(j){ pl.textContent='';
-          (j.items||[]).forEach(function(x){ var it=el('div','ask-pi'); it.append(el('div','ask-q',x.q)); var a=el('div','ask-a'); String(x.a).split(/\n{2,}/).forEach(function(p){a.appendChild(el('p',null,p))}); it.appendChild(a); pl.appendChild(it); });
-          if(!pl.childNodes.length) pl.textContent='אין עדיין.'; }).catch(function(){ pl.textContent='לא ניתן לטעון כרגע.'; }); });
-      if(showPrev) setTimeout(function(){prev.open=true},0); }
-    f.append(ta,sb); if(prev) body.append(prev); body.append(log,f,st,note); d.append(h,body); bg.appendChild(d); document.body.appendChild(bg); ta.focus();
+    var bg=el('div','srcdlg-bg ask-bg'), d=el('div','srcdlg ask-dlg'); d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','שאל על הסוגיה');
+    /* header: title + which sugya / stage */
+    var h=el('header'), hb=el('div','ask-hd'), h4=el('h4',null,'שאל על הסוגיה'), sub=el('div','ask-sub',title);
+    hb.append(h4,sub); var x=el('button','x','×'); x.type='button'; x.setAttribute('aria-label','סגור'); h.append(hb,x);
+    /* body (scrolls): earlier questions (collapsed), then this conversation */
+    var body=el('div','ask-body'), log=el('div','ask-log');
+    var n=COUNTS[sid]||0;
+    if(n){
+      var prev=el('section','ask-prev'), ph=el('button','ask-prev-h'); ph.type='button'; ph.setAttribute('aria-expanded','false');
+      ph.append(el('span',null,'שאלות קודמות על הסוגיה'),el('span','ask-n',String(n)),el('span','ask-chev','⌄'));
+      var pl=el('div','ask-plist'); pl.hidden=true; prev.append(ph,pl); body.appendChild(prev);
+      function load(){ if(pl.dataset.done) return; pl.dataset.done='1'; pl.textContent='טוען…';
+        fetch('/api/ask?page='+encodeURIComponent(page)+'&section='+encodeURIComponent(sid)).then(function(r){return r.json()}).then(function(j){
+          pl.textContent=''; var items=j.items||[];
+          if(!items.length){ pl.appendChild(el('p','fb-muted','אין עדיין.')); return; }
+          items.forEach(function(it,i){
+            var dt=el('details','ask-pi'); if(i>=5) dt.hidden=true;
+            var sm=el('summary'); sm.append(el('span','ask-pq',it.q),el('span','ask-chev','⌄'));
+            var a=el('div','ask-pa'); String(it.a).split(/\n{2,}/).forEach(function(p){a.appendChild(el('p',null,p))});
+            dt.append(sm,a); pl.appendChild(dt); });
+          if(items.length>5){ var more=el('button','ask-more','עוד '+(items.length-5)+' שאלות'); more.type='button';
+            more.onclick=function(){ pl.querySelectorAll('.ask-pi[hidden]').forEach(function(e){e.hidden=false}); more.remove(); }; pl.appendChild(more); }
+        }).catch(function(){ pl.textContent='לא ניתן לטעון כרגע.'; delete pl.dataset.done; }); }
+      function setOpen(o){ pl.hidden=!o; ph.setAttribute('aria-expanded',o); prev.classList.toggle('open',o); if(o) load(); }
+      ph.onclick=function(){ setOpen(pl.hidden); };
+      if(showPrev) setOpen(true);
+    }
+    body.appendChild(log);
+    /* composer (stays at the bottom) */
+    var foot=el('div','ask-foot'), f=el('form','ask-f'), ta=el('textarea'); ta.rows=1; ta.maxLength=500; ta.required=true;
+    ta.placeholder=stage!=null?'שאלה על השלב הזה…':'מה לא ברור בסוגיה?'; ta.setAttribute('aria-label','השאלה');
+    var sb=el('button','ask-send'); sb.type='submit'; sb.setAttribute('aria-label','שליחה'); sb.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var st=el('p','ask-st'); st.setAttribute('aria-live','polite');
+    var note=el('p','ask-note','תשובת AI מתוך הסוגיה שבדף — עזר ללימוד, לא מקור; להלכה — שאלו רב. השאלות מוצגות ללומדים אחרים, בלי שם.');
+    f.append(ta,sb); foot.append(st,f,note);
+    d.append(h,body,foot); bg.appendChild(d); document.body.appendChild(bg);
+    if(!showPrev) ta.focus();
+    function grow(){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,120)+'px'; }
+    ta.addEventListener('input',grow);
+    ta.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(hover:hover)').matches){ e.preventDefault(); f.requestSubmit?f.requestSubmit():sb.click(); } });
     function close(){bg.remove();document.removeEventListener('keydown',esc)} function esc(e){if(e.key==='Escape')close()}
     x.onclick=close; bg.addEventListener('click',function(e){if(e.target===bg)close()}); document.addEventListener('keydown',esc);
     f.addEventListener('submit',function(e){ e.preventDefault(); var q=ta.value.trim(); if(q.length<3) return;
       sb.disabled=true; st.textContent='חושב…';
-      var qa=el('div','ask-q'); qa.textContent=q; log.appendChild(qa);
+      var pv=body.querySelector('.ask-prev.open>.ask-prev-h'); if(pv) pv.click();   /* focus on the new conversation */
+      var qa=el('div','ask-q'); qa.textContent=q; log.appendChild(qa); qa.scrollIntoView({block:'nearest'});
+      ta.value=''; grow();
       fetch('/api/ask',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,section:sid,stage:stage==null?null:stage,q:q,history:hist})})
         .then(function(r){return r.json().catch(function(){return {ok:false}})})
         .then(function(j){ sb.disabled=false;
           if(j&&j.ok){ st.textContent=''; var a=el('div','ask-a'); j.a.split(/\n{2,}/).forEach(function(p){a.appendChild(el('p',null,p))}); log.appendChild(a);
-            hist.push({q:q,a:j.a}); ta.value=''; ta.placeholder='שאלת המשך…'; a.scrollIntoView({block:'nearest'}); }
-          else { qa.remove(); st.textContent=ERR[j&&j.error]||'לא ניתן לענות כרגע. נסו שוב מאוחר יותר.'; }
-        }).catch(function(){ sb.disabled=false; qa.remove(); st.textContent='אין חיבור. נסו שוב.'; });
+            hist.push({q:q,a:j.a}); ta.placeholder='שאלת המשך…'; a.scrollIntoView({block:'nearest'}); }
+          else { qa.remove(); ta.value=q; grow(); st.textContent=ERR[j&&j.error]||'לא ניתן לענות כרגע. נסו שוב מאוחר יותר.'; }
+        }).catch(function(){ sb.disabled=false; qa.remove(); ta.value=q; grow(); st.textContent='אין חיבור. נסו שוב.'; });
     });
   }
   fetch('/api/ask?page='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(c){
