@@ -899,3 +899,8 @@ a.dn-d:hover{border-color:var(--accent);background:var(--accent-soft)}
 .sug-t:hover,.sug-t:focus-visible{color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
 .sug-t span{display:inline}
 html.lab .sug-end,html.lab .stg-tools{display:none}
+.ask-prev{border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--card)}
+.ask-prev>summary{cursor:pointer;font-weight:700;color:var(--accent);font-size:14.5px}
+.ask-plist{display:grid;gap:10px;margin-top:8px;max-height:40vh;overflow:auto}
+.ask-pi{display:grid;gap:4px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.ask-pi:last-child{border-bottom:0}

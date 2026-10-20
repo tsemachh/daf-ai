@@ -7,20 +7,34 @@ import { json, clean, sha256 } from "../../_lib.js";
 const MODEL = "claude-haiku-5-5";
 const PAGE = /^[a-z]+\/\d{1,3}$/;
 let ready = false;
-async function ensure(db) {
+export async function ensure(db) {
   if (ready) return;
   await db.prepare(`CREATE TABLE IF NOT EXISTS asks (
       id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
       ip_hash TEXT NOT NULL DEFAULT '', page TEXT NOT NULL, section TEXT NOT NULL DEFAULT '', q TEXT NOT NULL, a TEXT NOT NULL DEFAULT '',
       in_tok INTEGER NOT NULL DEFAULT 0, out_tok INTEGER NOT NULL DEFAULT 0)`).run();
+  try { await db.prepare("ALTER TABLE asks ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0").run(); } catch { /* exists */ }
   ready = true;
 }
 const day = () => new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Jerusalem" });
 const strip = (s) => String(s ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
-export function onRequestGet({ env }) {
-  return new Response(JSON.stringify({ enabled: !!(env.ANTHROPIC_API_KEY && env.DB) }),
-    { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300" } });
+// GET /api/ask → {enabled}; GET /api/ask?page=bechorot/32 → also {counts: {s2: 3, …}} of shared questions per sugya;
+// GET /api/ask?page=…&section=s2 → {items: [{q, a, at}]} — questions are shared with all learners (anonymous; the owner can hide any).
+export async function onRequestGet({ request, env }) {
+  const u = new URL(request.url), page = u.searchParams.get("page") || "", section = (u.searchParams.get("section") || "").replace(/[^a-z0-9_-]/gi, "");
+  const out = { enabled: !!(env.ANTHROPIC_API_KEY && env.DB) };
+  if (env.DB && PAGE.test(page)) {
+    await ensure(env.DB);
+    if (section) {
+      const { results } = await env.DB.prepare("SELECT q, a, created_at AS at FROM asks WHERE page = ? AND section = ? AND hidden = 0 ORDER BY id DESC LIMIT 50").bind(page, section).all();
+      out.items = results;
+    } else {
+      const { results } = await env.DB.prepare("SELECT section, COUNT(*) AS n FROM asks WHERE page = ? AND hidden = 0 GROUP BY section").bind(page).all();
+      out.counts = Object.fromEntries(results.map((r) => [r.section, r.n]));
+    }
+  }
+  return new Response(JSON.stringify(out), { headers: { "content-type": "application/json; charset=utf-8", "cache-control": page ? "public, max-age=60" : "public, max-age=300" } });
 }
 
 function context(d, sid) {
