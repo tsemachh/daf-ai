@@ -59,7 +59,10 @@ const SYSTEM = `אתה עוזר לימוד באתר ״דף צמח״ לחזרה �
 הסתמך רק על החומר של הסוגיה שמצורף (לשון הגמרא, מהלך הסוגיה והסיכומים). כשאתה מצטט את הגמרא — בתוך ״…״.
 אם התשובה אינה בחומר, אמור זאת בכנות והצע לעיין בגמרא, בשטיינזלץ או ברש״י — אל תמציא מקורות, שמות או דעות.
 אל תפסוק הלכה למעשה: אם נשאלת שאלה הלכתית מעשית, הסבר מה אומרת הסוגיה והוסף ״להלכה למעשה — יש לשאול רב״.
-אם השאלה אינה קשורה ללימוד הסוגיה, השב בנימוס שאתה עונה רק על הסוגיה.`;
+אם השאלה אינה קשורה ללימוד הסוגיה, השב בנימוס שאתה עונה רק על הסוגיה.
+פתח תמיד את התשובה בתגית אחת בשורה נפרדת — [OK] כשהשאלה עניינית על הסוגיה או על הלימוד שלה (גם אם התשובה אינה בחומר),
+[OFF] כשהיא אינה קשורה לסוגיה, היא בדיקה/ספאם/שטות, או שיש בה תוכן פוגע או פרטים אישיים. התגית לא מוצגת ללומד.`;
+const BURST = 5;   // questions per minute from one learner
 
 export async function onRequestPost({ request, env }) {
   if (!env.ANTHROPIC_API_KEY || !env.DB) return json({ ok: false, error: "disabled" }, 503);
@@ -77,6 +80,13 @@ export async function onRequestPost({ request, env }) {
   if (ipHash) {
     const r = await env.DB.prepare("SELECT COUNT(*) AS n FROM asks WHERE day = ? AND ip_hash = ?").bind(d0, ipHash).first();
     if (r.n >= ucap) return json({ ok: false, error: "user_cap" }, 429);
+    const m = await env.DB.prepare("SELECT COUNT(*) AS n FROM asks WHERE ip_hash = ? AND created_at > strftime('%Y-%m-%dT%H:%M:%SZ','now','-1 minute')").bind(ipHash).first();
+    if (m.n >= BURST) return json({ ok: false, error: "burst" }, 429);
+  }
+  // the same question on the same sugya (no follow-up context): reuse the shared answer — no model call, no duplicate
+  if (!(Array.isArray(b.history) && b.history.length) && stage == null) {
+    const same = await env.DB.prepare("SELECT a FROM asks WHERE page = ? AND section = ? AND hidden = 0 AND q = ? ORDER BY id DESC LIMIT 1").bind(page, section, q).first();
+    if (same) return json({ ok: true, a: same.a, cached: true });
   }
   const res = await env.ASSETS.fetch(new URL(`/feed/v1/${page}.json`, request.url));
   if (!res.ok) return json({ ok: false, error: "no_page" }, 404);
@@ -95,11 +105,15 @@ export async function onRequestPost({ request, env }) {
   }).catch(() => null);
   if (!r || !r.ok) return json({ ok: false, error: "upstream", status: r ? r.status : 0 }, 502);
   const j = await r.json();
-  const a = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
+  let a = (j.content || []).filter((c) => c.type === "text").map((c) => c.text).join("\n").trim();
+  // relevance gate: the model tags each answer; off-topic, test, spam or personal questions are answered but never shared
+  const tag = (a.match(/^\s*\[(OK|OFF)\]/i) || [])[1];
+  a = a.replace(/^\s*\[(OK|OFF)\]\s*/i, "").trim();
   if (!a) return json({ ok: false, error: "empty" }, 502);
-  await env.DB.prepare("INSERT INTO asks (day, ip_hash, page, section, q, a, in_tok, out_tok) VALUES (?,?,?,?,?,?,?,?)")
-    .bind(d0, ipHash, page, section, q, a, j.usage?.input_tokens || 0, j.usage?.output_tokens || 0).run();
-  return json({ ok: true, a });
+  const hide = tag && tag.toUpperCase() === "OK" ? 0 : 1;
+  await env.DB.prepare("INSERT INTO asks (day, ip_hash, page, section, q, a, in_tok, out_tok, hidden) VALUES (?,?,?,?,?,?,?,?,?)")
+    .bind(d0, ipHash, page, section, q, a, j.usage?.input_tokens || 0, j.usage?.output_tokens || 0, hide).run();
+  return json({ ok: true, a, shared: !hide });
 }
 
 export function onRequest() { return json({ ok: false, error: "method" }, 405); }

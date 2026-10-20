@@ -1169,7 +1169,7 @@ document.addEventListener('click',function(e){
   var page=location.pathname.replace(/^\/|\/$/g,''), pre=art.id+'-';
   var ICON='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.7v.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="16.9" r="1.05" fill="currentColor"/></svg>';
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
-  var ERR={cap:'הגענו למכסת השאלות היומית של האתר. נסו שוב מחר.',user_cap:'שאלתם הרבה היום 🙂 אפשר לשאול שוב מחר.',too_short:'כתבו שאלה קצת יותר מפורטת.',disabled:'השירות אינו זמין כרגע.'};
+  var ERR={burst:'רגע 🙂 — נסו שוב בעוד דקה.',cap:'הגענו למכסת השאלות היומית של האתר. נסו שוב מחר.',user_cap:'שאלתם הרבה היום 🙂 אפשר לשאול שוב מחר.',too_short:'כתבו שאלה קצת יותר מפורטת.',disabled:'השירות אינו זמין כרגע.'};
   var COUNTS={};
   function open(sid,title,stage,showPrev){
     var hist=[];
