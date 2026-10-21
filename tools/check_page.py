@@ -142,6 +142,22 @@ def main():
     long_ = [st['short'] for st in ns if len((st.get('short') or '').split()) > 14]
     if long_:
         warn.append(f'{len(long_)} `short` lines over 14 words, e.g. ״{long_[0][:40]}…״')
+    OPN = re.compile(r'^(ו?יתיב|ו?תיב|ו?אמר ליה|אמרו ליה|ו?אמרי ליה|א״ל|הדר|ו?אזל|אתא|אתו|שלחו? ליה|כי אתא)(\s|$)')
+    for prv, s in zip(secs, secs[1:]):   # a section opening mid-conversation usually continues the previous one (note #32)
+        m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)', s['ref'])
+        g = nseg(a.cache, slug, int(m[1]), m[2])[1] if m else []
+        try:
+            first = clean(g[int(m[3]) - 1])
+        except (IndexError, TypeError):
+            first = ''
+        if OPN.match(first) and not s.get('new_sugya'):
+            warn.append(f'{s["id"]} opens mid-conversation (״{first[:20]}…״) — if it continues {prv["id"]}\'s question or story, '
+                        f'merge it into {prv["id"]} as a stage; if it is a new topic, set "new_sugya": true')
+    LBL = re.compile(r'^(מקור|ברייתא|משנה|המשך|דיון|סיכום|קושיה|תירוץ|שאלה|שלב|ראיה|תיובתא|מסקנה)\b[^?]{0,25}:')
+    for s in secs:   # a stage q is the stage's own question, not a label (note #30)
+        for x in s.get('stages') or []:
+            if LBL.match(x.get('q', '')) or not x.get('q', '').rstrip().endswith('?'):
+                errs.append(f'{s["id"]}: stage q ״{x.get("q","")[:40]}״ — write the question the stage asks (״מה המקור ש…?״), not a label')
     for s in secs:   # milestones of long sugyot
         n_ = len(s.get('steps', [])); sg = s.get('stages')
         if sg:

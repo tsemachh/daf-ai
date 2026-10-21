@@ -42,7 +42,7 @@
       var guard=0;
       while(n&&guard++<20){
         var v=n.nodeValue, re=new RegExp(reG.source,'g'), m, hit=null;
-        while((m=re.exec(v))){var k=m[3]; if(seen[k]) continue; if(G[k].np&&m[2]) continue; hit=m; break}
+        while((m=re.exec(v))){var k=m[3]; if(seen[k]) continue; if((G[k].np||(k.length<=3&&G[k].t!=='תנא'&&G[k].t!=='אמורא'))&&m[2]&&!G[k].pf) continue;   /* a prefix + short term is usually another word (ב+ציר = בציר ״פחות״) */ hit=m; break}
         if(!hit) break;
         var k=hit[3]; seen[k]=1;
         var start=hit.index+hit[1].length, pl=hit[2].length;

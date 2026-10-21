@@ -188,6 +188,15 @@ It checks every `unlock` (key to the sugya) for accuracy and drops (patch to nul
 the fuller explanation. It returns ONLY patches, never a rewritten page:
 `[{"where": "s3.steps[4].body" | "quiz[2].o[1]" | …, "severity": "ERROR|OMISSION|THIN|DOUBTFUL",
 "why": "<source quote>", "new": "<corrected Hebrew / new step object>"}]`, and writes the source log.
+Three checks from reader notes, each answered explicitly in its patches (none → say "boundaries / stage questions /
+glossary links: OK" in the source log): **(1) boundaries** — for every pair of adjacent sections, does the second still
+answer the first's open question or continue its story (״כיוצא בה שמעתי״ → the source → ״ויתיב…״)? Then patch
+`"where":"sN","severity":"ERROR","new":"merge into sM as stage k"` and the main agent merges them (one section, `stages`,
+`ref` extended); every `check_page` "opens mid-conversation" warning must be resolved this way or by `"new_sugya": true`.
+**(2) stage questions** — each `q` asks what that stage actually asks (the source sought, the reason, the case), in
+the Gemara's terms, never a label (״מקור ברייתא:״). **(3) glossary links** — every word the page will link (a glossary
+term, also after a ו/ב/ה/כ/ל/מ/ש/ד prefix) is used in that sense here; a different word that only contains a term
+(״בציר״ = פחות, not ציר) gets `nogl`, and a word a first reading gets wrong (פִּסֵּחַ וְעִוֵּר) gets its niqqud.
 
 **c. Apply** every ERROR, OMISSION and THIN patch with `python tools/apply_review.py data/<slug>/<daf>.json <cache>/<slug>/<daf>/review.json` (the reviewer writes its patches and glossary entries there) (insert new steps without renumbering
 section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re-run `fill_srctext.py`
