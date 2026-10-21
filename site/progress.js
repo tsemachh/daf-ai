@@ -187,6 +187,7 @@
     var box=el('div','acct'), btn=el('button','acct-btn'); btn.type='button'; btn.setAttribute('aria-haspopup','true'); btn.setAttribute('aria-expanded','false');
     var menu=el('div','acct-menu'); menu.hidden=true; box.append(btn,menu);
     if(host){ var g=el('span','topnav-end'); var b=host.querySelector('.ai-badge'); if(b) g.append(b); g.append(box); host.append(g); }
+    else if(app.querySelector('.home-top')) app.querySelector('.home-top').append(box);   /* home: same line as the brand, on the left */
     else { var h1=app.querySelector('header h1'), th=h1&&h1.parentNode.querySelector('.thesis');
       if(th){ var row=el('div','acct-row'); th.before(row); row.append(th,box); }       /* same line as the subtitle, on the left */
       else { var bar=el('div','acct-bar'); bar.append(box); if(h1){ bar.classList.add('under-h1'); h1.after(bar); } else app.insertBefore(bar,app.firstChild); } }

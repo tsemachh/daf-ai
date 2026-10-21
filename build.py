@@ -736,10 +736,9 @@ def render_home(by_slug, latest, about):
     mas = " ".join(f'<a href="./{s}/">מסכת {ds[0]["tractate_he"]}</a>' for s, ds in by_slug.items())
     body = f"""<div class="wrap" id="app"><section id="home">
 <header class="home-h">
-  <div class="eyebrow">{BRAND}</div>
-  <h1>{SITE_TITLE}</h1>
-  <p class="thesis">דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה</p>
-  <div class="meta"><span class="ai-badge">נוצר על ידי סוכן AI</span><span>נבדק גם בקריאה אנושית</span><span>מתעדכן מדי יום</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
+  <div class="home-top"><div class="eyebrow">{BRAND}</div></div>
+  <h1>דפי חזרה ולימוד לדף היומי</h1>
+  <div class="meta"><span class="ai-badge">נוצר ע״י AI</span><span>נבדק בקריאה אנושית</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 {navbar()}
 <div id="progress-home"></div>
