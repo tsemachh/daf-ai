@@ -534,10 +534,10 @@
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
       var DEF={tree:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
-      var OPTS=[['open','תקצירים, הקדמה, מפתח לסוגיה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל'],['rashi','הקשה על ציטוט פותחת את רש״י (במקום שטיינזלץ)']];
+      var OPTS=[['open','תקצירים, הקדמה, מפתח לסוגיה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל'],['niqqud','ניקוד בציטוטי הגמרא (מספריא)'],['rashi','הקשה על ציטוט פותחת את רש״י (במקום שטיינזלץ)']];
       function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids,details.unlock').forEach(function(d){d.open=on})}
       function setBtn(role,on){var b=art.querySelector('.controls [data-role="'+role+'"]'); if(b&&(b.getAttribute('aria-pressed')==='true')!==on) b.click();}
-      function apply(k,on){ if(k==='open') setOpen(on); if(k==='tree') setBtn('tree',on); if(k==='chav') setBtn('mode',on); }
+      function apply(k,on){ if(k==='open') setOpen(on); if(k==='tree') setBtn('tree',on); if(k==='chav') setBtn('mode',on); if(k==='niqqud'&&window.dafNiqqud&&(on||P.niqqud===false)) window.dafNiqqud(on); }
       var gb=ctr.querySelector('[data-role="prefs"]'), newGb=!gb;
       if(newGb){gb=document.createElement('button'); gb.type='button'; gb.className='btn'; gb.setAttribute('aria-expanded','false'); gb.textContent='⚙'; gb.setAttribute('aria-label','הגדרות');}
       var pn=document.createElement('div'); pn.className='prefs'; pn.hidden=true;
@@ -834,6 +834,57 @@
   },{passive:false});
 })();
 
+
+/* niqqud on Gemara quotes (setting): the vocalized words come straight from Sefaria's William Davidson vocalized
+   Aramaic text — never generated — and replace the quote's words in place; a word that does not match letter for
+   letter stays as it is. Off restores the original text. */
+(function(){
+  var art=document.querySelector('article.daf'); if(!art) return;
+  var SEFU='https://www.sefaria.org/api/texts/', VE='William_Davidson_Edition_-_Vocalized_Aramaic', VOC={}, ORIG=[], on=false, busy=null;
+  function nrm(t){ return (t||'').replace(/<[^>]+>/g,' ').replace(/[֑-ׇ]/g,'').replace(/[^א-ת\s]/g,' ').replace(/\s+/g,' ').trim(); }
+  function amud(r){ return VOC[r]||(VOC[r]=fetch(SEFU+r+'?lang=he&context=0&commentary=0&vhe='+VE).then(function(x){ if(!x.ok) throw x.status; return x.json(); })
+      .then(function(j){ if(!/Vocalized/.test(j.heVersionTitle||'')) return []; var out=[];
+        (j.he||[]).forEach(function(t){ String(t).replace(/<[^>]+>/g,' ').split(/[\s־]+/).forEach(function(v){ var n=nrm(v); if(n&&n.indexOf(' ')<0) out.push({v:v.replace(/[^א-ת֑-ׇ]/g,''),n:n}); }); }); return out; })
+      .catch(function(){ delete VOC[r]; return []; })); }
+  function amudsFor(sec){
+    var am=sec.querySelector(':scope > .amud'), key=am&&am.dataset.ref, tr=art.dataset.tractate, dn=+art.dataset.daf, out=[];
+    var m=key&&key.match(/^(.+)\.(\d+)([ab])(?:\.\d+)?(?:-(?:(\d+)([ab])\.)?\d+)?$/);
+    if(m){ var d=+m[2], a=m[3], ed=m[4]?+m[4]:d, ea=m[5]||a; for(var g=0;g<6;g++){ out.push(m[1]+'.'+d+a); if(d===ed&&a===ea) break; if(a==='a') a='b'; else { a='a'; d++; } } tr=tr||m[1]; }
+    if(tr&&dn) [[dn,'a'],[dn,'b'],[dn-1,'b'],[dn+1,'a']].forEach(function(x){ var r=tr+'.'+x[0]+x[1]; if(x[0]>1&&out.indexOf(r)<0) out.push(r); });
+    return out;
+  }
+  function find(words,qw){   /* index of the best run of the quote's words in the amud, or -1 */
+    var best=-1, bk=-1;
+    for(var k=0;k<words.length;k++){ if(words[k].n!==qw[0]&&words[k].n!==qw[1]) continue;
+      var j=k, hit=0; for(var w=0;w<qw.length;w++){ for(var z=j;z<Math.min(words.length,j+3);z++){ if(words[z].n===qw[w]){ hit++; j=z+1; break; } } }
+      if(hit>best){ best=hit; bk=k; if(hit===qw.length) break; } }
+    return best>=Math.max(2,Math.ceil(qw.length*0.75))?bk:-1;
+  }
+  function voc(q,lists){
+    var T=q.textContent, ow=[], m, re=/[א-ת]+/g; while((m=re.exec(T))) ow.push([m.index,m.index+m[0].length,m[0]]);
+    var qw=ow.map(function(w){return w[2]}); if(qw.length<2) return;
+    for(var a=0;a<lists.length;a++){ var words=lists[a], k=find(words,qw); if(k<0) continue;
+      var vw=[], j=k; qw.forEach(function(w){ var v=null; for(var z=j;z<Math.min(words.length,j+3);z++){ if(words[z].n===w){ v=words[z].v; j=z+1; break; } } vw.push(v); });
+      var tw=document.createTreeWalker(q,NodeFilter.SHOW_TEXT), pos=0, nodes=[];
+      while(tw.nextNode()){ var n=tw.currentNode; nodes.push([n,pos,pos+n.nodeValue.length]); pos+=n.nodeValue.length; }
+      nodes.forEach(function(nd){ var out='', last=nd[1];
+        ow.forEach(function(w,i){ if(vw[i]&&w[0]>=nd[1]&&w[1]<=nd[2]){ out+=T.slice(last,w[0])+vw[i]; last=w[1]; } });
+        out+=T.slice(last,nd[2]); if(out!==nd[0].nodeValue){ ORIG.push([nd[0],nd[0].nodeValue]); nd[0].nodeValue=out; } });
+      return; }
+  }
+  function run(){
+    return Promise.all([].map.call(art.querySelectorAll('section.sugya'),function(sec){
+      var qs=[].filter.call(sec.querySelectorAll('.gq'),function(q){ return !q.dataset.v; }); if(!qs.length) return;
+      return Promise.all(amudsFor(sec).map(amud)).then(function(lists){ if(!on) return; qs.forEach(function(q){ q.dataset.v='1'; voc(q,lists); }); });
+    }));
+  }
+  window.dafNiqqud=function(v){
+    on=!!v; art.classList.toggle('niqqud',on);
+    if(on){ busy=run(); return busy; }
+    while(ORIG.length){ var x=ORIG.pop(); x[0].nodeValue=x[1]; }
+    art.querySelectorAll('.gq[data-v]').forEach(function(q){ delete q.dataset.v; });
+  };
+})();
 
 /* listen mode: the browser's own Hebrew voice reads the sugyot — title, "בקצרה", then each step — with the
    step being read highlighted. Text is vocalized first with Dicta's Nakdan (modern Hebrew for the explanation,
