@@ -78,7 +78,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    Never leave a step as a bare quote or "…".
    Every ״…״ on the page opens Steinsaltz for those words, so ״…״ is ONLY for Gemara words: a term from Rashi
    or S (״ממון המוטל בספק״) is written and explained unquoted; a 2-word anchor S leaves unexplained (a bare name
-   or place, ״כאילא ביבנה״) is lengthened into the words S does explain.
+   or place, ״כאילא ביבנה״) is lengthened into the words S does explain. Page references and your own words
+   (״בדף כ״ה״, ״כאן״) are never inside ״…״.
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
@@ -113,11 +114,14 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    and its derivation · an objection chain to its answer · ״ולמה…?״ · another opinion · a new case), never between a
    question and its answer. `q` ≤10 words ending in ״?״ (״האם ״לא יגאל״ מופנה?״); `a` ≤18 words, what the stage
    concludes — say so when it ends in תיובתא / קשיא / תיקו.
+9. **Mishnah steps are explained too** (reader note, Bechorot 26): every clause gets its reason or what it
+   means in practice (from S/R), and every step names who acts and on what — never a bare restatement or a
+   sentence that leans on the previous step ("שוב מחדש", "עליהן") for its subject.
+10. **Aids stay readable on a phone** (reader notes, Bechorot 19, 32): a `table`'s row labels are ≤6 words and column
+   heads ≤3 (the first column must not crowd the others); a `seq` has ≤8 cards. A stage `q` asks the stage's real
+   question in the Gemara's terms (״מה המקור שאין פודים על מום עובר?״), not a generic topic name.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
 every step has `seg`. Fix and stop. Reply with: sections, steps, and one line per segment you were unsure of.
-8. **Mishnah steps are explained too** (reader note, Bechorot 26): every clause gets its reason or what it
-   means in practice (from S/R), and every step names who acts and on what — never a bare restatement or a
-   sentence that leans on the previous step ("שוב מחדש", "עליהן") for its subject.

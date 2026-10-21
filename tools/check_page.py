@@ -151,6 +151,18 @@ def main():
                 errs.append(f'{s["id"]}: bad `stages` (first at 0, increasing, ≥2 steps each, q and a) — {ats} of {n_} steps')
         elif n_ >= 10 and not a.no_seg:
             errs.append(f'{s["id"]}: {n_} steps but no `stages` (2–5 milestones with q/a)')
+    for s in d['sections']:   # aids readable on a phone (reader notes #9, #26)
+        t_ = s.get('table') or {}
+        lab = [r[0] for r in t_.get('rows', []) if r] + [c_ for c_ in t_.get('cols', []) if c_]
+        lng = [x for x in lab if len(TAG.sub('', str(x)).split()) > 7]
+        if lng:
+            warn.append(f'{s["id"]}: table label over 7 words (״{TAG.sub("", str(lng[0]))[:30]}…״) — keep row labels short (≤6 words) so the columns stay balanced')
+        if len((s.get('seq') or {}).get('items', [])) > 8:
+            warn.append(f'{s["id"]}: `seq` has {len(s["seq"]["items"])} cards — ≤8')
+        for st in s.get('steps', []):   # ״…״ opens Steinsaltz: only Gemara words (note #14)
+            for q_ in re.findall(r'״([^״]{2,40})״', TAG.sub('', st.get('body', ''))):
+                if re.match(r'^(ב?דף [א-ת]|בעמוד [אב]|לעיל)', q_):
+                    errs.append(f'{s["id"]}: ״{q_}״ is a page reference, not Gemara — write it without quote marks')
     nu = sum(1 for s in secs if s.get('unlock'))
     if secs and nu > max(1, len(secs) // 3):
         warn.append(f'{nu} of {len(secs)} sugyot have an `unlock` — keep it only where a learner jumping in would miss the case (aim ≤ 1/3)')
