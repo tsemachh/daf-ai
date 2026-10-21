@@ -28,6 +28,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 ## Structure
 - One section per sugya; `ref` = its exact segment range (`Berakhot.2a.5-2b.3`, cross-daf `Berakhot.2b.18-3a.2`).
   Every segment of both amudim is in exactly one section.
+- An answer that brings a source (״כיוצא בה שמעתי, דתנן…״) and the story or discussion that continues it (״ויתיב רב…״)
+  until the original question is resolved is ONE sugya, with `stages` — never split it where the source begins (Bechorot 37).
 - `seg` on EVERY step = the segment it explains (`2a.7`). A segment with M: hints needs at least one step.
 - `type`: q = question / challenge / request for a source / proof offered against; a = answer / rejection;
   c = conclusion / תיובתא / שמע מינה / ruling; "" = statement, Mishnah, background. In חברותא mode the
