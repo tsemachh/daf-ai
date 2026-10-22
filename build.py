@@ -597,14 +597,14 @@ def render_daf(d, prev, nxt, glossary, sources):
 {nav}
   </ol>
 </nav>
-<a class="to-quiz" href="#{key}-quiz">✎ בחן את עצמך — שאלות חזרה בסוף הדף ↓</a>
+<a class="to-quiz" href="#{key}-quiz">✎ שאלות הבנה על הדף — בסוף הדף ↓</a>
 {story}
 
 {sections}
 
 <section class="sugya" id="{key}-quiz">
-  <div class="amud">חזרה</div>
-  <h3>בחן את עצמך <span class="score" data-role="score"></span></h3>
+  <div class="amud">בסוף הדף</div>
+  <h3>שאלות הבנה <span class="score" data-role="score"></span></h3>
   <div class="quiz" data-role="quizBox"></div>
   <button class="btn" data-role="resetQuiz" type="button" style="margin-top:14px">התחל מחדש</button>
 </section>

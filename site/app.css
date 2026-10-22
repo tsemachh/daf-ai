@@ -932,3 +932,12 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .ask-st{margin:0;font-size:13.5px;color:var(--muted)}
 .ask-st:empty{display:none}
 .ask-note{margin:0;font-size:12px;line-height:1.4;color:var(--muted)}
+
+/* finished-the-daf banner (before the understanding questions) */
+.done-ban{margin:28px 0 8px;padding:18px 18px 16px;border:2px solid var(--accent);border-radius:16px;background:color-mix(in srgb,var(--accent) 10%,var(--card))}
+.db-h{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:24px;font-weight:900;line-height:1.2}
+.db-ck{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--sans);font-size:19px}
+.db-p{margin:10px 0 14px;font-size:16px;line-height:1.55;color:var(--ink)}
+.db-row{display:flex;flex-wrap:wrap;gap:8px}
+.db-row .btn{text-decoration:none}
+.db-go{background:var(--accent);color:#fff;border-color:var(--accent)}

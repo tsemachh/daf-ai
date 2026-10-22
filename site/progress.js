@@ -294,7 +294,26 @@
         toast(was?'הוסר מ״ללמוד אחר כך״':'נשמר ל״ללמוד אחר כך״ — מופיע בדף הבית',function(){ if(was) S.later[k]=was; else delete S.later[k]; save(); paint(); }); };
       b.innerHTML=BOOK; tl.insertBefore(b,tl.firstChild); laterB[id]=b;
     });
+    /* finished the daf: a clear banner after the last sugya, leading to the understanding questions */
+    var qsec=document.getElementById(art.id+'-quiz'), dban=null;
+    function banner(){
+      var on=!!E.done; if(!qsec) return;
+      var sig=on?(E.quiz?E.quiz.best+'/'+E.quiz.of:'-'):''; if(dban&&dban.dataset.sig===sig) return;
+      if(dban){ dban.remove(); dban=null; } if(!on) return;
+      dban=el('div','done-ban'); dban.dataset.sig=sig; dban.setAttribute('role','status');
+      var h1=art.querySelector('header h1'), nm=h1?h1.textContent.trim():'הדף';
+      var hd=el('div','db-h'); hd.append(el('span','db-ck','✓'), el('span',null,'סיימת את '+nm)); dban.appendChild(hd);
+      var nq=(art.querySelectorAll('.quiz .qitem').length)||8;
+      dban.appendChild(el('p','db-p', E.quiz ? 'שאלות ההבנה: '+E.quiz.best+' מתוך '+E.quiz.of+(E.quiz.best<E.quiz.of?' — השאלות שפספסת יחזרו אליך בחזרה של מחר.':' — הבנה מלאה!')
+        : 'עכשיו הזמן לבדוק שהדף ברור: '+nq+' שאלות הבנה — למה, מה ההבדל, ומה הדין במקרה חדש. לא שינון.'));
+      var row=el('div','db-row');
+      if(!E.quiz){ var qa=el('a','btn db-go','לשאלות ההבנה ↓'); qa.href='#'+qsec.id; row.appendChild(qa); }
+      var nx=[].filter.call(art.querySelectorAll('.pager a'),function(x){return x.textContent.indexOf('←')>=0})[0];
+      if(nx){ var na=el('a','btn','לדף הבא ←'); na.href=nx.href; row.appendChild(na); }
+      dban.appendChild(row); qsec.before(dban);
+    }
     function paint(){
+      banner();
       var ab=art.querySelector('.controls [data-role="learned"]');
       if(ab&&ab.dataset.all!==String(nLearned(P)===P.n.length)){ var all=nLearned(P)===P.n.length; ab.dataset.all=String(all); ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
         ab.title=all?'כל הסוגיות סומנו כנלמדו — הקש לביטול':'סמן את כל הסוגיות בדף כנלמדו'; }
@@ -389,7 +408,7 @@
         if(!ok&&!inQ) S.review.push({page:P.k,q:i,due:addDays(today(),1),n:0});
         else if(ok&&!inQ&&spare>0){ spare--; S.review.push({page:P.k,q:i,due:addDays(today(),3),n:1}); }  /* a couple of correct ones come back too */
       });
-      if(!E.quiz||right>E.quiz.best) E.quiz={best:right,of:items.length,ts:Date.now()}; touch(); save();
+      if(!E.quiz||right>E.quiz.best) E.quiz={best:right,of:items.length,ts:Date.now()}; touch(); save(); banner();
     },0)});
     /* חברותא: remember what the learner knew per sugya */
     document.addEventListener('daf:cv',function(ev){ var d=ev.detail, sid=(d.sec||'').slice(pre.length); if(!sid) return;
