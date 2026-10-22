@@ -104,6 +104,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    ללמדו בגמרא" and their segments go in `skip`. Everything else — including legal-monetary and intimate
    halachic topics — is presented fully and neutrally, as the Gemara does.
 6. Hebrew content, no niqqud, nothing that G/S/R do not support.
+   Sages by full name as the glossary keys them: ״רבי יוחנן״, not ״ר׳ יוחנן״ (the abbreviation is not linked), and the
+   full form when a short one names someone else (״רבי יוסי בר חנינא״, not ״רבי יוסי״).
    Exception: a word a first reading gets wrong (פסח ועור = צולע ועיוור, not Pesach) gets niqqud once, in
    `<span class="nogl">…</span>`; also wrap in `nogl` a word the glossary would mislink (״בציר״ ≠ ציר).
 7. **`short` on every step** (the תמצית reading level shows it instead of `body`): the move in one line, ≤12 words,
