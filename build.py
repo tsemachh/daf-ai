@@ -221,6 +221,23 @@ FEED_TERMS = {
 
 
 
+
+NOINDEX = ("lab/", "review/", "feedback/", "offline/")   # utility pages and the model-comparison lab stay out of search
+
+
+def seo_pass():
+    """Every indexable page gets a self canonical; utility pages get noindex (Search Console: duplicate/thin pages)."""
+    for root, _, files in os.walk(DIST):
+        if "index.html" not in files: continue
+        rel = os.path.relpath(root, DIST).replace(os.sep, "/")
+        rel = "" if rel == "." else rel + "/"
+        f = os.path.join(root, "index.html"); h = open(f, encoding="utf8").read(); h0 = h
+        if rel.startswith(NOINDEX) and 'name="robots"' not in h:
+            h = h.replace("<head>", '<head>\n<meta name="robots" content="noindex">', 1)
+        elif 'name="robots"' not in h and 'rel="canonical"' not in h:
+            h = h.replace("<title>", f'<link rel="canonical" href="{SITE_URL}/{rel}">\n<title>', 1)
+        if h != h0: open(f, "w", encoding="utf8").write(h)
+
 def write_llms(alld, by_slug):
     """llms.txt (llmstxt.org): a short map of the site for AI agents — what it is, the terms, the JSON feed, every daf."""
     L = [f"# {BRAND} — דפי חזרה ולימוד לדף היומי", "",
@@ -1119,6 +1136,7 @@ def main():
         f'<div class="wrap" id="app"><section><header><h1>הדף לא נמצא</h1>'
         f'<p class="thesis">הכתובת אינה קיימת. <a href="/">לדף הבית</a></p></header></section></div>', "הדף לא נמצא"))
     write_pwa()
+    seo_pass()
     print(f"built {len(alld)} dafim in {len(by_slug)} masechtot -> {DIST}")
 
 
