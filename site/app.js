@@ -532,7 +532,7 @@
       var KEY='dafPrefs', P={};
       try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){P={}}
       function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
-      var DEF={tree:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
+      var DEF={tree:true,niqqud:true}; function val(k){return (k in P)?!!P[k]:!!DEF[k];}
       var ctr=art.querySelector('.controls'); if(!ctr) return;
       var OPTS=[['open','תקצירים, הקדמה, מפתח לסוגיה ועזרים פתוחים תמיד'],['tree','תצוגת עץ כברירת מחדל'],['chav','מצב חברותא כברירת מחדל'],['niqqud','ניקוד בציטוטי הגמרא (מספריא)'],['rashi','הקשה על ציטוט פותחת את רש״י (במקום שטיינזלץ)']];
       function setOpen(on){art.querySelectorAll('details.storyline,details.flowd,details.aids,details.unlock').forEach(function(d){d.open=on})}
