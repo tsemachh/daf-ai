@@ -29,7 +29,7 @@
       var guard=0;
       while(n&&guard++<20){
         var best=null,br=null;
-        RULES.forEach(function(r){var v=n.nodeValue, g=new RegExp(r.re.source,'g'), m; while((m=g.exec(v))){ if(!LW.test(v.charAt(m.index-1)||' ')&&!LW.test(v.charAt(m.index+m[0].length)||' ')) break; g.lastIndex=m.index+1; } if(m&&(!best||m.index<best.index)){best=m;br=r}});   /* whole words only: ״מדברים שוא, ואין״ is not a verse reference */
+        RULES.forEach(function(r){var v=n.nodeValue, g=new RegExp(r.re.source,'g'), m; while((m=g.exec(v))){ if(!LW.test(v.charAt(m.index-1)||' ')&&!LW.test(v.charAt(m.index+m[0].length)||' ')&&!(r===RULES[0]&&(gem(m[2])>150||gem(m[3])>176))) break; g.lastIndex=m.index+1; } if(m&&(!best||m.index<best.index)){best=m;br=r}});   /* whole words only: ״מדברים שוא, ואין״ is not a verse reference */
         if(!best) break;
         var a=mkSrc(br.url(best),best[0]);
         var mid=n.splitText(best.index); var rest=mid.splitText(best[0].length); mid.parentNode.replaceChild(a,mid); n=rest;
