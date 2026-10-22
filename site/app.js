@@ -23,12 +23,13 @@
     else { el=document.createElement('a'); el.className='src'; el.href=url; el.target='_blank'; el.rel='noopener'; }
     el.textContent=text; return el;
   }
+  var LW=new RegExp('['+H+']');
   function linkify(art){
     textNodes(art).forEach(function(n){
       var guard=0;
       while(n&&guard++<20){
         var best=null,br=null;
-        RULES.forEach(function(r){var m=r.re.exec(n.nodeValue); if(m&&(!best||m.index<best.index)){best=m;br=r}});
+        RULES.forEach(function(r){var v=n.nodeValue, g=new RegExp(r.re.source,'g'), m; while((m=g.exec(v))){ if(!LW.test(v.charAt(m.index-1)||' ')&&!LW.test(v.charAt(m.index+m[0].length)||' ')) break; g.lastIndex=m.index+1; } if(m&&(!best||m.index<best.index)){best=m;br=r}});   /* whole words only: ״מדברים שוא, ואין״ is not a verse reference */
         if(!best) break;
         var a=mkSrc(br.url(best),best[0]);
         var mid=n.splitText(best.index); var rest=mid.splitText(best[0].length); mid.parentNode.replaceChild(a,mid); n=rest;
@@ -458,6 +459,23 @@
   document.addEventListener('click',function(e){
     var a=e.target.closest&&e.target.closest('button.src[data-ref]'); if(!a) return;
     e.preventDefault(); e.stopPropagation(); openSrc(a);
+  },true);
+  /* a verse / source link with no cached text: fetch it from Sefaria and show it in the same in-page dialog
+     (instead of leaving the page for a new tab); only if Sefaria fails does the link open normally */
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a.src[href*="sefaria.org/"]'); if(!a||a.dataset.external||e.metaKey||e.ctrlKey||e.shiftKey) return;
+    var m=a.href.match(/sefaria\.org\/([^?#]+)/); if(!m) return;
+    var key=decodeURIComponent(m[1]); if(/^[A-Z][A-Za-z_ ]+\.\d+[ab]/.test(key)) return;   /* Gemara links keep their own handling */
+    e.preventDefault(); e.stopPropagation();
+    var go=function(){ a.dataset.ref=key; a.dataset.url=a.href; openSrc(a); };
+    if(SRC[key]) return go();
+    a.classList.add('busy');
+    fetch('https://www.sefaria.org/api/texts/'+encodeURIComponent(key).replace(/%2C/g,',')+'?lang=he&context=0&commentary=0')
+      .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+      .then(function(j){ var he=j.he; if(!he||(Array.isArray(he)&&!he.length)) throw 0;
+        var ps=(Array.isArray(he)?he:[he]).map(function(t){ return String(t).replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim(); }).filter(Boolean);
+        SRC[key]={t:j.heRef||key, p:ps}; a.classList.remove('busy'); go(); })
+      .catch(function(){ a.classList.remove('busy'); window.open(a.href,'_blank','noopener'); });
   },true);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSrc()});
   window.addEventListener('hashchange',closeSrc);
