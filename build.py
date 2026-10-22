@@ -220,6 +220,31 @@ FEED_TERMS = {
 }
 
 
+
+def write_llms(alld, by_slug):
+    """llms.txt (llmstxt.org): a short map of the site for AI agents — what it is, the terms, the JSON feed, every daf."""
+    L = [f"# {BRAND} — דפי חזרה ולימוד לדף היומי", "",
+         "> Hebrew interactive review pages for each daf of Daf Yomi (Babylonian Talmud): every give-and-take move of the "
+         "sugya as its own step in plain Hebrew, Gemara quotes, summary aids and 8 understanding questions per daf. "
+         "Written by an AI agent (Claude), checked against the Gemara text by an independent agent, corrected nightly "
+         "from reader notes. Not a halachic ruling source.", "",
+         "Prefer the JSON feed over scraping HTML: it carries the same content in a stable structure, with credit terms.", "",
+         f"Terms: {FEED_TERMS['use']} {FEED_TERMS['credit']}. {FEED_TERMS['ai_note']}", "",
+         "## Machine-readable",
+         f"- [Feed documentation]({SITE_URL}/feed/): fields, terms and usage of the JSON feed",
+         f"- [Feed index]({SITE_URL}/feed/v1/index.json): every daf with its JSON URL and last change",
+         f"- [Glossary]({SITE_URL}/feed/v1/glossary.json): sages and terms used on the pages",
+         f"- [Sitemap]({SITE_URL}/sitemap.xml)", "",
+         "## About",
+         f"- [How the pages are made]({SITE_URL}/about/): sources, writing, independent review, reader notes",
+         f"- [Architecture]({SITE_URL}/architecture.html)",
+         f"- [Changes]({SITE_URL}/changes/)", ""]
+    for slug, ds in by_slug.items():
+        L.append(f"## מסכת {ds[0]['tractate_he']} ({ds[0]['tractate']})")
+        L += [f"- [{d['title']}]({SITE_URL}/{slug}/{d['daf']}/): {d.get('thesis', '')} — JSON: {SITE_URL}/feed/v1/{slug}/{d['daf']}.json" for d in ds]
+        L.append("")
+    open(os.path.join(DIST, "llms.txt"), "w", encoding="utf8").write("\n".join(L))
+
 def write_feed(alld, glossary, lm):
     """Read-only JSON feed for partner apps (agreed use): /feed/v1/index.json, /feed/v1/<slug>/<daf>.json,
     /feed/v1/glossary.json. Same content as the daf pages, plus `_meta` with credit, links and the
@@ -1088,6 +1113,7 @@ def main():
     write_feed(alld, glossary, lm)
     open(os.path.join(DIST, "robots.txt"), "w", encoding="utf8").write(
         f"User-agent: *\nDisallow: /admin/\nDisallow: /api/\nSitemap: {SITE_URL}/sitemap.xml\n")
+    write_llms(alld, by_slug)
     open(os.path.join(DIST, "404.html"), "w", encoding="utf8").write(page(
         "הדף לא נמצא · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><header><h1>הדף לא נמצא</h1>'

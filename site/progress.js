@@ -509,6 +509,12 @@
       var g=el('div','tiles'), hw=document.getElementById('howto'), seen=false; try{seen=!!localStorage.getItem('howto-seen')}catch(e){}
       function howTile(){ var ht=tile(seen?'':'new',null,'💡','איך משתמשים','3 דקות','חזרה, תצוגת עץ, חברותא ומקורות'); ht.onclick=function(){ if(hw.showModal) hw.showModal(); else hw.setAttribute('open',''); }; return ht; }
       if(hw&&!seen) g.appendChild(howTile());   /* first visit: the guide comes first */
+      /* continue: the first sugya not yet learned, from the last place read onward (that daf, then the next dapim) */
+      if(S.last){ var lp=byKey(S.last.page), k0=lp?L.indexOf(lp):-1, rs=null;
+        for(var q=k0; q>=0&&q<L.length&&!rs; q++){ var pq=L[q]; if(pq.s!==lp.s) break; if(learnedP(pq)) continue;
+          var eq=S.pages[pq.k], idq=pq.n.filter(function(id){ return !(eq&&eq.s[id]==='learned'); })[0];
+          if(idq) rs={p:pq,id:idq,i:pq.n.indexOf(idq)}; }
+        if(rs) g.insertBefore(tile('hot',url(rs.p)+(rs.i>0?'#'+rs.p.s+rs.p.d+'-'+rs.id:''),'↩','המשך מהמקום',rs.p.h,'סוגיה '+(rs.i+1)+' מתוך '+rs.p.n.length),g.firstChild); }
       if(S.first||S.review.length){
       var dl=dueList(), rv;
       var sn=Math.min(dl.length,RVN);   /* one short session, not the whole backlog — the rest waits for the next days */
@@ -517,8 +523,6 @@
       g.appendChild(rv);
       var sk=streak(); g.appendChild(tile(sk?'warm':'',false,'🔥','רצף',sk?sk+(sk===1?' יום':' ימים'):'0',sk?'ימי לימוד ברציפות (שבת לא שוברת)':'לומדים כל יום? הרצף נספר כאן'));
       }
-      if(S.last){ var lp=byKey(S.last.page); if(lp){ var i=lp.n.indexOf(S.last.section);
-        g.appendChild(tile('',url(lp)+(i>0?'#'+lp.s+lp.d+'-'+S.last.section:''),'↩','המשך מהמקום',lp.h,i>=0?'סוגיה '+(i+1):'')); } }
       var ms=tp?tp.s:Object.keys(C.mas)[0];
       if(ms&&C.mas[ms]){ var m=C.mas[ms], tot=m.last-m.first+1, done=0; for(var dd=m.first; dd<=m.last; dd++){ if(dafState(ms,dd,byKey(ms+'/'+dd))==='learned') done++; }
         var bh=S.first?behind():[], pt=tile(bh.length?'hot':'','/'+ms+'/#map','📖','מסכת '+m.he,done+' / '+tot,bh.length?'מאחר ב־'+bh.length+(bh.length===1?' דף':' דפים')+' · להשלים':(S.first?'✓ במסלול':'כל הדפים לפי פרקים'));
