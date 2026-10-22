@@ -15,6 +15,7 @@
   /* ---------- helpers ---------- */
   function el(t,c,txt){var e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
   var TF=null, TC={t:0,v:''}; function today(){var n=Date.now(); if(n-TC.t<60000) return TC.v; try{TF=TF||new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem'}); TC.v=TF.format(new Date())}catch(e){TC.v=new Date().toISOString().slice(0,10)} TC.t=n; return TC.v}
+  var RVN=8;   /* questions per daily review session */
   function addDays(iso,n){var d=new Date(iso+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
   function dow(iso){return new Date(iso+'T12:00:00Z').getUTCDay()}
   function rest(iso){return dow(iso)===6}               /* Shabbat never breaks a streak or a plan */
@@ -406,7 +407,7 @@
       var right=0, spare=2; items.forEach(function(q,i){ var ok=!q.querySelector('.opt.wrong'); if(ok) right++;
         var inQ=S.review.some(function(r){return r.page===P.k&&r.q===i});
         if(!ok&&!inQ) S.review.push({page:P.k,q:i,due:addDays(today(),1),n:0});
-        else if(ok&&!inQ&&spare>0){ spare--; S.review.push({page:P.k,q:i,due:addDays(today(),3),n:1}); }  /* a couple of correct ones come back too */
+        else if(ok&&!inQ&&spare>0&&dueList().length<RVN*2){ spare--; S.review.push({page:P.k,q:i,due:addDays(today(),3),n:1}); }  /* a couple of correct ones come back too */
       });
       if(!E.quiz||right>E.quiz.best) E.quiz={best:right,of:items.length,ts:Date.now()}; touch(); save(); banner();
     },0)});
@@ -510,7 +511,8 @@
       if(hw&&!seen) g.appendChild(howTile());   /* first visit: the guide comes first */
       if(S.first||S.review.length){
       var dl=dueList(), rv;
-      if(dl.length) rv=tile('hot','/review/','🔁','חזרה היום',dl.length+(dl.length===1?' שאלה':' שאלות'),'כ־'+Math.max(1,Math.round(dl.length*0.4))+' דק׳ · לפני הדף החדש');
+      var sn=Math.min(dl.length,RVN);   /* one short session, not the whole backlog — the rest waits for the next days */
+      if(dl.length) rv=tile('hot','/review/','🔁','חזרה היום',sn+(sn===1?' שאלה':' שאלות'),'כ־'+Math.max(1,Math.round(sn*0.5))+' דק׳ · לפני הדף החדש');
       else rv=tile('','/review/','🔁','חזרה היום',S.review.length?'✓ הכול':'—',S.review.length?'השאלות הבאות יחזרו לפי הלוח':'שאלה שטעיתם בה תחזור לכאן');
       g.appendChild(rv);
       var sk=streak(); g.appendChild(tile(sk?'warm':'',false,'🔥','רצף',sk?sk+(sk===1?' יום':' ימים'):'0',sk?'ימי לימוד ברציפות (שבת לא שוברת)':'לומדים כל יום? הרצף נספר כאן'));
@@ -612,7 +614,7 @@
         document.getElementById('rv-sub').textContent='שאלות מעורבות מכל דפי הפרק שלמדתם.';
         var pool=[]; L.forEach(function(p){ if(p.s===m[1]&&p.d>=r[1]&&p.d<=r[2]&&S.pages[p.k]) (B[p.k]||[]).forEach(function(_,i){pool.push({page:p.k,q:i})}); });
         qs=pool.sort(function(){return Math.random()-.5}).slice(0,10); } }
-    else if(mode==='due') qs=dueList().slice(0,12);
+    else if(mode==='due') qs=dueList().slice(0,RVN);
     var i=0, right=0;
     function next(){
       RV.innerHTML='';
