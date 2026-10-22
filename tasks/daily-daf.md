@@ -203,7 +203,7 @@ section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re
 (if refs changed, with `--force`) and `check_page.py` until it exits 0. Count fixes.
 
 
-**d. Checks:** `python validate.py` exits 0 (no new compound-name warnings); `python build.py`;
+**d. Checks:** `python tools/fill_verses.py` (stores the text of every verse the pages link to in `data/sources.json` — without it a verse quote waits for Sefaria on click; commit `data/sources.json` with the page); `python validate.py` exits 0 (no new compound-name warnings); `python build.py`;
 Playwright on `dist/<slug>/<daf>/index.html` (serve `dist` with `python -m http.server`) at 390 and
 1280 px: no page error, no horizontal overflow, `nav.map` right after the header, 8 quiz items, every
 section has a `button.src` and each opens a `.srcdlg` (Escape between clicks), a `button.term` opens a
