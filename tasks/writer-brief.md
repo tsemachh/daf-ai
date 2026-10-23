@@ -106,6 +106,7 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 6. Hebrew content, no niqqud, nothing that G/S/R do not support.
    Sages by full name as the glossary keys them: ״רבי יוחנן״, not ״ר׳ יוחנן״ (the abbreviation is not linked), and the
    full form when a short one names someone else (״רבי יוסי בר חנינא״, not ״רבי יוסי״).
+   ״במערבא״ / ״אמרי במערבא״ = בארץ ישראל — write ״בארץ ישראל״, never ״במערב״ (reader note, Bechorot 38).
    Exception: a word a first reading gets wrong (פסח ועור = צולע ועיוור, not Pesach) gets niqqud once, in
    `<span class="nogl">…</span>`; also wrap in `nogl` a word the glossary would mislink (״בציר״ ≠ ציר).
 7. **`short` on every step** (the תמצית reading level shows it instead of `body`): the move in one line, ≤12 words,
@@ -117,7 +118,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    2–5 stages, the first `at` 0, increasing, each ≥3 steps; break where the sugya turns to a NEW sub-question (a source
    and its derivation · an objection chain to its answer · ״ולמה…?״ · another opinion · a new case), never between a
    question and its answer. `q` ≤10 words ending in ״?״ (״האם ״לא יגאל״ מופנה?״); `a` ≤18 words, what the stage
-   concludes — say so when it ends in תיובתא / קשיא / תיקו.
+   concludes — say so when it ends in תיובתא / קשיא / תיקו. A run of parallel בעיות (״ואם תמצא לומר…״) that all end in
+   one תיקו is ONE stage, not split by topic (reader note, Bechorot 38).
 9. **Mishnah steps are explained too** (reader note, Bechorot 26): every clause gets its reason or what it
    means in practice (from S/R), and every step names who acts and on what — never a bare restatement or a
    sentence that leans on the previous step ("שוב מחדש", "עליהן") for its subject.
