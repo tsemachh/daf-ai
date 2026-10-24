@@ -127,6 +127,13 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    heads ≤3 (the first column must not crowd the others); a `seq` has ≤8 cards. A stage `q` asks the stage's real
    question in the Gemara's terms (״מה המקור שאין פודים על מום עובר?״), not a generic topic name.
 
+11. **״לימא כתנאי״ gets a `kt` box** (reader note, Bechorot 39): whenever the Gemara asks whether an amoraic dispute
+   or an open question is a tannaitic dispute (״לימא כתנאי״, ״כתנאי״, ״מאי לאו בהא קמיפלגי״ on a baraita), the section gets
+   `"kt":{"q":"<the question/dispute being tied to tannaim, in one sentence>","sides":[{"label":"<amora or צד א>","say":"…"},
+   {"label":"…","say":"…"}],"src":"<מחלוקת בברייתא | במשנה>","tannaim":[{"who":"<full name>","say":"<his view>"}],
+   "rounds":[{"k":"הצעה|דחייה|העמדה|מסקנה","t":"<who is mapped to which side, or why it fails>","res":"נדחה|מסקנה"?}]}` —
+   shown open above the steps, so the learner sees what is tied to what and where each round lands. Every line is
+   stated by G (or credited to S/R).
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,

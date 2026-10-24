@@ -142,6 +142,18 @@ def main():
     long_ = [st['short'] for st in ns if len((st.get('short') or '').split()) > 14]
     if long_:
         warn.append(f'{len(long_)} `short` lines over 14 words, e.g. ״{long_[0][:40]}…״')
+    for s in secs:   # ״לימא כתנאי״ needs its kt box (reader note, Bechorot 39)
+        m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)(?:-(?:(\d+)([ab])\.)?(\d+))?', s['ref'])
+        txt = ''
+        if m:
+            d1, a1, i1 = int(m[1]), m[2], int(m[3]); d2, a2 = (int(m[4]), m[5]) if m[4] else (d1, a1); i2 = int(m[6] or i1)
+            for dd, aa in ([(d1, a1)] if (d1, a1) == (d2, a2) else [(d1, a1), (d2, a2)]):
+                g = nseg(a.cache, slug, dd, aa)[1]
+                lo = i1 if (dd, aa) == (d1, a1) else 1
+                hi = i2 if (dd, aa) == (d2, a2) else len(g)
+                txt += ' '.join(clean(x) for x in g[lo - 1:hi])
+        if re.search(r'(לימא|נימא)\s+כתנאי|כתנאי:', txt) and not s.get('kt'):
+            errs.append(f'{s["id"]}: the Gemara asks ״לימא כתנאי״ but the section has no `kt` box (question, two sides, tannaim, rounds)')
     OPN = re.compile(r'^(ו?יתיב|ו?תיב|ו?אמר ליה|אמרו ליה|ו?אמרי ליה|א״ל|הדר|ו?אזל|אתא|אתו|שלחו? ליה|כי אתא)(\s|$)')
     for prv, s in zip(secs, secs[1:]):   # a section opening mid-conversation usually continues the previous one (note #32)
         m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)', s['ref'])

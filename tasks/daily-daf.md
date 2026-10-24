@@ -197,6 +197,7 @@ answer the first's open question or continue its story (״כיוצא בה שמע
 the Gemara's terms, never a label (״מקור ברייתא:״). **(3) glossary links** — every word the page will link (a glossary
 term, also after a ו/ב/ה/כ/ל/מ/ש/ד prefix) is used in that sense here; a different word that only contains a term
 (״בציר״ = פחות, not ציר) gets `nogl`, and a word a first reading gets wrong (פִּסֵּחַ וְעִוֵּר) gets its niqqud.
+**(4) ״לימא כתנאי״** — every such section has a `kt` box (writer-brief rule 11) whose question, two sides, tannaim and rounds match G; patch `sN.kt`.
 
 **c. Apply** every ERROR, OMISSION and THIN patch with `python tools/apply_review.py data/<slug>/<daf>.json <cache>/<slug>/<daf>/review.json` (the reviewer writes its patches and glossary entries there) (insert new steps without renumbering
 section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re-run `fill_srctext.py`

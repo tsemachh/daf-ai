@@ -398,6 +398,24 @@ def _seq_split(x):
     return (m[1], m[2]) if m and m[1].count("״") % 2 == 0 else ("", x)
 
 
+
+def render_kt(k):
+    """״לימא כתנאי״ made explicit, shown open before the steps: the question being tied to tannaim and its two
+    sides, the tannaim's dispute, and each round of the give-and-take (proposal → rejection → where it lands).
+    {"q", "sides": [{"label","say"}, {"label","say"}], "tannaim": [{"who","say"}], "rounds": [{"k","t","res"?}]}"""
+    sides = "".join(f'<div class="kt-s"><b>{x.get("label","")}</b><span>{x["say"]}</span></div>' for x in k.get("sides", []))
+    tn = "".join(f'<li><b>{x["who"]}:</b> {x["say"]}</li>' for x in k.get("tannaim", []))
+    RES = {"נדחה": "no", "נדחית": "no", "מסקנה": "ok", "נשאר": "ok", "מתקבל": "ok"}
+    rd = "".join(f'<li><span class="kt-k">{x["k"]}</span> {x["t"]}'
+                 + (f' <span class="kt-res {RES.get(x["res"], "")}">{x["res"]}</span>' if x.get("res") else "") + "</li>"
+                 for x in k.get("rounds", []))
+    return ('  <div class="kt nogl"><div class="kt-h">לימא כתנאי — מה תולים במה?</div>'
+            f'<p class="kt-q"><b>השאלה:</b> {k["q"]}</p>'
+            + (f'<div class="kt-sides">{sides}</div>' if sides else "")
+            + (f'<div class="kt-t"><div class="kt-l">{k.get("src") or "מחלוקת התנאים"}</div><ul>{tn}</ul></div>' if tn else "")
+            + (f'<div class="kt-t"><div class="kt-l">שלבי ההעמדה</div><ol class="kt-r">{rd}</ol></div>' if rd else "")
+            + "</div>")
+
 def render_seq(t):
     """Order of events (a story, a process or a chain of moves): {"title", "items": [str, …]} — numbered cards
     joined by arrows; an item 'move — answer' shows the move bold and the answer under it."""
@@ -548,6 +566,8 @@ def render_section(d, s):
             parts.append("  " + s["pre"])
         if s.get("map"):   # say up front that a map exists — it helps most before learning the sugya
             parts.append('  <button class="aid-hint" type="button" data-open-aid="map">🗺️ יש מפת שיטות לסוגיה — מי אמר מה ואיך זה מתכנס. הצג ←</button>')
+        if s.get("kt"):
+            parts.append(render_kt(s["kt"]))
         parts.append(render_steps(s["steps"], s.get("ref")))
         aids, names = [], []
         if s.get("table"):
