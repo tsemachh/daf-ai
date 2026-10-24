@@ -961,3 +961,19 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .kt-res{font-size:12px;font-weight:700;padding:0 7px;border-radius:999px;white-space:nowrap}
 .kt-res.no{background:#e9c6c6;color:#7a1f1f}.kt-res.ok{background:#cfe8d3;color:#1f5a2a}
 @media (max-width:520px){.kt-sides{grid-template-columns:1fr}}
+
+/* measures to scale */
+.scl{margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.scl-g+.scl-g{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.scl-l{font-weight:700;font-size:14px;margin-bottom:8px}
+.scl-r{display:grid;grid-template-columns:1fr auto;grid-template-areas:'name v' 'bar bar' 'note note';align-items:center;gap:3px 10px;margin:10px 0}
+.scl-name{grid-area:name}.scl-v{grid-area:v}.scl-bar{grid-area:bar}
+.scl-name{font-size:14px}
+.scl-bar{height:14px;border-radius:7px;background:var(--line);overflow:hidden}
+.scl-bar i{display:block;height:100%;background:var(--accent);border-radius:7px}
+.scl-r.c1 .scl-bar i{background:var(--gold)}
+.scl-r.c2 .scl-bar i{background:#c77d4a}.scl-r.c3 .scl-bar i{background:#7aa874}
+.scl-name{line-height:1.3}
+.scl-v{font-size:13px;font-weight:700;white-space:nowrap}
+.scl-n{grid-area:note;font-size:12.5px;color:var(--muted)}
+.scl-z,.scl-gn{font-size:12.5px;color:var(--muted);margin-top:6px}

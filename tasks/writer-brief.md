@@ -135,6 +135,11 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    shown open above the steps, so the learner sees what is tied to what and where each round lands. Every line is
    stated by G (or credited to S/R). When a section has `kt`, its `flow` does not retell the rounds: one or two sentences — what
    the sugya is about and where it ends up.
+12. **Measures to scale (`scale`)** (reader note, Bechorot 39): when the sugya compares sizes or measures (שיעורים,
+   אמות, טפחים, אצבעות, כזית/כביצה, distances) between opinions or objects, add
+   `"scale":{"title","groups":[{"label","unit","min"?,"bars":[{"name","v":<number>,"note"?}],"note"?}]}` — one group per
+   comparison, values in one unit, `min` only to zoom in on small differences. Every number stated by G or credited
+   to S/R; never a modern conversion (cm, grams).
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,

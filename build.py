@@ -416,6 +416,31 @@ def render_kt(k):
             + (f'<div class="kt-t"><div class="kt-l">שלבי ההעמדה</div><ol class="kt-r">{rd}</ol></div>' if rd else "")
             + "</details>")
 
+
+def _num(v):
+    return f'<bdi>{v:g}</bdi>' 
+
+
+def render_scale(sc):
+    """Measures drawn to scale, so the learner sees how the opinions / sizes compare:
+    {"title", "groups": [{"label", "unit", "min"?, "bars": [{"name", "v", "note"?}], "note"?}]}.
+    `min` > 0 zooms in (the bar starts there, marked), for differences of half a finger on a cubit."""
+    out = []
+    for g in sc["groups"]:
+        lo = g.get("min", 0); hi = max(b["v"] for b in g["bars"])
+        rows = []
+        for k, b in enumerate(g["bars"]):
+            w = 100 * (b["v"] - lo) / max(hi - lo, 1e-9)
+            note = f'<span class="scl-n">{b["note"]}</span>' if b.get("note") else ""
+            rows.append(f'<div class="scl-r c{k % 4}"><span class="scl-name">{b["name"]}</span>'
+                        f'<span class="scl-bar"><i style="width:{max(w, 2):.1f}%"></i></span>'
+                        f'<span class="scl-v">{_num(b["v"])} {g.get("unit", "")}</span>{note}</div>')
+        zoom = f'<div class="scl-z">מוגדל: הפסים מתחילים ב־{_num(lo)} {g.get("unit", "")}, כדי שההבדל ייראה</div>' if lo else ""
+        gnote = f'<div class="scl-gn">{g["note"]}</div>' if g.get("note") else ""
+        out.append(f'<div class="scl-g"><div class="scl-l">{g["label"]}</div>{"".join(rows)}{zoom}{gnote}</div>')
+    title = f'<div class="mtx-h">{sc["title"]}</div>' if sc.get("title") else ""
+    return f'  <div class="scl nogl">{title}{"".join(out)}</div>'
+
 def render_seq(t):
     """Order of events (a story, a process or a chain of moves): {"title", "items": [str, …]} — numbered cards
     joined by arrows; an item 'move — answer' shows the move bold and the answer under it."""
@@ -569,6 +594,8 @@ def render_section(d, s):
         if s.get("kt"):
             parts.append(render_kt(s["kt"]))
         parts.append(render_steps(s["steps"], s.get("ref")))
+        if s.get("scale"):
+            parts.append(render_scale(s["scale"]))
         aids, names = [], []
         if s.get("table"):
             aids.append(render_table(s["table"])); names.append("טבלת שיטות")
