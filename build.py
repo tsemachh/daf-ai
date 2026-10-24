@@ -409,12 +409,12 @@ def render_kt(k):
     rd = "".join(f'<li><span class="kt-k">{x["k"]}</span> {x["t"]}'
                  + (f' <span class="kt-res {RES.get(x["res"], "")}">{x["res"]}</span>' if x.get("res") else "") + "</li>"
                  for x in k.get("rounds", []))
-    return ('  <div class="kt nogl"><div class="kt-h">לימא כתנאי — מה תולים במה?</div>'
+    return ('  <details class="kt nogl" open><summary class="kt-h">לימא כתנאי — מה תולים במה?</summary>'
             f'<p class="kt-q"><b>השאלה:</b> {k["q"]}</p>'
             + (f'<div class="kt-sides">{sides}</div>' if sides else "")
             + (f'<div class="kt-t"><div class="kt-l">{k.get("src") or "מחלוקת התנאים"}</div><ul>{tn}</ul></div>' if tn else "")
             + (f'<div class="kt-t"><div class="kt-l">שלבי ההעמדה</div><ol class="kt-r">{rd}</ol></div>' if rd else "")
-            + "</div>")
+            + "</details>")
 
 def render_seq(t):
     """Order of events (a story, a process or a chain of moves): {"title", "items": [str, …]} — numbered cards

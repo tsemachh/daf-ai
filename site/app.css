@@ -944,7 +944,11 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 
 /* ״לימא כתנאי״ box: the question, its two sides, the tannaim, and each round */
 .kt{margin:12px 0 14px;padding:12px 14px;border:1px solid var(--line);border-inline-start:4px solid var(--gold);border-radius:12px;background:var(--card)}
-.kt-h{font-weight:800;color:var(--gold);font-size:15px;margin-bottom:6px}
+.kt-h{font-weight:800;color:var(--gold);font-size:15px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+.kt-h::-webkit-details-marker{display:none}
+.kt-h::after{content:"▾";font-size:13px;color:var(--muted);transition:transform .15s}
+.kt:not([open]) .kt-h::after{transform:rotate(90deg)}
+.kt[open] .kt-h{margin-bottom:6px}
 .kt-q{margin:0 0 8px;line-height:1.55}
 .kt-sides{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 .kt-s{padding:8px 10px;border-radius:10px;background:var(--accent-soft);display:grid;gap:2px;line-height:1.45}

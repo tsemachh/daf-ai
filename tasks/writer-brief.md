@@ -133,7 +133,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    {"label":"…","say":"…"}],"src":"<מחלוקת בברייתא | במשנה>","tannaim":[{"who":"<full name>","say":"<his view>"}],
    "rounds":[{"k":"הצעה|דחייה|העמדה|מסקנה","t":"<who is mapped to which side, or why it fails>","res":"נדחה|מסקנה"?}]}` —
    shown open above the steps, so the learner sees what is tied to what and where each round lands. Every line is
-   stated by G (or credited to S/R).
+   stated by G (or credited to S/R). When a section has `kt`, its `flow` does not retell the rounds: one or two sentences — what
+   the sugya is about and where it ends up.
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
