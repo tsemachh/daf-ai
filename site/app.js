@@ -449,7 +449,7 @@
       /* same order everywhere: גמרא · שטיינזלץ · רש״י; ״גמרא״ = the text alone (turns the commentaries off) */
       var sync=function(){ setTimeout(function(){ gb.setAttribute('aria-pressed', tog.getAttribute('aria-pressed')!=='true'&&rtog.getAttribute('aria-pressed')!=='true'); },0); };
       tog.addEventListener('click',sync); rtog.addEventListener('click',sync);
-      gb.onclick=function(){ if(tog.getAttribute('aria-pressed')==='true') tog.click(); if(rtog.getAttribute('aria-pressed')==='true') rtog.click(); sync(); };
+      gb.onclick=function(){ flush(); if(tog.getAttribute('aria-pressed')==='true') tog.click(); if(rtog.getAttribute('aria-pressed')==='true') rtog.click(); sync(); };
       rtog.onclick=function(){
         var on=rtog.getAttribute('aria-pressed')!=='true'; rtog.setAttribute('aria-pressed',on);
         if(!on){ b.querySelectorAll('.rsx').forEach(function(e){e.remove()}); return }
@@ -469,7 +469,7 @@
             sp.textContent='רש״י · ספריא'; rtog.classList.remove('busy'); flush();
             if(!any){ card.hidden=false; card.textContent='לא נמצאו דברי רש״י לקטע זה.'; }
           });
-        }).catch(function(){ flush(); rtog.classList.remove('busy'); rtog.setAttribute('aria-pressed','false'); card.hidden=false; card.textContent='לא ניתן לטעון את רש״י מספריא כרגע.'; });
+        }).catch(function(){ flush(); rtog.classList.remove('busy'); rtog.setAttribute('aria-pressed','false'); sync(); card.hidden=false; card.textContent='לא ניתן לטעון את רש״י מספריא כרגע.'; });
       };
       tog.onclick=function(){
         var on=tog.getAttribute('aria-pressed')!=='true'; tog.setAttribute('aria-pressed',on);
@@ -477,7 +477,7 @@
         tog.classList.add('busy');
         ready().then(function(){ tog.classList.remove('busy'); paras.forEach(function(P){ if(!P.al) return; var dv=document.createElement('div'); dv.className='stx';
           P.al.ch.forEach(function(c){ renderParts(dv,c) });
-          P.el.after(dv) }); flush() }).catch(function(){flush(); tog.classList.remove('busy'); tog.setAttribute('aria-pressed','false'); fail()});
+          P.el.after(dv) }); flush() }).catch(function(){flush(); tog.classList.remove('busy'); tog.setAttribute('aria-pressed','false'); sync(); fail()});
       };
       b.addEventListener('click',function(e){
         var w=e.target.closest('.w'); if(!w) return;
@@ -495,8 +495,10 @@
     }
     d.append(h); if(isGem&&typeof row!=='undefined') d.append(row); d.append(b); if(card) d.append(card); d.append(f); bg.appendChild(d); document.body.appendChild(bg);
     bg.addEventListener('click',function(e){if(e.target===bg)closeSrc()}); x.focus();
-    if(isGem&&a.dataset.st) d.querySelector('.st-tog').click();
-    if(isGem&&a.dataset.rs) d.querySelectorAll('.st-tog')[1].click();
+    if(isGem&&a.dataset.st) tog.click();
+    if(isGem&&a.dataset.rs) rtog.click();
+    /* never leave the Gemara behind a loader: show it if the commentary is slow or nothing asked for it */
+    if(stFirst) setTimeout(flush, 4000);
     return true;
   }
   document.addEventListener('click',function(e){
