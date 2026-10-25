@@ -224,7 +224,7 @@
     x.onclick=close; bg2.addEventListener('click',function(e){ if(e.target===bg2) close(); }); document.addEventListener('keydown',esc); x.focus();
     var ams=[]; segs.forEach(function(g){ var a=g.split('.')[0]; if(ams.indexOf(a)<0) ams.push(a); });
     /* three views of the same lines: Steinsaltz (default) · Rashi · the Gemara text */
-    var MODES=[['st','שטיינזלץ'],['rashi','רש״י'],['gem','גמרא']], tabs={}, mode='st', row=document.createElement('div'); row.className='stg-tabs'; row.setAttribute('role','tablist');
+    var MODES=[['gem','גמרא'],['st','שטיינזלץ'],['rashi','רש״י']], tabs={}, mode='st', row=document.createElement('div'); row.className='stg-tabs'; row.setAttribute('role','tablist');
     MODES.forEach(function(m){ var t=document.createElement('button'); t.type='button'; t.className='st-tog'; t.textContent=m[1]; t.setAttribute('aria-pressed',m[0]===mode);
       t.onclick=function(){ show(m[0]); }; tabs[m[0]]=t; row.appendChild(t); });
     h.after(row);
@@ -438,13 +438,18 @@
     var f=document.createElement('footer'); var sp=document.createElement('span'); sp.textContent='הטקסט מתוך ספריא'; var l=document.createElement('a'); l.className='src'; l.href=a.dataset.url; l.target='_blank'; l.rel='noopener'; l.textContent='פתח בספריא'; l.dataset.external='1'; f.append(sp,l);
     var card=null;
     if(isGem){
-      var tog=document.createElement('button'); tog.type='button'; tog.className='st-tog'; tog.textContent='שטיינזלץ'; tog.setAttribute('aria-pressed','false'); h.insertBefore(tog,x);
+      var tog=document.createElement('button'); tog.type='button'; tog.className='st-tog'; tog.textContent='שטיינזלץ'; tog.setAttribute('aria-pressed','false');
+      var row=document.createElement('div'); row.className='stg-tabs'; var gb=document.createElement('button'); gb.type='button'; gb.className='st-tog'; gb.textContent='גמרא'; gb.setAttribute('aria-pressed','true'); row.append(gb,tog);
       card=document.createElement('div'); card.className='stw'; card.hidden=true; card.setAttribute('aria-live','polite');
       var credit=function(){sp.textContent='ביאור שטיינזלץ · CC-BY-NC · ספריא'};
       var ready=function(){ return loadSt(key).then(function(segs){ paras.forEach(function(P){ if(P.al!==undefined) return; P.al=alignPara(segs,P.text); var ws=P.el.querySelectorAll('.w'); P.ws=ws; P.map=P.al?mapTokens(P.al,[].map.call(ws,function(w){return w.textContent})):[] }); credit(); return segs }) };
       var fail=function(){card.hidden=false; card.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'};
       /* רש״י on the sugya: each Gemara paragraph followed by Rashi's comments on that segment (dibbur hamatchil bold) */
-      var rtog=document.createElement('button'); rtog.type='button'; rtog.className='st-tog'; rtog.textContent='רש״י'; rtog.setAttribute('aria-pressed','false'); h.insertBefore(rtog,x);
+      var rtog=document.createElement('button'); rtog.type='button'; rtog.className='st-tog'; rtog.textContent='רש״י'; rtog.setAttribute('aria-pressed','false'); row.appendChild(rtog);
+      /* same order everywhere: גמרא · שטיינזלץ · רש״י; ״גמרא״ = the text alone (turns the commentaries off) */
+      var sync=function(){ setTimeout(function(){ gb.setAttribute('aria-pressed', tog.getAttribute('aria-pressed')!=='true'&&rtog.getAttribute('aria-pressed')!=='true'); },0); };
+      tog.addEventListener('click',sync); rtog.addEventListener('click',sync);
+      gb.onclick=function(){ if(tog.getAttribute('aria-pressed')==='true') tog.click(); if(rtog.getAttribute('aria-pressed')==='true') rtog.click(); sync(); };
       rtog.onclick=function(){
         var on=rtog.getAttribute('aria-pressed')!=='true'; rtog.setAttribute('aria-pressed',on);
         if(!on){ b.querySelectorAll('.rsx').forEach(function(e){e.remove()}); return }
@@ -488,7 +493,7 @@
         }).catch(fail);
       });
     }
-    d.append(h,b); if(card) d.append(card); d.append(f); bg.appendChild(d); document.body.appendChild(bg);
+    d.append(h); if(isGem&&typeof row!=='undefined') d.append(row); d.append(b); if(card) d.append(card); d.append(f); bg.appendChild(d); document.body.appendChild(bg);
     bg.addEventListener('click',function(e){if(e.target===bg)closeSrc()}); x.focus();
     if(isGem&&a.dataset.st) d.querySelector('.st-tog').click();
     if(isGem&&a.dataset.rs) d.querySelectorAll('.st-tog')[1].click();
