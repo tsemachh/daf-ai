@@ -223,11 +223,27 @@
     function esc(e){ if(e.key==='Escape') close(); }
     x.onclick=close; bg2.addEventListener('click',function(e){ if(e.target===bg2) close(); }); document.addEventListener('keydown',esc); x.focus();
     var ams=[]; segs.forEach(function(g){ var a=g.split('.')[0]; if(ams.indexOf(a)<0) ams.push(a); });
-    Promise.all(ams.map(function(a){ return amudTexts(tr+'.'+a); })).then(function(ts){
-      b.innerHTML='';
-      segs.forEach(function(g){ var a=g.split('.')[0], t=ts[ams.indexOf(a)], k=+g.split('.')[1]-1, p=document.createElement('p');
-        if(t.s[k]) safeInto(p,t.s[k]); else safeInto(p,t.g[k]||''); b.appendChild(p); });
-    }).catch(function(){ ld.textContent='לא ניתן לטעון את ביאור שטיינזלץ מספריא כרגע.'; });
+    /* three views of the same lines: Steinsaltz (default) · Rashi · the Gemara text */
+    var MODES=[['st','שטיינזלץ'],['rashi','רש״י'],['gem','גמרא']], tabs={}, mode='st', row=document.createElement('div'); row.className='stg-tabs'; row.setAttribute('role','tablist');
+    MODES.forEach(function(m){ var t=document.createElement('button'); t.type='button'; t.className='st-tog'; t.textContent=m[1]; t.setAttribute('aria-pressed',m[0]===mode);
+      t.onclick=function(){ show(m[0]); }; tabs[m[0]]=t; row.appendChild(t); });
+    h.after(row);
+    var TX=null, RSX=null;
+    function getTx(){ return TX||(TX=Promise.all(ams.map(function(a){ return amudTexts(tr+'.'+a); }))); }
+    function getRs(){ return RSX||(RSX=Promise.all(ams.map(function(a){ return loadRashi(tr+'.'+a).catch(function(){return []}); }))); }
+    function show(m){ mode=m; MODES.forEach(function(x){ tabs[x[0]].setAttribute('aria-pressed',x[0]===m); });
+      h4.textContent=(m==='st'?'שטיינזלץ':m==='rashi'?'רש״י':'לשון הגמרא')+' · '+title;
+      sp.textContent=m==='st'?'ביאור שטיינזלץ · CC-BY-NC · ספריא':m==='rashi'?'רש״י · ספריא':'לשון הגמרא · ספריא';
+      b.innerHTML=''; var l2=document.createElement('p'); l2.className='gap'; l2.textContent='טוען…'; b.appendChild(l2);
+      (m==='rashi'?Promise.all([getTx(),getRs()]):getTx().then(function(t){return [t,null]})).then(function(r){ if(mode!==m) return; b.innerHTML='';
+        segs.forEach(function(g){ var a=g.split('.')[0], ai=ams.indexOf(a), t=r[0][ai], k=+g.split('.')[1]-1;
+          if(m==='rashi'){ var cm=((r[1][ai]||[])[k]||[]); cm=(Array.isArray(cm)?cm:[cm]).filter(Boolean);
+            cm.forEach(function(c){ var q=document.createElement('p'); safeInto(q,String(c)); b.appendChild(q); }); return; }
+          var p=document.createElement('p'); if(m==='gem'){ p.className='stg-gm'; safeInto(p,t.g[k]||''); } else safeInto(p,t.s[k]||t.g[k]||''); b.appendChild(p); });
+        if(!b.childNodes.length){ var e=document.createElement('p'); e.className='gap'; e.textContent=m==='rashi'?'אין רש״י על שורות השלב.':'אין טקסט.'; b.appendChild(e); }
+      }).catch(function(){ l2.textContent='לא ניתן לטעון מספריא כרגע.'; });
+    }
+    show('st');
   };
   var RS={};
   function loadRashi(amud){ return RS[amud]||(RS[amud]=getJ(SEF+'api/texts/Rashi_on_'+amud+'?lang=he&context=0&pad=0').then(function(x){return x.he||[]}).catch(function(e){delete RS[amud]; throw e})); }
@@ -645,8 +661,12 @@
     }
     render(); var rs=art.querySelector('[data-role="resetQuiz"]'); if(rs) rs.addEventListener('click',render);
   }
-  document.querySelectorAll('article.daf').forEach(function(a){a.hidden=false; initDaf(a); if(window.__enrichDaf) window.__enrichDaf(a);});
-  if(location.hash){var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView();}
+  /* a link to a sugya (#…-s6): jump there first, before the page's heavy setup, then re-align once the setup and
+     lazy-rendered sections above it have settled */
+  function jump(){ if(!location.hash) return; var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
+  var arts=document.querySelectorAll('article.daf'); arts.forEach(function(a){a.hidden=false;}); jump();
+  arts.forEach(function(a){ initDaf(a); if(window.__enrichDaf) window.__enrichDaf(a); });
+  jump(); if(location.hash){ requestAnimationFrame(function(){ requestAnimationFrame(jump); }); setTimeout(jump,450); }
 
 })();
 

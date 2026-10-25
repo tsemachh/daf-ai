@@ -987,3 +987,8 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .st-ic:hover,.st-ic:focus-visible{opacity:1;background:var(--card)}
 .st-ih{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
 .st-ig{font-family:var(--serif);color:var(--gold);margin:0 0 8px;line-height:1.6}
+
+.srcdlg .stg-gm{font-family:var(--serif);color:var(--gold);font-size:1.08em;line-height:1.75}
+.stg-tabs{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line)}
+.stg-tabs .st-tog{border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 16px;font:inherit;font-size:15px;cursor:pointer}
+.stg-tabs .st-tog[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#16130a;font-weight:700}
