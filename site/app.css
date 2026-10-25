@@ -981,3 +981,9 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 /* a Gemara quote that opens an explanation: dashed underline (a quote with nothing to add stays plain) */
 .gq:not(.gq-flat){text-decoration:underline dashed;text-decoration-color:color-mix(in srgb,var(--gold) 70%,transparent);text-decoration-thickness:1px;text-underline-offset:5px;text-decoration-skip-ink:none}
 .gq .q-src{text-decoration-color:var(--accent)}
+
+/* per-step Steinsaltz icon */
+.st-ic{display:inline-grid;place-items:center;width:24px;height:24px;margin-inline-start:4px;vertical-align:middle;border:0;border-radius:999px;background:transparent;color:inherit;opacity:.75;cursor:pointer;padding:0}
+.st-ic:hover,.st-ic:focus-visible{opacity:1;background:var(--card)}
+.st-ih{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.st-ig{font-family:var(--serif);color:var(--gold);margin:0 0 8px;line-height:1.6}

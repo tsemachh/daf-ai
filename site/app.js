@@ -207,6 +207,31 @@
       });
     });
   };
+  /* every step: a small icon → Steinsaltz on that step's Gemara line, in the pop-up (with the line itself) */
+  (function(){
+    var art=document.querySelector('article.daf'); if(!art) return; var tr=art.dataset.tractate;
+    var ICO='<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.2c2-.9 4-.9 6 .4v9.6c-2-1.3-4-1.3-6-.4z"/><path d="M14 3.2c-2-.9-4-.9-6 .4v9.6c2-1.3 4-1.3 6-.4z"/></svg>';
+    art.querySelectorAll('ol.steps > li[data-seg]').forEach(function(li){
+      var tag=li.querySelector(':scope > .tag'); if(!tag||!/^\d+[ab]\.\d+$/.test(li.dataset.seg)) return;
+      var b=document.createElement('button'); b.type='button'; b.className='st-ic'; b.innerHTML=ICO; b.title='שטיינזלץ לשלב'; b.setAttribute('aria-label','ביאור שטיינזלץ לשלב זה');
+      tag.appendChild(b);
+    });
+    art.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('.st-ic'); if(!b) return; e.preventDefault(); e.stopPropagation();
+      var li=b.closest('li'), m=li.dataset.seg.match(/^(\d+[ab])\.(\d+)$/), pop=window.__dafPop; if(!m||!pop) return;
+      if(!pop.hidden&&pop.dataset.for===li.dataset.seg){ pop.hidden=true; return; }
+      pop.innerHTML=''; pop.dataset.for=li.dataset.seg; pop.hidden=false;
+      var h=document.createElement('div'); h.className='st-ih'; h.textContent='ביאור שטיינזלץ לשלב (לשון הגמרא מודגשת)';
+      var g=document.createElement('p'); g.className='st-ig'; var sp=document.createElement('div'); sp.className='st-pd'; sp.textContent='טוען…';
+      var cr=document.createElement('div'); cr.className='st-cr'; var a=document.createElement('a'); a.href=SEF+tr+'.'+li.dataset.seg+'?lang=he&with=Steinsaltz'; a.target='_blank'; a.rel='noopener'; a.dataset.external='1'; a.textContent='בספריא ↗';
+      cr.append(document.createTextNode('ביאור שטיינזלץ · CC-BY-NC · '),a);
+      pop.append(h,sp,cr);
+      var r=b.getBoundingClientRect(), w=Math.min(360,innerWidth-32); pop.style.width=w+'px';
+      pop.style.left=(Math.max(16,Math.min(innerWidth-w-16,r.left+r.width/2-w/2))+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px';
+      amudTexts(tr+'.'+m[1]).then(function(t){ var i=+m[2]-1; sp.textContent=''; if(t.s[i]) safeInto(sp,t.s[i]); else sp.textContent='אין ביאור לשורה זו.'; })
+        .catch(function(){ sp.textContent='לא ניתן לטעון מספריא כרגע.'; });
+    },true);
+  })();
   var RS={};
   function loadRashi(amud){ return RS[amud]||(RS[amud]=getJ(SEF+'api/texts/Rashi_on_'+amud+'?lang=he&context=0&pad=0').then(function(x){return x.he||[]}).catch(function(e){delete RS[amud]; throw e})); }
   function cmtPref(){ try{ var P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; return P.rashi?'rashi':'st'; }catch(e){ return 'st'; } }
