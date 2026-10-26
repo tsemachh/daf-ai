@@ -92,6 +92,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    by the Gemara; else ״לא נאמר״ or leave the aid out.
    A long sugya (≥12 steps) that tries several derivations, each refuted by a פירכא, gets a `table` of the
    attempts (what is learned from what · the פירכא · result) so the learner can track it.
+   The same for a run of ≥4 ״תא שמע״ proofs each deflected (one row per proof: source · what it seems to show ·
+   the answer) — reader note, Bechorot 42.
 4. **Quiz: exactly 8**, testing understanding: 4 reasoning (why the ruling / why a proof failed / what the
    הו״א was), 2 principle or distinction, 2 application to a new case. At most 1 "who said". Never a recall stem (״מה הקשה אביי?״, ״מה מקור שיטתו?״) — ask
    why the objection works, what it shows, or what changes in a new case; the learner should be able to answer from
