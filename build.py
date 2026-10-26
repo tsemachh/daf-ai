@@ -20,6 +20,8 @@ SWDAF = json.load(open(_swp, encoding="utf8")) if os.path.exists(_swp) else {}
 SW_CREDIT = "באדיבות Simon Wolf (www.swdaf.com)"
 _sws = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "swdaf_sec.json")
 SWSEC = json.load(open(_sws, encoding="utf8")) if os.path.exists(_sws) else {}   # "<folder>/<file>" -> section id
+_swh = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "swdaf_he.json")
+SWHE = json.load(open(_swh, encoding="utf8")) if os.path.exists(_swh) else {}   # file name -> Hebrew title
 
 
 # site slug -> swdaf folder (also the feed's ?mas=), where the names differ
@@ -33,7 +35,7 @@ def sw_charts(slug, daf):
     out, dr = [], SW_DIR.get(slug, slug)
     for f in SWDAF.get(dr, {}).get(str(daf), []):
         t = re.sub(r"^[A-Za-z_]+?\d+_?", "", f).rsplit(".", 1)[0].replace("_", " ").strip() or "דף עזר"
-        out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": t, "sec": SWSEC.get(f"{dr}/{f}", "")})
+        out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": SWHE.get(f, t), "en": t, "sec": SWSEC.get(f"{dr}/{f}", "")})
     return out
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
@@ -633,7 +635,7 @@ def render_section(d, s):
         swc = [c for c in sw_charts(d["slug"], d["daf"]) if c["sec"] == s["id"]]
         if swc:   # Simon Wolf's sheet for this sugya, linked at the source (with permission)
             aids.append('<div class="sw-aid">' + "".join(
-                f'<a class="sw-sec" href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1">📊 <bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a>' for c in swc)
+                f'<a class="sw-sec" title="{esc(c["en"])}" href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1">📊 {esc(c["title"])} <small>(PDF)</small></a>' for c in swc)
                 + '<p class="sw-cr">באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi></p></div>')
             names.append("דף עזר של Simon Wolf" if len(swc) == 1 else "דפי עזר של Simon Wolf")
         if aids:
@@ -686,7 +688,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     SWC = 'באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi>'
     if sw:
         links += (f'\n    <li class="sw-li">תרשימים ודפי עיון — {SWC}<ul>'
-                  + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a>'
+                  + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1" title="{esc(c["en"])}">{esc(c["title"])} <small>(PDF)</small></a>'
                           + (f' · <a href="#{key}-{c["sec"]}-aids">בסוגיה ↑</a>' if c["sec"] else "") + '</li>' for c in sw)
                   + '</ul></li>')
     sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
