@@ -444,6 +444,20 @@ def _num(v):
     return f'<bdi>{v:g}</bdi>' 
 
 
+FIGS = os.path.join(ROOT, "content", "figs")
+
+
+def render_fig(figs):
+    """Our own drawings for what a sugya talks about (parts of the eye, the ear, a coin…), where no outside
+    sheet covers it: [{"src": "<content/figs/NAME.svg>", "cap": "…"}]. The SVG is ours, inlined, themed by CSS."""
+    out = []
+    for f in figs:
+        svg = open(os.path.join(FIGS, f["src"] + ".svg"), encoding="utf8").read().strip()
+        cap = f'<figcaption>{f["cap"]}</figcaption>' if f.get("cap") else ""
+        out.append(f'<figure class="fig">{svg}{cap}</figure>')
+    return "".join(out)
+
+
 def render_scale(sc):
     """Measures drawn to scale, so the learner sees how the opinions / sizes compare:
     {"title", "groups": [{"label", "unit", "min"?, "bars": [{"name", "v", "note"?}], "note"?}]}.
@@ -630,6 +644,8 @@ def render_section(d, s):
             aids.append(render_calc(s["calc"])); names.append("חשבון")
         if s.get("seq"):
             aids.append(render_seq(s["seq"])); names.append("סדר האירועים")
+        if s.get("fig"):
+            aids.append(render_fig(s["fig"])); names.append("איור")
         if s.get("map"):
             aids.append(render_map(s["map"], f"{sid}-map")); names.append("מפת השיטות")
         swc = [c for c in sw_charts(d["slug"], d["daf"]) if c["sec"] == s["id"]]

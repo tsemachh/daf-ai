@@ -1005,3 +1005,26 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .sw-sec:hover{background:var(--accent-soft)}
 .sw-aid{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 0}
 .sw-aid .sw-cr{flex-basis:100%;margin:0}
+/* our own drawings (content/figs/*.svg) */
+.fig{margin:8px 0 4px;text-align:center}
+.fig svg{width:100%;max-width:440px;height:auto;font-family:var(--sans)}
+.fig text{direction:rtl;text-anchor:start;font-size:12.5px;fill:var(--ink)}
+.fig text.sm{font-size:11px;fill:var(--muted)}
+.fig text.no{fill:var(--no);font-weight:700}
+.fig text.ok{fill:var(--ok);font-weight:700}
+.fig .ld{stroke:var(--muted);stroke-width:.8;fill:none;stroke-dasharray:2 2}
+.fig .sk{fill:#f6f1e6;stroke:#8a7a62;stroke-width:1.5}
+.fig .lid{fill:none;stroke:#5b4a35;stroke-width:4;stroke-linecap:round}
+.fig .lash path{stroke:#5b4a35;stroke-width:2;stroke-linecap:round}
+.fig .blk{fill:#2b2620}
+.fig .sira{fill:none;stroke:#b08a3c;stroke-width:4}
+.fig .thw{fill:none;stroke:#f6f1e6;stroke-width:3.5;stroke-linecap:round}
+.fig .thb{fill:none;stroke:#2b2620;stroke-width:3.5;stroke-linecap:round}
+.fig .dq{fill:#e9e2d2;stroke:#2b2620}
+.fig .ear{fill:#e8c9a8;stroke:#8a6a4a;stroke-width:1.5}
+.fig .ear-in{fill:#d9a988;stroke:none}
+.fig .cut{stroke:var(--no);stroke-width:2.5;stroke-linecap:round}
+.fig .notch{fill:var(--paper);stroke:var(--no);stroke-width:2}
+.fig .hole{fill:var(--paper);stroke:var(--no);stroke-width:2}
+.fig figcaption{font-size:.85em;color:var(--muted);margin-top:4px}
+.fig text.l{text-anchor:end}

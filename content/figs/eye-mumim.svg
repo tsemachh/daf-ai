@@ -1,0 +1,20 @@
+<svg viewBox="0 0 360 250" role="img" aria-label="איור העין: ריס, לבן, שחור, סירא, תבלול ודק">
+  <path class="sk" d="M40,125 Q180,25 320,125 Q180,225 40,125 Z"/>
+  <path class="lid" d="M40,125 Q180,25 320,125"/>
+  <g class="lash"><path d="M90,88 l-6,-12 M120,72 l-4,-13 M150,63 l-2,-13 M180,60 v-13 M210,63 l2,-13 M240,72 l4,-13 M270,88 l6,-12"/></g>
+  <circle class="blk" cx="180" cy="125" r="48"/>
+  <circle class="sira" cx="180" cy="125" r="48"/>
+  <path class="thw" d="M96,132 Q130,128 166,120"/>
+  <path class="thb" d="M222,138 Q250,146 282,140"/>
+  <circle class="dq" cx="196" cy="104" r="6"/>
+  <g class="lb">
+    <text x="300" y="30">ריס — העפעף (״תורא ברא דעינא״)</text><path class="ld" d="M210,34 L205,58"/>
+    <text x="350" y="52">לבן — ״חלב העין״</text>
+    <text x="350" y="66" class="sm">ר׳ יוסי: אין מומין בלבן</text><path class="ld" d="M300,70 L272,118"/>
+    <text x="8" y="196" class="no l">תבלול — מום</text><text x="8" y="210" class="sm l">חוט לבן שנכנס בשחור</text><path class="ld" d="M40,184 L110,135"/>
+    <text x="350" y="196" class="ok">שחור נכנס בלבן —</text>
+    <text x="350" y="210" class="sm">ר׳ יוסי: אינו מום · ר׳ מאיר: מום</text><path class="ld" d="M300,184 L268,146"/>
+    <text x="250" y="240" class="sm">סירא — העיגול המקיף את השחור</text><path class="ld" d="M200,228 L196,174"/>
+    <text x="110" y="62" class="sm">דק — כתם בשחור</text><path class="ld" d="M118,66 L190,100"/>
+  </g>
+</svg>

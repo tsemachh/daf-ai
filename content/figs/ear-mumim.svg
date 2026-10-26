@@ -1,0 +1,14 @@
+<svg viewBox="0 0 360 230" role="img" aria-label="איור אוזן הבכור: סדק, פגימה ונקב">
+  <path class="ear" d="M330,120 C300,60 210,40 120,55 C60,65 25,100 30,125 C35,150 70,175 125,185 C215,200 300,180 330,120 Z"/>
+  <path class="ear-in" d="M300,120 C270,85 200,75 135,85 C95,92 75,110 78,125 C82,142 105,152 140,158 C205,168 270,155 300,120 Z"/>
+  <path class="cut" d="M150,55 L158,88"/>
+  <path class="notch" d="M232,184 L240,170 L250,185"/>
+  <circle class="hole" cx="200" cy="120" r="7"/>
+  <g class="lb">
+    <text x="190" y="22" class="no">סדק — כל שהוא</text><path class="ld" d="M170,27 L155,62"/>
+    <text x="350" y="215" class="no">פגימה — כדי שתחגור בה ציפורן</text><path class="ld" d="M262,203 L242,182"/>
+    <text x="8" y="212" class="no l">נקב — מלא כרשינה (ת״ק)</text>
+    <text x="8" y="226" class="sm l">כעדשה (ר׳ יוסי בר׳ יהודה)</text><path class="ld" d="M80,200 L194,126"/>
+    <text x="350" y="70" class="sm">בין בידי אדם</text><text x="350" y="84" class="sm">בין בידי שמים</text>
+  </g>
+</svg>
