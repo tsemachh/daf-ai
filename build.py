@@ -637,7 +637,7 @@ def render_section(d, s):
                 + '<p class="sw-cr">באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi></p></div>')
             names.append("דף עזר של Simon Wolf" if len(swc) == 1 else "דפי עזר של Simon Wolf")
         if aids:
-            parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
+            parts.append(f'  <details class="aids" id="{sid}-aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):
             parts.append("  " + s["post"])
         parts.append(cont_link(d, s, "next"))
@@ -686,7 +686,8 @@ def render_daf(d, prev, nxt, glossary, sources):
     SWC = 'באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi>'
     if sw:
         links += (f'\n    <li class="sw-li">תרשימים ודפי עזר — {SWC}<ul>'
-                  + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a></li>' for c in sw)
+                  + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a>'
+                          + (f' · <a href="#{key}-{c["sec"]}-aids">בסוגיה ↑</a>' if c["sec"] else "") + '</li>' for c in sw)
                   + '</ul></li>')
     sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
     pn = []

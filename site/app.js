@@ -670,7 +670,8 @@
   }
   /* a link to a sugya (#…-s6): jump there first, before the page's heavy setup, then re-align once the setup and
      lazy-rendered sections above it have settled */
-  function jump(){ if(!location.hash) return; var t=document.getElementById(location.hash.slice(1)); if(t) t.scrollIntoView(); }
+  function jump(){ if(!location.hash) return; var t=document.getElementById(location.hash.slice(1)); if(!t) return; if(t.tagName==='DETAILS') t.open=true; t.scrollIntoView(); }
+  addEventListener('hashchange',function(){ var t=document.getElementById(location.hash.slice(1)); if(t&&t.tagName==='DETAILS'&&!t.open){ t.open=true; t.scrollIntoView(); } });
   var arts=document.querySelectorAll('article.daf'); arts.forEach(function(a){a.hidden=false;}); jump();
   arts.forEach(function(a){ initDaf(a); if(window.__enrichDaf) window.__enrichDaf(a); });
   jump(); if(location.hash){ requestAnimationFrame(function(){ requestAnimationFrame(jump); }); setTimeout(jump,450); }
