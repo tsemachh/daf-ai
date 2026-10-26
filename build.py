@@ -597,9 +597,6 @@ def render_section(d, s):
     parts = [f'<section class="sugya{" stgd" if stg else ""}" id="{sid}"{stg}>', f'  <div class="amud"{ref}>{s["amud"]}</div>']
     if s.get("title"):
         parts.append(f'  <h3>{s["title"]}</h3>')
-    for c in sw_charts(d["slug"], d["daf"]):
-        if c["sec"] == s["id"]:
-            parts.append(f'  <a class="sw-sec" href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1">📊 <bdi dir="ltr">{esc(c["title"])}</bdi> <span>· דף עזר באדיבות <bdi dir="ltr">Simon Wolf</bdi></span></a>')
     if s["kind"] != "raw":
         parts.append(cont_link(d, s, "prev"))
     if s["kind"] == "raw":
@@ -633,6 +630,12 @@ def render_section(d, s):
             aids.append(render_seq(s["seq"])); names.append("סדר האירועים")
         if s.get("map"):
             aids.append(render_map(s["map"], f"{sid}-map")); names.append("מפת השיטות")
+        swc = [c for c in sw_charts(d["slug"], d["daf"]) if c["sec"] == s["id"]]
+        if swc:   # Simon Wolf's sheet for this sugya, linked at the source (with permission)
+            aids.append('<div class="sw-aid">' + "".join(
+                f'<a class="sw-sec" href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1">📊 <bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a>' for c in swc)
+                + '<p class="sw-cr">באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi></p></div>')
+            names.append("דף עזר של Simon Wolf" if len(swc) == 1 else "דפי עזר של Simon Wolf")
         if aids:
             parts.append(f'  <details class="aids"><summary>עזרים — {" · ".join(names)}</summary>' + "\n".join(aids) + "</details>")
         if s.get("post"):
