@@ -1,0 +1,37 @@
+<svg viewBox="0 0 360 300" role="img" aria-label="זנב הבכור וחוליותיו: פגם מן העצם ומן הפרק, ראש הזנב שנקלף, ובשר בין חוליה לחוליה">
+<g transform="translate(176,40) scale(1.2) translate(-142,-136)">
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.2" d="M352,138 L192,136 C172,136 160,146 156,162 C152,182 156,204 166,218 C172,228 176,234 178,242 C182,254 186,264 188,276 L184,290 L210,290 L204,276 C202,264 200,254 202,244 C206,232 214,224 228,216 C250,210 300,206 352,206 Z"/>
+<path style="fill:#5b4a35" d="M184,290 L210,290 L206,282 L187,282 Z"/>
+</g>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:22;stroke-linecap:round" d="M228,46 C182,44 152,70 152,104 L152,232"/>
+<path style="fill:none;stroke:#d9b991;stroke-width:19;stroke-linecap:round" d="M228,46 C182,44 152,70 152,104 L152,232"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="146.0" y="58" width="12.0" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="146.25" y="78" width="11.5" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="146.5" y="98" width="11.0" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="146.75" y="118" width="10.5" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="147.0" y="138" width="10.0" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="147.25" y="158" width="9.5" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="147.5" y="196" width="9.0" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="147.75" y="216" width="8.5" height="16" rx="4"/>
+<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="148.5" y="240" width="7" height="18" rx="3"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:1.2" d="M141,238 L145,243 L149,238 L153,244 L157,238 L161,243 L163,238"/>
+<path style="fill:var(--paper);stroke:var(--ok);stroke-width:2" d="M140,90 L148,96 L140,102"/>
+<path class="notch" d="M140,120 L150,126 L140,132"/>
+<path style="fill:none;stroke:var(--no);stroke-width:1.6" d="M140,175 L135,175 L135,195 L140,195"/>
+<text x="8" y="20" class="l" data-seg="39b.12">נפגם הזנב:</text>
+<text x="8" y="60" class="sm l" data-seg="39b.12">חוליה</text>
+<path class="ld" d="M40,56 L145,64"/>
+<text x="8" y="92" class="ok l" data-seg="39b.12">מן הפרק — אינו מום</text>
+<text x="8" y="106" class="sm l" data-seg="39b.12">בין הפרקים מעלה ארוכה</text>
+<path class="ld" d="M116,96 L138,96"/>
+<text x="8" y="130" class="no l" data-seg="39b.12">מן העצם — מום</text>
+<path class="ld" d="M94,126 L138,126"/>
+<text x="8" y="178" class="l" data-seg="39b.12">בשר מחוליה לחוליה</text>
+<text x="8" y="192" class="no l" data-seg="39b.12">מלא אצבע — מום</text>
+<path class="ld" d="M112,186 L133,186"/>
+<text x="8" y="236" class="l" data-seg="39b.12">ראש הזנב: נקלף העור</text>
+<text x="8" y="250" class="l" data-seg="39b.12">והבשר והעצם נשאר</text>
+<text x="8" y="264" class="no l" data-seg="39b.12">מום</text>
+<path class="ld" d="M110,250 L146,250"/>
+<text x="8" y="278" class="sm l" data-seg="39b.12">אין מעלה ארוכה (רש״י)</text>
+</svg>
