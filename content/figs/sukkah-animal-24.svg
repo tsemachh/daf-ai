@@ -1,28 +1,59 @@
-<svg viewBox="0 0 360 286" role="img" aria-label="בהמה ונוד תפוח כדופן: טעמי רבי מאיר לפי רב אחא בר יעקב">
-  <path d="M10,200 L350,200" style="stroke:#8a7a62;stroke-width:1.5;fill:none"/>
-  <path d="M168,86 Q182,110 176,150" style="stroke:#6b4f33;stroke-width:2.5;fill:none;stroke-linecap:round"/>
-  <g style="fill:#b08a62;stroke:#6b4f33;stroke-width:1.5">
-    <rect x="52" y="126" width="12" height="74" rx="3"/><rect x="70" y="126" width="12" height="74" rx="3"/>
-    <rect x="136" y="126" width="12" height="74" rx="3"/><rect x="154" y="126" width="12" height="74" rx="3"/>
-    <path d="M45,88 Q48,73 75,73 L152,73 Q169,73 169,92 L169,126 Q169,140 154,140 L62,140 Q45,140 45,122 Z"/>
-    <path d="M50,88 L22,81 Q7,79 5,92 L5,108 Q7,117 18,115 L50,110 Z"/>
-    <path d="M30,82 L38,68 L42,84 Z"/>
+<svg viewBox="0 0 360 300" role="img" aria-label="שתי סוכות זו לצד זו: א. בהמה משמשת דופן; ב. דופן עומדת על נוד תפוח. בטבלה: לפי שני הלשונות של רב אחא בר יעקב בדעת ר׳ מאיר — מתי זו מחיצה">
+  <g style="fill:none;stroke:#b9ad95;stroke-width:1">
+    <rect x="186" y="4" width="166" height="186" rx="8"/>
+    <rect x="8" y="4" width="166" height="186" rx="8"/>
   </g>
-  <g style="fill:#4a3826"><rect x="52" y="194" width="12" height="6"/><rect x="70" y="194" width="12" height="6"/><rect x="136" y="194" width="12" height="6"/><rect x="154" y="194" width="12" height="6"/><circle cx="16" cy="92" r="2.2"/></g>
-  <ellipse cx="275" cy="181" rx="48" ry="19" style="fill:#c9a27a;stroke:#7a5a3a;stroke-width:1.5"/>
-  <path d="M318,174 L332,166 L334,174 Z" style="fill:#c9a27a;stroke:#7a5a3a;stroke-width:1.2"/>
-  <rect x="225" y="78" width="100" height="84" style="fill:#d8c39c;stroke:#8a6a4a;stroke-width:1.5"/>
-  <path d="M250,78 L250,162 M275,78 L275,162 M300,78 L300,162" style="stroke:#a8906a;stroke-width:1;fill:none"/>
+  <g style="fill:none;stroke:#8a7a62;stroke-width:1.2">
+    <circle cx="340" cy="18" r="9"/><circle cx="162" cy="18" r="9"/>
+  </g>
+  <g id="hut-a" transform="translate(186,0)">
+    <path d="M6,180 L160,180" style="stroke:#8a7a62;stroke-width:1.5;fill:none"/>
+    <g style="fill:#c8ad84;stroke:#7a5f40;stroke-width:1.2"><rect x="8" y="66" width="8" height="114"/><rect x="150" y="66" width="8" height="114"/></g>
+    <path d="M2,70 L164,70" style="stroke:#6b5638;stroke-width:3;fill:none"/>
+    <path d="M4,66 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0" style="fill:#7f9a5a;stroke:#4f6a35;stroke-width:1.2"/>
+    <path d="M140,118 Q152,134 148,162" style="stroke:#6b4f33;stroke-width:2.5;fill:none;stroke-linecap:round"/>
+    <g style="fill:#b08a62;stroke:#6b4f33;stroke-width:1.5">
+      <rect x="48" y="146" width="9" height="34" rx="2"/><rect x="62" y="146" width="9" height="34" rx="2"/>
+      <rect x="118" y="146" width="9" height="34" rx="2"/><rect x="130" y="146" width="9" height="34" rx="2"/>
+      <path d="M42,124 Q44,110 64,110 L124,110 Q140,110 140,124 L140,140 Q140,152 126,152 L56,152 Q42,152 42,140 Z"/>
+      <path d="M46,122 L28,112 Q16,110 14,120 L14,132 Q16,140 26,138 L46,136 Z"/>
+      <path d="M30,113 L38,104 L40,117 Z"/>
+    </g>
+    <path d="M26,112 Q22,102 28,98" style="stroke:#d9c9a8;stroke-width:2.2;fill:none;stroke-linecap:round"/>
+    <g style="fill:#4a3826"><rect x="48" y="175" width="9" height="5"/><rect x="62" y="175" width="9" height="5"/><rect x="118" y="175" width="9" height="5"/><rect x="130" y="175" width="9" height="5"/><circle cx="22" cy="120" r="2"/></g>
+  </g>
+  <g id="hut-b" transform="translate(8,0)">
+    <path d="M6,180 L160,180" style="stroke:#8a7a62;stroke-width:1.5;fill:none"/>
+    <g style="fill:#c8ad84;stroke:#7a5f40;stroke-width:1.2"><rect x="8" y="66" width="8" height="114"/><rect x="150" y="66" width="8" height="114"/></g>
+    <path d="M2,70 L164,70" style="stroke:#6b5638;stroke-width:3;fill:none"/>
+    <path d="M4,66 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0 q8,-12 16,0" style="fill:#7f9a5a;stroke:#4f6a35;stroke-width:1.2"/>
+    <g style="fill:#8f6a45;stroke:#5a3f26;stroke-width:1.4">
+      <path d="M36,170 L22,180 L30,183 L44,174 Z"/><path d="M122,171 L136,180 L128,183 L114,175 Z"/>
+      <path d="M130,150 L146,143 L149,158 L131,160 Z"/>
+      <path d="M22,158 C22,139 48,135 80,135 C112,135 134,141 134,158 C134,174 112,180 80,180 C48,180 22,176 22,158 Z"/>
+    </g>
+    <path d="M141,145 L143,159 M26,176 L33,181 M131,177 L124,182" style="stroke:#3e2b1a;stroke-width:2;fill:none"/>
+    <path d="M38,150 Q58,141 84,142" style="stroke:#c9a47c;stroke-width:3.5;fill:none;stroke-linecap:round;opacity:.85"/>
+    <path d="M34,168 Q80,176 124,166" style="stroke:#5a3f26;stroke-width:1;fill:none;stroke-dasharray:2 3"/>
+    <rect x="28" y="84" width="104" height="52" style="fill:#d8c39c;stroke:#8a6a4a;stroke-width:1.5"/>
+    <path d="M49,84 L49,136 M70,84 L70,136 M91,84 L91,136 M112,84 L112,136" style="stroke:#a8906a;stroke-width:1;fill:none"/>
+  </g>
   <g class="lb">
-    <text x="350" y="16" data-seg="24a.10">רב אחא בר יעקב — ר׳ מאיר סבר:</text>
-    <text x="350" y="32" class="sm" data-seg="24a.10">א. כל מחיצה שעומדת ברוח — אינה מחיצה</text>
-    <text x="350" y="46" class="sm" data-seg="24a.10">ב. שאינה עשויה בידי אדם — אינה מחיצה</text>
-    <text x="219" y="124" class="sm" data-seg="24a.11">דופן</text>
-    <text x="8" y="220" class="no l" data-seg="24a.10">בהמה — רוח חיים</text>
-    <text x="8" y="234" class="sm l" data-seg="24a.10">עומדת ברוח, ולאו בידי אדם</text>
-    <text x="8" y="248" class="sm l" data-seg="24a.9">ר׳ מאיר מטהר משום גולל</text>
-    <text x="350" y="220" data-seg="24a.11">נוד תפוח</text><path class="ld" d="M300,210 L285,200"/>
-    <text x="350" y="262" class="no" data-seg="24a.11">לטעם א׳: הרי עומדת ברוח</text>
-    <text x="350" y="278" class="ok" data-seg="24b.1">לטעם ב׳: הרי עשויה בידי אדם</text>
+    <text x="340" y="23" style="text-anchor:middle;font-weight:800" data-seg="24a.10">א</text>
+    <text x="326" y="23" data-seg="24a.10">בהמה כדופן</text>
+    <text x="344" y="44" class="sm" data-seg="24a.10">עומדת על רוח חיים</text>
+    <text x="162" y="23" style="text-anchor:middle;font-weight:800" data-seg="24a.11">ב</text>
+    <text x="148" y="23" data-seg="24a.11">דופן על נוד תפוח</text>
+    <text x="166" y="44" class="sm" data-seg="24a.11">עור מלא אוויר</text>
+    <text x="352" y="210" class="sm" data-seg="24a.10">ר׳ מאיר, לשון א׳: מחיצה שעומדת ברוח?</text>
+    <text x="269" y="232" class="no" style="text-anchor:middle" data-seg="24a.10">אינה מחיצה</text>
+    <text x="91" y="232" class="no" style="text-anchor:middle" data-seg="24a.11">אינה מחיצה</text>
+    <text x="352" y="264" class="sm" data-seg="24a.10">לשון ב׳: מחיצה שאינה עשויה בידי אדם?</text>
+    <text x="269" y="286" class="no" style="text-anchor:middle" data-seg="24a.10">אינה מחיצה</text>
+    <text x="91" y="286" class="ok" style="text-anchor:middle" data-seg="24b.1">מחיצה</text>
+  </g>
+  <g style="fill:none;stroke:#b9ad95;stroke-width:1">
+    <rect x="194" y="216" width="150" height="24" rx="5"/><rect x="16" y="216" width="150" height="24" rx="5"/>
+    <rect x="194" y="270" width="150" height="24" rx="5"/><rect x="16" y="270" width="150" height="24" rx="5"/>
   </g>
 </svg>
