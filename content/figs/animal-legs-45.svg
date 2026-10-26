@@ -1,0 +1,12 @@
+<svg viewBox="0 0 360 208" role="img" aria-label="יד ורגל בעלות שש אצבעות, והאצבע היתרת בשורה אחת עם שאר האצבעות">
+<rect style="fill:#ecd0b0;stroke:var(--no);stroke-width:2.2" x="212" y="72" width="11" height="40" rx="5.5"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="222.5" y="68" width="11" height="46" rx="5.5"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="235.5" y="60" width="11" height="54" rx="5.5"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="249.5" y="56" width="11" height="58" rx="5.5"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="263.5" y="58" width="11" height="56" rx="5.5"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="277.5" y="64" width="11" height="50" rx="5.5"/><path style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" d="M210,104 L294,104 C298,130 294,158 278,170 L226,170 C212,158 208,130 210,104 Z"/><rect style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" x="292" y="112" width="12" height="36" rx="6" transform="rotate(-35 298 148)"/><path style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" d="M48,100 C46,140 60,176 82,178 C104,176 116,140 114,100 C110,88 52,88 48,100 Z"/><ellipse style="fill:#ecd0b0;stroke:var(--no);stroke-width:2.2" cx="52" cy="94" rx="4.5" ry="6.5"/><ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="63" cy="90" rx="4.5" ry="6.5"/><ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="74" cy="87" rx="5" ry="7"/><ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="85" cy="85" rx="5" ry="7"/><ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="96" cy="84" rx="5.5" ry="7.5"/><ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="108" cy="84" rx="8" ry="10"/>
+<g class="lb">
+<text x="352" y="18" class="no" data-seg="45b.1">שש אצבעות בכל יד ורגל</text>
+<text x="352" y="32" class="sm" data-seg="45b.1">עשרים וארבע</text>
+<text x="8" y="18" class="l" data-seg="45b.2">נספרת על גבי היד</text>
+<text x="8" y="32" class="sm l" data-seg="45b.2">בשורה אחת עם שאר האצבעות</text>
+<path class="ld" d="M110,36 L208,66"/><path class="ld" d="M40,36 L52,82"/>
+<text x="174" y="200" class="no" data-seg="45b.1">חכמים: פוסלים</text>
+<text x="190" y="200" class="ok l" data-seg="45b.1">ר׳ יהודה: מכשיר</text>
+</g>
+</svg>
