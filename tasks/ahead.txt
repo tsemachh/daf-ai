@@ -1,10 +1,10 @@
-temurah/16
-temurah/17
-temurah/18
-temurah/19
-temurah/20
-temurah/21
-temurah/22
+!temurah/16
+!temurah/17
+!temurah/18
+!temurah/19
+!temurah/20
+!temurah/21
+!temurah/22
 temurah/23
 temurah/24
 temurah/25
