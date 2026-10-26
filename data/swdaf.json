@@ -1,0 +1,46 @@
+{
+ "_note": "Charts by Simon Wolf (www.swdaf.com), used with permission (Oct 2026): link to the source, credit \"באדיבות Simon Wolf (www.swdaf.com)\". Filled from https://www.swdaf.com/swrss.php?mas=<masechet> (tools/swdaf.py).",
+ "bechorot": {
+  "2": [
+   "bechorot002_Pesukim_Intro.pdf"
+  ],
+  "5": [
+   "bechorot005_Money_Kodesh.pdf"
+  ],
+  "11": [
+   "bechorot011_Kinyan_Nochri_BaAretz.pdf"
+  ],
+  "13": [
+   "bechorot013_Pesukim_Perek2.pdf"
+  ],
+  "16": [
+   "bechorot016_Sheep_Generations.pdf"
+  ],
+  "17": [
+   "bechorot017_Efshar_LTzamtzem.pdf"
+  ],
+  "25": [
+   "bechorot025_Pasik_Reishei.pdf"
+  ],
+  "27": [
+   "bechorot027_Teruma_Chala_Today.pdf"
+  ],
+  "29": [
+   "bechorot029_Torah_Pay.pdf"
+  ],
+  "47": [
+   "bechorot047_Pru_Urvu.pdf"
+  ],
+  "49": [
+   "bechorot049_Milah_Bechor_Shehechiyanu.pdf"
+  ],
+  "50": [
+   "bechorot050_Gold_Silver.pdf",
+   "bechorot050_Sela_Tzuri_Weight.pdf",
+   "bechorot050_Shekel_Kodesh_Currencies.pdf"
+  ],
+  "55": [
+   "bechorot055_Yarden_Maps.pdf"
+  ]
+ }
+}

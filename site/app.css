@@ -998,3 +998,5 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .stg-x::before{line-height:30px;height:30px;display:block}
 .stg-h.open .stg-x::before{line-height:36px}
 .stg-h:not(.open) .stg-x::before{line-height:24px}
+.to-sw{font-weight:600;font-size:.92em}
+.sw-cr{color:var(--muted);font-size:.85em}

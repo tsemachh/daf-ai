@@ -15,6 +15,18 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, "dist")
 _dsp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "dafspoiler.json")
 DAFSPOILER = json.load(open(_dsp, encoding="utf8")) if os.path.exists(_dsp) else {}
+_swp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "swdaf.json")
+SWDAF = json.load(open(_swp, encoding="utf8")) if os.path.exists(_swp) else {}
+SW_CREDIT = "באדיבות Simon Wolf (www.swdaf.com)"
+
+
+def sw_charts(slug, daf):
+    """Simon Wolf's charts for a daf — linked at the source (with permission), so his updates show through."""
+    out = []
+    for f in SWDAF.get(slug, {}).get(str(daf), []):
+        t = re.sub(r"^[a-z]+\d+_", "", f).rsplit(".", 1)[0].replace("_", " ")
+        out.append({"href": f"https://www.swdaf.com/docDownload/{slug}/{f}", "title": t})
+    return out
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
 BRAND = "דף צמח"   # the site's short name — what people search for
@@ -49,6 +61,7 @@ SOURCES = [
     ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
     ("אתר סיני — שיעורי הדף היומי של הרב אורי בריליאנט", "https://www.sinai.org.il/", "שיעורים, סיכומים, תרשימים וחוברות ״דף מאיר״ — לבדיקת מהלך הסוגיות וההסברים"),
     ("Daf Spoiler — הכנה לדף היומי, הרב נפתלי רמתי", "https://dafspoiler.com/", "סיכום והכנה לכל דף בשאלות ותשובות — לבדיקת הרקע והמקרה של כל סוגיה (ברשות הכותב)"),
+    ("SW Daf — Simon Wolf", "https://www.swdaf.com/", "תרשימים, מפות וטבלאות לדף — מקושרים במקור (באדיבות Simon Wolf)"),
     ("דיקטה — הנקדן", "https://nakdan.dicta.org.il/", "ניקוד אוטומטי של הטקסט לפני ההקראה בקול"),
 ]
 
@@ -655,6 +668,13 @@ def render_daf(d, prev, nxt, glossary, sources):
         lk.append({"href": f'https://dafspoiler.com/index.html?masechta={ds["id"]}&daf={d["daf"]}',
                    "text": "הכנה לדף — Daf Spoiler (הרב נפתלי רמתי)"})
     links = "\n".join(f'    <li><a href="{esc(l["href"])}">{esc(l["text"])}</a></li>' for l in lk)
+    sw = sw_charts(d["slug"], d["daf"])
+    SWC = 'באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi>'
+    if sw:
+        links += (f'\n    <li class="sw-li">תרשימים לדף — {SWC}<ul>'
+                  + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a></li>' for c in sw)
+                  + '</ul></li>')
+    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"תרשים" if len(sw) == 1 else f"{len(sw)} תרשימים"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
     pn = []
     for k, fmt in ((neighbour(d["slug"], d["daf"], -1), '→ {}'), (neighbour(d["slug"], d["daf"], 1), '{} ←')):
         if k:
@@ -687,6 +707,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   </ol>
 </nav>
 <a class="to-quiz" href="#{key}-quiz">✎ שאלות הבנה על הדף — בסוף הדף ↓</a>
+{sw_top}
 {story}
 
 {sections}
@@ -699,9 +720,9 @@ def render_daf(d, prev, nxt, glossary, sources):
 </section>
 {pager}
 
-<section class="sugya">
+<section class="sugya" id="{key}-more">
   <div class="amud">להעמקה</div>
-  <h3>מקורות באתר דף יומי</h3>
+  <h3>מקורות להעמקה</h3>
   <ul class="links">
 {links}
   </ul>
