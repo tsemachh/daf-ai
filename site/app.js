@@ -307,7 +307,8 @@
       var li=f.list.indexOf(f.seg), r=0, o=-1;
       if(full.length>3) while((o=f.seg.n.indexOf(full,o+1))>=0&&o<f.o) r++;
       var tries=[[f.seg,r]]; if(li>0&&f.list[li-1].a===f.seg.a) tries.push([f.list[li-1],1e4]); if(li>=0&&li+1<f.list.length) tries.push([f.list[li+1],0]);
-      for(var t=0;t<tries.length;t++){ if(stIn(tries[t][0],tries[t][1],t===tries.length-1)) return; }
+      for(var t=0;t<tries.length;t++){ if(stIn(tries[t][0],tries[t][1],t===tries.length-1)) return true; }
+      return false;
     }
     function stIn(seg,r,last){
       var parts=String(seg.s||'').replace(/<(?!\/?(b|strong)>)[^>]+>/g,'').split(/<\/?(?:b|strong)>/);
@@ -324,7 +325,7 @@
       }
       cands=cands.filter(function(c){ return c.s===best; });
       var c0=cands.length?cands[Math.min(r,cands.length-1)]:null, k0=c0?c0.k:-1, e0=c0?c0.e:-1;
-      if(k0<0){ if(last) pd.textContent='לא נמצא ביאור לציטוט זה.'; return false; }
+      if(k0<0){ if(last){ pd.textContent='לא נמצא ביאור לציטוט זה.'; if(rl&&rl.length&&!picked) show('rashi'); } return false; }
       var start=bw[k0].i, end=bw[e0].i, stop=end+1, ew=sp[end];
       parts=parts.slice();
       if(end%2){
@@ -385,7 +386,8 @@
         return m==='rashi'?showRashi(seg.seg):showSt(seg);
       }).catch(function(){ if(cur===q) pd.textContent='לא ניתן לטעון מספריא כרגע.'; });
     }
-    if(probe) return found.then(function(seg){ if(!seg) return null; showSt(seg);
+    /* no Steinsaltz passage for the words counts as thin: with no Rashi either, the quote stays plain text */
+    if(probe) return found.then(function(seg){ if(!seg) return null; if(!showSt(seg)) thin=true;
       return rashiFor(seg.seg).then(function(l){ return {thin:thin, rashi:l.length}; }, function(){ return {thin:thin, rashi:-1}; }); });
     Object.keys(T).forEach(function(k){ T[k].onclick=function(e){ e.stopPropagation(); picked=true; setCmtPref(k); show(k); }; });
     T.rashi.hidden=true;
