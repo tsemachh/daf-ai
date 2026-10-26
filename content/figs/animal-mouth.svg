@@ -1,0 +1,25 @@
+<svg viewBox="0 0 360 200" role="img" aria-label="פי הבכור מן הצד: שפה עליונה עודפת, לחי תחתון עודף, ורוב המדבר שבלשון">
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M153,82.1 C147,74.3 149,64.2 158,59.5 C178,50.1 215,43.9 262,40.0 C300,36.9 335,40.0 352,44.7 L352,133.6 C318,138.3 262,139.8 214,135.9 C190,133.6 170,130.5 162,126.6 C155,123.5 154,121.1 157,119.6 L330,102.4 Z"/>
+<path style="fill:#7b3a3a;stroke:#7a5c3a;stroke-width:1" d="M153,82.1 L330,102.4 L157,119.6 Z"/>
+<path style="fill:none;stroke:#e7a0a0;stroke-width:4;stroke-linecap:round" d="M156,83.7 L318,101.2"/>
+<path style="fill:none;stroke:#e7a0a0;stroke-width:4;stroke-linecap:round" d="M160,118.0 L318,103.6"/>
+<ellipse class="blk" cx="160" cy="67.3" rx="2.5" ry="4"/>
+<circle class="blk" cx="300" cy="54.0" r="3"/>
+<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M163,119.0 L158,110.0 L164,109.0 L168,118.5 Z"/>
+<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M171,118.2 L166,109.2 L172,108.2 L176,117.7 Z"/>
+<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M179,117.4 L174,108.4 L180,107.4 L184,116.9 Z"/>
+<path style="fill:#d97b7b;stroke:#8a4a4a;stroke-width:.8" d="M186,116.7 C192,108.6 215,104.0 268,101.6 L270,108.4 Z"/>
+<path style="fill:none;stroke:#b0453a;stroke-width:1.6;stroke-dasharray:4 3" d="M158,59.5 C136,65.7 130,82.1 140,89.9 L154,85.2"/>
+<path style="fill:none;stroke:#b0453a;stroke-width:1.6;stroke-dasharray:4 3" d="M162,126.6 C146,127.4 134,121.1 136,113.3 L157,118.0"/>
+<text x="8" y="22" class="no l" data-seg="40a.21">פרוס: שפה עליונה עודפת</text>
+<text x="8" y="36" class="sm l" data-seg="40a.16">פיו כחזיר (אילא: מום)</text>
+<path class="ld" d="M100,40 L136,75.9"/>
+<text x="8" y="164" class="no l" data-seg="40a.23">הלחי התחתון עודף — מום</text>
+<text x="8" y="178" class="sm l" data-seg="40b.3">דאית בה עצם (רב פפא)</text>
+<path class="ld" d="M100,156 L137,121.1"/>
+<text x="352" y="22" data-seg="40a.23">לחי העליון</text>
+<path class="ld" d="M290,26 L250,71.2"/>
+<text x="352" y="174" data-seg="40a.16">לשון: רוב המדבר</text>
+<text x="352" y="188" class="sm" data-seg="40a.16">שאינו דבוק במלקוחיו</text>
+<path class="ld" d="M240,164 L200,107.1"/>
+</svg>
