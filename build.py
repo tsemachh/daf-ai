@@ -685,7 +685,7 @@ def render_daf(d, prev, nxt, glossary, sources):
     sw = sw_charts(d["slug"], d["daf"])
     SWC = 'באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi>'
     if sw:
-        links += (f'\n    <li class="sw-li">תרשימים ודפי עזר — {SWC}<ul>'
+        links += (f'\n    <li class="sw-li">תרשימים ודפי עיון — {SWC}<ul>'
                   + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a>'
                           + (f' · <a href="#{key}-{c["sec"]}-aids">בסוגיה ↑</a>' if c["sec"] else "") + '</li>' for c in sw)
                   + '</ul></li>')
