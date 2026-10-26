@@ -454,7 +454,8 @@ def render_fig(figs):
     for f in figs:
         svg = open(os.path.join(FIGS, f["src"] + ".svg"), encoding="utf8").read().strip()
         cap = f'<figcaption>{f["cap"]}</figcaption>' if f.get("cap") else ""
-        out.append(f'<figure class="fig">{svg}{cap}</figure>')
+        ai = '<p class="fig-ai">איור שנוצר על ידי AI ונבדק מול הגמרא ורש״י · <button type="button" class="fig-fb">ראיתם טעות? כתבו הערה</button></p>'
+        out.append(f'<figure class="fig">{svg}{cap}{ai}</figure>')
     return "".join(out)
 
 
