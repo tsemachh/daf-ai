@@ -2,14 +2,14 @@
 """Add Simon Wolf's daf charts (swdaf.com, used with permission) to data/swdaf.json.
 
 The container can't reach swdaf.com, so the nightly run reads the feed with WebFetch
-(https://www.swdaf.com/swrss.php?mas=<masechet>) and passes the PDF URLs here:
+(https://www.swdaf.com/swrss.php?mas=<folder>, e.g. temurah, succah, avoda_zara — see SW_DIR in build.py) and passes the PDF URLs here:
     python tools/swdaf.py add https://www.swdaf.com/docDownload/bechorot/bechorot050_Gold_Silver.pdf ...
 Pages link to the PDFs at the source (never copied), credited "באדיבות Simon Wolf (www.swdaf.com)".
 """
 import json, os, re, sys
 
 P = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "swdaf.json")
-RX = re.compile(r"^https://www\.swdaf\.com/docDownload/([a-z]+)/(\1(\d+)_[A-Za-z0-9_]+\.pdf)$")
+RX = re.compile(r"^https://www\.swdaf\.com/docDownload/([a-z_]+)/((?i:\1)(\d+)(?:_[A-Za-z0-9_]+)?\.pdf)$")
 
 
 def main(a):

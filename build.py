@@ -20,12 +20,18 @@ SWDAF = json.load(open(_swp, encoding="utf8")) if os.path.exists(_swp) else {}
 SW_CREDIT = "באדיבות Simon Wolf (www.swdaf.com)"
 
 
+# site slug -> swdaf folder (also the feed's ?mas=), where the names differ
+SW_DIR = {"sukkah": "succah", "rosh-hashanah": "rosh_hashana", "megillah": "megilah", "moed-katan": "moed_katan",
+          "chagigah": "chagiga", "bava-kamma": "bava_kama", "bava-metzia": "bava_metzia", "bava-batra": "bava_batra",
+          "avodah-zarah": "avoda_zara", "chullin": "chulin", "keritot": "kreitot", "niddah": "nidah"}
+
+
 def sw_charts(slug, daf):
-    """Simon Wolf's charts for a daf — linked at the source (with permission), so his updates show through."""
-    out = []
-    for f in SWDAF.get(slug, {}).get(str(daf), []):
-        t = re.sub(r"^[a-z]+\d+_", "", f).rsplit(".", 1)[0].replace("_", " ")
-        out.append({"href": f"https://www.swdaf.com/docDownload/{slug}/{f}", "title": t})
+    """Simon Wolf's charts / source sheets for a daf — linked at the source (with permission), so his updates show through."""
+    out, dr = [], SW_DIR.get(slug, slug)
+    for f in SWDAF.get(dr, {}).get(str(daf), []):
+        t = re.sub(r"^[A-Za-z_]+?\d+_?", "", f).rsplit(".", 1)[0].replace("_", " ").strip() or "דף עזר"
+        out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": t})
     return out
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
@@ -61,7 +67,7 @@ SOURCES = [
     ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
     ("אתר סיני — שיעורי הדף היומי של הרב אורי בריליאנט", "https://www.sinai.org.il/", "שיעורים, סיכומים, תרשימים וחוברות ״דף מאיר״ — לבדיקת מהלך הסוגיות וההסברים"),
     ("Daf Spoiler — הכנה לדף היומי, הרב נפתלי רמתי", "https://dafspoiler.com/", "סיכום והכנה לכל דף בשאלות ותשובות — לבדיקת הרקע והמקרה של כל סוגיה (ברשות הכותב)"),
-    ("SW Daf — Simon Wolf", "https://www.swdaf.com/", "תרשימים, מפות וטבלאות לדף — מקושרים במקור (באדיבות Simon Wolf)"),
+    ("SW Daf — Simon Wolf", "https://www.swdaf.com/", "תרשימים, מפות ודפי מקורות לדף — מקושרים במקור (באדיבות Simon Wolf)"),
     ("דיקטה — הנקדן", "https://nakdan.dicta.org.il/", "ניקוד אוטומטי של הטקסט לפני ההקראה בקול"),
 ]
 
@@ -671,10 +677,10 @@ def render_daf(d, prev, nxt, glossary, sources):
     sw = sw_charts(d["slug"], d["daf"])
     SWC = 'באדיבות <bdi dir="ltr">Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener" data-external="1">www.swdaf.com</a>)</bdi>'
     if sw:
-        links += (f'\n    <li class="sw-li">תרשימים לדף — {SWC}<ul>'
+        links += (f'\n    <li class="sw-li">תרשימים ודפי עזר — {SWC}<ul>'
                   + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a></li>' for c in sw)
                   + '</ul></li>')
-    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"תרשים" if len(sw) == 1 else f"{len(sw)} תרשימים"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
+    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף — תרשימים ומקורות · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
     pn = []
     for k, fmt in ((neighbour(d["slug"], d["daf"], -1), '→ {}'), (neighbour(d["slug"], d["daf"], 1), '{} ←')):
         if k:

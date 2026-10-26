@@ -1,5 +1,1387 @@
 {
- "_note": "Charts by Simon Wolf (www.swdaf.com), used with permission (Oct 2026): link to the source, credit \"באדיבות Simon Wolf (www.swdaf.com)\". Filled from https://www.swdaf.com/swrss.php?mas=<masechet> (tools/swdaf.py).",
+ "_note": "Daf charts and source sheets by Simon Wolf (www.swdaf.com), used with permission (Oct 2026): link to the source, credit \"באדיבות Simon Wolf (www.swdaf.com)\". Keyed by swdaf folder (= feed ?mas=), then daf. Filled from https://www.swdaf.com/swrss.php?mas=<folder> via tools/swdaf.py.",
+ "berachot": {
+  "2": [
+   "berachot002_braitot.pdf"
+  ],
+  "6": [
+   "berachot006_7_8_Tefila_Beit_Knesset.pdf",
+   "berachot006_Front_Back_Shul.pdf"
+  ],
+  "8": [
+   "berachot008_Tefila_Beit_Knesset.pdf"
+  ],
+  "11": [
+   "berachot011_RavPapa.pdf"
+  ],
+  "15": [
+   "berachot015_Netilat_Yadaim.pdf"
+  ],
+  "27": [
+   "berachot027_RYehuda_Chachamim.pdf"
+  ],
+  "30": [
+   "berachot030_Tefilat_HaDerech.pdf",
+   "berachot030_Rosh_Chodesh_Night.pdf"
+  ],
+  "31": [
+   "berachot031_Bnot_Yisrael.pdf",
+   "berachot031_Insertions_Tefillah_RYona.pdf",
+   "berachot031_Zecher_LChurban.pdf"
+  ],
+  "32": [
+   "berachot032_Kohen_ShHarag.pdf"
+  ],
+  "33": [
+   "berachot033_Rambam_Beracha_ShEina_Tzricha.pdf",
+   "berachot033_Reasons_for_Mitzvot.pdf"
+  ],
+  "34": [
+   "berachot034_Davening_Road.pdf",
+   "berachot034_Tefilla_Kavana.pdf"
+  ],
+  "35": [
+   "berachot035_Beracha_Intro.pdf"
+  ],
+  "37": [
+   "berachot037_Chavitza.pdf"
+  ],
+  "42": [
+   "berachot042_Hefsek_Seuda.pdf"
+  ],
+  "45": [
+   "berachot045_Women_Zimun.pdf"
+  ],
+  "47": [
+   "berachot047_Terumat_Maaser.pdf"
+  ],
+  "53": [
+   "berachot053_Mayim_Achronim.pdf"
+  ],
+  "58": [
+   "berachot058_Constellations.pdf"
+  ],
+  "59": [
+   "berachot059_Planets.pdf"
+  ]
+ },
+ "shabbat": {
+  "3": [
+   "shabbat003_Shtaim_Arba_Chart.pdf"
+  ],
+  "5": [
+   "shabbat005_Pictures_Perek1.pdf"
+  ],
+  "8": [
+   "shabbat008_Diagrams_Kaveret.pdf"
+  ],
+  "13": [
+   "shabbat013_18_Halachot.pdf"
+  ],
+  "14": [
+   "shabbat014_Achilat_Tumah.pdf"
+  ],
+  "15": [
+   "shabbat015_Measurements_Challah.pdf"
+  ],
+  "23": [
+   "shabbat023_ChovatNerChanuka_LoTassur_Roeh.pdf",
+   "shabbat023_Birkat_Haroeh.pdf"
+  ],
+  "25": [
+   "shabbat025_Karet.pdf",
+   "shabbat025_Shabbat_Candles.pdf"
+  ],
+  "26": [
+   "shabbat026_3x3_Opinions_Chart.pdf"
+  ],
+  "27": [
+   "shabbat027_Kesut_Laila.pdf"
+  ],
+  "29": [
+   "shabbat029_Petilat_HaBeged_Chart.pdf"
+  ],
+  "33": [
+   "shabbat033_Rashbi.pdf"
+  ],
+  "34": [
+   "shabbat034_Rabbeinu_Tam.pdf"
+  ],
+  "35": [
+   "shabbat035_Tekiyot_Candle_Lighting.pdf"
+  ],
+  "36": [
+   "shabbat036_Kira_Intro.pdf"
+  ],
+  "37": [
+   "shabbat037_Kira_Chart_Shitot.pdf"
+  ],
+  "48": [
+   "shabbat048_Cooking_Apples.pdf"
+  ],
+  "49": [
+   "shabbat049_Life_vs_Aseh.pdf"
+  ],
+  "67": [
+   "shabbat067_Darchei_Emori.pdf"
+  ],
+  "72": [
+   "shabbat072_Mitasek.pdf"
+  ],
+  "75": [
+   "shabbat075_Pasik_Reishei.pdf"
+  ],
+  "82": [
+   "shabbat082_Tumat_AvodaZara.pdf"
+  ],
+  "86": [
+   "shabbat086_Poletet.pdf",
+   "shabbat086_Poletet_Mekorot.pdf"
+  ],
+  "92": [
+   "shabbat092_Katef_Marpeko.pdf"
+  ],
+  "93": [
+   "shabbat093_Msayeia.pdf",
+   "shabbat093_Shnayim_Shasu.pdf"
+  ],
+  "97": [
+   "shabbat097_Oreg.pdf"
+  ],
+  "98": [
+   "shabbat098_Mishkan_Krashim.pdf"
+  ],
+  "103": [
+   "shabbat103_Pasik_Reishei.pdf",
+   "shabbat103_Writing_Opinions.pdf"
+  ],
+  "104": [
+   "shabbat104_Censor.pdf",
+   "shabbat104_Letter_Chet.pdf"
+  ],
+  "105": [
+   "shabbat105_Loom.pdf"
+  ],
+  "106": [
+   "shabbat106_Rambam_Mekalkel_Eina_Tzricha_Lgufa.pdf"
+  ],
+  "107": [
+   "shabbat107_Incidental_Melacha.pdf"
+  ],
+  "110": [
+   "shabbat110_Sirus_Women.pdf"
+  ],
+  "111": [
+   "shabbat111_Knots_Untying.pdf"
+  ],
+  "113": [
+   "shabbat113_Loom.pdf"
+  ],
+  "114": [
+   "shabbat114_Shofar_Neilah.pdf"
+  ],
+  "116": [
+   "shabbat116_Censor_Ramban.pdf"
+  ],
+  "117": [
+   "shabbat117_Lechem_Mishneh.pdf"
+  ],
+  "118": [
+   "shabbat118_Kippah.pdf"
+  ],
+  "125": [
+   "shabbat125_Tanur_Nagar.pdf"
+  ],
+  "126": [
+   "shabbat126_Pakak_Nagar_Opinions.pdf"
+  ],
+  "129": [
+   "shabbat129_Planets.pdf"
+  ],
+  "137": [
+   "shabbat137_Mila_Asher_Kidesh.pdf"
+  ],
+  "140": [
+   "shabbat140_Antibiotics_Shabbat.pdf"
+  ],
+  "142": [
+   "shabbat142_Basis_Asur_Mutar.pdf"
+  ],
+  "146": [
+   "Shabbat146_Opening_Packages.pdf"
+  ],
+  "148": [
+   "shabbat148_Rebuke.pdf"
+  ],
+  "156": [
+   "shabbat156_Hashgacha.pdf"
+  ]
+ },
+ "eruvin": {
+  "4": [
+   "eruvin004_Amat_Mizbeach.pdf"
+  ],
+  "14": [
+   "eruvin014_Yam_Shlomo.pdf"
+  ],
+  "17": [
+   "eruvin017_Mayim_Achronim.pdf"
+  ],
+  "18": [
+   "eruvin018_Front_Back_Shul.pdf",
+   "eruvin018_Rav_Shlomo_Zalman.pdf"
+  ],
+  "28": [
+   "eruvin028_Issur_Sheretz.pdf"
+  ],
+  "31": [
+   "eruvin031_Terumat_Maaser.pdf"
+  ],
+  "40": [
+   "eruvin040_Milah_Bechor_Shehechiyanu.pdf"
+  ],
+  "41": [
+   "eruvin041_9Av_Bayit_Sheni.pdf"
+  ],
+  "45": [
+   "eruvin045_Hatzala.pdf"
+  ],
+  "49": [
+   "eruvin049_3_Chatzerot_Rishonim.pdf"
+  ],
+  "52": [
+   "eruvin052_Hechzik_Hechziro_Rishonim.pdf"
+  ],
+  "56": [
+   "eruvin056_Constellations.pdf"
+  ],
+  "58": [
+   "eruvin058_chart_medidat_tchum.pdf"
+  ],
+  "62": [
+   "eruvin062_Moreh_Halacha.pdf"
+  ],
+  "66": [
+   "eruvin066_chart_bitul_reshut.pdf"
+  ],
+  "70": [
+   "eruvin070_Chart_Bitul_One_All.pdf"
+  ],
+  "76": [
+   "eruvin076_RYochanan_Rabanan_Kaisari.pdf"
+  ],
+  "82": [
+   "eruvin082_Asmachta.pdf"
+  ],
+  "83": [
+   "eruvin083_Measurements.pdf"
+  ],
+  "91": [
+   "eruvin091_Summary_Reshuyot.pdf"
+  ],
+  "92": [
+   "eruvin092_Tziruf_Minyan.pdf"
+  ],
+  "95": [
+   "eruvin095_Tefillin_Placement.pdf"
+  ],
+  "97": [
+   "eruvin097_Keshirat_Tefillin.pdf"
+  ]
+ },
+ "pesachim": {
+  "5": [
+   "pesachim005_pesukim.pdf"
+  ],
+  "15": [
+   "pesachim015_Rabbi_Chanina_Sgan_HaKohanim.pdf"
+  ],
+  "33": [
+   "pesachim033_Mitasek.pdf"
+  ],
+  "35": [
+   "pesachim035_Terumat_Maaser.pdf"
+  ],
+  "36": [
+   "pesachim036_Matza_Ashira.pdf"
+  ],
+  "39": [
+   "pesachim039_Horseradish_Maror.pdf"
+  ],
+  "40": [
+   "pesachim040_Shemura_Matza.pdf"
+  ],
+  "41": [
+   "pesachim041_Lav_Klallot.pdf"
+  ],
+  "46": [
+   "pesachim046_Netilat_Yadaim.pdf"
+  ],
+  "47": [
+   "pesachim047_Eiruv_Tavshilin.pdf",
+   "pesachim047_Mitoch_Hoil.pdf"
+  ],
+  "48": [
+   "pesachim048_Measurements_Challah.pdf"
+  ],
+  "50": [
+   "pesachim050_melacha_erev_pesach.pdf"
+  ],
+  "56": [
+   "pesachim056_Korchin_Shema.pdf"
+  ],
+  "57": [
+   "pesachim057_Ishmael_ben_Fiachi.pdf"
+  ],
+  "58": [
+   "pesachim058_Chart_Tamid_Intro.pdf"
+  ],
+  "62": [
+   "pesachim062_Chart_Pesach_Shelamim.pdf"
+  ],
+  "85": [
+   "pesachim085_Tziruf_Minyan.pdf"
+  ],
+  "88": [
+   "pesachim088_Pru_Urvu.pdf"
+  ],
+  "94": [
+   "pesachim094_Rabbeinu_Tam.pdf",
+   "pesachim094_Constellations.pdf"
+  ],
+  "101": [
+   "pesachim101_Shinui_Makom.pdf"
+  ],
+  "103": [
+   "pesachim103_Hefsek_Seuda.pdf",
+   "pesachim103_Yaknahaz_Chart.pdf"
+  ],
+  "106": [
+   "pesachim106_Iyunim_Kiddush.pdf"
+  ],
+  "109": [
+   "pesachim109_Mikveh_Reviit.pdf"
+  ],
+  "110": [
+   "pesachim110_Zugot_Shedim.pdf"
+  ],
+  "118": [
+   "pesachim118_5th_Cup_Final.pdf",
+   "pesachim118_5th_Cup_Girsa.pdf"
+  ],
+  "119": [
+   "pesachim119_Ein_Maftirin_Afikoman.pdf"
+  ],
+  "120": [
+   "pesachim120_Matza_7_Days.pdf"
+  ]
+ },
+ "shekalim": {
+  "15": [
+   "shekalim015_Multiple_Aronot.pdf"
+  ],
+  "16": [
+   "shekalim016_Non_Yehudah_King.pdf"
+  ],
+  "17": [
+   "shekalim017_Pesukim.pdf"
+  ],
+  "18": [
+   "shekalim018_shulchanot.pdf"
+  ]
+ },
+ "yoma": {
+  "2": [
+   "yoma002_Intro_Pesukim.pdf"
+  ],
+  "5": [
+   "yoma005_Tzav_Titzave.pdf"
+  ],
+  "10": [
+   "yoma010_Maps.pdf",
+   "yoma010_Mezuza_Dirat_Arai.pdf"
+  ],
+  "14": [
+   "yoma014_Tamid_Yoma.pdf"
+  ],
+  "15": [
+   "yoma015_Yesod_SouthEast.pdf"
+  ],
+  "16": [
+   "yoma016_Layout_Azara.pdf"
+  ],
+  "17": [
+   "yoma017_BeitMoked_Middot_Tamid.pdf"
+  ],
+  "27": [
+   "yoma027_Hefshet_Nituach_Zar.pdf"
+  ],
+  "36": [
+   "yoma036_Tzafon_Mizbeach.pdf"
+  ],
+  "38": [
+   "yoma038_Alexander_Alabarch.pdf"
+  ],
+  "39": [
+   "yoma039_Achilat_Kodashim.pdf"
+  ],
+  "40": [
+   "yoma040_SederAvoda_Pesukim.pdf"
+  ],
+  "45": [
+   "yoma045_Para_Gold_Maarachot.pdf"
+  ],
+  "46": [
+   "yoma046_maariv_erev_shabbat.pdf"
+  ],
+  "63": [
+   "yoma063_Chart_Shechutei_Chutz.pdf"
+  ],
+  "67": [
+   "yoma067_Chukim_Mishpatim.pdf",
+   "yoma067_Crimson_String.pdf"
+  ],
+  "68": [
+   "yoma068_Pesukim_Machanot.pdf"
+  ],
+  "70": [
+   "yoma070_Shitot_Seder_Avoda.pdf"
+  ],
+  "74": [
+   "yoma074_Chatzi_Shiur.pdf"
+  ],
+  "76": [
+   "yoma076_Inui_Torah_Rabbinic.pdf"
+  ],
+  "81": [
+   "yoma081_Eating_Erev_YomKippur.pdf",
+   "yoma081_Terumot_Spices.pdf"
+  ],
+  "82": [
+   "yoma082_Yehareg_Val_Yaavor.pdf"
+  ]
+ },
+ "succah": {
+  "8": [
+   "succah008_RYochanan_Rabanan_Kaisari.pdf"
+  ],
+  "11": [
+   "succah011_Lulav_Hiddur.pdf",
+   "succah011_Tallit_Tefillin_Women.pdf"
+  ],
+  "15": [
+   "succah015_Chart_Gzeirat_Tikra.pdf",
+   "succah015_Efshar_LTzamtzem.pdf"
+  ],
+  "25": [
+   "succah025_Osek_BMitzva.pdf"
+  ],
+  "33": [
+   "succah033_Pasik_Reishei.pdf"
+  ],
+  "37": [
+   "succah037_Shaking_Lulav.pdf"
+  ],
+  "39": [
+   "succah039_Sechora_Peirot_Shviit.pdf"
+  ],
+  "45": [
+   "succah045_Noachide_Shituf.pdf",
+   "succah045_Rashbi.pdf"
+  ],
+  "46": [
+   "succah046_Leshev_BaSuccah.pdf",
+   "succah046_LoTassur.pdf",
+   "succah046_Milah_Bechor_Shehechiyanu.pdf",
+   "succah046_Roeh_Ner_Chanuka.pdf"
+  ],
+  "50": [
+   "succah050_PrinciplesofDrash.pdf"
+  ],
+  "51": [
+   "succah051_Alexandria_Destroyer.pdf",
+   "succah051_Living_in_Mitzrayim.pdf"
+  ],
+  "53": [
+   "succah053_Tekiyot_Candle_Lighting.pdf"
+  ],
+  "55": [
+   "succah055_Mishmarot.pdf"
+  ]
+ },
+ "beitzah": {
+  "12": [
+   "beitzah012_Mitoch_Hoyil.pdf"
+  ],
+  "13": [
+   "beitzah013_Terumat_Maaser.pdf"
+  ],
+  "15": [
+   "beitzah015_Eiruv_Tavshilin.pdf"
+  ],
+  "24": [
+   "beitzah024_Ochel_Nefesh.pdf"
+  ],
+  "25": [
+   "beitzah025_Shechita_Mitzva_Matir.pdf"
+  ],
+  "33": [
+   "beitzah033_Opening_Packages.pdf"
+  ],
+  "40": [
+   "beitzah040_Muktzah_Shabbat_YomTov.pdf"
+  ]
+ },
+ "taanit": {
+  "2": [
+   "taanit002_Intro.pdf"
+  ],
+  "4": [
+   "taanit004_human_sacrifice.pdf"
+  ],
+  "6": [
+   "taanit006_RavPapa.pdf"
+  ],
+  "10": [
+   "taanit010_60Days_Post_Equinox.pdf"
+  ],
+  "11": [
+   "taanit011_TaanitShaot_YomTaanit_YomShemini.pdf"
+  ]
+ },
+ "megilah": {
+  "4": [
+   "megilah004_Women_Megilla.pdf"
+  ],
+  "10": [
+   "megilah010_Kedushat_Haaretz.pdf"
+  ],
+  "20": [
+   "megilah020_Ketzirat_HaOmer.pdf"
+  ],
+  "25": [
+   "megilah025_Reasons_for_Mitzvot.pdf"
+  ],
+  "28": [
+   "megilah028_Bnot_Yisrael.pdf"
+  ]
+ },
+ "moed_katan": {
+  "2": [
+   "moed_katan002_Introduction.pdf"
+  ],
+  "3": [
+   "moed_katan003_Melachot_Sheviit.pdf"
+  ],
+  "15": [
+   "moed_katan015_Avel_Menudeh_Metzorah.pdf"
+  ],
+  "24": [
+   "moed_katan024_Atifat_Ishmaelim.pdf"
+  ],
+  "28": [
+   "moed_katan028_Hashgacha.pdf"
+  ]
+ },
+ "yevamot": {
+  "9": [
+   "yevamot009_asura_lazeh_muteret_lazeh.pdf",
+   "yevamot009_chataot.pdf"
+  ],
+  "28": [
+   "yevamot028_asura_lazeh_muteret_lazeh.pdf"
+  ],
+  "30": [
+   "yevamot030_mishna_charts.pdf"
+  ],
+  "33": [
+   "yevamot033_Chart_RChiya_BarKapara.pdf"
+  ],
+  "37": [
+   "yevamot037_yabam_safek.pdf"
+  ],
+  "40": [
+   "yevamot040_shniot_chalitza.pdf"
+  ],
+  "53": [
+   "yevamot053_Yehareg_Val_Yaavor.pdf"
+  ],
+  "54": [
+   "yevamot054_Arayot_Limudim.pdf"
+  ],
+  "55": [
+   "yevamot055_Karet_Aririm.pdf"
+  ],
+  "75": [
+   "yevamot075_Tevila_Sunset_Kapara.pdf"
+  ],
+  "121": [
+   "yevamot121_Agunot_WTC.pdf"
+  ]
+ },
+ "ketubot": {
+  "6": [
+   "ketubot006_Pasik_Reishei.pdf"
+  ],
+  "25": [
+   "ketubot025_Teruma_Chala_Today.pdf",
+   "ketubot025_Yovel_Torah.pdf"
+  ],
+  "34": [
+   "ketubot034_Chart_Mevashel.pdf"
+  ],
+  "37": [
+   "ketubot037_Kam_Lei.pdf"
+  ],
+  "72": [
+   "ketubot072_Covering_Hair.pdf"
+  ],
+  "74": [
+   "ketubot074_Shliach_Tnai.pdf"
+  ],
+  "76": [
+   "ketubot076_Burden_of_Proof.pdf"
+  ],
+  "99": [
+   "ketubot099_Gold_Silver.pdf"
+  ],
+  "104": [
+   "ketubot104_Praying_for_Death.pdf"
+  ],
+  "105": [
+   "ketubot105_Torah_Pay.pdf"
+  ]
+ },
+ "nedarim": {
+  "2": [
+   "nedarim002_Language_Nedarim_Nazir.pdf"
+  ],
+  "4": [
+   "nedarim004_Achilat_Kodashim.pdf"
+  ],
+  "23": [
+   "nedarim023_Kol_Nidrei.pdf"
+  ],
+  "37": [
+   "nedarim037_Pesukim.pdf",
+   "nedarim037_Torah_Pay.pdf"
+  ],
+  "53": [
+   "nedarim053_Chart.pdf"
+  ],
+  "61": [
+   "nedarim061_Yovel_Torah.pdf"
+  ],
+  "62": [
+   "nedarim062_7_9_Av.pdf"
+  ],
+  "67": [
+   "nedarim067_Pesukim.pdf"
+  ],
+  "68": [
+   "nedarim068.pdf"
+  ],
+  "71": [
+   "nedarim071.pdf"
+  ]
+ },
+ "nazir": {
+  "2": [
+   "nazir002_Introduction.pdf",
+   "nazir002_Language_Nedarim_Nazir.pdf",
+   "nazir002_pesukim.pdf"
+  ],
+  "5": [
+   "nazir005_Summary_RavMatna_BarPada.pdf"
+  ],
+  "13": [
+   "nazir013_15.pdf"
+  ],
+  "16": [
+   "nazir016_Summary_RavMatna_BarPada.pdf"
+  ],
+  "34": [
+   "nazir034_35.pdf"
+  ],
+  "41": [
+   "nazir041_58.pdf",
+   "nazir041_SummaryChart_REliezer_Rabanan.pdf"
+  ],
+  "48": [
+   "nazir048_MachloketRAkivaRYishmael.pdf"
+  ],
+  "58": [
+   "nazir058_41.pdf"
+  ]
+ },
+ "sotah": {
+  "2": [
+   "sotah002_PesukeiSotah.pdf"
+  ],
+  "4": [
+   "sotah004.pdf"
+  ],
+  "14": [
+   "sotah014_Mizbeach_Chuda_Keren.pdf"
+  ],
+  "21": [
+   "sotah021_Women_Torah.pdf"
+  ]
+ },
+ "gittin": {
+  "88": [
+   "gittin088_Get_Meuseh.pdf"
+  ]
+ },
+ "kiddushin": {
+  "2": [
+   "kiddushin002_mitzva_intro.pdf"
+  ],
+  "12": [
+   "kiddushin012_Money_Conversion.pdf"
+  ],
+  "14": [
+   "kiddushin014_Pesukim.pdf"
+  ],
+  "31": [
+   "kiddushin031_Kippah.pdf"
+  ],
+  "34": [
+   "kiddushin034_Chart_Time_Bound_Mitzvot.pdf"
+  ],
+  "37": [
+   "kiddushin037_Chadash_Outside_Israel.pdf"
+  ],
+  "59": [
+   "kiddushin059_Ani_Mehapech.pdf"
+  ],
+  "72": [
+   "kiddushin072_MapofBavel.pdf"
+  ]
+ },
+ "bava_kama": {
+  "63": [
+   "bava_kama063_chart_ganav.pdf"
+  ],
+  "71": [
+   "bava_kama071_Chart_Mevashel.pdf"
+  ],
+  "114": [
+   "bava_kama114_Yeush_Sefarim.pdf"
+  ]
+ },
+ "bava_metzia": {
+  "5": [
+   "bava_metzia005_Chashid_Shvua.pdf",
+   "bava_metzia005_Lo_Tachmod.pdf"
+  ],
+  "44": [
+   "bava_metzia044_Gold_Silver.pdf"
+  ],
+  "115": [
+   "bava_metzia115_Lav_Klallot.pdf"
+  ]
+ },
+ "bava_batra": {
+  "15": [
+   "bava_batra015_Last_8_Pesukim.pdf"
+  ],
+  "18": [
+   "bava_batra018.pdf"
+  ],
+  "27": [
+   "bava_batra027_16_Amot_Ulah.pdf"
+  ],
+  "35": [
+   "bava_batra035_Litigants_Are_Reshayim.pdf"
+  ],
+  "48": [
+   "bava_batra048_Get_Meuseh.pdf"
+  ],
+  "54": [
+   "bava_batra054_Ani_Mehapech.pdf"
+  ],
+  "57": [
+   "bava_batra057_Rashbam.pdf"
+  ],
+  "60": [
+   "bava_batra060_Zecher_Lchurban.pdf"
+  ],
+  "74": [
+   "bava_batra074_Loeg_Larash.pdf"
+  ],
+  "76": [
+   "bava_batra076_Kinyan_Mesira.pdf"
+  ],
+  "81": [
+   "bava_batra081_Ger_Lomar_Avoteinu.pdf"
+  ],
+  "87": [
+   "bava_batra087_Aveida_Midaat.pdf"
+  ],
+  "90": [
+   "bava_batra090_Measurements.pdf"
+  ],
+  "95": [
+   "bava_batra095_Martef.pdf"
+  ],
+  "97": [
+   "bava_batra097_Grape_Juice.pdf"
+  ],
+  "101": [
+   "bava_batra101_Kuchin.pdf"
+  ],
+  "102": [
+   "bava_batra102_Kuchin.pdf"
+  ],
+  "107": [
+   "bava_batra107_Pesukim_Nachala.pdf"
+  ],
+  "115": [
+   "bava_batra115_Nachala_Tzidukim.pdf"
+  ],
+  "137": [
+   "bava_batra137_Matana_Al_Mnat_Lhachzir.pdf"
+  ],
+  "151": [
+   "bava_batra151_Matnat_Shchiv_Merah.pdf"
+  ]
+ },
+ "sanhedrin": {
+  "13": [
+   "sanhedrin013_Tekufah.pdf"
+  ],
+  "20": [
+   "sanhedrin020_Melech.pdf"
+  ],
+  "21": [
+   "sanhedrin021_Yichud_Pilegesh_SeferTorah.pdf"
+  ],
+  "24": [
+   "sanhedrin024_Asmachta.pdf"
+  ],
+  "25": [
+   "sanhedrin025_Lo_Tachmod.pdf"
+  ],
+  "26": [
+   "sanhedrin026_Shemittah_Bzman_Hazeh.pdf"
+  ],
+  "27": [
+   "sanhedrin027_Family_Tree.pdf",
+   "sanhedrin027_Disqualification_Eidim.pdf"
+  ],
+  "28": [
+   "sanhedrin028_Family_Tree.pdf"
+  ],
+  "35": [
+   "sanhedrin035_Shemittah_Kohen_Sheharag.pdf"
+  ],
+  "40": [
+   "sanhedrin040_Pesukim_Perek5.pdf"
+  ],
+  "42": [
+   "sanhedrin042_Kiddush_Levana.pdf"
+  ],
+  "43": [
+   "sanhedrin043_Areivut.pdf"
+  ],
+  "45": [
+   "sanhedrin045_PrinciplesofDrash.pdf"
+  ],
+  "52": [
+   "sanhedrin052_Chukot_Akum.pdf"
+  ],
+  "54": [
+   "sanhedrin054_Eirva.pdf"
+  ],
+  "56": [
+   "sanhedrin056_7_Noachide_Laws.pdf"
+  ],
+  "59": [
+   "sanhedrin059_Abortion.pdf"
+  ],
+  "63": [
+   "sanhedrin063_Noachide_Shutfut_Shituf.pdf"
+  ],
+  "65": [
+   "sanhedrin065_Ov_Idoni_Molech.pdf"
+  ],
+  "73": [
+   "sanhedrin073_Rodef_LoTaamod_Yehareg_Val_Taavor.pdf"
+  ],
+  "74": [
+   "sanhedrin074_Rodef_LoTaamod_Yehareg_Val_Taavor.pdf"
+  ],
+  "75": [
+   "sanhedrin075_Eim_Chamuto.pdf"
+  ],
+  "76": [
+   "sanhedrin076_Aveidat_Kuti.pdf"
+  ],
+  "77": [
+   "sanhedrin077_Koach_Adam.pdf"
+  ],
+  "82": [
+   "sanhedrin082_Weapons_in_Shul.pdf"
+  ],
+  "84": [
+   "sanhedrin084_Medical_Treatment_Parents.pdf"
+  ],
+  "91": [
+   "sanhedrin091_Fish_Controversy.pdf"
+  ],
+  "95": [
+   "sanhedrin095_Vayelech_Charana.pdf"
+  ],
+  "98": [
+   "sanhedrin098_Tzedakah.pdf"
+  ],
+  "105": [
+   "sanhedrin105_Akum_OlamHabah.pdf"
+  ],
+  "110": [
+   "sanhedrin110_Machloket.pdf"
+  ]
+ },
+ "makkot": {
+  "3": [
+   "makkot003_Shemitat_Kesafim.pdf"
+  ],
+  "7": [
+   "makkot007_PesukimPerek2.pdf"
+  ],
+  "12": [
+   "makkot012_Kavod_Grandparents.pdf"
+  ],
+  "14": [
+   "makkot014_Charts.pdf"
+  ],
+  "19": [
+   "makkot019_Ger_Lomar_Avoteinu.pdf",
+   "makkot019_Kedushat_Haaretz_Hamikdash.pdf"
+  ],
+  "20": [
+   "makkot020_Shaving_Points.pdf"
+  ],
+  "21": [
+   "makkot021_Shaving_Points.pdf"
+  ]
+ },
+ "shevuot": {
+  "2": [
+   "shevuot002_Pesukim.pdf"
+  ],
+  "3": [
+   "shevuot003_Razors.pdf"
+  ],
+  "4": [
+   "shevuot004_PrinciplesofDrash.pdf"
+  ],
+  "18": [
+   "shevuot018_Havdalah_Vestot_Mitasek.pdf"
+  ],
+  "19": [
+   "shevuot019_Shvua_BLeshon_Neder.pdf"
+  ],
+  "28": [
+   "shevuot028_Chart.pdf"
+  ],
+  "30": [
+   "shevuot030_Rav_Shlomo_Zalman.pdf"
+  ],
+  "38": [
+   "shevuot038_Rav_Natronai_Arur.pdf"
+  ],
+  "39": [
+   "shevuot039_Uvshmo_Tivashea.pdf"
+  ],
+  "40": [
+   "shevuot040_Eid_Echad_Shvuat_Heset.pdf"
+  ],
+  "42": [
+   "shevuot042_Taanat_Katan_Poshea.pdf"
+  ],
+  "44": [
+   "shevuot044_Gold_Silver.pdf"
+  ],
+  "46": [
+   "shevuot046_Buyer_Believed.pdf"
+  ]
+ },
+ "horayot": {
+  "2": [
+   "horayot002_Pesukim.pdf"
+  ],
+  "10": [
+   "horayot010_13_Mekorot.pdf"
+  ],
+  "12": [
+   "horayot012_Greek_Chai.pdf",
+   "horayot012_Simana_Milta.pdf"
+  ]
+ },
+ "zevachim": {
+  "2": [
+   "zevachim002_Intro.pdf"
+  ],
+  "14": [
+   "zevachim014_Holacha.pdf"
+  ],
+  "18": [
+   "zevachim018_Kesut_Laila.pdf"
+  ],
+  "19": [
+   "zevachim019_Yom_HaShemini.pdf"
+  ],
+  "20": [
+   "zevachim020_Tzafon.pdf"
+  ],
+  "21": [
+   "zevachim021_Mei_Kiyor.pdf"
+  ],
+  "32": [
+   "zevachim032_Biya_Bmiktzat.pdf"
+  ],
+  "33": [
+   "zevachim033_Charts.pdf"
+  ],
+  "39": [
+   "zevachim039_VeAsa_LaPar.pdf"
+  ],
+  "40": [
+   "zevachim040_Kal_ViChomer.pdf",
+   "zevachim040_VeAsa_LaPar.pdf"
+  ],
+  "41": [
+   "zevachim041_Kal_ViChomer.pdf"
+  ],
+  "44": [
+   "zevachim044_Pesukim.pdf"
+  ],
+  "48": [
+   "zevachim048_Pesukim.pdf"
+  ],
+  "50": [
+   "zevachim050_Chart_Limudim.pdf"
+  ],
+  "53": [
+   "zevachim053_Yesod_Dromi.pdf"
+  ],
+  "54": [
+   "zevachim054_Mizbeach_HaChitzon.pdf"
+  ],
+  "55": [
+   "zevachim055_Petach_Ohel_Moed.pdf"
+  ],
+  "56": [
+   "zevachim056_Rabbeinu_Tam.pdf"
+  ],
+  "57": [
+   "zevachim057_Summary_Eizohu_Mikoman.pdf"
+  ],
+  "58": [
+   "zevachim058_Mizbeach_Placement.pdf"
+  ],
+  "59": [
+   "zevachim059_Kiyor_Mizbeach_Placement.pdf",
+   "zevachim059_Mizbeach_Summary.pdf"
+  ],
+  "60": [
+   "zevachim060_Kedushat_Haaretz_Hamikdash.pdf"
+  ],
+  "62": [
+   "zevachim062_Nichoshet_Ramps.pdf"
+  ],
+  "64": [
+   "zevachim064_Beit_Hadeshen.pdf"
+  ],
+  "67": [
+   "zevachim067_Kinim.pdf"
+  ],
+  "68": [
+   "zevachim068_Kinim.pdf"
+  ],
+  "69": [
+   "zevachim069_Chart_Nveilat_Of.pdf"
+  ],
+  "70": [
+   "zevachim070_Chart_Nveilat_Of.pdf"
+  ],
+  "79": [
+   "zevachim079_Korech.pdf"
+  ],
+  "83": [
+   "zevachim083_Chart_HaMizbeach_Mikadesh.pdf"
+  ],
+  "91": [
+   "zevachim091_Pasik_Reishei.pdf"
+  ],
+  "97": [
+   "zevachim097_Achilat_Kodashim.pdf",
+   "zevachim097_Aseh_Doche_LoTaseh_AndMore.pdf"
+  ],
+  "100": [
+   "zevachim100_Chart_Onen.pdf"
+  ],
+  "102": [
+   "zevachim102_Non_Yehudah_King.pdf"
+  ],
+  "106": [
+   "zevachim106_Pesukim.pdf"
+  ],
+  "107": [
+   "zevachim107_Pesukim.pdf"
+  ],
+  "113": [
+   "zevachim113_OrChaim_Tzedaka.pdf"
+  ],
+  "118": [
+   "zevachim118_Shilo_TimeLine.pdf"
+  ]
+ },
+ "menachot": {
+  "2": [
+   "menachot002_Intro_Pesukim.pdf"
+  ],
+  "18": [
+   "menachot018_Pesukim.pdf"
+  ],
+  "19": [
+   "menachot019_Mizbeach_Tzafon.pdf"
+  ],
+  "20": [
+   "menachot020_Rabbeinu_Tam.pdf"
+  ],
+  "21": [
+   "menachot021_Salt.pdf"
+  ],
+  "27": [
+   "menachot027_Lulav_Hiddur.pdf"
+  ],
+  "28": [
+   "menachot028_Menorah.pdf"
+  ],
+  "30": [
+   "menachot030_Last_8_Pesukim.pdf",
+   "menachot030_Write_Torah.pdf"
+  ],
+  "34": [
+   "menachot034_Tefillin_Rashi_RTam.pdf"
+  ],
+  "36": [
+   "menachot036_Keshirat_Tefillin.pdf"
+  ],
+  "37": [
+   "menachot037_Tefillin_Placement.pdf"
+  ],
+  "38": [
+   "menachot038_Techelet.pdf"
+  ],
+  "40": [
+   "menachot040_Kesut_Laila.pdf"
+  ],
+  "53": [
+   "menachot053_Menachot_Lishma.pdf",
+   "menachot053_Mila_Asher_Kidesh.pdf"
+  ],
+  "54": [
+   "menachot054_Matza_Ashira.pdf"
+  ],
+  "55": [
+   "menachot055_Menachot_Lishma.pdf"
+  ],
+  "57": [
+   "menachot057_Matza_Ashira.pdf"
+  ],
+  "58": [
+   "menachot058_Lav_Klallot.pdf"
+  ],
+  "62": [
+   "menachot062_Shaking_Lulav.pdf"
+  ],
+  "64": [
+   "menachot064_Hyrkanus_Aristobolus.pdf"
+  ],
+  "65": [
+   "menachot065_Sefirat_HaOmer.pdf"
+  ],
+  "66": [
+   "menachot066_Sefirat_HaOmer.pdf"
+  ],
+  "68": [
+   "menachot068_Chadash_Outside_Israel.pdf"
+  ],
+  "71": [
+   "menachot071_Korchin_Shema.pdf"
+  ],
+  "72": [
+   "menachot072_Ketzirat_HaOmer.pdf"
+  ],
+  "75": [
+   "menachot075_Chavitza.pdf",
+   "menachot075_Greek_Chai.pdf",
+   "menachot075_Making_Menachot.pdf"
+  ],
+  "77": [
+   "menachot077_Lachmei_Todah.pdf"
+  ],
+  "84": [
+   "menachot084_Chadash_Outside_Israel.pdf"
+  ],
+  "86": [
+   "menachot086_Grape_Juice.pdf"
+  ],
+  "96": [
+   "menachot096_Lechem_HaPanim.pdf"
+  ],
+  "97": [
+   "menachot097_Amot_Keilim.pdf"
+  ],
+  "99": [
+   "menachot099_Shulchanot.pdf",
+   "menachot099_Talmud_Torah.pdf"
+  ],
+  "105": [
+   "menachot105_Nazir_Metzorah.pdf"
+  ],
+  "107": [
+   "menachot107_Korbanot_Animals.pdf"
+  ],
+  "109": [
+   "menachot109_Kohen_Mumar.pdf"
+  ],
+  "110": [
+   "menachot110_Korban_Tefilla.pdf"
+  ]
+ },
+ "chulin": {
+  "2": [
+   "chulin002_Intro.pdf"
+  ],
+  "3": [
+   "chulin003_Mishna_Table.pdf"
+  ],
+  "4": [
+   "chulin004_Matza_Lishma.pdf"
+  ],
+  "6": [
+   "chulin006_BeitShan_Mosaic.pdf"
+  ],
+  "7": [
+   "chulin007_Kedushat_Haaretz.pdf"
+  ],
+  "9": [
+   "chulin009_Keshirat_Tefillin.pdf"
+  ],
+  "15": [
+   "chulin015_Chart_Mevashel.pdf"
+  ],
+  "16": [
+   "chulin016_Koach_Adam.pdf"
+  ],
+  "17": [
+   "chulin017_Eating_Bacon.pdf"
+  ],
+  "18": [
+   "chulin018_Trachea.pdf"
+  ],
+  "21": [
+   "chulin021_Chart_Olat_Of.pdf"
+  ],
+  "23": [
+   "chulin023_Palges.pdf"
+  ],
+  "24": [
+   "chulin024_Kohanim_Age.pdf"
+  ],
+  "26": [
+   "chulin026_Tekiyot_Candle_Lighting.pdf"
+  ],
+  "28": [
+   "chulin028_Efshar_LTzamtzem.pdf"
+  ],
+  "29": [
+   "chulin029_Shechita_Process.pdf"
+  ],
+  "34": [
+   "chulin034_Achilat_Tumah.pdf"
+  ],
+  "43": [
+   "chulin043_Esophagus.pdf"
+  ],
+  "63": [
+   "chulin063_Tameh_Birds.pdf"
+  ],
+  "64": [
+   "chulin064_Blood_Eggs.pdf"
+  ],
+  "65": [
+   "chulin065_Chagav_RavPapa.pdf"
+  ],
+  "67": [
+   "chulin067_Worms_Food.pdf"
+  ],
+  "77": [
+   "chulin077_Darchei_Emori.pdf"
+  ],
+  "78": [
+   "chulin078_Mother_Child_Chart.pdf"
+  ],
+  "80": [
+   "chulin080_Chart_ZeraAv.pdf"
+  ],
+  "84": [
+   "chulin084_Pesukim_KisuiDam.pdf"
+  ],
+  "85": [
+   "chulin085_Yeniva_Worm.pdf"
+  ],
+  "86": [
+   "chulin086_Hefsek_Seuda.pdf"
+  ],
+  "91": [
+   "chulin091_Vayelech_Charana.pdf"
+  ],
+  "92": [
+   "chulin092_30_Mitzvot_Bnei_Noach.pdf"
+  ],
+  "100": [
+   "chulin100_Bitul.pdf"
+  ],
+  "105": [
+   "chulin105_Meat_Milk.pdf",
+   "chulin105_Mayim_Achronim.pdf",
+   "chulin105_Kinuach_Hadacha.pdf"
+  ],
+  "106": [
+   "chulin106_Mayim_Rishonim.pdf"
+  ],
+  "118": [
+   "chulin118_Yadot_Shomer.pdf"
+  ],
+  "122": [
+   "chulin122_4_Mil.pdf"
+  ],
+  "127": [
+   "chulin127_128_Summary_Charts.pdf"
+  ],
+  "130": [
+   "chulin130_Perek10_Pesukim.pdf"
+  ],
+  "131": [
+   "chulin131_Matnot_Kehuna_Knas_Ezra.pdf"
+  ],
+  "133": [
+   "chulin133_Matnot_Kehuna_Knas_Ezra.pdf"
+  ],
+  "135": [
+   "chulin135_Perek11_Pesukim.pdf"
+  ],
+  "136": [
+   "chulin136_RavIlai_Summary.pdf",
+   "chulin136_Talit_Sheula.pdf"
+  ]
+ },
  "bechorot": {
   "2": [
    "bechorot002_Pesukim_Intro.pdf"
@@ -41,6 +1423,260 @@
   ],
   "55": [
    "bechorot055_Yarden_Maps.pdf"
+  ]
+ },
+ "arachin": {
+  "2": [
+   "arachin002_Reeya.pdf",
+   "arachin002_Tzitzit.pdf",
+   "arachin002_Women_Megilla.pdf",
+   "arachin002_Intro.pdf"
+  ],
+  "3": [
+   "arachin003_Women_Zimun.pdf"
+  ],
+  "4": [
+   "arachin004_Pesukim_Limudim.pdf"
+  ],
+  "5": [
+   "arachin005_Nidon_Bichvodo.pdf"
+  ],
+  "7": [
+   "arachin007_Abortion.pdf"
+  ],
+  "9": [
+   "arachin009_Chodesh_Maleh_Chaser.pdf"
+  ],
+  "12": [
+   "arachin012_Timeline_Yovel.pdf"
+  ],
+  "14": [
+   "arachin014_Pesukim_Limudim.pdf"
+  ],
+  "16": [
+   "arachin016_LoTisna.pdf"
+  ],
+  "17": [
+   "arachin017_Arachin_Korbanot.pdf"
+  ],
+  "19": [
+   "arachin019_Marpeko.pdf"
+  ],
+  "21": [
+   "arachin021_Get_Meuseh.pdf"
+  ],
+  "26": [
+   "arachin026_Geulat_Sdeh_Achuza.pdf"
+  ],
+  "29": [
+   "arachin029_Pesukim_Limudim.pdf"
+  ],
+  "32": [
+   "arachin032_Kedushat_Haaretz.pdf",
+   "arachin032_Yovel_Torah.pdf"
+  ],
+  "33": [
+   "arachin033_Yovel_Torah.pdf"
+  ]
+ },
+ "temurah": {
+  "2": [
+   "temurah002_Introduction.pdf"
+  ],
+  "7": [
+   "temurah007_Issurei_Mum.pdf"
+  ],
+  "9": [
+   "temurah009_Chozer_Meimir.pdf"
+  ],
+  "14": [
+   "temurah014_Miketz_40.pdf"
+  ],
+  "28": [
+   "temurah028_Issurei_Mizbeach.pdf"
+  ],
+  "33": [
+   "temurah033_Hamada_Haracha.pdf"
+  ]
+ },
+ "kreitot": {
+  "2": [
+   "kreitot002_Introduction.pdf"
+  ],
+  "5": [
+   "kreitot005_Greek_Chai.pdf"
+  ],
+  "6": [
+   "kreitot006_Simana_Milta.pdf"
+  ],
+  "9": [
+   "kreitot009_Pesukim.pdf"
+  ],
+  "10": [
+   "kreitot010_Birth_Tuma_RYehuda.pdf",
+   "kreitot010_Oleh_Vyored.pdf"
+  ],
+  "14": [
+   "kreitot014_Multi_Relatives.pdf"
+  ],
+  "16": [
+   "kreitot016_shabbat_gufin_mechulakin.pdf"
+  ],
+  "19": [
+   "kreitot019_Mitasek.pdf"
+  ],
+  "27": [
+   "kreitot027_Pesukim.pdf"
+  ]
+ },
+ "kinnim": {
+  "22": [
+   "kinnim022_Introduction.pdf",
+   "kinnim022_Kinnim_Diagrams.pdf"
+  ],
+  "24": [
+   "kinnim024_Kinnim_Diagrams.pdf"
+  ]
+ },
+ "tamid": {
+  "28": [
+   "tamid028_Terumat_Hadeshen.pdf"
+  ],
+  "29": [
+   "tamid029_Maaracha_Ktoret.pdf"
+  ],
+  "30": [
+   "tamid030_Beit_Hamoked.pdf"
+  ],
+  "33": [
+   "tamid033_Summary_Tamid.pdf"
+  ]
+ },
+ "middot": {
+  "34": [
+   "middot034_Middot_Diagrams.pdf"
+  ]
+ },
+ "nidah": {
+  "2": [
+   "nidah002_Introduction.pdf"
+  ],
+  "17": [
+   "nidah017_Anatomy.pdf"
+  ],
+  "29": [
+   "nidah029_Toah.pdf"
+  ],
+  "32": [
+   "nidah032_Limudim.pdf"
+  ],
+  "33": [
+   "nidah033_Poletet.pdf"
+  ],
+  "42": [
+   "nidah042_Poletet.pdf"
+  ],
+  "43": [
+   "nidah043_Limudim.pdf"
+  ],
+  "44": [
+   "nidah044_Abortion.pdf"
+  ],
+  "46": [
+   "nidah046_Rashi_Lshitato.pdf"
+  ],
+  "47": [
+   "nidah047_Teruma_Chala_Kedusha_Today.pdf"
+  ],
+  "54": [
+   "nidah054_Cycles.pdf"
+  ],
+  "63": [
+   "nidah063_Or_Zarua.pdf"
+  ],
+  "64": [
+   "nidah064_Veset_Chodesh.pdf"
+  ],
+  "66": [
+   "nidah066_Bnot_Yisrael.pdf"
+  ],
+  "69": [
+   "nidah069_Sefurim_Lefanainu.pdf"
+  ]
+ },
+ "rosh_hashana": {
+  "11": [
+   "rosh_hashana011_Mazalot.pdf"
+  ],
+  "18": [
+   "rosh_hashana018_9Av_Bayit_Sheni.pdf"
+  ],
+  "20": [
+   "rosh_hashana020_International_Date_Line.pdf"
+  ],
+  "34": [
+   "rosh_hashana034_Shofar_Limudim.pdf"
+  ]
+ },
+ "chagiga": {
+  "2": [
+   "chagiga002_Chinuch.pdf",
+   "chagiga002_Pru_Urvu.pdf",
+   "chagiga002_Reeya.pdf"
+  ],
+  "4": [
+   "chagiga004_Miriam_Magadla.pdf"
+  ]
+ },
+ "avoda_zara": {
+  "8": [
+   "avoda_zara008_Rabbeinu_Yona.pdf"
+  ],
+  "9": [
+   "avoda_zara009_Timeline.pdf"
+  ],
+  "11": [
+   "avoda_zara011_Sela_Tzuri.pdf"
+  ],
+  "13": [
+   "avoda_zara013_Leaving_Eretz_Yisrael.pdf"
+  ],
+  "15": [
+   "avoda_zara015_Shemitta_Gavra_Karka.pdf"
+  ],
+  "17": [
+   "avoda_zara017_Kiruv_Erva.pdf"
+  ],
+  "20": [
+   "avoda_zara020_Land_for_Peace.pdf",
+   "avoda_zara020_LoTichanem_VNishmarta.pdf"
+  ],
+  "24": [
+   "avoda_zara024_Yitro.pdf"
+  ],
+  "30": [
+   "avoda_zara030_Yayin_Mevushal.pdf"
+  ],
+  "34": [
+   "avoda_zara034.pdf"
+  ],
+  "38": [
+   "avoda_zara038_Bishul_Akum.pdf"
+  ],
+  "52": [
+   "avoda_zara052.pdf"
+  ],
+  "55": [
+   "avoda_zara055.pdf"
+  ],
+  "62": [
+   "avoda_zara062_Sechora_Peirot_Shviit.pdf"
+  ],
+  "65": [
+   "avoda_zara065_Loeg_Larash.pdf"
+  ],
+  "75": [
+   "avoda_zara075_Mayim_Eifer_Chart.pdf"
   ]
  }
 }
