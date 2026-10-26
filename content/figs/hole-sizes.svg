@@ -1,34 +1,65 @@
-<svg viewBox="0 0 360 300" role="img" aria-label="סולם גדלים של נקבים: כרשינה ועדשה באוזן; סלע, מקדח וחיסומו ואגרוף בגולגולת ובמאור">
-  <circle cx="340" cy="40" r="9" style="fill:#c08a4a;stroke:#7a5a30;stroke-width:1"/>
-  <circle cx="302" cy="40" r="10.5" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
-  <circle class="hole" cx="80" cy="40" r="11.5"/><circle cx="80" cy="40" r="10.5" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
-  <circle class="hole" cx="32" cy="40" r="15"/><circle cx="35" cy="43" r="10.5" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
-  <path class="ld" d="M8,90 L352,90"/>
-  <circle cx="318" cy="135" r="18" style="fill:#c9c1ad;stroke:#857a63;stroke-width:1.5"/>
-  <circle cx="318" cy="135" r="13" style="fill:none;stroke:#857a63;stroke-width:.8"/>
-  <path d="M313,158 L323,158 M313,162 L323,162" style="stroke:#857a63;stroke-width:1.5"/>
-  <circle cx="318" cy="190" r="24" style="fill:none;stroke:#6f6352;stroke-width:1.5;stroke-dasharray:4 3"/>
-  <circle cx="318" cy="190" r="18" style="fill:var(--paper);stroke:#6f6352;stroke-width:2"/>
-  <circle cx="318" cy="258" r="36" style="fill:var(--paper);stroke:#6f6352;stroke-width:2"/>
+<svg viewBox="0 0 360 310" role="img" aria-label="א: נקב באוזן הבכור — מלא כרשינה או כעדשה, והאם הכרשינה עומדת בנקב או נכנסת ויוצאה. ב: חסרון בגולגולת — מלא מקדח שווה לסלע, ותירוץ רב חסדא: מקדח וחיסומו, נקב שהורחב, יותר מסלע">
+  <!-- ===== panel א: hole in the ear ===== -->
+  <g transform="translate(6,2) scale(.16)"><path class="ear" d="M330,120 C300,60 210,40 120,55 C60,65 25,100 30,125 C35,150 70,175 125,185 C215,200 300,180 330,120 Z"/><path class="ear-in" d="M300,120 C270,85 200,75 135,85 C95,92 75,110 78,125 C82,142 105,152 140,158 C205,168 270,155 300,120 Z"/></g>
+  <circle cx="38" cy="21" r="2.6" style="fill:var(--paper);stroke:var(--no);stroke-width:1.2"/>
+  <path class="ld" d="M40,24 L56,44"/>
+  <rect class="ear" x="12" y="44" width="150" height="56" rx="14"/>
+  <!-- loose: seed passes through (נכנסת ויוצאה) -->
+  <circle class="hole" cx="48" cy="72" r="15"/>
+  <circle cx="48" cy="72" r="9" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
+  <!-- tight: seed stuck (עומדת) -->
+  <circle class="hole" cx="128" cy="72" r="10"/>
+  <circle cx="128" cy="72" r="9" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
+  <!-- the two seeds, same scale -->
+  <circle cx="338" cy="47" r="9" style="fill:#9a8250;stroke:#6a5630;stroke-width:1"/>
+  <ellipse cx="338" cy="77" rx="8.3" ry="8" style="fill:#c08a4a;stroke:#7a5a30;stroke-width:1"/>
+  <path d="M8,128 L352,128" style="stroke:var(--muted);stroke-width:.6"/>
+
+  <!-- ===== panel ב: hole in the skull ===== -->
+  <path class="sk" d="M192,156 C188,140 200,132 214,132 C228,132 236,141 235,152 L233,158 L230,159 L230,166 L225,167 L224,171 L214,171 L213,166 C206,166 200,164 196,162 C193,160 192,158 192,156 Z"/>
+  <circle cx="225" cy="150" r="4" style="fill:#5b4a35"/>
+  <path d="M231,157 L229,161" style="stroke:#5b4a35;stroke-width:1.6"/>
+  <path d="M216,166 L216,171 M220,166 L220,171 M224,166 L224,171" style="stroke:#8a7a62;stroke-width:.8"/>
+  <circle cx="208" cy="133.6" r="3" style="fill:var(--paper);stroke:#6f6352;stroke-width:1.2"/>
+  <!-- right: bit fills the hole = סלע -->
+  <rect class="sk" x="306" y="160" width="48" height="44" rx="8"/>
+  <circle cx="330" cy="182" r="16" style="fill:var(--paper);stroke:#6f6352;stroke-width:2"/>
+  <circle cx="330" cy="182" r="15" style="fill:#a3a8ad;stroke:#5f656b;stroke-width:1"/>
+  <path d="M318,182 C322,172 330,178 330,182 C330,186 338,192 342,182" style="fill:none;stroke:#5f656b;stroke-width:1.4"/>
+  <path d="M322,204 L338,204 M322,209 L338,209" style="stroke:var(--ink);stroke-width:1.6"/>
+  <circle cx="330" cy="232" r="16" style="fill:#c9c1ad;stroke:#857a63;stroke-width:1.5"/>
+  <circle cx="330" cy="232" r="12" style="fill:none;stroke:#857a63;stroke-width:.8"/>
+  <!-- window locator (מאור) -->
+  <rect x="318" y="262" width="26" height="34" style="fill:#d8cdb8;stroke:#857a63;stroke-width:1"/>
+  <rect x="325" y="270" width="12" height="12" style="fill:var(--paper);stroke:#6f6352;stroke-width:1.2"/>
+  <!-- left: same bit in a widened hole > סלע -->
+  <rect class="sk" x="14" y="206" width="100" height="72" rx="10"/>
+  <circle cx="64" cy="242" r="24" style="fill:var(--paper);stroke:#6f6352;stroke-width:2"/>
+  <circle cx="64" cy="242" r="15" style="fill:#a3a8ad;stroke:#5f656b;stroke-width:1"/>
+  <path d="M52,242 C56,232 64,238 64,242 C64,246 72,252 76,242" style="fill:none;stroke:#5f656b;stroke-width:1.4"/>
+  <path d="M126,236 L138,242 L126,248" style="fill:none;stroke:var(--ink);stroke-width:1.6"/>
+  <circle cx="160" cy="242" r="16" style="fill:#c9c1ad;stroke:#857a63;stroke-width:1.5"/>
+  <circle cx="160" cy="242" r="12" style="fill:none;stroke:#857a63;stroke-width:.8"/>
+
   <g class="lb">
-    <text x="350" y="16" data-seg="37b.8">נקב באוזן הבכור</text>
-    <text x="352" y="66" class="sm" data-seg="37b.8">עדשה</text>
-    <text x="318" y="66" class="sm" data-seg="37b.8">כרשינה</text>
-    <text x="276" y="34" data-seg="37b.8">ת״ק: מלא כרשינה</text>
-    <text x="276" y="48" data-seg="37b.8">ר׳ יוסי בר׳ יהודה: כעדשה</text>
-    <text x="276" y="62" class="sm" data-seg="37b.9">כרשינה אינה גדולה מעדשה אלא מעט</text>
-    <text x="8" y="16" class="sm l" data-seg="37b.16">רב הושעיא שאל:</text>
-    <text x="98" y="66" class="sm" data-seg="37b.16">העומדת</text>
-    <text x="8" y="82" class="sm l" data-seg="37b.16">הנכנסת ויוצאה</text>
-    <text x="8" y="108" class="l" data-seg="37b.17">חסרון בגולגולת · מאור</text>
-    <text x="290" y="131" data-seg="37b.18">בית הלל: כדי שינטל מן החי וימות</text>
-    <text x="290" y="145" class="sm" data-seg="37b.18">שמואל: כסלע — ושוה למקדח? קושיה</text>
-    <text x="286" y="176" data-seg="37b.17">בית שמאי: כמלא מקדח</text>
-    <text x="286" y="190" class="sm" data-seg="37b.21">מאור בידי אדם: מקדח גדול של לשכה</text>
-    <text x="286" y="204" class="sm" data-seg="37b.21">כפונדיון האיטלקי וכסלע נירונית</text>
-    <text x="286" y="218" data-seg="38a.1">תירוץ רב חסדא: מקדח וחיסומו — יותר מסלע</text>
-    <text x="274" y="246" data-seg="37b.20">מאור שלא נעשה בידי אדם</text>
-    <text x="274" y="260" class="sm" data-seg="37b.20">מלא אגרוף גדול (בן אבטיח)</text>
-    <text x="274" y="274" class="sm" data-seg="37b.20">ר׳ יוסי: כראש גדול של אדם</text>
+    <text x="350" y="18" style="font-weight:700" data-seg="37b.8">א · נקב באוזן הבכור</text>
+    <text x="324" y="51" data-seg="37b.8">ת״ק: מלא כרשינה</text>
+    <text x="324" y="81" data-seg="37b.8">ר׳ יוסי בר׳ יהודה: כעדשה</text>
+    <text x="96" y="76" class="sm" data-seg="37b.16">או</text>
+    <text x="85" y="116" class="sm" data-seg="37b.16">הנכנסת ויוצאה</text>
+    <text x="146" y="116" class="sm" data-seg="37b.16">העומדת</text>
+
+    <text x="350" y="148" style="font-weight:700" data-seg="37b.17">ב · חסרון בגולגולת</text>
+    <text x="300" y="178" data-seg="37b.17">בית שמאי:</text>
+    <text x="300" y="192" data-seg="37b.17">כמלא מקדח</text>
+    <text x="300" y="211" class="sm" data-seg="37b.20">שווה? קושיה</text>
+    <text x="300" y="230" data-seg="37b.18">בית הלל:</text>
+    <text x="300" y="244" data-seg="37b.18">כסלע</text>
+    <text x="310" y="276" class="sm" data-seg="37b.21">מאור: מקדח גדול של לשכה</text>
+    <text x="310" y="290" class="sm" data-seg="37b.21">כסלע נירונית</text>
+    <text x="114" y="182" data-seg="38a.1">רב חסדא:</text>
+    <text x="114" y="196" data-seg="38a.1">מקדח וחיסומו</text>
+    <text x="96" y="294" class="sm" data-seg="38a.1">נקב שהורחב</text>
+    <text x="172" y="276" class="sm" data-seg="38a.1">יותר מסלע</text>
   </g>
 </svg>
