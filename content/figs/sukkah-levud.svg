@@ -1,0 +1,32 @@
+<svg viewBox="0 0 360 272" role="img" aria-label="חתך צד של סכך עליון ותחתון: פחות משלשה טפחים, שלשה עם טפח ובלי טפח">
+  <g style="fill:#8aa35f;stroke:#566e36;stroke-width:1">
+    <rect x="50" y="62" width="25" height="6"/><rect x="95" y="62" width="25" height="6"/><rect x="140" y="62" width="25" height="6"/>
+    <rect x="75" y="42" width="20" height="6"/><rect x="120" y="42" width="20" height="6"/>
+    <rect x="50" y="164" width="30" height="6"/><rect x="130" y="164" width="35" height="6"/>
+    <rect x="80" y="116" width="50" height="6"/>
+    <rect x="50" y="254" width="30" height="6"/><rect x="130" y="254" width="35" height="6"/>
+    <rect x="88" y="206" width="5" height="6"/><rect x="103" y="206" width="5" height="6"/><rect x="118" y="206" width="5" height="6"/>
+  </g>
+  <rect x="80" y="164" width="50" height="6" style="fill:none;stroke:#8aa35f;stroke-width:1.2;stroke-dasharray:3 2"/>
+  <path d="M105,125 L105,157" style="stroke:#8aa35f;stroke-width:1.6;fill:none"/>
+  <path d="M100,155 L105,162 L110,155 Z" style="fill:#8aa35f"/>
+  <g style="stroke:#8a7a62;stroke-width:1;fill:none">
+    <path d="M38,48 L38,62 M34,48 L42,48 M34,62 L42,62"/>
+    <path d="M38,122 L38,164 M34,122 L42,122 M34,164 L42,164"/>
+    <path d="M38,212 L38,254 M34,212 L42,212 M34,254 L42,254"/>
+  </g>
+  <path d="M8,90 L352,90 M8,182 L352,182" style="stroke:#8a7a62;stroke-width:.6;stroke-dasharray:4 4;fill:none"/>
+  <g class="lb">
+    <text x="2" y="50" class="sm l" data-seg="22a.4">עליון</text>
+    <text x="2" y="70" class="sm l" data-seg="22a.4">תחתון</text>
+    <text x="350" y="34" class="ok" data-seg="22a.4">פחות משלשה טפחים: כשרה</text>
+    <text x="350" y="52" class="sm" data-seg="22a.2">קנה עולה וקנה יורד (שמואל)</text>
+    <text x="350" y="68" class="sm" data-seg="22a.4">לבוד — נחשב רצף</text>
+    <text x="350" y="124" data-seg="22a.4">שלשה טפחים, ויש בגגו טפח</text>
+    <text x="350" y="144" class="ok" data-seg="22a.4">רבא: כשרה — חבוט רמי</text>
+    <text x="350" y="162" class="no" data-seg="22a.4">אביי: פסולה</text>
+    <text x="350" y="214" data-seg="22a.4">שלשה טפחים, ואין בגגו טפח</text>
+    <text x="350" y="234" class="no" data-seg="22a.4">אביי ורבא: פסולה</text>
+    <text x="350" y="252" class="sm" data-seg="22a.7">לא אמרינן חבוט רמי</text>
+  </g>
+</svg>
