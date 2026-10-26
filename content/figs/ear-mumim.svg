@@ -1,14 +1,15 @@
-<svg viewBox="0 0 360 230" role="img" aria-label="איור אוזן הבכור: סדק, פגימה ונקב">
+<svg viewBox="0 0 360 238" role="img" aria-label="איור אוזן הבכור: סדק, פגימה ונקב">
   <path class="ear" d="M330,120 C300,60 210,40 120,55 C60,65 25,100 30,125 C35,150 70,175 125,185 C215,200 300,180 330,120 Z"/>
+  <path class="lobe" d="M30,125 C35,150 70,175 112,183 L100,62 C55,72 25,102 30,125 Z"/>
   <path class="ear-in" d="M300,120 C270,85 200,75 135,85 C95,92 75,110 78,125 C82,142 105,152 140,158 C205,168 270,155 300,120 Z"/>
   <path class="cut" d="M150,55 L158,88"/>
   <path class="notch" d="M232,184 L240,170 L250,185"/>
   <circle class="hole" cx="200" cy="120" r="7"/>
   <g class="lb">
-    <text x="190" y="22" class="no">סדק — כל שהוא</text><path class="ld" d="M170,27 L155,62"/>
-    <text x="350" y="215" class="no">פגימה — כדי שתחגור בה ציפורן</text><path class="ld" d="M262,203 L242,182"/>
-    <text x="8" y="212" class="no l">נקב — מלא כרשינה (ת״ק)</text>
-    <text x="8" y="226" class="sm l">כעדשה (ר׳ יוסי בר׳ יהודה)</text><path class="ld" d="M80,200 L194,126"/>
-    <text x="350" y="70" class="sm">בין בידי אדם</text><text x="350" y="84" class="sm">בין בידי שמים</text>
+    <text x="350" y="22" class="no" data-seg="37b.6">סדק — כל שהוא</text><path class="ld" d="M268,27 L156,60"/>
+    <text x="350" y="232" class="no" data-seg="37b.7">פגימה — כדי שתחגור בה ציפורן</text><path class="ld" d="M262,220 L242,184"/>
+    <text x="8" y="198" class="no l" data-seg="37b.8">נקב — מלא כרשינה (ת״ק)</text>
+    <text x="8" y="212" class="sm l" data-seg="37b.8">כעדשה (ר׳ יוסי בר׳ יהודה) · נכנסת ויוצאה</text><path class="ld" d="M80,186 L194,126"/>
+    <text x="350" y="40" class="sm" data-seg="37b.7">סדק ופגימה — בין בידי אדם</text><text x="350" y="54" class="sm" data-seg="37b.7">בין בידי שמים</text><text x="8" y="22" class="ok l" data-seg="37a.15">עור — האליה הרכה של האוזן</text><text x="8" y="36" class="sm l" data-seg="37a.15">פגימה בו אינה מום (חוזר ומתרפא)</text><path class="ld" d="M40,40 L60,100"/><text x="350" y="100" class="sm" data-seg="37a.15">חסחוס — כאן המומים</text>
   </g>
 </svg>

@@ -1028,3 +1028,6 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .fig .hole{fill:var(--paper);stroke:var(--no);stroke-width:2}
 .fig figcaption{font-size:.85em;color:var(--muted);margin-top:4px}
 .fig text.l{text-anchor:end}
+.fig .thw-o{fill:none;stroke:#2b2620;stroke-width:6;stroke-linecap:round}
+.fig .dq{fill:#e9e2d2;fill-opacity:.55;stroke:#e9e2d2;stroke-dasharray:2 2}
+.fig .lobe{fill:#f3dcc4;stroke:#8a6a4a;stroke-width:1.5;stroke-dasharray:4 3}

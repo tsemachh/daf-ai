@@ -191,6 +191,33 @@ def main():
             for q_ in re.findall(r'״([^״]{2,40})״', TAG.sub('', st.get('body', ''))):
                 if re.match(r'^(ב?דף [א-ת]|בעמוד [אב]|לעיל)', q_):
                     errs.append(f'{s["id"]}: ״{q_}״ is a page reference, not Gemara — write it without quote marks')
+    # our own drawings (content/figs/*.svg): every label names its Gemara line (data-seg) and says nothing the sugya
+    # doesn't — its words must be found in the Gemara, Rashi or our explanation of this daf (no invented terms)
+    figs = [(s['id'], f['src']) for s in d['sections'] for f in s.get('fig', [])]
+    if figs:
+        corpus = ' '.join(TAG.sub('', st.get('body', '')) for s in d['sections'] for st in s.get('steps', []))
+        corpus += ' ' + ' '.join(clean(x) for am in 'ab' for x in nseg(a.cache, slug, daf, am)[1])
+        for am in 'ab':
+            rp = os.path.join(a.cache, slug, str(daf), f'rashi_he_{am}.json')
+            if os.path.exists(rp):
+                corpus += ' ' + clean(json.dumps(json.load(open(rp, encoding='utf-8')), ensure_ascii=False))
+        norm = lambda t: re.sub(r'[\u0591-\u05C7״׳"\'()\[\]:;,.·—\-–?!]', ' ', t)
+        corpus = ' ' + ' '.join(norm(corpus).split()) + ' '
+        STOP = {'ר', 'רבי', 'של', 'את', 'כל', 'או', 'גם', 'לא', 'אם', 'על', 'עם', 'זה', 'זו', 'הוא', 'היא'}
+        for sid, src in figs:
+            fp = os.path.join(ROOT, 'content', 'figs', src + '.svg')
+            if not os.path.exists(fp):
+                errs.append(f'{sid}: fig {src}.svg not found'); continue
+            for attrs, lab in re.findall(r'<text([^>]*)>([^<]*)</text>', open(fp, encoding='utf-8').read()):
+                sg = re.search(r'data-seg="([^"]+)"', attrs)
+                if not sg:
+                    errs.append(f'{sid}: fig {src}: label ״{lab}״ has no data-seg (the Gemara line it comes from)'); continue
+                if sg.group(1) not in want and sg.group(1) not in stepsegs:
+                    errs.append(f'{sid}: fig {src}: label ״{lab}״ data-seg={sg.group(1)} is not a line of this daf')
+                toks = [t for t in norm(lab).split() if len(t) > 1 and t not in STOP]
+                miss = [t for t in toks if not any(f' {v}' in corpus for v in [t] + [x + t for x in 'והבלמשכד'] + ([t[1:]] if t[0] in 'והבלמשכד' and len(t) > 2 else []))]
+                if toks and len(miss) > len(toks) // 4:
+                    errs.append(f'{sid}: fig {src}: label ״{lab}״ — words not in the Gemara/Rashi/explanation: {", ".join(miss)}')
     nu = sum(1 for s in secs if s.get('unlock'))
     if secs and nu > max(1, len(secs) // 3):
         warn.append(f'{nu} of {len(secs)} sugyot have an `unlock` — keep it only where a learner jumping in would miss the case (aim ≤ 1/3)')
