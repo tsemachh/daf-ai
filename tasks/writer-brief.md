@@ -111,6 +111,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    ״במערבא״ / ״אמרי במערבא״ = בארץ ישראל — write ״בארץ ישראל״, never ״במערב״ (reader note, Bechorot 38).
    Exception: a word a first reading gets wrong (פסח ועור = צולע ועיוור, not Pesach) gets niqqud once, in
    `<span class="nogl">…</span>`; also wrap in `nogl` a word the glossary would mislink (״בציר״ ≠ ציר).
+   `nogl` only in HTML fields (`body`, `pre`/`post`, tables); `short`, `stages` and the quiz are plain text — there
+   reword instead (״ר׳ אלעזר״ for the tanna; ״תופסת״ for the verb ״חלה״).
 7. **`short` on every step** (the תמצית reading level shows it instead of `body`): the move in one line, ≤12 words,
    plain text (no HTML, no quote marks), standing on its own — who says what and why in a nutshell, e.g.
    ״רב: רק בבכור תם — בעל מום אינו קדוש לכך״, ״קושיה: אם כן, למה צריך פסוק?״, ״מסקנה: הלכה כרשב״ג״.
