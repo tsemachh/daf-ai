@@ -1,15 +1,40 @@
-<svg viewBox="0 0 360 238" role="img" aria-label="איור אוזן הבכור: סדק, פגימה ונקב">
-  <path class="ear" d="M330,120 C300,60 210,40 120,55 C60,65 25,100 30,125 C35,150 70,175 125,185 C215,200 300,180 330,120 Z"/>
-  <path class="lobe" d="M30,125 C35,150 70,175 112,183 L100,62 C55,72 25,102 30,125 Z"/>
-  <path class="ear-in" d="M300,120 C270,85 200,75 135,85 C95,92 75,110 78,125 C82,142 105,152 140,158 C205,168 270,155 300,120 Z"/>
-  <path class="cut" d="M150,55 L158,88"/>
-  <path class="notch" d="M232,184 L240,170 L250,185"/>
-  <circle class="hole" cx="200" cy="120" r="7"/>
+<svg viewBox="0 0 360 300" role="img" aria-label="אוזן הבכור, מוגדלת ומחוברת לראש: בחסחוס המומים — סדק, פגימה ונקב; פגימה בעור הרך אינה מום">
+  <!-- locator: calf face from the front, its right ear highlighted -->
+  <path style="fill:#e6d6b8;stroke:#6e4e30;stroke-width:1" d="M39,18 L37,9 L45,15 Z M71,18 L73,9 L65,15 Z"/>
+  <path style="fill:#b98a5e;stroke:#6e4e30;stroke-width:1.2" d="M34,20 C44,12 66,12 76,20 C79,36 76,54 69,70 C64,80 46,80 41,70 C34,54 31,36 34,20 Z"/>
+  <path style="fill:#b98a5e;stroke:#6e4e30;stroke-width:1.2" d="M36,26 C26,24 14,27 8,33 C16,38 28,38 37,33 Z"/>
+  <path class="ear" style="stroke:var(--accent);stroke-width:2" d="M74,26 C84,24 96,27 102,33 C94,38 82,38 73,33 Z"/>
+  <ellipse style="fill:#e3c2a4;stroke:#6e4e30;stroke-width:1" cx="55" cy="70" rx="13" ry="8"/>
+  <circle class="blk" cx="45" cy="34" r="2.6"/><circle class="blk" cx="65" cy="34" r="2.6"/>
+  <circle class="blk" cx="50" cy="71" r="1.8"/><circle class="blk" cx="60" cy="71" r="1.8"/>
+  <path style="fill:none;stroke:var(--accent);stroke-width:1" d="M100,37 L40,150"/>
+  <!-- the side of the head the ear grows from -->
+  <path style="fill:#b98a5e;stroke:#6e4e30;stroke-width:1.5" d="M0,112 C30,124 50,150 50,178 C50,206 32,238 0,254 Z"/>
+  <!-- the ear: cartilage plate -->
+  <path class="ear" d="M46,160 C70,145 105,124 135,116 L146,131 L158,110 C175,106 190,104.5 205,104 C270,101 340,128 344,162 C346,192 280,232 205,236 C150,237 105,224 81,214 L70,194 L58,203 C54,201 50,198 46,196 Z"/>
+  <path class="ear-in" d="M108,176 C135,148 178,132 225,130 C272,130 316,146 326,166 C316,190 270,212 220,214 C170,215 132,200 108,182 Z"/>
+  <!-- soft skin at the root (אליה רכה) -->
+  <path style="fill:#f0cfc0;stroke:#8a6a4a;stroke-width:1" d="M46,160 C57,153 81,139 95,132 C104,158 104,194 95,219 C90,217 85,215 81,214 L70,194 L58,203 C54,201 50,198 46,196 Z"/>
+  <!-- blemishes in the cartilage -->
+  <path class="cut" style="fill:none" d="M135,116 L146,131 L158,110"/>
+  <path class="cut" d="M215,104 L222,134"/>
+  <circle class="hole" cx="284" cy="186" r="7.5"/>
+  <circle style="fill:#8f8a4a;stroke:#5e5a2c;stroke-width:.8" cx="284" cy="186" r="5"/>
+  <!-- a notch in the soft skin: not a blemish -->
+  <path style="fill:none;stroke:var(--ok);stroke-width:2.5;stroke-linecap:round" d="M58,203 L70,194 L81,214"/>
+  <!-- zone brackets -->
+  <path style="fill:none;stroke:var(--muted);stroke-width:1" d="M46,242 L46,249 L95,249 L95,242 M101,242 L101,249 L344,249 L344,242"/>
   <g class="lb">
-    <text x="350" y="22" class="no" data-seg="37b.6">סדק — כל שהוא</text><path class="ld" d="M268,27 L156,60"/>
-    <text x="350" y="232" class="no" data-seg="37b.7">פגימה — כדי שתחגור בה ציפורן</text><path class="ld" d="M262,220 L242,184"/>
-    <text x="8" y="198" class="no l" data-seg="37b.8">נקב — מלא כרשינה (ת״ק)</text>
-    <text x="8" y="212" class="sm l" data-seg="37b.8">כעדשה (ר׳ יוסי בר׳ יהודה) · נכנסת ויוצאה</text><path class="ld" d="M80,186 L194,126"/>
-    <text x="350" y="40" class="sm" data-seg="37b.7">סדק ופגימה — בין בידי אדם</text><text x="350" y="54" class="sm" data-seg="37b.7">בין בידי שמים</text><text x="8" y="22" class="ok l" data-seg="37a.15">עור — האליה הרכה של האוזן</text><text x="8" y="36" class="sm l" data-seg="37a.15">פגימה בו אינה מום (חוזר ומתרפא)</text><path class="ld" d="M40,40 L60,100"/><text x="350" y="100" class="sm" data-seg="37a.15">חסחוס — כאן המומים</text>
+    <text x="352" y="22" class="no" data-seg="37b.7">פגימה — שתחגור בה ציפורן</text>
+    <path class="ld" d="M198,20 L148,124"/>
+    <text x="352" y="50" class="no" data-seg="37b.6">סדק — כל שהוא</text>
+    <path class="ld" d="M254,47 L219,108"/>
+    <text x="352" y="78" class="no" data-seg="37b.8">נקב — מלא כרשינה</text>
+    <text x="352" y="92" class="sm" data-seg="37b.8">כרשינה נכנסת ויוצאה</text>
+    <path class="ld" d="M300,98 L286,177"/>
+    <text x="290" y="268" style="font-weight:700" data-seg="37a.15">חסחוס — כאן המומים</text>
+    <text x="268" y="283" class="sm" data-seg="37b.6">סדק · פגימה · נקב</text>
+    <text x="8" y="268" class="ok l" data-seg="37a.15">עור: אינה מום</text>
+    <text x="8" y="283" class="sm l" data-seg="37a.15">חוזר ומתרפא</text>
   </g>
 </svg>

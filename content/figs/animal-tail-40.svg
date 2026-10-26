@@ -1,54 +1,68 @@
-<svg viewBox="0 0 360 300" role="img" aria-label="זנב הבהמה: חוליות הזנב בגדי ובטלה, זנב כשל חזיר, וזנב העגל עד הערקוב">
-<text x="352" y="16" data-seg="40b.7">חוליות הזנב (ברייתא)</text>
-<text x="305.0" y="34" style="text-anchor:middle;font-weight:700" data-seg="40b.7">בגדי</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M312,40 L348,40 L348,48 C338,52 322,52 312,48 Z"/>
-<rect style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" x="321" y="47" width="18" height="20" rx="8"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="325" y="51" width="10" height="11" rx="3"/>
-<text x="330" y="104" style="text-anchor:middle" data-seg="40b.7">אחת</text>
-<text x="330" y="118" class="no" style="text-anchor:middle" data-seg="40b.7">מום</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M262,40 L298,40 L298,48 C288,52 272,52 262,48 Z"/>
-<rect style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" x="271" y="47" width="18" height="34" rx="8"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="275" y="51" width="10" height="11" rx="3"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="275" y="65" width="10" height="11" rx="3"/>
-<text x="280" y="104" style="text-anchor:middle" data-seg="40b.7">שתים</text>
-<text x="280" y="118" class="ok" style="text-anchor:middle" data-seg="40b.7">אינו מום</text>
-<text x="197.0" y="34" style="text-anchor:middle;font-weight:700" data-seg="40b.7">בטלה</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M204,40 L240,40 L240,48 C230,52 214,52 204,48 Z"/>
-<rect style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" x="213" y="47" width="18" height="34" rx="8"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="217" y="51" width="10" height="11" rx="3"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="217" y="65" width="10" height="11" rx="3"/>
-<text x="222" y="104" style="text-anchor:middle" data-seg="40b.7">שתים</text>
-<text x="222" y="118" class="no" style="text-anchor:middle" data-seg="40b.7">מום</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M154,40 L190,40 L190,48 C180,52 164,52 154,48 Z"/>
-<rect style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" x="163" y="47" width="18" height="48" rx="8"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="167" y="51" width="10" height="11" rx="3"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="167" y="65" width="10" height="11" rx="3"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:1" x="167" y="79" width="10" height="11" rx="3"/>
-<text x="172" y="104" style="text-anchor:middle" data-seg="40b.7">שלש</text>
-<text x="172" y="118" class="ok" style="text-anchor:middle" data-seg="40b.7">אינו מום</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M50,40 L112,40 L112,48 C100,52 62,52 50,48 Z"/>
-<path style="fill:none;stroke:#7a5c3a;stroke-width:9;stroke-linecap:round" d="M80,49 C80,60 81,72 81,84"/>
-<path style="fill:none;stroke:#d9b991;stroke-width:6;stroke-linecap:round" d="M80,49 C80,60 81,72 81,84"/>
-<text x="8" y="16" class="l" data-seg="40b.4">זנב הגדי כשל חזיר</text>
-<text x="81" y="100" style="text-anchor:middle" data-seg="40b.6">כריכא — עגולה</text><text x="81" y="113" class="sm" style="text-anchor:middle" data-seg="40b.6">ולא רחבה (רב פפא; רש״י)</text>
-<text x="81" y="127" class="no" style="text-anchor:middle" data-seg="40b.4">ר׳ חנניא בן גמליאל: מום</text>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M352,138 L192,136 C172,136 160,146 156,162 C152,182 156,204 166,218 C172,228 176,234 178,242 C182,254 186,264 188,276 L184,290 L210,290 L204,276 C202,264 200,254 202,244 C206,232 214,224 228,216 C250,210 300,206 352,206 Z"/>
-<path class="ld" d="M352,138 L352,206"/>
-<path style="fill:#5b4a35" d="M184,290 L210,290 L206,282 L187,282 Z"/>
-<path style="fill:none;stroke:#7a5c3a;stroke-width:8;stroke-linecap:round" d="M166,140 C150,146 142,170 142,200 L142,232"/>
-<path style="fill:none;stroke:#d9b991;stroke-width:5;stroke-linecap:round" d="M166,140 C150,146 142,170 142,200 L142,232"/>
-<ellipse style="fill:#7a5c3a" cx="142" cy="234" rx="5" ry="8"/>
-<path style="fill:none;stroke:var(--accent);stroke-width:1.4;stroke-dasharray:5 3" d="M66,244 L222,244"/>
-<circle style="fill:none;stroke:var(--accent);stroke-width:1.6" cx="190" cy="242" r="6"/>
-<text x="8" y="248" class="l" data-seg="40b.18">עד הערקוב</text>
-<text x="8" y="174" class="l" data-seg="40b.18">זנב העגל</text>
-<text x="8" y="190" class="no l" data-seg="40b.18">שאינה מגעת — מום</text>
-<text x="8" y="205" class="sm l" data-seg="40b.18">מרבית העגלים זנבן מגיעות לערקוב (רש״י)</text>
-<path class="ld" d="M106,180 L138,190"/>
-<text x="352" y="246" data-seg="40b.18">ערקוב — קפץ העליון</text>
-<path class="ld" d="M246,242 L198,242"/>
-<text x="352" y="260" class="sm" data-seg="40b.18">ר׳ חנינא בן אנטיגנוס:</text>
-<text x="352" y="274" class="sm" data-seg="40b.18">שבאמצע הירך</text>
-<text x="8" y="282" class="sm l" data-seg="41a.1">ולא קפץ התחתון</text>
-<path class="ld" d="M96,278 L184,276"/>
+<svg viewBox="0 0 360 318" role="img" aria-label="זנב הבהמה: א — זנבות גדי וטלה וחוליותיהם; ב — אחורי העגל מהצד, זנב שאינה מגעת לערקוב; ג — זנב הגדי כשל חזיר">
+<text x="352" y="16" style="font-weight:700" data-seg="40b.7">א</text>
+<text x="272" y="18" style="text-anchor:middle;font-weight:700" data-seg="40b.7">בגדי</text>
+<text x="102" y="18" style="text-anchor:middle;font-weight:700" data-seg="40b.7">בטלה</text>
+<path style="fill:none;stroke:var(--muted);stroke-width:1" d="M206,28 L206,24 L338,24 L338,28 M30,28 L30,24 L174,24 L174,28"/>
+<path style="fill:none;stroke:var(--muted);stroke-width:1" d="M190,6 L190,120"/>
+<path transform="translate(203.32,-39.92) scale(0.42)" style="fill:#c9a27a;stroke:#7a5c3a;stroke-width:1.5;vector-effect:non-scaling-stroke" d="M310,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L310,216 Z"/>
+<path transform="translate(203.32,-39.92) scale(0.42)" style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:14;stroke-linecap:round" d="M293,37 C285,37 281,40 281,46 L281,56"/>
+<path style="fill:none;stroke:#c9a27a;stroke-width:11;stroke-linecap:round" d="M293,37 C285,37 281,40 281,46 L281,56"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="277" y="47" width="8" height="7" rx="2"/>
+<text x="313" y="106" style="text-anchor:middle;font-weight:700" data-seg="40b.7">אחת</text>
+<text x="313" y="120" class="no" style="text-anchor:middle" data-seg="40b.7">מום</text>
+<path transform="translate(127.32,-39.92) scale(0.42)" style="fill:#c9a27a;stroke:#7a5c3a;stroke-width:1.5;vector-effect:non-scaling-stroke" d="M310,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L310,216 Z"/>
+<path transform="translate(127.32,-39.92) scale(0.42)" style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:14;stroke-linecap:round" d="M217,37 C209,37 205,40 205,46 L205,65"/>
+<path style="fill:none;stroke:#c9a27a;stroke-width:11;stroke-linecap:round" d="M217,37 C209,37 205,40 205,46 L205,65"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="201" y="47" width="8" height="7" rx="2"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="201" y="56" width="8" height="7" rx="2"/>
+<text x="237" y="106" style="text-anchor:middle;font-weight:700" data-seg="40b.7">שתים</text>
+<text x="237" y="120" class="ok" style="text-anchor:middle" data-seg="40b.7">אינו מום</text>
+<path transform="translate(35.32,-39.92) scale(0.42)" style="fill:#eee6d4;stroke:#8a7a62;stroke-width:1.5;vector-effect:non-scaling-stroke" d="M310,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L310,216 Z"/>
+<path transform="translate(35.32,-39.92) scale(0.42)" style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:14;stroke-linecap:round" d="M125,37 C117,37 113,40 113,46 L113,65"/>
+<path style="fill:none;stroke:#eee6d4;stroke-width:11;stroke-linecap:round" d="M125,37 C117,37 113,40 113,46 L113,65"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="109" y="47" width="8" height="7" rx="2"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="109" y="56" width="8" height="7" rx="2"/>
+<text x="145" y="106" style="text-anchor:middle;font-weight:700" data-seg="40b.7">שתים</text>
+<text x="145" y="120" class="no" style="text-anchor:middle" data-seg="40b.7">מום</text>
+<path transform="translate(-40.68,-39.92) scale(0.42)" style="fill:#eee6d4;stroke:#8a7a62;stroke-width:1.5;vector-effect:non-scaling-stroke" d="M310,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L310,216 Z"/>
+<path transform="translate(-40.68,-39.92) scale(0.42)" style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:14;stroke-linecap:round" d="M49,37 C41,37 37,40 37,46 L37,74"/>
+<path style="fill:none;stroke:#eee6d4;stroke-width:11;stroke-linecap:round" d="M49,37 C41,37 37,40 37,46 L37,74"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="33" y="47" width="8" height="7" rx="2"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="33" y="56" width="8" height="7" rx="2"/>
+<rect style="fill:#fbf6ea;stroke:#8a7a62;stroke-width:1" x="33" y="65" width="8" height="7" rx="2"/>
+<text x="69" y="106" style="text-anchor:middle;font-weight:700" data-seg="40b.7">שלש</text>
+<text x="69" y="120" class="ok" style="text-anchor:middle" data-seg="40b.7">אינו מום</text>
+<path style="fill:none;stroke:var(--muted);stroke-width:1" d="M4,128 L356,128"/>
+<rect style="fill:none;stroke:var(--muted);stroke-width:1" x="4" y="136" width="122" height="104" rx="6"/>
+<text x="118" y="152" style="font-weight:700" data-seg="40b.4">ג</text>
+<path transform="translate(-11.20,93.20) scale(0.3)" style="fill:#c9a27a;stroke:#7a5c3a;stroke-width:1.5;vector-effect:non-scaling-stroke" d="M310,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L310,216 Z"/>
+<path transform="translate(-11.20,93.20) scale(0.3)" style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:13;stroke-linecap:round" d="M53,149 C45,149 40,154 39,163"/>
+<path style="fill:none;stroke:#c9a27a;stroke-width:10;stroke-linecap:round" d="M53,149 C45,149 40,154 39,163"/>
+<text x="64" y="204" style="text-anchor:middle" data-seg="40b.6">כשל חזיר — עגולה</text>
+<text x="64" y="218" class="no" style="text-anchor:middle" data-seg="40b.4">ר׳ חנניא בן גמליאל:</text>
+<text x="64" y="232" class="no" style="text-anchor:middle" data-seg="40b.4">מום</text>
+<text x="352" y="152" style="font-weight:700" data-seg="40b.18">ב</text>
+<g style="fill:#c9a27a;stroke:#7a5c3a;stroke-width:.8"><rect x="300" y="146" width="30" height="11" rx="4"/><path d="M328,148 L336,140 L342,142 L340,149 L332,152 Z"/><path d="M302,156 L302,166 M308,156 L308,166 M322,156 L322,166 M327,156 L327,166" style="stroke-width:2"/><path d="M300,148 L297,160" style="stroke-width:1.4;fill:none"/></g>
+<rect style="fill:none;stroke:var(--accent);stroke-width:1.4" x="293" y="142" width="19" height="27" rx="3"/>
+<path style="fill:#c9a27a;stroke:#7a5c3a;stroke-width:1.5" d="M352,176 L236,176 C218,176 206,186 204,202 C202,216 206,226 212,236 C216,244 216,252 211,259 C209,264 213,268 217,271 L219,292 C220,298 221,302 222,304 L224,312 L246,312 L242,304 L236,298 L233,290 L232,272 C232,264 234,258 238,252 C246,240 256,230 264,222 C270,216 282,214 300,216 L352,216 Z"/>
+<path style="fill:#5b4a35" d="M224,312 L246,312 L243,305 L223,305 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:8;stroke-linecap:round" d="M208,182 C197,188 192,198 192,212 L192,232"/>
+<path style="fill:none;stroke:#c9a27a;stroke-width:5;stroke-linecap:round" d="M208,182 C197,188 192,198 192,212 L192,232"/>
+<ellipse style="fill:#7a5c3a" cx="192" cy="236" rx="4.5" ry="7"/>
+<path style="fill:none;stroke:var(--muted);stroke-width:1" d="M189,263 L213,263"/>
+<path style="fill:none;stroke:var(--no);stroke-width:2" d="M192,245 L192,261 M187,245 L197,245 M187,261 L197,261"/>
+<circle style="fill:none;stroke:var(--accent);stroke-width:1.8" cx="222" cy="263" r="9"/>
+<circle style="fill:none;stroke:var(--accent);stroke-width:1.4" cx="228" cy="301" r="6"/>
+<text x="184" y="214" data-seg="40b.18">זנב העגל</text>
+<text x="184" y="252" class="no" data-seg="40b.18">שאינה מגעת</text>
+<text x="184" y="266" class="no" data-seg="40b.18">לערקוב — מום</text>
+<path class="ld" d="M250,263 L232,263"/>
+<text x="252" y="267" class="l" data-seg="40b.18">ערקוב — קפץ העליון</text>
+<path class="ld" d="M250,301 L235,301"/>
+<text x="252" y="305" class="sm l" data-seg="41a.1">ולא קפץ התחתון</text>
 </svg>

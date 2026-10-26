@@ -1,23 +1,142 @@
-<svg viewBox="0 0 360 300" role="img" aria-label="מומי רגלי הבהמה: שחול, כסול ושרוע; פרסות קלוטות; בעל חמש רגלים">
-<path style="fill:#e9e2d2;stroke:#8a7a62;stroke-width:1.3" d="M279,46 Q315,24 351,46 L347,58 Q315,48 283,58 Z"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M293,55 L290,85 L291,110"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M291,112 L291,119"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="293" cy="55" r="6"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M337,55 L340,85 L339,110"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M339,112 L339,119"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="337" cy="55" r="6"/><path style="fill:#e9e2d2;stroke:#8a7a62;stroke-width:1.3" d="M189,46 Q225,24 261,46 L257,58 Q225,48 193,58 Z"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M203,55 L200,85 L201,110"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M201,112 L201,119"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="203" cy="55" r="6"/><circle class="hole" cx="247" cy="55" r="5"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M256,70 L260,98 L258,122"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M258,124 L258,131"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="256" cy="70" r="6"/><path style="fill:#e9e2d2;stroke:#8a7a62;stroke-width:1.3" d="M99,46 Q135,24 171,46 L167,58 Q135,48 103,58 Z"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M113,55 L110,85 L111,110"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M111,112 L111,119"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="113" cy="55" r="6"/><circle class="hole" cx="157" cy="55" r="5"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M153,30 L157,60 L157,86"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M157,88 L157,95"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="153" cy="30" r="6"/><path style="fill:#e9e2d2;stroke:#8a7a62;stroke-width:1.3" d="M9,46 Q45,24 81,46 L77,58 Q45,48 13,58 Z"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M23,55 L20,85 L21,110"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M21,112 L21,119"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="23" cy="55" r="6"/><path style="fill:none;stroke:#a8875e;stroke-width:7;stroke-linecap:round;stroke-linejoin:round" d="M67,55 L71,94 L69,124"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M69,126 L69,133"/><circle style="fill:#a8875e;stroke:#6b5638;stroke-width:1" cx="67" cy="55" r="6"/><path style="fill:#5a4a3a;stroke:#a08a6a;stroke-width:1.2" d="M334.5,185 C323,187 324,211 334.5,210 Z M337.5,185 C349,187 348,211 337.5,210 Z"/><circle style="fill:#5a4a3a;stroke:#a08a6a;stroke-width:1.2" cx="336" cy="240" r="12.5"/><circle style="fill:#5a4a3a;stroke:#a08a6a;stroke-width:1.2" cx="336" cy="282" r="12.5"/><path style="fill:none;stroke:var(--paper);stroke-width:2.2" d="M336,270 L336,294"/><path style="fill:none;stroke:#b8956a;stroke-width:6;stroke-linecap:round" d="M52,236 L52,284"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M52,285 L52,291"/><path style="fill:none;stroke:#b8956a;stroke-width:6;stroke-linecap:round" d="M64,236 L65,284"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M65,285 L65,291"/><path style="fill:none;stroke:#b8956a;stroke-width:6;stroke-linecap:round" d="M128,236 L126,284"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M126,285 L126,291"/><path style="fill:none;stroke:#b8956a;stroke-width:6;stroke-linecap:round" d="M140,236 L140,284"/><path style="fill:none;stroke:#5a4a3a;stroke-width:8;stroke-linecap:butt" d="M140,285 L140,291"/><path style="fill:none;stroke:var(--no);stroke-width:6;stroke-linecap:round;stroke-dasharray:3 3" d="M77,236 L79,284"/><path style="fill:#c9a77c;stroke:#7a5f40;stroke-width:1.3" d="M45,232 C40,212 62,204 95,206 C130,206 156,208 158,222 C160,240 140,244 95,244 C70,244 48,244 45,232 Z"/><path style="fill:#c9a77c;stroke:#7a5f40;stroke-width:1.3" d="M50,214 C40,206 30,200 20,204 C12,207 10,216 16,222 C22,226 36,226 48,228 Z"/><path style="fill:none;stroke:#7a5f40;stroke-width:2;stroke-linecap:round" d="M158,216 C166,226 166,240 162,252"/>
+<svg viewBox="0 0 360 320" role="img" aria-label="מומי רגלי הבהמה: אחורי הבהמה — ירך תקינה, שחול, כסול ושרוע; פרסות סדוקות לעומת קלוטות; בהמה בעלת חמש רגלים">
+<path style="fill:none;stroke:#9a8a72;stroke-width:1" d="M274,144 L350,144"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M325,84 L341,84 L337.4,138 L328.6,138 Z"/>
+<path style="fill:#4a3c2e" d="M328.2,137 L337.8,137 L338.6,144 L327.4,144 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M283,84 L299,84 L295.4,138 L286.6,138 Z"/>
+<path style="fill:#4a3c2e" d="M286.2,137 L295.8,137 L296.6,144 L285.4,144 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M278,40 C276,30 282,26 290,29 C300,32 306,28 312,28 C318,28 324,32 334,29 C342,26 348,30 346,40 C350,60 348,78 341,90 L325,90 C322,80 318,76 312,76 C306,76 302,80 299,90 L283,90 C276,78 274,60 278,40 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:3;stroke-linecap:round" d="M312,32 C314,56 311,76 313,100"/>
+<ellipse style="fill:#7a5c3a" cx="313" cy="105" rx="3" ry="6"/>
+<path style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" d="M281,32 C290,34 303,35 306,39 L318,39 C321,35 334,34 343,32 L340,41 C334,46 337,56 338,62 C334,72 324,76 317,74 L307,74 C300,76 290,72 286,62 C287,56 290,46 284,41 Z"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="301" cy="64" rx="4" ry="5"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="323" cy="64" rx="4" ry="5"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:1.2;stroke-dasharray:1.5 2" d="M312,40 L312,56"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="291" cy="60" r="5.5"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="333" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#6b5638;stroke-width:9;stroke-linecap:round" d="M333,60 L337,92"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M333,60 L337,92"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="337" cy="92" r="4"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="333" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#6b5638;stroke-width:9;stroke-linecap:round" d="M291,60 L287,92"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M291,60 L287,92"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="287" cy="92" r="4"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="291" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#9a8a72;stroke-width:1" d="M184,144 L260,144"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M235,84 L251,84 L247.4,138 L238.6,138 Z"/>
+<path style="fill:#4a3c2e" d="M238.2,137 L247.8,137 L248.6,144 L237.4,144 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M193,98 L209,98 L205.4,152 L196.6,152 Z"/>
+<path style="fill:#4a3c2e" d="M196.2,151 L205.8,151 L206.6,158 L195.4,158 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M188,40 C186,30 192,26 200,29 C210,32 216,28 222,28 C228,28 234,32 244,29 C252,26 258,30 256,40 C260,60 258,78 251,90 L235,90 C232,80 228,76 222,76 C216,76 212,80 209,90 L193,90 C186,78 184,60 188,40 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:3;stroke-linecap:round" d="M222,32 C224,56 221,76 223,100"/>
+<ellipse style="fill:#7a5c3a" cx="223" cy="105" rx="3" ry="6"/>
+<path style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" d="M191,32 C200,34 213,35 216,39 L228,39 C231,35 244,34 253,32 L250,41 C244,46 247,56 248,62 C244,72 234,76 227,74 L217,74 C210,76 200,72 196,62 C197,56 200,46 194,41 Z"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="211" cy="64" rx="4" ry="5"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="233" cy="64" rx="4" ry="5"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:1.2;stroke-dasharray:1.5 2" d="M222,40 L222,56"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="201" cy="60" r="5.5"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="243" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#6b5638;stroke-width:9;stroke-linecap:round" d="M243,60 L247,92"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M243,60 L247,92"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="247" cy="92" r="4"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="243" cy="60" r="5.5"/>
+<path style="fill:none;stroke:var(--no);stroke-width:9;stroke-linecap:round" d="M194,76 L194,106"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M194,76 L194,106"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="194" cy="106" r="4"/>
+<circle style="fill:#f3ead8;stroke:var(--no);stroke-width:2" cx="194" cy="76" r="5.5"/>
+<circle class="hole" cx="201" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#9a8a72;stroke-width:1" d="M94,144 L170,144"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M145,84 L161,84 L157.4,138 L148.6,138 Z"/>
+<path style="fill:#4a3c2e" d="M148.2,137 L157.8,137 L158.6,144 L147.4,144 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M103,60 L119,60 L115.4,114 L106.6,114 Z"/>
+<path style="fill:#4a3c2e" d="M106.2,113 L115.8,113 L116.6,120 L105.4,120 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M98,40 C96,30 102,26 110,29 C120,32 126,28 132,28 C138,28 144,32 154,29 C162,26 168,30 166,40 C170,60 168,78 161,90 L145,90 C142,80 138,76 132,76 C126,76 122,80 119,90 L103,90 C96,78 94,60 98,40 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:3;stroke-linecap:round" d="M132,32 C134,56 131,76 133,100"/>
+<ellipse style="fill:#7a5c3a" cx="133" cy="105" rx="3" ry="6"/>
+<path style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" d="M101,32 C110,34 123,35 126,39 L138,39 C141,35 154,34 163,32 L160,41 C154,46 157,56 158,62 C154,72 144,76 137,74 L127,74 C120,76 110,72 106,62 C107,56 110,46 104,41 Z"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="121" cy="64" rx="4" ry="5"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="143" cy="64" rx="4" ry="5"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:1.2;stroke-dasharray:1.5 2" d="M132,40 L132,56"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="111" cy="60" r="5.5"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="153" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#6b5638;stroke-width:9;stroke-linecap:round" d="M153,60 L157,92"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M153,60 L157,92"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="157" cy="92" r="4"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="153" cy="60" r="5.5"/>
+<path style="fill:none;stroke:var(--no);stroke-width:9;stroke-linecap:round" d="M108,32 L105,66"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M108,32 L105,66"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="105" cy="66" r="4"/>
+<circle style="fill:#f3ead8;stroke:var(--no);stroke-width:2" cx="108" cy="32" r="5.5"/>
+<circle class="hole" cx="111" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#9a8a72;stroke-width:1" d="M4,144 L80,144"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M55,84 L71,84 L67.4,138 L58.6,138 Z"/>
+<path style="fill:#4a3c2e" d="M58.2,137 L67.8,137 L68.6,144 L57.4,144 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M13,100 L29,100 L25.4,154 L16.6,154 Z"/>
+<path style="fill:#4a3c2e" d="M16.2,153 L25.8,153 L26.6,160 L15.4,160 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M8,40 C6,30 12,26 20,29 C30,32 36,28 42,28 C48,28 54,32 64,29 C72,26 78,30 76,40 C80,60 78,78 71,90 L55,90 C52,80 48,76 42,76 C36,76 32,80 29,90 L13,90 C6,78 4,60 8,40 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:3;stroke-linecap:round" d="M42,32 C44,56 41,76 43,100"/>
+<ellipse style="fill:#7a5c3a" cx="43" cy="105" rx="3" ry="6"/>
+<path style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" d="M11,32 C20,34 33,35 36,39 L48,39 C51,35 64,34 73,32 L70,41 C64,46 67,56 68,62 C64,72 54,76 47,74 L37,74 C30,76 20,72 16,62 C17,56 20,46 14,41 Z"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="31" cy="64" rx="4" ry="5"/>
+<ellipse style="fill:#d9b991;stroke:#8a7a62;stroke-width:1" cx="53" cy="64" rx="4" ry="5"/>
+<path style="fill:none;stroke:#8a7a62;stroke-width:1.2;stroke-dasharray:1.5 2" d="M42,40 L42,56"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="21" cy="60" r="5.5"/>
+<circle style="fill:#cdbfa3;stroke:#6b5638;stroke-width:1.2" cx="63" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#6b5638;stroke-width:9;stroke-linecap:round" d="M63,60 L67,92"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M63,60 L67,92"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="67" cy="92" r="4"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="63" cy="60" r="5.5"/>
+<path style="fill:none;stroke:var(--no);stroke-width:9;stroke-linecap:round" d="M21,60 L16,110"/>
+<path style="fill:none;stroke:#f3ead8;stroke-width:6;stroke-linecap:round" d="M21,60 L16,110"/>
+<circle style="fill:#f3ead8;stroke:#6b5638;stroke-width:1.3" cx="16" cy="110" r="4"/>
+<circle style="fill:#f3ead8;stroke:var(--no);stroke-width:2" cx="21" cy="60" r="5.5"/>
+<path style="fill:none;stroke:#9a8a72;stroke-width:.8" d="M6,192 L354,192 M188,198 L188,316"/>
+<path style="fill:#4a3c2e;stroke:#a08a6a;stroke-width:1.2" d="M325.5,210 C312,214 307,232 309,248 C310,256 320,258 325.5,254 Z"/>
+<path style="fill:#8a7458" d="M323,220 C315,226 313,238 314,246 C316,251 321,251 323,248 Z"/>
+<path style="fill:#4a3c2e;stroke:#a08a6a;stroke-width:1.2" d="M330.5,210 C344,214 349,232 347,248 C346,256 336,258 330.5,254 Z"/>
+<path style="fill:#8a7458" d="M333,220 C341,226 343,238 342,246 C340,251 335,251 333,248 Z"/>
+<path style="fill:#4a3c2e;stroke:#a08a6a;stroke-width:1.2" d="M328,264 C346,264 352,280 351,294 C350,306 342,311 328,311 C314,311 306,306 305,294 C304,280 310,264 328,264 Z"/>
+<ellipse style="fill:#8a7458" cx="328" cy="289" rx="16" ry="17"/>
+<path style="fill:none;stroke:var(--paper);stroke-width:1.6" d="M328,264 L328,311"/>
+<path style="fill:none;stroke:#9a8a72;stroke-width:1" d="M8,306 L182,306"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M47,258 L57,258 L55.5,300 L48.5,300 Z"/>
+<path style="fill:#4a3c2e" d="M48,300 L56,300 L57,306 L47,306 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M59,258 L69,258 L67.5,300 L60.5,300 Z"/>
+<path style="fill:#4a3c2e" d="M60,300 L68,300 L69,306 L59,306 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M136,258 L146,258 L144.5,300 L137.5,300 Z"/>
+<path style="fill:#4a3c2e" d="M137,300 L145,300 L146,306 L136,306 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M148,258 L158,258 L156.5,300 L149.5,300 Z"/>
+<path style="fill:#4a3c2e" d="M149,300 L157,300 L158,306 L148,306 Z"/>
+<path style="fill:var(--no);stroke:var(--no);stroke-width:1" d="M79,258 L89,258 L87.5,300 L80.5,300 Z"/>
+<path style="fill:var(--no)" d="M80,300 L88,300 L89,306 L79,306 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M44,240 C52,230 80,232 110,232 C134,232 152,230 158,240 C164,252 160,266 150,270 C130,274 80,274 56,270 C46,266 40,252 44,240 Z"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M50,240 C42,232 32,226 24,226 C14,226 10,236 12,244 C14,252 22,254 30,252 C38,252 46,256 52,262 Z"/>
+<path style="fill:none;stroke:#e9dfcb;stroke-width:2.2;stroke-linecap:round" d="M26,227 C24,220 27,215 32,214"/>
+<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.3" d="M34,230 L44,224 L40,234 Z"/>
+<circle style="fill:#4a3c2e" cx="24" cy="235" r="1.8"/>
+<path style="fill:#b8956a;stroke:#7a5c3a;stroke-width:1" d="M12,240 C10,246 14,252 20,252 C24,252 26,248 24,242 Z"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:2.5;stroke-linecap:round" d="M158,240 C166,252 166,268 164,284"/>
+<ellipse style="fill:#7a5c3a" cx="164" cy="288" rx="2.5" ry="5"/>
 <g class="lb">
-<text x="315" y="144" class="ok" style="text-anchor:middle" data-seg="40a.14">בתוך הכסל</text>
-<text x="315" y="158" class="sm" style="text-anchor:middle" data-seg="40a.14">הירך במקומה</text>
-<text x="225" y="144" class="no" style="text-anchor:middle" data-seg="40a.11">שחול</text>
-<text x="225" y="158" class="sm" style="text-anchor:middle" data-seg="40a.11">נשמטה יריכו</text>
-<text x="135" y="144" class="no" style="text-anchor:middle" data-seg="40a.14">כסול</text>
-<text x="135" y="158" class="sm" style="text-anchor:middle" data-seg="40a.14">על גבי הכסל</text>
-<text x="45" y="144" class="no" style="text-anchor:middle" data-seg="40a.14">שרוע</text>
-<text x="45" y="158" class="sm" style="text-anchor:middle" data-seg="40a.14">ארוכה מחברתה</text>
-<text x="352" y="14" class="sm" data-seg="40a.14">כסל</text><path class="ld" d="M334,16 L322,32"/>
-<text x="318" y="196" data-seg="40a.13">סדוקות ולא עגולות</text>
-<text x="318" y="209" class="sm" data-seg="40a.13">פרסות בהמה טהורה</text>
-<text x="318" y="238" class="no" data-seg="40a.11">קלוטות כשל חמור</text>
-<text x="318" y="251" class="sm" data-seg="40a.13">עגולות ולא סדוקות</text>
-<text x="318" y="280" class="no" data-seg="40a.13">רב פפא: כיון דעגילן</text>
-<text x="318" y="293" class="sm" data-seg="40a.13">אף על גב דסדיקן — מום</text>
-<text x="8" y="183" class="no l" data-seg="40a.11">בעל חמש רגלים</text>
-<text x="8" y="196" class="sm l" data-seg="40a.11">או שאין לו אלא שלש</text>
-<text x="86" y="268" class="no sm l" data-seg="40a.12">יתר ביד</text>
+<text x="352" y="14" data-seg="40a.14">א · אחורי הבהמה</text>
+<text x="4" y="14" class="sm l" data-seg="40a.14">כסל</text>
+<path class="ld" d="M14,19 L13,30"/>
+<text x="312" y="168" class="ok" style="text-anchor:middle" data-seg="40a.14">בתוך הכסל</text>
+<text x="312" y="182" class="sm" style="text-anchor:middle" data-seg="40a.14">הירך במקומה</text>
+<text x="222" y="168" class="no" style="text-anchor:middle" data-seg="40a.11">שחול</text>
+<text x="222" y="182" class="sm" style="text-anchor:middle" data-seg="40a.11">נשמטה יריכו</text>
+<text x="132" y="168" class="no" style="text-anchor:middle" data-seg="40a.14">כסול</text>
+<text x="132" y="182" class="sm" style="text-anchor:middle" data-seg="40a.14">על גבי הכסל</text>
+<text x="42" y="168" class="no" style="text-anchor:middle" data-seg="40a.14">שרוע</text>
+<text x="42" y="182" class="sm" style="text-anchor:middle" data-seg="40a.14">ארוכה מחברתה</text>
+<text x="352" y="210" data-seg="40a.13">ב · פרסות — מבט מלמטה</text>
+<text x="298" y="232" data-seg="40a.13">סדוקות ולא עגולות</text>
+<text x="298" y="246" class="sm" data-seg="40a.13">פרסות בהמה טהורה</text>
+<text x="298" y="278" class="no" data-seg="40a.11">קלוטות כשל חמור</text>
+<text x="298" y="292" class="sm" data-seg="40a.13">רב פפא: כיון דעגילן</text>
+<text x="298" y="305" class="sm" data-seg="40a.13">אף על גב דסדיקן</text>
+<text x="182" y="210" data-seg="40a.11">ג · הבהמה — מבט מן הצד</text>
+<text x="182" y="226" class="no" data-seg="40a.11">בעל חמש רגלים</text>
+<text x="98" y="296" class="no sm l" data-seg="40a.12">יתר ביד</text>
+<path class="ld" d="M96,292 L90,287"/>
 </g>
 </svg>
