@@ -12,14 +12,14 @@
 <path style="fill:none;stroke:#b0453a;stroke-width:1.6;stroke-dasharray:4 3" d="M158,59.5 C136,65.7 130,82.1 140,89.9 L154,85.2"/>
 <path style="fill:none;stroke:#b0453a;stroke-width:1.6;stroke-dasharray:4 3" d="M162,126.6 C146,127.4 134,121.1 136,113.3 L157,118.0"/>
 <text x="8" y="22" class="no l" data-seg="40a.21">פרוס: שפה עליונה עודפת</text>
-<text x="8" y="36" class="sm l" data-seg="40a.16">פיו כחזיר (אילא: מום)</text>
+<text x="8" y="36" class="sm l" data-seg="40a.16">פיו כחזיר — אילא: מום; חכמים חולקים</text>
 <path class="ld" d="M100,40 L136,75.9"/>
 <text x="8" y="164" class="no l" data-seg="40a.23">הלחי התחתון עודף — מום</text>
 <text x="8" y="178" class="sm l" data-seg="40b.3">דאית בה עצם (רב פפא)</text>
 <path class="ld" d="M100,156 L137,121.1"/>
 <text x="352" y="22" data-seg="40a.23">לחי העליון</text>
 <path class="ld" d="M290,26 L250,71.2"/>
-<text x="352" y="174" data-seg="40a.16">לשון: רוב המדבר</text>
+<text x="352" y="174" data-seg="40a.16">לשון: רוב המדבר (ר׳ יהודה)</text>
 <text x="352" y="188" class="sm" data-seg="40a.16">שאינו דבוק במלקוחיו</text>
 <path class="ld" d="M240,164 L200,107.1"/>
 </svg>
