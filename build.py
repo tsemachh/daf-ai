@@ -452,7 +452,10 @@ def render_fig(figs):
     sheet covers it: [{"src": "<content/figs/NAME.svg>", "cap": "…"}]. The SVG is ours, inlined, themed by CSS."""
     out = []
     for f in figs:
-        svg = open(os.path.join(FIGS, f["src"] + ".svg"), encoding="utf8").read().strip()
+        fp = os.path.join(FIGS, f["src"] + ".svg")
+        if not os.path.exists(fp):   # never break the build over a drawing still being made
+            print("WARNING: missing drawing", f["src"]); continue
+        svg = open(fp, encoding="utf8").read().strip()
         cap = f'<figcaption>{f["cap"]}</figcaption>' if f.get("cap") else ""
         ai = '<p class="fig-ai">איור שנוצר על ידי AI ונבדק מול הגמרא ורש״י · <button type="button" class="fig-fb">ראיתם טעות? כתבו הערה</button></p>'
         out.append(f'<figure class="fig">{svg}{cap}{ai}</figure>')
