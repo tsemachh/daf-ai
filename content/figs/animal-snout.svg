@@ -1,58 +1,49 @@
-<svg viewBox="0 0 360 300" role="img" aria-label="חוטם הבכור מלפנים, והפה מן הצד: השפה, החוטין החיצונות והתיומת">
-<path style="fill:#d8b4a6;stroke:#7a5c3a;stroke-width:1.5" d="M141,22 C158,14 202,14 219,22 C229,28 233,45 229,61 C225,78 212,92 180,94 C148,92 135,78 131,61 C127,45 131,28 141,22 Z"/>
-<ellipse class="blk" cx="160" cy="47" rx="8.5" ry="14" transform="rotate(-18 160 47)"/>
-<ellipse class="blk" cx="200" cy="47" rx="8.5" ry="14" transform="rotate(18 200 47)"/>
-<path style="fill:none;stroke:#7a5c3a;stroke-width:1.2" d="M180,64 L180,80 M156,84 C168,79 192,79 204,84"/>
-<circle class="hole" cx="141" cy="49" r="4"/>
-<circle class="hole" style="stroke:var(--ok)" cx="180" cy="44" r="4"/>
-<text x="8" y="30" class="no l" data-seg="39a.9">מבחוץ — מום</text>
-<text x="8" y="44" class="sm l" data-seg="39a.9">נקבו מחיצות החיצונות</text>
-<text x="8" y="58" class="sm l" data-seg="39a.9">שהנקב נראה</text>
-<path class="ld" d="M78,25 L126,25 L138,45"/>
-<text x="352" y="30" class="ok" data-seg="39a.9">מבפנים — אינו מום</text>
-<text x="352" y="44" class="sm" data-seg="39a.9">במחיצה החולקת</text>
-<text x="352" y="58" class="sm" data-seg="39a.9">את החוטם — מקום סתר</text>
-<path class="ld" d="M254,25 L232,25 L184,41"/>
-<text x="8" y="86" class="sm l" data-seg="39a.9">ניקבו חוטמין זה לתוך זה</text>
-<path style="fill:none;stroke:var(--muted);stroke-width:.6" d="M20,103 L340,103"/>
-<path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M153,192.1 C147,184.3 149,174.2 158,169.5 C178,160.1 215,153.9 262,150.0 C300,146.9 335,150.0 352,154.7 L352,243.6 C318,248.3 262,249.8 214,245.9 C190,243.6 170,240.5 162,236.6 C155,233.5 154,231.1 157,229.6 L330,212.4 Z"/>
-<path style="fill:#7b3a3a;stroke:#7a5c3a;stroke-width:1" d="M153,192.1 L330,212.4 L157,229.6 Z"/>
-<path style="fill:none;stroke:#e7a0a0;stroke-width:4;stroke-linecap:round" d="M156,193.7 L318,211.2"/>
-<path style="fill:none;stroke:#e7a0a0;stroke-width:4;stroke-linecap:round" d="M160,228.0 L318,213.6"/>
-<ellipse class="blk" cx="160" cy="177.3" rx="2.5" ry="4"/>
-<circle class="blk" cx="300" cy="164.0" r="3"/>
-<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M163,229.0 L158,220.0 L164,219.0 L168,228.5 Z"/>
-<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M171,228.2 L166,219.2 L172,218.2 L176,227.7 Z"/>
-<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M179,227.4 L174,218.4 L180,217.4 L184,226.9 Z"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="234" y="202.0" width="10" height="5.5" rx="1.5"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="234" y="215.9" width="10" height="5.5" rx="1.5"/>
-<path style="stroke:#8a7a62;stroke-width:.7" d="M239,202.0 L239,207.5 M239,215.9 L239,221.4"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="246" y="203.3" width="10" height="5.5" rx="1.5"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="246" y="214.7" width="10" height="5.5" rx="1.5"/>
-<path style="stroke:#8a7a62;stroke-width:.7" d="M251,203.3 L251,208.8 M251,214.7 L251,220.2"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="258" y="204.7" width="10" height="5.5" rx="1.5"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="258" y="213.5" width="10" height="5.5" rx="1.5"/>
-<path style="stroke:#8a7a62;stroke-width:.7" d="M263,204.7 L263,210.2 M263,213.5 L263,219.0"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="270" y="206.1" width="10" height="5.5" rx="1.5"/>
-<rect style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" x="270" y="212.4" width="10" height="5.5" rx="1.5"/>
-<path style="stroke:#8a7a62;stroke-width:.7" d="M275,206.1 L275,211.6 M275,212.4 L275,217.9"/>
-<path style="fill:none;stroke:#b0453a;stroke-width:3;stroke-linecap:round" d="M150,179.6 C148,185.9 149,189.8 153,192.1 M157,229.6 C154,231.9 156,235.0 161,236.6"/>
-<path style="fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:3 2" d="M229,195.2 L229,228.0"/>
-<text x="8" y="140" class="l" data-seg="39a.9">שפתו: תורא ברא דשיפתיה</text>
-<text x="8" y="154" class="sm l" data-seg="39a.9">שורה חיצונה של שפה</text>
-<text x="8" y="168" class="sm l" data-seg="39a.9">חודה ולא רחבה</text>
-<path class="ld" d="M110,158 L148,184.3"/>
-<text x="8" y="214" class="no l" data-seg="39a.10">החוטין החיצונות</text>
-<text x="8" y="228" class="sm l" data-seg="39a.10">נפגמו, נגממו — מום</text>
-<path class="ld" d="M100,218 L170,226.4"/>
-<text x="352" y="122" data-seg="39a.13">הפנימיים: מן התיומת ולפנים</text>
-<text x="352" y="136" class="sm" data-seg="39a.13">ותיומת עצמה כלפנים</text>
-<path class="ld" d="M232,128 L229,195.2"/>
-<text x="352" y="268" data-seg="39a.10">התיומת: שיניים גדולות</text>
-<text x="352" y="282" class="sm" data-seg="39a.10">שאחת נראית כשתים</text>
-<path class="ld" d="M262,258 L258,221.8"/>
-<text x="8" y="254" class="l" data-seg="39a.14">פנימיות שנעקרו:</text>
-<text x="8" y="268" class="sm l" data-seg="39a.13">ת״ק — שוחטין</text>
-<text x="8" y="282" class="sm l" data-seg="39a.14">ר׳ יהושע בן קפוצאי — אפסולי מיפסל</text>
-<text x="8" y="296" class="sm l" data-seg="39a.14">ר׳ חנינא בן אנטיגנוס — אפילו לא נפסל</text>
+<svg viewBox="0 0 360 320" role="img" aria-label="א: ראש העגל מלפנים — נקב בדופן החוטם החיצונה ונקב במחיצה. ב: ראש העגל מהצד, הלחי פתוחה — השפה, החוטין החיצונות, והתיומת שממנה ולפנים הפנימיים">
+<text x="352" y="18" style="font-weight:700" data-seg="39a.9">א · החוטם ושני הנחיריים מלפנים</text>
+<g transform="translate(18,16) scale(0.9)">
+<path style="fill:#e3c7a6;stroke:#7a5c3a;stroke-width:1.3" d="M138,36 C120,26 98,28 88,40 C100,50 122,50 140,48 Z M222,36 C240,26 262,28 272,40 C260,50 238,50 220,48 Z"/>
+<path style="fill:#c99a6a;stroke:#6b4a2b;stroke-width:1.5" d="M150,16 C165,10 195,10 210,16 C222,22 226,40 224,60 C222,80 218,92 220,100 C224,112 222,134 210,140 L150,140 C138,134 136,112 140,100 C142,92 138,80 136,60 C134,40 138,22 150,16 Z"/>
+<path style="fill:#f1e6d4;stroke:none" d="M172,18 C178,16 184,16 188,18 L184,70 L176,70 Z"/>
+<ellipse class="blk" cx="147" cy="58" rx="4" ry="5"/>
+<ellipse class="blk" cx="213" cy="58" rx="4" ry="5"/>
+<path style="fill:#d9b0a6;stroke:#6b4a2b;stroke-width:1.3" d="M146,96 C160,90 200,90 214,96 C224,108 224,130 210,140 L150,140 C136,130 136,108 146,96 Z"/>
+<ellipse class="blk" cx="163" cy="113" rx="6" ry="10" transform="rotate(22 163 113)"/>
+<ellipse class="blk" cx="197" cy="113" rx="6" ry="10" transform="rotate(-22 197 113)"/>
+<path style="fill:none;stroke:#6b4a2b;stroke-width:1.1" d="M180,122 L180,133 M160,134 C170,138 190,138 200,134"/>
+<circle class="hole" cx="154" cy="114" r="3.5"/>
+<circle class="hole" style="stroke:var(--ok)" cx="180" cy="110" r="3.5"/>
+</g>
+<text x="8" y="108" class="no l" data-seg="39a.9">מבחוץ — מום</text>
+<text x="8" y="122" class="sm l" data-seg="39a.9">שהנקב נראה</text>
+<path class="ld" d="M80,112 L149,117"/>
+<text x="352" y="108" class="ok" data-seg="39a.9">מבפנים — אינו מום</text>
+<text x="352" y="122" class="sm" data-seg="39a.9">במחיצה — מקום סתר</text>
+<path class="ld" d="M250,104 L200,97 L182,111"/>
+<path style="fill:none;stroke:var(--muted);stroke-width:.6" d="M10,152 L350,152"/>
+<text x="352" y="170" style="font-weight:700" data-seg="39a.10">ב · הפה מן הצד</text>
+<path style="fill:#e3c7a6;stroke:#7a5c3a;stroke-width:1.3" d="M232,190 C246,176 266,172 282,176 C272,190 254,198 238,200 Z"/>
+<path style="fill:#c99a6a;stroke:#6b4a2b;stroke-width:1.5" d="M56,226 C66,214 95,200 140,190 C175,183 205,180 222,184 C238,188 246,198 252,210 L268,236 L276,284 L218,284 C210,277 200,274 188,274 C150,274 100,278 70,278 C56,278 46,274 44,268 C42,264 43,261 46,259 L41,257 C36,250 35,236 42,230 C46,227 51,226 56,226 Z"/>
+<path style="fill:#e9dcc4;stroke:#7a5c3a;stroke-width:1" d="M206,185 C207,175 214,170 221,171 C221,178 217,183 213,186 Z"/>
+<ellipse class="blk" cx="160" cy="210" rx="4.5" ry="3.5"/>
+<path style="fill:#2b2620" d="M46,236 C53,231 61,233 59,240 C55,238 51,239 46,236 Z"/>
+<path style="fill:#5a2e2e;stroke:#6b4a2b;stroke-width:1.2" d="M50,252 C80,244 150,242 200,246 C206,252 206,262 200,268 C150,270 80,270 50,264 C46,260 46,256 50,252 Z"/>
+<path style="fill:#e39a9a;stroke:none" d="M50,262 C80,264 150,264 202,262 L200,268 C150,270 80,270 50,266 Z"/>
+<path style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7" d="M51,262 L46,254 L51,253 L56,262 Z M58,263 L53,254 L58,253 L63,263 Z M65,263 L61,254 L66,254 L70,263 Z"/>
+<g style="fill:#efe7d6;stroke:#8a7a62;stroke-width:.7">
+<rect x="127" y="253" width="15" height="10" rx="2"/><rect x="144" y="253" width="15" height="10" rx="2"/><rect x="161" y="253" width="15" height="10" rx="2"/><rect x="178" y="253" width="15" height="10" rx="2"/>
+<path d="M134.5,253 L134.5,259 M151.5,253 L151.5,259 M168.5,253 L168.5,259 M185.5,253 L185.5,259"/>
+</g>
+<path style="fill:none;stroke:#b0453a;stroke-width:3;stroke-linecap:round" d="M43,231 C37,238 37,250 41,257 M46,259 C43,262 43,266 45,269"/>
+<path style="fill:none;stroke:var(--ink);stroke-width:1.8" d="M123,240 L123,294"/>
+<path style="fill:none;stroke:var(--ink);stroke-width:1" d="M42,286 L42,291 L120,291 L120,286 M126,286 L126,291 L200,291 L200,286"/>
+<text x="8" y="184" class="l" data-seg="39a.9">שפתו — השורה החיצונה</text>
+<text x="8" y="198" class="sm l" data-seg="39a.9">חודה ולא רחבה</text>
+<path class="ld" d="M30,204 L40,240"/>
+<text x="352" y="222" data-seg="39a.10">התיומת</text>
+<text x="352" y="236" class="sm" data-seg="39a.10">שיניים גדולות</text>
+<path class="ld" d="M300,226 L250,226 L136,252"/>
+<text x="118" y="302" data-seg="39a.10">החוטין החיצונות</text>
+<text x="118" y="317" class="no" data-seg="39a.10">נפגמו, נגממו — מום</text>
+<text x="128" y="302" class="l" data-seg="39a.13">מן התיומת ולפנים — פנימיים</text>
+<text x="128" y="317" class="sm l" data-seg="39a.13">ותיומת עצמה כלפנים</text>
 </svg>
