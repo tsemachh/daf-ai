@@ -1,0 +1,28 @@
+<svg viewBox="0 0 360 286" role="img" aria-label="בהמה ונוד תפוח כדופן: טעמי רבי מאיר לפי רב אחא בר יעקב">
+  <path d="M10,200 L350,200" style="stroke:#8a7a62;stroke-width:1.5;fill:none"/>
+  <path d="M168,86 Q182,110 176,150" style="stroke:#6b4f33;stroke-width:2.5;fill:none;stroke-linecap:round"/>
+  <g style="fill:#b08a62;stroke:#6b4f33;stroke-width:1.5">
+    <rect x="52" y="126" width="12" height="74" rx="3"/><rect x="70" y="126" width="12" height="74" rx="3"/>
+    <rect x="136" y="126" width="12" height="74" rx="3"/><rect x="154" y="126" width="12" height="74" rx="3"/>
+    <path d="M45,88 Q48,73 75,73 L152,73 Q169,73 169,92 L169,126 Q169,140 154,140 L62,140 Q45,140 45,122 Z"/>
+    <path d="M50,88 L22,81 Q7,79 5,92 L5,108 Q7,117 18,115 L50,110 Z"/>
+    <path d="M30,82 L38,68 L42,84 Z"/>
+  </g>
+  <g style="fill:#4a3826"><rect x="52" y="194" width="12" height="6"/><rect x="70" y="194" width="12" height="6"/><rect x="136" y="194" width="12" height="6"/><rect x="154" y="194" width="12" height="6"/><circle cx="16" cy="92" r="2.2"/></g>
+  <ellipse cx="275" cy="181" rx="48" ry="19" style="fill:#c9a27a;stroke:#7a5a3a;stroke-width:1.5"/>
+  <path d="M318,174 L332,166 L334,174 Z" style="fill:#c9a27a;stroke:#7a5a3a;stroke-width:1.2"/>
+  <rect x="225" y="78" width="100" height="84" style="fill:#d8c39c;stroke:#8a6a4a;stroke-width:1.5"/>
+  <path d="M250,78 L250,162 M275,78 L275,162 M300,78 L300,162" style="stroke:#a8906a;stroke-width:1;fill:none"/>
+  <g class="lb">
+    <text x="350" y="16" data-seg="24a.10">רב אחא בר יעקב — ר׳ מאיר סבר:</text>
+    <text x="350" y="32" class="sm" data-seg="24a.10">א. כל מחיצה שעומדת ברוח — אינה מחיצה</text>
+    <text x="350" y="46" class="sm" data-seg="24a.10">ב. שאינה עשויה בידי אדם — אינה מחיצה</text>
+    <text x="219" y="124" class="sm" data-seg="24a.11">דופן</text>
+    <text x="8" y="220" class="no l" data-seg="24a.10">בהמה — רוח חיים</text>
+    <text x="8" y="234" class="sm l" data-seg="24a.10">עומדת ברוח, ולאו בידי אדם</text>
+    <text x="8" y="248" class="sm l" data-seg="24a.9">ר׳ מאיר מטהר משום גולל</text>
+    <text x="350" y="220" data-seg="24a.11">נוד תפוח</text><path class="ld" d="M300,210 L285,200"/>
+    <text x="350" y="262" class="no" data-seg="24a.11">לטעם א׳: הרי עומדת ברוח</text>
+    <text x="350" y="278" class="ok" data-seg="24b.1">לטעם ב׳: הרי עשויה בידי אדם</text>
+  </g>
+</svg>

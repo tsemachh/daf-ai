@@ -1,0 +1,28 @@
+<svg viewBox="0 0 360 200" role="img" aria-label="סוכה על גבי בהמה: דלתות על שני סוסים, ועליהן מחיצות וסכך">
+  <path d="M10,190 L250,190" style="stroke:#8a7a62;stroke-width:1.5;fill:none"/>
+  <g style="fill:#b08a62;stroke:#6b4f33;stroke-width:1.5">
+    <rect x="52" y="140" width="9" height="50" rx="3"/><rect x="100" y="140" width="9" height="50" rx="3"/>
+    <path d="M45,128 Q46,118 62,118 L104,118 Q114,118 114,130 L114,140 Q114,148 104,148 L56,148 Q45,148 45,140 Z"/>
+    <path d="M48,124 L30,118 Q20,116 16,124 L12,140 Q12,146 19,146 L26,144 L46,140 Z"/>
+    <rect x="166" y="140" width="9" height="50" rx="3"/><rect x="214" y="140" width="9" height="50" rx="3"/>
+    <path d="M159,128 Q160,118 176,118 L218,118 Q228,118 228,130 L228,140 Q228,148 218,148 L170,148 Q159,148 159,140 Z"/>
+    <path d="M162,124 L144,118 Q134,116 130,124 L126,140 Q126,146 133,146 L140,144 L160,140 Z"/>
+    <path d="M30,119 L33,108 L38,121 Z"/><path d="M144,119 L147,108 L152,121 Z"/>
+  </g>
+  <g style="fill:#4a3826"><circle cx="24" cy="127" r="2"/><circle cx="138" cy="127" r="2"/></g>
+  <path d="M114,128 Q124,140 120,160 M228,128 Q238,140 234,160" style="stroke:#6b4f33;stroke-width:2.5;fill:none;stroke-linecap:round"/>
+  <rect x="40" y="110" width="200" height="8" style="fill:#a8805a;stroke:#6b4f33;stroke-width:1.2"/>
+  <path d="M44,110 L44,48 M236,110 L236,48" style="stroke:#8a6a4a;stroke-width:4;fill:none"/>
+  <g style="fill:#8aa35f;stroke:#566e36;stroke-width:1"><rect x="40" y="42" width="38" height="6"/><rect x="82" y="42" width="38" height="6"/><rect x="124" y="42" width="38" height="6"/><rect x="166" y="42" width="38" height="6"/><rect x="208" y="42" width="32" height="6"/></g>
+  <g class="lb">
+    <text x="350" y="20" data-seg="23a.5">העושה סוכתו על גבי בהמה:</text>
+    <text x="272" y="48" class="sm" data-seg="23a.5">סכך</text>
+    <text x="350" y="78" class="sm" data-seg="23a.5">מחיצות</text><path class="ld" d="M308,74 L240,76"/>
+    <text x="350" y="112" data-seg="23a.5">דלתות על שני סוסים</text>
+    <text x="350" y="126" class="sm" data-seg="23a.5">והם קרקעית הסוכה</text>
+    <text x="350" y="152" class="ok" data-seg="23a.6">ר׳ מאיר: מכשיר</text>
+    <text x="350" y="166" class="sm" data-seg="23a.6">מדאורייתא מחזא חזיא</text>
+    <text x="350" y="182" class="no" data-seg="23a.5">ר׳ יהודה: פוסל</text>
+    <text x="350" y="196" class="sm" data-seg="23a.5">אינה ראויה לשבעה</text>
+  </g>
+</svg>
