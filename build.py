@@ -18,6 +18,8 @@ DAFSPOILER = json.load(open(_dsp, encoding="utf8")) if os.path.exists(_dsp) else
 _swp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "swdaf.json")
 SWDAF = json.load(open(_swp, encoding="utf8")) if os.path.exists(_swp) else {}
 SW_CREDIT = "באדיבות Simon Wolf (www.swdaf.com)"
+_sws = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "swdaf_sec.json")
+SWSEC = json.load(open(_sws, encoding="utf8")) if os.path.exists(_sws) else {}   # "<folder>/<file>" -> section id
 
 
 # site slug -> swdaf folder (also the feed's ?mas=), where the names differ
@@ -31,7 +33,7 @@ def sw_charts(slug, daf):
     out, dr = [], SW_DIR.get(slug, slug)
     for f in SWDAF.get(dr, {}).get(str(daf), []):
         t = re.sub(r"^[A-Za-z_]+?\d+_?", "", f).rsplit(".", 1)[0].replace("_", " ").strip() or "דף עזר"
-        out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": t})
+        out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": t, "sec": SWSEC.get(f"{dr}/{f}", "")})
     return out
 DAFS = {}  # (slug, daf) -> daf json, filled in main(); used for links between the parts of a split sugya
 SITE_TITLE = "דפי חזרה ולימוד — הדף היומי"
@@ -595,6 +597,9 @@ def render_section(d, s):
     parts = [f'<section class="sugya{" stgd" if stg else ""}" id="{sid}"{stg}>', f'  <div class="amud"{ref}>{s["amud"]}</div>']
     if s.get("title"):
         parts.append(f'  <h3>{s["title"]}</h3>')
+    for c in sw_charts(d["slug"], d["daf"]):
+        if c["sec"] == s["id"]:
+            parts.append(f'  <a class="sw-sec" href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1">📊 <bdi dir="ltr">{esc(c["title"])}</bdi> <span>· דף עזר באדיבות <bdi dir="ltr">Simon Wolf</bdi></span></a>')
     if s["kind"] != "raw":
         parts.append(cont_link(d, s, "prev"))
     if s["kind"] == "raw":
@@ -680,7 +685,7 @@ def render_daf(d, prev, nxt, glossary, sources):
         links += (f'\n    <li class="sw-li">תרשימים ודפי עזר — {SWC}<ul>'
                   + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1"><bdi dir="ltr">{esc(c["title"])} (PDF)</bdi></a></li>' for c in sw)
                   + '</ul></li>')
-    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף — תרשימים ומקורות · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
+    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
     pn = []
     for k, fmt in ((neighbour(d["slug"], d["daf"], -1), '→ {}'), (neighbour(d["slug"], d["daf"], 1), '{} ←')):
         if k:
