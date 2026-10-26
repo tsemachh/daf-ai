@@ -27,11 +27,11 @@
 <text x="172" y="104" style="text-anchor:middle" data-seg="40b.7">שלש</text>
 <text x="172" y="118" class="ok" style="text-anchor:middle" data-seg="40b.7">אינו מום</text>
 <path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M50,40 L112,40 L112,48 C100,52 62,52 50,48 Z"/>
-<path style="fill:none;stroke:#7a5c3a;stroke-width:9;stroke-linecap:round" d="M80,49 C80,60 98,62 98,72 C98,86 70,88 68,74 C66,62 88,62 88,74 C88,82 80,84 78,78"/>
-<path style="fill:none;stroke:#d9b991;stroke-width:6;stroke-linecap:round" d="M80,49 C80,60 98,62 98,72 C98,86 70,88 68,74 C66,62 88,62 88,74 C88,82 80,84 78,78"/>
+<path style="fill:none;stroke:#7a5c3a;stroke-width:9;stroke-linecap:round" d="M80,49 C80,60 81,72 81,84"/>
+<path style="fill:none;stroke:#d9b991;stroke-width:6;stroke-linecap:round" d="M80,49 C80,60 81,72 81,84"/>
 <text x="8" y="16" class="l" data-seg="40b.4">זנב הגדי כשל חזיר</text>
-<text x="81" y="104" style="text-anchor:middle" data-seg="40b.6">כריכא — עגולה (רב פפא)</text>
-<text x="81" y="118" class="no" style="text-anchor:middle" data-seg="40b.4">ר׳ חנניא בן גמליאל: מום</text>
+<text x="81" y="100" style="text-anchor:middle" data-seg="40b.6">כריכא — עגולה</text><text x="81" y="113" class="sm" style="text-anchor:middle" data-seg="40b.6">ולא רחבה (רב פפא; רש״י)</text>
+<text x="81" y="127" class="no" style="text-anchor:middle" data-seg="40b.4">ר׳ חנניא בן גמליאל: מום</text>
 <path style="fill:#d9b991;stroke:#7a5c3a;stroke-width:1.5" d="M352,138 L192,136 C172,136 160,146 156,162 C152,182 156,204 166,218 C172,228 176,234 178,242 C182,254 186,264 188,276 L184,290 L210,290 L204,276 C202,264 200,254 202,244 C206,232 214,224 228,216 C250,210 300,206 352,206 Z"/>
 <path class="ld" d="M352,138 L352,206"/>
 <path style="fill:#5b4a35" d="M184,290 L210,290 L206,282 L187,282 Z"/>
@@ -43,7 +43,7 @@
 <text x="8" y="248" class="l" data-seg="40b.18">עד הערקוב</text>
 <text x="8" y="174" class="l" data-seg="40b.18">זנב העגל</text>
 <text x="8" y="190" class="no l" data-seg="40b.18">שאינה מגעת — מום</text>
-<text x="8" y="205" class="sm l" data-seg="40b.18">כל מרבית עגלים כן</text>
+<text x="8" y="205" class="sm l" data-seg="40b.18">מרבית העגלים זנבן מגיעות לערקוב (רש״י)</text>
 <path class="ld" d="M106,180 L138,190"/>
 <text x="352" y="246" data-seg="40b.18">ערקוב — קפץ העליון</text>
 <path class="ld" d="M246,242 L198,242"/>
