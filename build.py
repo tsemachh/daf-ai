@@ -457,8 +457,13 @@ def render_fig(figs):
             print("WARNING: missing drawing", f["src"]); continue
         svg = open(fp, encoding="utf8").read().strip()
         cap = f'<figcaption>{f["cap"]}</figcaption>' if f.get("cap") else ""
+        view = f'<p class="fig-view">👁 {f["view"]}</p>' if f.get("view") else ""
+        # colour key — only for the colours this drawing actually uses
+        keys = [(c, t) for c, t in (("no", "אדום — מום / פסול"), ("ok", "ירוק — אינו מום / כשר"), ("ld", "קו מקווקו — מצביע על החלק"))
+                if f'class="{c}' in svg or f' {c}"' in svg or f'class="sm {c}' in svg]
+        key = ('<p class="fig-key">' + " · ".join(f'<span class="k-{c}">{t}</span>' for c, t in keys) + "</p>") if keys else ""
         ai = '<p class="fig-ai">איור שנוצר על ידי AI ונבדק מול הגמרא ורש״י · <button type="button" class="fig-fb">ראיתם טעות? כתבו הערה</button></p>'
-        out.append(f'<figure class="fig">{svg}{cap}{ai}</figure>')
+        out.append(f'<figure class="fig">{view}{svg}{key}{cap}{ai}</figure>')
     return "".join(out)
 
 

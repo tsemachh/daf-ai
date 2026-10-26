@@ -1033,3 +1033,7 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .fig .lobe{fill:#f3dcc4;stroke:#8a6a4a;stroke-width:1.5;stroke-dasharray:4 3}
 .fig .fig-ai{font-size:.78em;color:var(--muted);margin:4px 0 0}
 .fig .fig-fb{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;font:inherit;cursor:pointer}
+.fig{position:relative;z-index:41;background:var(--paper)}   /* above the floating sugya pill, which used to cover labels */
+.fig .fig-view{font-size:.82em;font-weight:600;color:var(--ink);margin:0 0 4px;text-align:start}
+.fig .fig-key{font-size:.78em;color:var(--muted);margin:2px 0 4px}
+.fig .k-no{color:var(--no);font-weight:700}.fig .k-ok{color:var(--ok);font-weight:700}
