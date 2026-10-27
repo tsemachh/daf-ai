@@ -1,0 +1,39 @@
+<svg viewBox="0 0 360 262" role="img" aria-label="חתך מהצד של שדה: סלע גבוה ונקע עמוק עשרה טפחים אינם נמדדים עם השדה, סלע ונקע קטנים מהם נמדדים עמה">
+  <!-- soil of the field (side cross-section), with a small dip (left) and a 10-tefach dip (centre) -->
+  <path d="M10,140 H20 L26,158 H44 L50,140 H130 L136,190 H204 L210,140 H350 V215 H10 Z" style="fill:#c9a878;stroke:#8a6a4a;stroke-width:1.5"/>
+  <path d="M136,190 H204" style="stroke:#8a6a4a;stroke-width:1.5"/>
+  <!-- rocks standing on the field -->
+  <path d="M75,140 L80,125 L88,122 L95,125 L100,140 Z" style="fill:#9c978e;stroke:#5f5a52;stroke-width:1.5"/>
+  <path d="M230,140 L238,92 L255,90 L272,92 L280,140 Z" style="fill:#9c978e;stroke:#5f5a52;stroke-width:1.5"/>
+  <!-- the 10-tefach ones: not part of the measured field (dashed outline) -->
+  <defs><pattern id="fdr-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0,0 V7" style="stroke:#7d7a74;stroke-width:2"/></pattern></defs>
+  <path d="M130,140 L136,190 H204 L210,140 Z" style="fill:url(#fdr-hatch);fill-opacity:.55;stroke:none"/>
+  <path d="M230,140 L238,92 L255,90 L272,92 L280,140 Z" style="fill:url(#fdr-hatch);fill-opacity:.6;stroke:none"/>
+  <!-- measured surface of the field -->
+  <path d="M10,140 H20 L26,158 H44 L50,140 H75 L80,125 L88,122 L95,125 L100,140 H130 M210,140 H230 M280,140 H350" style="fill:none;stroke:#c08a1e;stroke-width:4;stroke-linejoin:round"/>
+  <!-- 10-handbreadth dimension marks -->
+  <path d="M290,90 V140 M285,90 H295 M285,140 H295" style="fill:none;stroke:#3f6fb0;stroke-width:1.8"/>
+  <path d="M143,140 V190 M138,140 H148 M138,190 H148" style="fill:none;stroke:#3f6fb0;stroke-width:1.8"/>
+  <g class="lb">
+    <text x="350" y="18" data-seg="25a.6">נקעים וסלעים עשרה טפחים</text>
+    <text x="350" y="33" class="sm" data-seg="25a.6">אינן נמדדין עמה</text>
+    <text x="10" y="18" class="l" data-seg="25a.6">פחות מכאן —</text>
+    <text x="10" y="33" class="sm l" data-seg="25a.6">נמדדין עמה</text>
+
+    <text x="268" y="80" data-seg="25a.6">סלע</text>
+    <text x="350" y="112" data-seg="25a.6">עשרה</text>
+    <text x="350" y="126" data-seg="25a.6">טפחים</text>
+    <text x="180" y="130" data-seg="25a.6">נקע</text>
+    <text x="196" y="232" data-seg="25a.6">עשרה טפחים</text><path class="ld" d="M150,220 L143,193"/>
+
+    <text x="70" y="78" class="sm l" data-seg="25a.6">סלע</text><path class="ld" d="M80,82 L87,119"/>
+    <text x="10" y="102" class="sm l" data-seg="25a.6">נקע</text><path class="ld" d="M20,106 L33,153"/>
+
+    <text x="350" y="234" data-seg="25a.6">אינן נמדדין עמה</text>
+    <text x="350" y="249" class="sm" data-seg="25a.6">רש״י: נפדין בשווין</text>
+    <path class="ld" d="M300,224 L262,142 M282,224 L190,192"/>
+    <path d="M10,236 H30" style="stroke:#c08a1e;stroke-width:4"/>
+    <text x="34" y="240" class="l" data-seg="25a.6">נמדדין עמה</text>
+    <text x="34" y="255" class="sm l" data-seg="25a.6">חמשים שקל כסף</text>
+  </g>
+</svg>
