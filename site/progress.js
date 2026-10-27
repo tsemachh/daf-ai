@@ -534,7 +534,7 @@
       mt.appendChild(mlist); g.appendChild(mt);
       if(hw&&seen) g.appendChild(howTile());
       if(HD.pages) g.appendChild(tile('','/stats/','📊','באתר',HD.pages+' דפים',HD.mas+' מסכתות · '+HD.steps.toLocaleString('he-IL')+' שלבי סוגיה'));
-      if(HD.figs) g.appendChild(tile('','/drawings/','🖼','איורים',String(HD.figs),'כל האיורים שציירנו לסוגיות, לפי מסכת'));
+      if(HD.aids) g.appendChild(tile('','/aids/','🧩','עזרים',HD.aids.toLocaleString('he-IL'),'איורים, טבלאות, חשבונות ו־Simon Wolf — עם סינון'));
       if(HD.wn) g.appendChild(tile('','/changes/','✨','מה חדש · '+HD.wn.d,null,HD.wn.x+'…'));
       var gb=tile('',null,'⚙','קצב והגדרות',null,S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי'); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
       if(window.__fbTile) g.appendChild(window.__fbTile);

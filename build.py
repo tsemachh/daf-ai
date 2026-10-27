@@ -469,39 +469,67 @@ def render_fig(figs):
     return "".join(out)
 
 
-def render_drawings(alld):
-    """/drawings/: every drawing on the site in one place, by masechet, each linking to its sugya's עזרים."""
-    groups, seen = {}, {}
+AID_KINDS = [("fig", "איורים", "🖼"), ("table", "טבלאות שיטות", "▦"), ("decide", "אם… אז…", "⑂"), ("seq", "סדר האירועים", "⇢"),
+             ("chain", "שרשראות לימוד", "⛓"), ("calc", "חשבונות", "∑"), ("scale", "מידות בקנה מידה", "📏"), ("sw", "Simon Wolf", "📊")]
+
+
+def render_aids(alld):
+    """/aids/: every aid on the site in one list — drawings, tables, if→then, sequences, chains, calculations, scales
+    and Simon Wolf's sheets — filterable by kind and masechet; each links back to its sugya's עזרים."""
+    items, seenfig = [], {}
     for d in alld:
         for s in d["sections"]:
+            href = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{s["id"]}-aids'
+            where = f'{d["title"]} · {s.get("title", "")}'
+            def add(kind, title, html):
+                items.append({"k": kind, "m": d["slug"], "mh": d["tractate_he"], "t": title, "h": html, "links": [(href, where)]})
             for f in s.get("fig") or []:
                 if not os.path.exists(os.path.join(FIGS, f["src"] + ".svg")):
                     continue
-                k = f["src"]
-                link = (f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{s["id"]}-aids', f'{d["title"]} · {s.get("title", "")}')
-                if k in seen:
-                    seen[k]["links"].append(link); continue
-                seen[k] = {"f": f, "links": [link]}
-                groups.setdefault(d["tractate_he"], []).append(k)
-    n = len(seen)
-    toc = " ".join(f'<a class="back" href="#m-{i}">{esc(m)} ({len(ks)})</a>' for i, (m, ks) in enumerate(groups.items()))
-    body = []
-    for i, (m, ks) in enumerate(groups.items()):
-        cards = []
-        for k in ks:
-            e = seen[k]
-            fig = re.sub(r'<p class="fig-ai">.*?</p>', "", render_fig([e["f"]]), flags=re.S)
-            links = " ".join(f'<a href="{h}">{esc(t)} ←</a>' for h, t in e["links"])
-            cards.append(f'<article class="dr-card">{fig}<p class="dr-go">{links}</p></article>')
-        body.append(f'<h2 class="dr-m" id="m-{i}">מסכת {esc(m)}</h2>' + "".join(cards))
-    return n, page(
-        "איורים · " + SITE_TITLE,
+                if f["src"] in seenfig:
+                    seenfig[f["src"]]["links"].append((href, where)); continue
+                add("fig", "", re.sub(r'<p class="fig-ai">.*?</p>', "", render_fig([f]), flags=re.S)); seenfig[f["src"]] = items[-1]
+            for k, fn in (("table", render_table), ("decide", render_decide), ("seq", render_seq), ("chain", render_chain),
+                          ("calc", render_calc), ("scale", render_scale)):
+                for t in ([s[k]] if isinstance(s.get(k), dict) else s.get(k) or []):
+                    add(k, t.get("title") or s.get("title", ""), fn(t))
+        for c in sw_charts(d["slug"], d["daf"]):
+            sec = next((x for x in d["sections"] if x["id"] == c["sec"]), None)
+            items.append({"k": "sw", "m": d["slug"], "mh": d["tractate_he"], "t": c["title"],
+                          "h": f'<a class="sw-sec" title="{esc(c["en"])}" href="{esc(c["href"])}" target="_blank" rel="noopener">📊 {esc(c["title"])} <small>(PDF)</small></a>',
+                          "links": [(f'../{d["slug"]}/{d["daf"]}/' + (f'#{d["key"]}-{sec["id"]}-aids' if sec else f'#{d["key"]}-more'),
+                                     d["title"] + (f' · {sec.get("title", "")}' if sec else ""))]})
+    count = {k: sum(1 for x in items if x["k"] == k) for k, _, _ in AID_KINDS}
+    mas = list(dict.fromkeys((x["m"], x["mh"]) for x in items))
+    chips = f'<button type="button" class="ax-c on" data-k="">הכל <small>{len(items)}</small></button>' + "".join(
+        f'<button type="button" class="ax-c" data-k="{k}">{ic} {n} <small>{count[k]}</small></button>' for k, n, ic in AID_KINDS if count[k])
+    sel = '<select class="ax-m" aria-label="מסכת"><option value="">כל המסכתות</option>' + "".join(
+        f'<option value="{m}">מסכת {esc(h)}</option>' for m, h in mas) + "</select>"
+    names = {k: (n, ic) for k, n, ic in AID_KINDS}
+    cards = []
+    for x in items:
+        n, ic = names[x["k"]]
+        go = " ".join(f'<a href="{h}">{esc(t)} ←</a>' for h, t in x["links"])
+        body = x["h"] if x["k"] in ("fig", "sw") else f'<details><summary>{esc(re.sub("<[^>]+>", "", x["t"]))}</summary>{x["h"]}</details>'
+        cards.append(f'<article class="dr-card ax-{x["k"]}" data-k="{x["k"]}" data-m="{x["m"]}"><p class="ax-tag">{ic} {n} · מסכת {esc(x["mh"])}</p>'
+                     f'{body}<p class="dr-go">{go}</p></article>')
+    js = """<script>(function(){var k='',m='',cs=document.querySelectorAll('.ax-c'),as=document.querySelectorAll('.dr-card'),
+sel=document.querySelector('.ax-m'),n=document.querySelector('.ax-n');
+function go(){var c=0;as.forEach(function(a){var on=(!k||a.dataset.k===k)&&(!m||a.dataset.m===m);a.hidden=!on;if(on)c++});
+cs.forEach(function(b){b.classList.toggle('on',b.dataset.k===k);b.setAttribute('aria-pressed',b.dataset.k===k)});n.textContent=c+' עזרים';
+try{history.replaceState(null,'',location.pathname+(k||m?'#'+[k,m].filter(Boolean).join('/'):''))}catch(e){}}
+cs.forEach(function(b){b.onclick=function(){k=b.dataset.k;go()}});sel.onchange=function(){m=sel.value;go()};
+var h=location.hash.slice(1).split('/');h.forEach(function(x){if(document.querySelector('.ax-c[data-k="'+x+'"]'))k=x;else if(x&&sel.querySelector('option[value="'+x+'"]')){m=x;sel.value=x}});go();})();</script>"""
+    html = page(
+        "עזרים · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
-        f'<div class="eyebrow">עזרים</div><h1>כל האיורים</h1>'
-        f'<p class="thesis">{n} איורים שציירנו לסוגיות — מומים, סוכה, מקומות ומידות. כל איור מוביל לסוגיה שלו.</p></header>'
-        f'<p class="about-link">{toc}</p>'
-        f'<p class="fig-ai">האיורים נוצרו על ידי AI ונבדקו מול הגמרא ורש״י. ראיתם טעות? כתבו הערה מתוך הסוגיה עצמה.</p>'
-        f'{"".join(body)}<footer>{FOOT}</footer></section></div>', "כל האיורים באתר, לפי מסכת", depth=1)
+        f'<div class="eyebrow">כל העזרים</div><h1>עזרים לסוגיות</h1>'
+        f'<p class="thesis">איורים, טבלאות שיטות, חשבונות, סדרי אירועים ודפי העזר של Simon Wolf — מכל הדפים באתר. סננו לפי סוג ומסכת; כל עזר מוביל לסוגיה שלו.</p></header>'
+        f'<div class="ax-f" role="toolbar" aria-label="סינון">{sel}{chips}</div><p class="ax-n" aria-live="polite"></p>'
+        f'<p class="fig-ai">האיורים והטבלאות נוצרו על ידי AI ונבדקו מול הגמרא ורש״י. ראיתם טעות? כתבו הערה מתוך הסוגיה עצמה. '
+        f'דפי Simon Wolf — באדיבותו (<a href="https://www.swdaf.com/" target="_blank" rel="noopener">www.swdaf.com</a>).</p>'
+        f'{"".join(cards)}<footer>{FOOT}</footer></section></div>{js}', "כל העזרים באתר — איורים, טבלאות וחשבונות, לפי סוג ומסכת", depth=1)
+    return len(items), count, html
 
 
 def render_scale(sc):
@@ -916,7 +944,10 @@ def home_data():
     wn = {"d": fmt_day(log[0]["date"]), "x": re.sub("<[^>]+>", "", log[0]["items"][0])[:90]} if log and log[0]["items"] else None
     nfig = len({f["src"] for d in DAFS.values() for x in d["sections"] for f in (x.get("fig") or []) if os.path.exists(os.path.join(FIGS, f["src"] + ".svg"))})
     pages = list(DAFS.values())
-    return jscript({"wn": wn, "figs": nfig, "pages": len(pages), "mas": len({d["slug"] for d in pages}),
+    naid = nfig + sum(1 for d in pages for x in d["sections"] for k in ("table", "decide", "seq", "chain", "calc", "scale")
+                      for _ in ([x[k]] if isinstance(x.get(k), dict) else x.get(k) or [])) \
+        + sum(len(sw_charts(d["slug"], d["daf"])) for d in pages)
+    return jscript({"wn": wn, "figs": nfig, "aids": naid, "pages": len(pages), "mas": len({d["slug"] for d in pages}),
                     "steps": sum(len(x.get("steps") or []) for d in pages for x in d["sections"])}, id="home-data")
 
 
@@ -932,7 +963,7 @@ def render_home(by_slug, latest, about):
 <div id="progress-home"></div>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./drawings/">כל האיורים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./aids/">כל העזרים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -1246,8 +1277,12 @@ def main():
         f'<div class="eyebrow">התקדמות</div><h1>מה חדש באתר</h1>'
         f'<p class="thesis">כל השיפורים, מהחדש לישן.</p></header>{whatsnew(None, link=False)}'
         f'<footer>{FOOT}</footer></section></div>', "שינויים ושיפורים באתר", depth=1))
-    os.makedirs(os.path.join(DIST, "drawings"), exist_ok=True)
-    nfigs, dr_html = render_drawings(alld)
+    os.makedirs(os.path.join(DIST, "aids"), exist_ok=True)
+    naids, akinds, ax_html = render_aids(alld)
+    nfigs = akinds["fig"]
+    open(os.path.join(DIST, "aids", "index.html"), "w", encoding="utf8").write(ax_html)
+    os.makedirs(os.path.join(DIST, "drawings"), exist_ok=True)   # the old address of the drawings list
+    dr_html = '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=../aids/#fig"><link rel="canonical" href="../aids/"><a href="../aids/#fig">עזרים — איורים</a>'
     ap = os.path.join(DIST, "architecture.html")   # keep the architecture page's headline numbers current
     if os.path.exists(ap):
         nums = {"pages": len(alld), "mas": len(by_slug), "steps": sum(len(x.get("steps") or []) for d in alld for x in d["sections"]),
@@ -1273,7 +1308,7 @@ def main():
     open(os.path.join(DIST, "privacy", "index.html"), "w", encoding="utf8").write(render_privacy())
     os.makedirs(os.path.join(DIST, "notes"), exist_ok=True)
     open(os.path.join(DIST, "notes", "index.html"), "w", encoding="utf8").write(render_notes(by_slug))
-    urls = ["", "about/", "ideas/", "changes/", "drawings/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/", "ideas/", "changes/", "aids/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     gd = git_dates()
     lm = {f"{d['slug']}/{d['daf']}/": gd[f"data/{d['slug']}/{d['daf']}.json"] for d in alld if f"data/{d['slug']}/{d['daf']}.json" in gd}
     for slug in by_slug:   # a masechet page changes when any of its dapim do
