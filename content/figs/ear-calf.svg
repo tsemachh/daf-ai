@@ -1,0 +1,26 @@
+<svg viewBox="0 0 360 356" role="img" aria-label="אוזן העגל — מבט מהצד: חסחוס ועור, פגימה, סדק ונקב">
+  <defs><clipPath id="acr"><rect x="0" y="0" width="360" height="269" rx="10"/></clipPath></defs>
+  <image href="/figs/ear-calf.webp" x="0" y="0" width="360" height="269" clip-path="url(#acr)" preserveAspectRatio="xMidYMid slice"/>
+  <ellipse cx="96" cy="176" rx="40" ry="28" style="fill:#2f6b3a;fill-opacity:.18;stroke:#7fd18f;stroke-width:1.4;stroke-dasharray:4 3"/>
+  <path d="M221,45 L231,59 L241,43 Z" style="fill:#1b2230;stroke:#e05a5a;stroke-width:1.8;stroke-linejoin:round"/>
+  <path d="M249,189 L256,165" style="stroke:#e05a5a;stroke-width:2.6;stroke-linecap:round"/>
+  <circle cx="255" cy="110" r="6.5" style="fill:#1b2230;stroke:#e05a5a;stroke-width:2"/><circle cx="255" cy="110" r="3.4" style="fill:#9c8a4a"/>
+  <g data-on-img="1" style="font-weight:700">
+    <circle cx="231" cy="22" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="231" y="26" style="text-anchor:middle;fill:#a33;font-size:11px" data-seg="37b.7">1</text>
+    <circle cx="270" cy="212" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="270" y="216" style="text-anchor:middle;fill:#a33;font-size:11px" data-seg="37b.6">2</text>
+    <circle cx="285" cy="96" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="285" y="100" style="text-anchor:middle;fill:#a33;font-size:11px" data-seg="37b.8">3</text>
+    <circle cx="300" cy="160" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="300" y="164" style="text-anchor:middle;fill:#1d1814;font-size:11px" data-seg="37a.15">4</text>
+    <circle cx="56" cy="214" r="8" style="fill:#fbf8f1;stroke:#2f6b3a"/><text x="56" y="218" style="text-anchor:middle;fill:#2f6b3a;font-size:11px" data-seg="37a.15">5</text>
+  </g>
+  <path d="M231,30 L231,42 M265,205 L254,186 M277,99 L262,107 M292,156 L270,140 M62,207 L72,196" style="stroke:#fbf8f1;stroke-width:1.2"/>
+  <g data-on-img="1"><circle cx="350" cy="284" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="287.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="37b.7">1</text></g>
+  <text x="338" y="288" class="no" data-seg="37b.7">פגימה — כדי שתחגור בה ציפורן — מום</text>
+  <g data-on-img="1"><circle cx="350" cy="298" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="301.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="37b.6">2</text></g>
+  <text x="338" y="302" class="no" data-seg="37b.6">סדק — כל שהוא — מום</text>
+  <g data-on-img="1"><circle cx="350" cy="312" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="315.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="37b.8">3</text></g>
+  <text x="338" y="316" class="no" data-seg="37b.8">נקב — מלא כרשינה (רש״י: נכנסת ויוצאה) — מום</text>
+  <g data-on-img="1"><circle cx="350" cy="326" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="329.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="37a.15">4</text></g>
+  <text x="338" y="330" data-seg="37a.15">חסחוס — כאן המומים</text>
+  <g data-on-img="1"><circle cx="350" cy="340" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="343.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="37a.15">5</text></g>
+  <text x="338" y="344" class="ok" data-seg="37a.15">עור — האליה הרכה: אינה מום, חוזר ומתרפא</text>
+</svg>
