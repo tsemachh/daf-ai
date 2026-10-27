@@ -17,7 +17,7 @@ from fill_srctext import REF  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TAG = re.compile(r'<[^>]+>')
-SAGE = re.compile(r'^(רבי|רב|רבן|רבה|רבא|ר׳|ר\'|מר|אביי|שמואל|עולא|בן|בר|אבא|חכמים|רש״י|ת״ק)( |$)')
+SAGE = re.compile(r'^(רבי|רב|רבן|רבה|רבא|ר׳|ר\'|מר|אביי|שמואל|עולא|בן|בר|אבא|חכמים|רש״י|ת״ק|ריש לקיש|תנא|בית שמאי|בית הלל|חכמי|רבנן|אנשי)( |$)|^[א-ת׳״]+ (?:בר|בן|בריה דרב|בריה דרבי|אחי) ')   # a sage's name, bold by design
 # a bold phrase of ≥2 words, not already inside ״…״, that is not a sage's name → a Gemara quote missing its marks
 BARE = re.compile(r'(?<!״)<b>((?:(?!</b>).)+? (?:(?!</b>).)+?)</b>(?!״)')
 
