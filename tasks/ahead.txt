@@ -1,10 +1,10 @@
 !temurah/33
-temurah/34
-keritot/2
-keritot/3
-keritot/4
-keritot/5
-keritot/6
+!temurah/34
+!keritot/2
+!keritot/3
+!keritot/4
+!keritot/5
+!keritot/6
 keritot/7
 keritot/8
 keritot/9
