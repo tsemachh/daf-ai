@@ -1058,3 +1058,4 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .ax-tag{margin:0 0 6px;font-size:13px;color:var(--muted)}
 .dr-card>details>summary{cursor:pointer;font-weight:700;padding:4px 0}
 .dr-card[hidden]{display:none}
+.dr-card>details>.ch>.mtx-h,.dr-card>details>div>.mtx-h,.dr-card>details>.mtx-h{display:none}
