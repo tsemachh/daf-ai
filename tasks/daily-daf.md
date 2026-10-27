@@ -169,8 +169,8 @@ for the next run.
 "dyc:<id>" …, "status": "used" | "skimmed" | "skipped" | "unreadable", "contributed": ["s2: …"],
 "corrections": <n>, "by": "review"}`. Commit it with the cache.
 
-## 4. Write `data/<slug>/<daf>.json` — Fable writer subagent
-Spawn ONE subagent with **model `fable`** (general-purpose; Fable is a separate weekly allowance — owner, 2026-10-27). Prompt: "Read `tasks/writer-brief.md` and
+## 4. Write `data/<slug>/<daf>.json` — Sonnet writer subagent
+Spawn ONE subagent with **model `sonnet`** (general-purpose). Prompt: "Read `tasks/writer-brief.md` and
 follow it exactly. Input: `<cache>/<slug>/<daf>/pack.md`. Write `data/<slug>/<daf>.json`. Hebrew date
 for `meta`/`card`: <date> (+ holiday). Read no other file." All writing rules (complete shakla vetarya,
 explain-don't-transcribe, `seg`/`p`/`type`, aids, amud labels, continuation, quiz, content boundary)
@@ -190,12 +190,12 @@ Then, with scripts only:
   loads, updates and saves `data/glossary.json` — never read the whole file into context.
 
 ## 5. Verify, then publish
-**a. Review subagent** (**model `fable`** — separate allowance; ONE subagent). Give it `pack.md` and
+**a. Review subagent** (model: this run's main model — Fable/Opus; ONE subagent). Give it `pack.md` and
 the page JSON (not rendered text). It checks against the Gemara (G) with S/R and the Sinai summary as
 cross-checks — the Gemara wins any disagreement: attributions, rulings, amud placement, quotes, every
 intermediate קושיה/תירוץ and each FINAL conclusion, merged or missing moves, `p` and `type`, storyline
 and בקצרה accuracy, every aid cell, every quiz answer and distractor, new glossary entries in context.
-It checks every `unlock` (key to the sugya) for accuracy and drops (patch to null) any that only restates the sugya's first step, gives the answer, or sets up a case the first step already makes clear — most sugyot need none (aim ≤ 1/3 of a page); and flags as OMISSION any sugya where a learner who skipped straight to it would not know what case or concept it is about (typically a jump to a new topic) — supplying the 1–2 sentence `unlock`. It checks the `stages` of every sugya with 10+ steps (present; boundaries at real turns of the sugya; each `q`/`a` true to the steps — patch `sN.stages`; if it inserts steps, it shifts the later `at` values). It checks every step's `short` line (the תמצית level shows it instead of the body): true to the step, ≤12 words, not a bare tag — patch `sN.steps[i].short`. It flags as OMISSION a sugya where ≥2 opinions or readings (e.g. two amoraim explaining a mishnah) rule on ≥2 cases but no `table` sums them up, supplying the `table` (readers asked for this on בכורות כ״ח and ל״ה). It also flags THIN steps (a move stated without its reasoning) — the writer's typical weakness — and supplies
+It checks every `unlock` (key to the sugya) for accuracy and drops (patch to null) any that only restates the sugya's first step, gives the answer, or sets up a case the first step already makes clear — most sugyot need none (aim ≤ 1/3 of a page); and flags as OMISSION any sugya where a learner who skipped straight to it would not know what case or concept it is about (typically a jump to a new topic) — supplying the 1–2 sentence `unlock`. It checks the `stages` of every sugya with 10+ steps (present; boundaries at real turns of the sugya; each `q`/`a` true to the steps — patch `sN.stages`; if it inserts steps, it shifts the later `at` values). It checks every step's `short` line (the תמצית level shows it instead of the body): true to the step, ≤12 words, not a bare tag — patch `sN.steps[i].short`. It flags as OMISSION a sugya where ≥2 opinions or readings (e.g. two amoraim explaining a mishnah) rule on ≥2 cases but no `table` sums them up, supplying the `table` (readers asked for this on בכורות כ״ח and ל״ה). It also flags THIN steps (a move stated without its reasoning) — Sonnet's typical weakness — and supplies
 the fuller explanation. It returns ONLY patches, never a rewritten page:
 `[{"where": "s3.steps[4].body" | "quiz[2].o[1]" | …, "severity": "ERROR|OMISSION|THIN|DOUBTFUL",
 "why": "<source quote>", "new": "<corrected Hebrew / new step object>"}]`, and writes the source log.
