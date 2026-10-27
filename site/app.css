@@ -525,11 +525,14 @@ details.aids[open]>summary{margin-bottom:4px}
 
 /* worked numbers */
 .cl ul{list-style:none;margin:0;padding:0}
-.cl li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.cl li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 16px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
+.cl li.full{grid-template-columns:1fr}
+.cl li::after{content:none!important}
 .cl li:last-child{border-bottom:0}
 .cl li.sum{font-weight:800}
 .cl-c{display:block;font-size:12px;color:var(--muted);font-weight:400}
-.cl-v{font-variant-numeric:tabular-nums;white-space:nowrap;direction:ltr}
+.cl-v{font-variant-numeric:tabular-nums;white-space:nowrap;unicode-bidi:plaintext;text-align:end;max-width:52vw}
+.cl li:not(.sum)+li.sum{border-top:2px solid var(--muted)}
 /* order of events */
 .sq ol{margin:0;padding:0;list-style:none;display:grid;gap:18px}
 .sq li{display:flex;align-items:flex-start;gap:10px;margin:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);position:relative;font-size:15px;line-height:1.5}
@@ -704,9 +707,8 @@ details.howto .howto-lead{margin:10px 0 4px;font-size:16px;line-height:1.6}
   .mtx tbody th{white-space:normal;border:0;padding:8px 12px 2px;font-size:15px}
   .mtx td{border:0;padding:3px 12px;overflow-wrap:anywhere}
   .mtx td[data-l]::before{content:attr(data-l) ": ";font-weight:700;color:var(--muted);font-size:13px}
-  .cl li{flex-wrap:wrap}
   .cl-l{min-width:0;overflow-wrap:anywhere}
-  .cl-v{white-space:normal;overflow-wrap:anywhere;margin-inline-start:auto}
+  .cl-v{white-space:normal;overflow-wrap:anywhere}
 }
 
 details.more-pages{margin-top:14px}

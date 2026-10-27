@@ -404,6 +404,8 @@ def render_chain(t):
 def render_calc(t):
     """Worked numbers: {"title", "rows": [[label, value, cite?]], "lines": [[label, value]], "note"?}."""
     def row(r, cls=""):
+        if isinstance(r, str):   # a stray sentence: show it whole across the box, never split as label|value
+            return f'<li class="{cls} full"><span class="cl-l">{r}</span></li>'
         cite = f'<span class="cl-c">{r[2]}</span>' if len(r) > 2 and r[2] else ""
         return f'<li class="{cls}"><span class="cl-l">{r[0]}{cite}</span><span class="cl-v">{r[1]}</span></li>'
     body = "".join(row(r) for r in t["rows"]) + "".join(row(r, "sum") for r in t.get("lines", []))

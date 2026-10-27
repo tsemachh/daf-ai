@@ -191,6 +191,16 @@ def main():
             for q_ in re.findall(r'״([^״]{2,40})״', TAG.sub('', st.get('body', ''))):
                 if re.match(r'^(ב?דף [א-ת]|בעמוד [אב]|לעיל)', q_):
                     errs.append(f'{s["id"]}: ״{q_}״ is a page reference, not Gemara — write it without quote marks')
+    # worked-numbers boxes: every row and total is [label, value] or [label, value, cite] — a bare string breaks the
+    # two-column layout (it was split letter by letter: ״ס״ | ״ך״), and the cite is for readers (״משנה״, ״ו׳ ע״א״), not a seg id
+    for s in d['sections']:
+        for c_ in ([s['calc']] if isinstance(s.get('calc'), dict) else s.get('calc') or []):
+            for part in ('rows', 'lines'):
+                for r_ in c_.get(part, []):
+                    if not (isinstance(r_, list) and 2 <= len(r_) <= 3 and all(isinstance(x, str) for x in r_)):
+                        errs.append(f'{s["id"]}: calc {part} item must be [label, value] or [label, value, cite] — got {str(r_)[:50]}; put explanations in `note`')
+                    elif len(r_) == 3 and re.fullmatch(r'\d+[ab]\.\d+', r_[2].strip()):
+                        errs.append(f'{s["id"]}: calc cite ״{r_[2]}״ is a segment id — write a source a reader knows (משנה, ברייתא, רש״י, ו׳ ע״א)')
     # our own drawings (content/figs/*.svg): every label names its Gemara line (data-seg) and says nothing the sugya
     # doesn't — its words must be found in the Gemara, Rashi or our explanation of this daf (no invented terms)
     figs = [(s['id'], f['src']) for s in d['sections'] for f in s.get('fig', [])]

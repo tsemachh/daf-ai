@@ -83,7 +83,7 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
-   {"title","rows":[[label,value,cite?]],"lines":[…]}; `seq` {"title","items":[…]} — each item one card, written "move — answer" (the question or step, then its outcome) or "label: text"; keep each under ~20 words;
+   {"title","rows":[[label,value,cite?]],"lines":[[label,value]],"note"?} — every row and total is a 2–3 item list with a short value (a number and its unit), the total as ["סך הכל","368 מנה"]; any sentence goes in `note`; cite is a source a reader knows (משנה, ברייתא, רש״י), never a segment id; `seq` {"title","items":[…]} — each item one card, written "move — answer" (the question or step, then its outcome) or "label: text"; keep each under ~20 words;
    `map` (מפת השיטות) when a sugya layers views — tannaim disputing WHERE/WHY others disagree, amoraim explaining,
    rejecting, ruling, supporting — so the learner sees who answers whom and where it ends: {"title","tiers":[{"tone"?: "t1" (earlier tannaim) | "t2" (later tannaim) | "a" (amoraim),"label":
    "תנאים|אמוראים|המחלוקת היסודית…","nodes":[{"id","name","say":"<their position in ≤20 words>","rejected"?:true}]}],
