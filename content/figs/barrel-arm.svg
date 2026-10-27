@@ -1,0 +1,65 @@
+<svg viewBox="0 0 360 285" role="img" aria-label="שיטת רבי יהודה במשקל היד: 1. חבית מלאה מים, מכניס את היד עד האציל והמים יוצאים; 2. מוציא את היד והחבית חסרה כנפח היד; 3. נותן לתוכה בשר חמור, גידים ועצמות עד שתתמלא">
+  <defs>
+    <clipPath id="brl-c1"><path d="M264,120 C254,160 254,200 264,240 L336,240 C346,200 346,160 336,120 Z"/></clipPath>
+    <clipPath id="brl-c2"><path d="M144,120 C134,160 134,200 144,240 L216,240 C226,200 226,160 216,120 Z"/></clipPath>
+    <clipPath id="brl-c3"><path d="M24,120 C14,160 14,200 24,240 L96,240 C106,200 106,160 96,120 Z"/></clipPath>
+  </defs>
+  <!-- panel dividers -->
+  <path style="fill:none;stroke:var(--muted);stroke-width:.8;stroke-dasharray:3 3" d="M240,28 L240,282 M120,28 L120,282"/>
+
+  <!-- ===== panel 1 (right): full barrel, arm in up to the elbow, water spills ===== -->
+  <path style="fill:#a9cfe8" d="M264,120 C254,160 254,200 264,240 L336,240 C346,200 346,160 336,120 Z"/>
+  <!-- arm: shoulder (sleeved) up-left, elbow at the water line, forearm and hand under water -->
+  <path style="fill:none;stroke:#8a6a4a;stroke-width:15;stroke-linecap:round;stroke-linejoin:round" d="M270,68 L300,120 L297,198"/>
+  <path style="fill:none;stroke:#e8c3a0;stroke-width:12;stroke-linecap:round;stroke-linejoin:round" d="M270,68 L300,120 L297,198"/>
+  <ellipse style="fill:#e8c3a0;stroke:#8a6a4a;stroke-width:1.5" cx="296" cy="210" rx="8" ry="13"/>
+  <path style="fill:none;stroke:#5f6f86;stroke-width:19;stroke-linecap:butt" d="M262,56 L284,93"/>
+  <rect clip-path="url(#brl-c1)" style="fill:#4f93c4;fill-opacity:.22" x="250" y="120" width="100" height="122"/>
+  <path style="fill:none;stroke:#3f78a3;stroke-width:1.5" d="M263,120 L337,120"/>
+  <!-- overflow down both sides, puddles -->
+  <path style="fill:none;stroke:#3f78a3;stroke-width:2.5;stroke-linecap:round" d="M263,120 C254,124 251,140 252,160 M337,120 C346,124 349,140 348,160 M250,176 L250,186 M350,176 L350,186 M249,204 L249,212 M351,204 L351,212"/>
+  <ellipse style="fill:#7fb3d5;stroke:#3f78a3;stroke-width:1" cx="250" cy="243" rx="9" ry="3"/>
+  <ellipse style="fill:#7fb3d5;stroke:#3f78a3;stroke-width:1" cx="350" cy="243" rx="9" ry="3"/>
+  <path style="fill:none;stroke:#8a5a32;stroke-width:5;stroke-linejoin:round" d="M264,120 C254,160 254,200 264,240 L336,240 C346,200 346,160 336,120"/>
+  <path style="fill:none;stroke:#4a3a2a;stroke-width:3" d="M257,148 L263,148 M343,148 L337,148 M257,214 L263,214 M343,214 L337,214"/>
+
+  <!-- ===== panel 2 (middle): arm out, the barrel is short by the arm's volume ===== -->
+  <path style="fill:#ead9bf" d="M144,120 C134,160 134,200 144,240 L216,240 C226,200 226,160 216,120 Z"/>
+  <rect clip-path="url(#brl-c2)" style="fill:#95c0df" x="130" y="150" width="100" height="92"/>
+  <path style="fill:none;stroke:#3f78a3;stroke-width:1.5" d="M138,150 L222,150"/>
+  <rect clip-path="url(#brl-c2)" style="fill:none;stroke:#3f78a3;stroke-width:1.2;stroke-dasharray:3 2" x="138" y="121" width="84" height="29"/>
+  <path style="fill:none;stroke:#8a5a32;stroke-width:5;stroke-linejoin:round" d="M144,120 C134,160 134,200 144,240 L216,240 C226,200 226,160 216,120"/>
+  <path style="fill:none;stroke:#4a3a2a;stroke-width:3" d="M137,148 L143,148 M223,148 L217,148 M137,214 L143,214 M223,214 L217,214"/>
+
+  <!-- ===== panel 3 (left): donkey flesh, sinews and bones put in until full ===== -->
+  <path style="fill:#a9cfe8" d="M24,120 C14,160 14,200 24,240 L96,240 C106,200 106,160 96,120 Z"/>
+  <ellipse style="fill:#b5544a;stroke:#7a3028;stroke-width:1" cx="46" cy="222" rx="15" ry="10"/>
+  <ellipse style="fill:#a84a42;stroke:#7a3028;stroke-width:1" cx="74" cy="219" rx="13" ry="11"/>
+  <ellipse style="fill:#b5544a;stroke:#7a3028;stroke-width:1" cx="58" cy="196" rx="14" ry="9"/>
+  <path style="fill:#efe6d2;stroke:#9a8c70;stroke-width:1" d="M34,178 C30,173 35,169 39,173 L70,182 C74,177 80,180 77,185 C81,189 76,194 72,190 L41,181 C37,186 31,183 34,178 Z"/>
+  <path style="fill:none;stroke:#d9b45a;stroke-width:2;stroke-linecap:round" d="M80,198 C86,192 82,186 88,180 M36,200 C30,194 36,190 32,184"/>
+  <rect clip-path="url(#brl-c3)" style="fill:#4f93c4;fill-opacity:.22" x="10" y="120" width="100" height="122"/>
+  <path style="fill:none;stroke:#3f78a3;stroke-width:1.5" d="M23,120 L97,120"/>
+  <path style="fill:none;stroke:#8a5a32;stroke-width:5;stroke-linejoin:round" d="M24,120 C14,160 14,200 24,240 L96,240 C106,200 106,160 96,120"/>
+  <path style="fill:none;stroke:#4a3a2a;stroke-width:3" d="M17,148 L23,148 M103,148 L97,148 M17,214 L23,214 M103,214 L97,214"/>
+
+  <g class="lb">
+    <text x="352" y="16" style="font-weight:700" data-seg="19a.5">ר׳ יהודה: משקל ידי עלי</text>
+    <text x="352" y="40" style="font-weight:700" data-seg="19b.2">1 · ממלא חבית מים</text>
+    <text x="352" y="54" class="sm" data-seg="19b.2">ומכניס ביד</text>
+    <text x="352" y="88" data-seg="19b.2">עד האציל</text>
+    <path class="ld" d="M318,93 L304,116"/>
+    <text x="336" y="262" data-seg="19a.5">יוצאין המים</text>
+    <text x="352" y="277" class="sm" data-seg="19b.2">ברגל: עד הארכובה</text>
+
+    <text x="232" y="40" style="font-weight:700" data-seg="19a.5">2 · נמצאת חסירה</text>
+    <text x="206" y="100" data-seg="19a.5">נפח היד</text>
+    <path class="ld" d="M180,105 L180,128"/>
+
+    <text x="112" y="40" style="font-weight:700" data-seg="19b.3">3 · נותן לתוכה</text>
+    <text x="112" y="54" class="sm" data-seg="19b.3">עד שתתמלא</text>
+    <text x="104" y="262" data-seg="19b.3">בשר חמור</text>
+    <text x="104" y="277" class="sm" data-seg="19b.3">גידים ועצמות</text>
+    <path class="ld" d="M52,252 L48,234"/>
+  </g>
+</svg>

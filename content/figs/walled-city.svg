@@ -1,0 +1,72 @@
+<svg viewBox="0 0 360 298" role="img" aria-label="ארבע עיירות במבט מלמעלה: 1. בית הבנוי בתוך החומה; 2. חולסית ומצולה לפנים מן החומה; 3. עיר שגגותיה חומתה — בתים צמודים בלי חומה; 4. טבריה — חומה בשלושה צדדים והים בצד הרביעי">
+  <!-- panel frames: 1 top-right, 2 top-left, 3 bottom-right, 4 bottom-left -->
+  <g style="fill:none;stroke:#b9ad95;stroke-width:1">
+    <rect x="186" y="4" width="166" height="142" rx="8"/>
+    <rect x="8" y="4" width="166" height="142" rx="8"/>
+    <rect x="186" y="152" width="166" height="142" rx="8"/>
+    <rect x="8" y="152" width="166" height="142" rx="8"/>
+  </g>
+
+  <!-- 1. a house built in the wall (Rahav) -->
+  <rect x="200" y="38" width="138" height="66" style="fill:none;stroke:#b9a27e;stroke-width:10"/>
+  <path d="M195,33 H343 V109 H195 Z M205,43 H333 V99 H205 Z" style="fill:none;stroke:#6e5a3c;stroke-width:1"/>
+  <g style="fill:#d9c3a0;stroke:#7a5f40;stroke-width:1">
+    <rect x="216" y="60" width="20" height="16"/><rect x="230" y="82" width="18" height="12"/>
+    <rect x="304" y="58" width="20" height="16"/><rect x="290" y="82" width="16" height="12"/>
+  </g>
+  <rect x="254" y="33" width="32" height="24" style="fill:#e8c48e;stroke:var(--accent);stroke-width:2"/>
+
+  <!-- 2. rocky ground and sand pit inside the wall -->
+  <rect x="22" y="38" width="138" height="66" style="fill:none;stroke:#b9a27e;stroke-width:10"/>
+  <path d="M17,33 H165 V109 H17 Z M27,43 H155 V99 H27 Z" style="fill:none;stroke:#6e5a3c;stroke-width:1"/>
+  <rect x="128" y="58" width="18" height="14" style="fill:#d9c3a0;stroke:#7a5f40;stroke-width:1"/>
+  <path d="M86,54 L110,52 L118,68 L108,90 L84,88 L78,70 Z" style="fill:#a9a49a;stroke:#6f6a60;stroke-width:1.2"/>
+  <g style="fill:#d2cdc2;stroke:#6f6a60;stroke-width:.8">
+    <circle cx="92" cy="64" r="4"/><circle cx="105" cy="62" r="3.5"/><circle cx="98" cy="78" r="4.5"/><circle cx="110" cy="74" r="3"/>
+  </g>
+  <ellipse cx="54" cy="72" rx="18" ry="14" style="fill:#e8d3a2;stroke:#a88a4e;stroke-width:1.2"/>
+  <g style="fill:#a88a4e">
+    <circle cx="46" cy="68" r="1"/><circle cx="54" cy="64" r="1"/><circle cx="62" cy="70" r="1"/><circle cx="48" cy="78" r="1"/>
+    <circle cx="58" cy="80" r="1"/><circle cx="64" cy="76" r="1"/><circle cx="42" cy="73" r="1"/><circle cx="55" cy="72" r="1"/>
+  </g>
+
+  <!-- 3. a town whose roofs are its wall: houses pressed together, no wall -->
+  <g style="fill:#d9c3a0;stroke:#7a5f40;stroke-width:1">
+    <rect x="214" y="182" width="16" height="16"/><rect x="230" y="182" width="16" height="16"/><rect x="246" y="182" width="16" height="16"/>
+    <rect x="262" y="182" width="16" height="16"/><rect x="278" y="182" width="16" height="16"/><rect x="294" y="182" width="16" height="16"/>
+    <rect x="310" y="182" width="16" height="16"/>
+    <rect x="214" y="230" width="16" height="16"/><rect x="230" y="230" width="16" height="16"/><rect x="246" y="230" width="16" height="16"/>
+    <rect x="262" y="230" width="16" height="16"/><rect x="278" y="230" width="16" height="16"/><rect x="294" y="230" width="16" height="16"/>
+    <rect x="310" y="230" width="16" height="16"/>
+    <rect x="214" y="198" width="16" height="16"/><rect x="214" y="214" width="16" height="16"/>
+    <rect x="310" y="198" width="16" height="16"/><rect x="310" y="214" width="16" height="16"/>
+  </g>
+
+  <!-- 4. Tiberias: wall on three sides, the sea on the fourth -->
+  <path d="M14,176 L62,176 L62,256 L14,256 Z" style="fill:#9cc3d8;stroke:none"/>
+  <g style="fill:none;stroke:#5f8fa8;stroke-width:1.2;stroke-linecap:round">
+    <path d="M22,196 q5,-4 10,0 q5,4 10,0"/><path d="M28,216 q5,-4 10,0 q5,4 10,0"/><path d="M20,236 q5,-4 10,0 q5,4 10,0"/>
+  </g>
+  <path d="M62,180 L156,180 L156,252 L62,252" style="fill:none;stroke:#b9a27e;stroke-width:10;stroke-linejoin:miter"/>
+  <path d="M62,175 L161,175 L161,257 L62,257 M62,185 L151,185 L151,247 L62,247" style="fill:none;stroke:#6e5a3c;stroke-width:1"/>
+  <g style="fill:#d9c3a0;stroke:#7a5f40;stroke-width:1">
+    <rect x="76" y="196" width="18" height="14"/><rect x="120" y="198" width="20" height="16"/>
+    <rect x="96" y="222" width="18" height="14"/><rect x="128" y="226" width="14" height="12"/>
+  </g>
+
+  <g class="lb">
+    <text x="344" y="24" style="font-weight:700" data-seg="32a.5">① בית הבנוי בחומה</text>
+    <text x="344" y="122" data-seg="32a.9">ר׳ שמעון: כבתי ערי חומה</text>
+    <text x="344" y="138" data-seg="32a.9">ר׳ יהודה: אינו כבתי ערי חומה</text>
+
+    <text x="166" y="24" style="font-weight:700" data-seg="32a.8">② חולסית ומצולה</text>
+    <text x="166" y="122" data-seg="32a.8">ר׳ מאיר: כבתים</text>
+    <text x="166" y="138" data-seg="32a.8">ר׳ יהודה: כשדות</text>
+
+    <text x="344" y="172" style="font-weight:700" data-seg="32a.10">③ גגותיה חומתה</text>
+    <text x="344" y="280" data-seg="32a.10">אינה כבתי ערי חומה</text>
+
+    <text x="166" y="172" style="font-weight:700" data-seg="32a.11">④ טבריה — ימה חומתה</text>
+    <text x="166" y="280" data-seg="32a.11">סביב — פרט לטבריה</text>
+  </g>
+</svg>
