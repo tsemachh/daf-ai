@@ -1,4 +1,3 @@
-!temurah/32
 !temurah/33
 temurah/34
 keritot/2
