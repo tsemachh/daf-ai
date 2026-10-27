@@ -527,6 +527,8 @@ details.aids[open]>summary{margin-bottom:4px}
 .cl ul{list-style:none;margin:0;padding:0}
 .cl li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 16px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
 .cl li.full{grid-template-columns:1fr}
+.cl li.long{grid-template-columns:1fr}
+.cl li.long .cl-v{white-space:normal;max-width:none;text-align:start;padding-inline-start:12px;border-inline-start:2px solid var(--line)}
 .cl li::after{content:none!important}
 .cl li:last-child{border-bottom:0}
 .cl li.sum{font-weight:800}

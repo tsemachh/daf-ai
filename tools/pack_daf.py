@@ -53,7 +53,8 @@ def seg_lines(label, i, g, s, r):
     rt = ' | '.join(clean(x) for x in rr if x)
     if rt:
         out.append(f'  R: {rt}')
-    m = [k.strip() for k in MARKERS if k in clean(g)]
+    cg = clean(g)   # a marker must end at a word end: ״תיקו״ is not ״תיקום״
+    m = [k.strip() for k in MARKERS if re.search(re.escape(k) + ('' if not k[-1].isalpha() else r'(?![א-ת])'), cg)]
     if m:
         out.append(f'  M: {", ".join(dict.fromkeys(m))}')
     return out

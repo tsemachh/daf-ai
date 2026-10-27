@@ -407,7 +407,8 @@ def render_calc(t):
         if isinstance(r, str):   # a stray sentence: show it whole across the box, never split as label|value
             return f'<li class="{cls} full"><span class="cl-l">{r}</span></li>'
         cite = f'<span class="cl-c">{r[2]}</span>' if len(r) > 2 and r[2] else ""
-        return f'<li class="{cls}"><span class="cl-l">{r[0]}{cite}</span><span class="cl-v">{r[1]}</span></li>'
+        long = " long" if len(re.sub("<[^>]+>", "", r[1])) > 22 else ""   # a sentence-long value goes under its label
+        return f'<li class="{cls}{long}"><span class="cl-l">{r[0]}{cite}</span><span class="cl-v">{r[1]}</span></li>'
     body = "".join(row(r) for r in t["rows"]) + "".join(row(r, "sum") for r in t.get("lines", []))
     title = f'<div class="mtx-h">{t["title"]}</div>' if t.get("title") else ""
     note = f'<p class="ch-n">{t["note"]}</p>' if t.get("note") else ""
