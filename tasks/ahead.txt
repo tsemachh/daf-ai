@@ -1,4 +1,3 @@
-!keritot/12
 !keritot/13
 keritot/14
 keritot/15
