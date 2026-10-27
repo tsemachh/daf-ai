@@ -1,0 +1,26 @@
+<svg viewBox="0 0 360 398" role="img" aria-label="בהמה כדופן לסוכה — מבט מהצד: הסכך בעשרה, הבהמה כשבעה, פחות משלשה ביניהם">
+  <defs><clipPath id="c-cow"><rect x="0" y="0" width="360" height="298" rx="10"/></clipPath></defs>
+  <rect x="0" y="0" width="360" height="298" rx="10" style="fill:#1b2230"/>
+  <image href="/figs/cow-side.webp" x="10.0" y="69.7" width="320.5" height="239.0" clip-path="url(#c-cow)"/>
+  <path d="M0,290 L360,290" style="stroke:#8a7a62;stroke-width:1.5"/>
+  <path d="M30,290 L30,70.0 M330,290 L330,70.0" style="stroke:#b08a5a;stroke-width:5"/>
+  <rect x="22" y="61.0" width="316" height="9" rx="4" style="fill:#7f9a55;stroke:#4f6a32"/>
+  <path d="M156.9,70.0 L156.9,136.0 M219.2,70.0 L219.2,134.0" style="stroke:#d9c39a;stroke-width:2"/>
+  <path d="M99.0,216.6 L196.9,216.6 L196.9,289 L99.0,289 Z" style="fill:#5fbf73;fill-opacity:.22;stroke:#5fbf73;stroke-width:1.2;stroke-dasharray:3 2"/>
+  <path d="M63.4,145.2 L277.0,145.2" style="stroke:#e05a5a;stroke-width:1.8;stroke-dasharray:6 4"/>
+  <path d="M346,290 L346,70.0 M342,290 L350,290 M342,70.0 L350,70.0" style="stroke:#d9c39a;stroke-width:1.2"/>
+  <path d="M354,132.0 L354,70.0" style="stroke:#5fbf73;stroke-width:2.4"/>
+  <g data-on-img="1"><circle cx="180.0" cy="50.0" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="180.0" y="54.0" style="text-anchor:middle;fill:#1d1814;font-size:11px;font-weight:700" data-seg="23a.11">1</text><circle cx="332.0" cy="180.0" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="332.0" y="184.0" style="text-anchor:middle;fill:#1d1814;font-size:11px;font-weight:700" data-seg="23a.11">2</text><circle cx="340.0" cy="99.0" r="8" style="fill:#fbf8f1;stroke:#2f6b3a"/><text x="340.0" y="103.0" style="text-anchor:middle;fill:#2f6b3a;font-size:11px;font-weight:700" data-seg="23a.11">3</text><circle cx="188.0" cy="101.0" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="188.0" y="105.0" style="text-anchor:middle;fill:#1d1814;font-size:11px;font-weight:700" data-seg="23a.11">4</text><circle cx="148.0" cy="253.3" r="8" style="fill:#fbf8f1;stroke:#2f6b3a"/><text x="148.0" y="257.3" style="text-anchor:middle;fill:#2f6b3a;font-size:11px;font-weight:700" data-seg="23a.10">5</text><circle cx="294.8" cy="145.2" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="294.8" y="149.2" style="text-anchor:middle;fill:#a33;font-size:11px;font-weight:700" data-seg="23b.1">6</text></g>
+  <g data-on-img="1"><circle cx="350" cy="308" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="311.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="23a.11">1</text></g>
+  <text x="338" y="312" data-seg="23a.11">סכך — בגובה עשרה טפחים</text>
+  <g data-on-img="1"><circle cx="350" cy="322" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="325.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="23a.11">2</text></g>
+  <text x="338" y="326" data-seg="23a.11">עשרה טפחים</text>
+  <g data-on-img="1"><circle cx="350" cy="336" r="6" style="fill:#fbf8f1;stroke:#2f6b3a;stroke-width:.8"/><text x="350" y="339.5" style="text-anchor:middle;fill:#2f6b3a;font-size:9px;font-weight:700" data-seg="23a.11">3</text></g>
+  <text x="338" y="340" class="ok" data-seg="23a.11">פחות משלשה סמוך לסכך — לבוד</text>
+  <g data-on-img="1"><circle cx="350" cy="350" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="353.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="23a.11">4</text></g>
+  <text x="338" y="354" data-seg="23a.11">קשורה בחבלים מלמעלה</text>
+  <g data-on-img="1"><circle cx="350" cy="364" r="6" style="fill:#fbf8f1;stroke:#2f6b3a;stroke-width:.8"/><text x="350" y="367.5" style="text-anchor:middle;fill:#2f6b3a;font-size:9px;font-weight:700" data-seg="23a.10">5</text></g>
+  <text x="338" y="368" class="ok" data-seg="23a.10">הוצא ודפנא בין רגליה</text>
+  <g data-on-img="1"><circle cx="350" cy="378" r="6" style="fill:#fbf8f1;stroke:#a33;stroke-width:.8"/><text x="350" y="381.5" style="text-anchor:middle;fill:#a33;font-size:9px;font-weight:700" data-seg="23b.1">6</text></g>
+  <text x="338" y="382" class="no" data-seg="23b.1">מתה — כווצא, ובטיל ליה לבוד</text>
+</svg>
