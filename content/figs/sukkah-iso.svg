@@ -1,0 +1,32 @@
+<svg viewBox="0 0 360 300" role="img" aria-label="סוכה במבט תלת־ממדי: שלש דפנות, סכך תחתון ועליון והרווח ביניהם">
+<path style="fill:#d8cdb8;stroke:#8a7a62;stroke-width:1" d="M200.0,182.0 L286.6,232.0 L200.0,282.0 L113.4,232.0 Z"/>
+<path style="fill:#c9a27a;fill-opacity:.55;stroke:#7a5c3a;stroke-width:1.2" d="M113.4,232.0 L200.0,182.0 L200.0,57.0 L113.4,107.0 Z"/>
+<path style="fill:#c9a27a;fill-opacity:.55;stroke:#7a5c3a;stroke-width:1.2" d="M200.0,182.0 L286.6,232.0 L286.6,107.0 L200.0,57.0 Z"/>
+<path style="fill:#c9a27a;fill-opacity:.35;stroke:#7a5c3a;stroke-width:1;stroke-dasharray:3 2" d="M113.4,232.0 L145.9,250.8 L145.9,125.8 L113.4,107.0 Z"/>
+<path style="fill:#7f9a55;stroke:#4f6a32;stroke-width:.8" d="M206.5,60.8 L216.2,66.4 L129.6,116.4 L119.9,110.8 Z"/>
+<path style="fill:#7f9a55;stroke:#4f6a32;stroke-width:.8" d="M228.1,73.2 L237.9,78.9 L151.3,128.9 L141.5,123.2 Z"/>
+<path style="fill:#7f9a55;stroke:#4f6a32;stroke-width:.8" d="M249.8,85.8 L259.5,91.4 L172.9,141.4 L163.2,135.8 Z"/>
+<path style="fill:#7f9a55;stroke:#4f6a32;stroke-width:.8" d="M271.4,98.2 L281.2,103.9 L194.6,153.9 L184.8,148.2 Z"/>
+<path style="fill:#1d1814;fill-opacity:.28;stroke:none" d="M220.0,68.6 L229.8,74.2 L143.2,124.2 L133.4,118.6 Z"/>
+<path style="fill:#1d1814;fill-opacity:.28;stroke:none" d="M241.7,81.1 L251.4,86.7 L164.8,136.7 L155.1,131.1 Z"/>
+<path style="fill:#1d1814;fill-opacity:.28;stroke:none" d="M263.3,93.6 L273.1,99.2 L186.5,149.2 L176.7,143.6 Z"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M218.9,71.7 L218.9,40.4"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M138.8,117.9 L138.8,86.7"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M240.6,84.2 L240.6,52.9"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M160.5,130.4 L160.5,99.2"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M262.2,96.7 L262.2,65.4"/>
+<path style="stroke:#6b4f2e;stroke-width:2.2;stroke-linecap:round" d="M182.1,142.9 L182.1,111.7"/>
+<path style="fill:#b5d07f;stroke:#4f6a32;stroke-width:1" d="M217.3,35.8 L227.1,41.4 L140.5,91.4 L130.7,85.8 Z"/>
+<path style="fill:#6f8c45;stroke:#4f6a32;stroke-width:.6" d="M130.7,85.8 L140.5,91.4 L140.5,96.4 L130.7,90.8 Z"/>
+<path style="fill:#b5d07f;stroke:#4f6a32;stroke-width:1" d="M239.0,48.2 L248.7,53.9 L162.1,103.9 L152.4,98.2 Z"/>
+<path style="fill:#6f8c45;stroke:#4f6a32;stroke-width:.6" d="M152.4,98.2 L162.1,103.9 L162.1,108.9 L152.4,103.2 Z"/>
+<path style="fill:#b5d07f;stroke:#4f6a32;stroke-width:1" d="M260.6,60.8 L270.4,66.4 L183.8,116.4 L174.0,110.8 Z"/>
+<path style="fill:#6f8c45;stroke:#4f6a32;stroke-width:.6" d="M174.0,110.8 L183.8,116.4 L183.8,121.4 L174.0,115.8 Z"/>
+<path style="stroke:var(--muted);stroke-width:1" d="M103.4,232.0 L103.4,107.0"/>
+<text x="97" y="170" data-seg="22a.2">עשרה טפחים</text>
+<path style="stroke:var(--ok);stroke-width:2" d="M103.4,107.0 L103.4,75.8"/>
+<text x="8" y="80" class="ok l" data-seg="22a.4">פחות משלשה</text><text x="8" y="94" class="sm l" data-seg="22a.4">לבוד</text>
+<text x="350" y="38" class="sm" data-seg="22a.2">קנה עולה וקנה יורד</text>
+<text x="350" y="20" data-seg="22a.2">סכך עליון</text><path class="ld" d="M262,44 L217.3,92.0"/>
+<text x="350" y="150" data-seg="22a.2">סכך תחתון</text><path class="ld" d="M300,154 L195.7,142.0"/>
+</svg>

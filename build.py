@@ -1124,6 +1124,8 @@ def main():
         shutil.copytree(os.path.join(ROOT, "site", "og"), os.path.join(DIST, "og"))
     for f in glob.glob(os.path.join(ROOT, "site", "static", "*")):
         shutil.copy(f, DIST)
+    if os.path.isdir(os.path.join(ROOT, "content", "figs", "img")):   # background images under our drawings (labels stay in the SVG)
+        shutil.copytree(os.path.join(ROOT, "content", "figs", "img"), os.path.join(DIST, "figs"))
     glossary = json.load(open(os.path.join(ROOT, "data", "glossary.json"), encoding="utf8"))
     sources = json.load(open(os.path.join(ROOT, "data", "sources.json"), encoding="utf8"))
     by_slug = {}

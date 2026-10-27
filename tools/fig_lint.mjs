@@ -26,7 +26,7 @@ for (const scheme of ['light', 'dark']) {
         if (x.b.x < vb.x - 1 || x.b.y < vb.y - 1 || x.b.x + x.b.width > vb.x + vb.width + 1 || x.b.y + x.b.height > vb.y + vb.height + 1)
           out.push(`cut off at the edge: ״${x.s}״`);
         const L1 = lum(getComputedStyle(x.t).fill), L2 = lum(bg), cr = (Math.max(L1, L2) + .05) / (Math.min(L1, L2) + .05);
-        if (cr < 3) out.push(`low contrast ${cr.toFixed(1)}:1: ״${x.s}״`);
+        if (cr < 3 && !x.t.closest('[data-on-img]')) out.push(`low contrast ${cr.toFixed(1)}:1: ״${x.s}״`);
       }
       for (let i = 0; i < T.length; i++) for (let j = i + 1; j < T.length; j++) {
         const a = T[i].b, c = T[j].b;
