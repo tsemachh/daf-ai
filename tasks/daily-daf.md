@@ -217,6 +217,14 @@ section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re
   2. `NODE_PATH=/opt/node-tools/node_modules node tools/fig_lint.mjs` — labels inside the frame, not overlapping, readable contrast, in light and dark.
   3. Blind review (new drawing only): a separate reviewer gets the rendered PNG + the Gemara and Rashi of those lines, *not* our page; it lists every claim the drawing makes (labels and what touches/crosses what), then checks each against the sources. Fix what it finds that the sources confirm.
 
+**d. Marked words in context (glossary senses).** After building, serve `dist` and run
+`NODE_PATH=/opt/node-tools/node_modules node tools/gloss_contexts.mjs <port> <slug>/<daf>` — every word the reader sees
+marked, with its sentence and the definition shown. Read it (or give it to the reviewer) and fix any mismatch: a word whose
+definition explains another sense (״קבלה״ as a business deal where the blood is received), an ordinary word marked as a
+term (the verb ״קורא״, ״רחבה״ = wide), or a partial/other person (״רבי חנניא״ inside ״רבי יהושע בן חנניא״). Fix by adding
+the missing sense to the entry's `d`, or a context to skip in its `x` (regex list), or a full-name key.
+The linker already skips names inside longer names, tractate names and citations, nav/headers, and prefixed short words.
+
 **d. Checks:** `python tools/fill_verses.py` (stores the text of every verse the pages link to in `data/sources.json` — without it a verse quote waits for Sefaria on click; commit `data/sources.json` with the page); `python validate.py` exits 0 (no new compound-name warnings); `python build.py`;
 Playwright on `dist/<slug>/<daf>/index.html` (serve `dist` with `python -m http.server`) at 390 and
 1280 px: no page error, no horizontal overflow, `nav.map` right after the header, 8 quiz items, every

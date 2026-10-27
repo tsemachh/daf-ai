@@ -14,7 +14,7 @@
     {re:new RegExp('שו״ע יו״ד (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+"Shulchan_Arukh,_Yoreh_De'ah."+gem(m[1])+'.'+gem(m[2])+'?lang=he'}},
     {re:new RegExp('רמב״ם מאכלות אסורות (['+H+']{1,3}), (['+H+']{1,3})'),url:function(m){return SEF+'Mishneh_Torah,_Forbidden_Foods.'+gem(m[1])+'.'+gem(m[2])+'?lang=he'}}
   ];
-  var SKIP='A,BUTTON,H1,H3,SCRIPT,.quiz,.map,.tag,.fb,footer,.term,.links,.card,.meta,details.storyline,details.flowd,.nogl,svg';
+  var SKIP='A,BUTTON,H1,H3,SCRIPT,.quiz,.map,.tag,.fb,footer,.term,.links,.card,.meta,details.storyline,details.flowd,.nogl,svg,.topnav,.dnav,.eyebrow,.pager,.tmeta,.perek';
   function textNodes(root){var out=[],w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||!n.nodeValue.trim())return 2;return p.closest(SKIP)?2:1}});while(w.nextNode())out.push(w.currentNode);return out}
   function mkSrc(url,text){
     var key=decodeURIComponent(url.replace(SEF,'').split('?')[0]), el;
@@ -36,6 +36,22 @@
       }
     });
   }
+  /* audit 2026-10-27: a marked word whose sense doesn't fit the sentence. Generic rules, then per-term "x" (contexts to skip) */
+  var PERSON={'תנא':1,'אמורא':1,'חכם':1}, LONGER={};
+  Object.keys(G).forEach(function(k){ Object.keys(G).forEach(function(l){ if(l!==k&&l.length>k.length&&(' '+l+' ').indexOf(' '+k+' ')>=0) (LONGER[k]=LONGER[k]||[]).push(l); }); });
+  function glossWrong(k,v,m){
+    var st=m.index+m[1].length, en=st+m[2].length+k.length, before=v.slice(Math.max(0,st-40),st), after=v.slice(en,en+40), win=before+m[2]+k+after;
+    if((LONGER[k]||[]).some(function(l){ return win.indexOf(l)>=0; })) return true;             /* part of a longer known term (״הלל״ in ״בית הלל״) */
+    if(/(?:^|[^א-ת])(?:מסכת|למסכת|במסכת)\s*$/.test(before)) return true;                         /* a tractate name */
+    if(/^\s+[א-ת]{1,3}[׳״']?\s*(?:ע״[אב]|,\s*[א-ת])/.test(after)&&!PERSON[G[k].t]) return true;   /* a citation: ״(נדה ג, ד)״, ״תמורה יא ע״ב״ */
+    if(PERSON[G[k].t]){
+      if(/(?:בן|בר|ב״ר|בריה\s+ד|בנו\s+של|אבי)\s*$/.test(before)) return true;                  /* a father's name inside a longer name */
+      if(m[2].indexOf('ב')>=0&&/^רבי?\s/.test(k)) return true;                                     /* ״ברבי X״ = son of */
+      if(/^\s+(?:בן|בר|ב״ר|ברבי|בריה|בנו\s+של|אבי)\s/.test(after)) return true;                   /* only the first part of a longer name */
+    }
+    var x=G[k].x; if(x) for(var i=0;i<x.length;i++) if(new RegExp(x[i]).test(win)) return true;
+    return false;
+  }
   function glossify(art){
     if(!reG) return; var seen={};
     var meta=art.querySelector('header .meta'); if(meta&&!art.querySelector('.legend')){var lg=document.createElement('div'); lg.className='legend'; lg.innerHTML='<span>הקש על מילה מסומנת להסבר קצר:</span><span><span class="lp">חכם</span> — תנא או אמורא</span><span><span class="lt">מושג</span> — מונח, מקום או דין</span>'; meta.after(lg);}
@@ -43,7 +59,7 @@
       var guard=0;
       while(n&&guard++<20){
         var v=n.nodeValue, re=new RegExp(reG.source,'g'), m, hit=null;
-        while((m=re.exec(v))){var k=m[3]; if(seen[k]) continue; if((G[k].np||(k.length<=3&&G[k].t!=='תנא'&&G[k].t!=='אמורא'))&&m[2]&&!G[k].pf) continue;   /* a prefix + short term is usually another word (ב+ציר = בציר ״פחות״) */ hit=m; break}
+        while((m=re.exec(v))){var k=m[3]; if(seen[k]) continue; if((G[k].np||(k.length<=4&&G[k].t!=='תנא'&&G[k].t!=='אמורא'))&&m[2]&&!G[k].pf) continue;   /* a prefix + short term is usually another word (ב+ציר = בציר, מ+שוער = משוער) */ if(glossWrong(k,v,m)) continue; hit=m; break}
         if(!hit) break;
         var k=hit[3]; seen[k]=1;
         var start=hit.index+hit[1].length, pl=hit[2].length;
