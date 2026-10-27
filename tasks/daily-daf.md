@@ -50,6 +50,11 @@ missing or the API fails, note it in the report and continue with §2.
    - **מה חדש (`data/changelog.json`) — every fix a reader will notice goes there**, including a content fix to one
      daf after a note (e.g. "בכורות כ״ח: נוספה טבלת סיכום לשיטות ר׳ יהודה ור׳ מאיר (בעקבות הערת קורא)"): one short Hebrew
      line under today's date (newest entry first; create the date entry if missing). New dapim are NOT listed there.
+   - **Catch-up for changes made outside the notes (owner sessions, new aids, drawings, outside sources).** Before the
+     report, run `git log --since="<the newest date in data/changelog.json>" --format="%ad %s" --date=short` and give every
+     commit a reader would notice (a new kind of aid, a drawing, a display change, a new source, a bug fix — not "Add <daf>",
+     cache, rush-order or internal tooling commits) a line under its own date, unless an existing line already covers it.
+     Group related commits into one line.
 4. Email is automatic: send `status` and `reply` in the SAME `POST /update` call. When a note with
    `notify` reaches fixed / feature / rejected, the server emails the author the reply and page link once
    and clears the address (response field `mail.sent`). Never email readers yourself.
