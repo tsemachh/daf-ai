@@ -41,6 +41,9 @@
     <rect x="214" y="198" width="16" height="16"/><rect x="214" y="214" width="16" height="16"/>
     <rect x="310" y="198" width="16" height="16"/><rect x="310" y="214" width="16" height="16"/>
   </g>
+  <g style="fill:#e6d6bb;stroke:#7a5f40;stroke-width:.8">
+    <rect x="244" y="206" width="14" height="12"/><rect x="266" y="210" width="16" height="12"/><rect x="288" y="204" width="12" height="12"/>
+  </g>
 
   <!-- 4. Tiberias: wall on three sides, the sea on the fourth -->
   <path d="M14,176 L62,176 L62,256 L14,256 Z" style="fill:#9cc3d8;stroke:none"/>
@@ -63,10 +66,11 @@
     <text x="166" y="122" data-seg="32a.8">ר׳ מאיר: כבתים</text>
     <text x="166" y="138" data-seg="32a.8">ר׳ יהודה: כשדות</text>
 
-    <text x="344" y="172" style="font-weight:700" data-seg="32a.10">③ גגותיה חומתה</text>
+    <text x="344" y="172" style="font-weight:700" data-seg="32a.10">③ גגותיה חומתה (שור איגר)</text>
     <text x="344" y="280" data-seg="32a.10">אינה כבתי ערי חומה</text>
 
     <text x="166" y="172" style="font-weight:700" data-seg="32a.11">④ טבריה — ימה חומתה</text>
-    <text x="166" y="280" data-seg="32a.11">סביב — פרט לטבריה</text>
+    <text x="166" y="273" data-seg="32a.11">סביב — פרט לטבריה</text>
+    <text x="166" y="288" data-seg="32a.10">אינה כבתי ערי חומה</text>
   </g>
 </svg>
