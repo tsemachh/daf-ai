@@ -1,0 +1,13 @@
+<svg viewBox="0 0 360 323" role="img" aria-label="פרסת העגל — מבט מלמטה: סדוקות, ומתאר עגול של קלוטות">
+  <defs><clipPath id="c-hoof-calf"><rect x="0" y="0" width="360" height="269" rx="10"/></clipPath></defs>
+  <image href="/figs/hoof-calf.webp" x="0" y="0" width="360" height="269" clip-path="url(#c-hoof-calf)" preserveAspectRatio="xMidYMid slice"/>
+  <circle cx="180" cy="148" r="118" style="fill:none;stroke:#e05a5a;stroke-width:2;stroke-dasharray:6 4"/>
+  <path d="M180,120 L180,240" style="stroke:#5fbf73;stroke-width:2.6;stroke-dasharray:5 3"/>
+  <path d="M180,248 L180,240 M311,66 L296,82" style="stroke:#fbf8f1;stroke-width:1.2"/>
+  <g data-on-img="1"><circle cx="180" cy="256" r="8" style="fill:#fbf8f1;stroke:#2f6b3a"/><text x="180" y="260" style="text-anchor:middle;fill:#2f6b3a;font-size:11px;font-weight:700" data-seg="40a.13">1</text><circle cx="318" cy="60" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="318" y="64" style="text-anchor:middle;fill:#a33;font-size:11px;font-weight:700" data-seg="40a.11">2</text></g>
+  <g data-on-img="1"><circle cx="350" cy="284" r="6" style="fill:#fbf8f1;stroke:#2f6b3a;stroke-width:.8"/><text x="350" y="287.5" style="text-anchor:middle;fill:#2f6b3a;font-size:9px;font-weight:700" data-seg="40a.13">1</text></g>
+  <text x="338" y="288" class="ok" data-seg="40a.13">סדוקות ולא עגולות — פרסות בהמה טהורה</text>
+  <g data-on-img="1"><circle cx="350" cy="298" r="6" style="fill:#fbf8f1;stroke:#a33;stroke-width:.8"/><text x="350" y="301.5" style="text-anchor:middle;fill:#a33;font-size:9px;font-weight:700" data-seg="40a.11">2</text></g>
+  <text x="338" y="302" class="no" data-seg="40a.11">קלוטות כשל חמור</text>
+  <text x="338" y="316" data-seg="40a.13">רב פפא: כיון דעגילן — מום, אף על גב דסדיקן</text>
+</svg>

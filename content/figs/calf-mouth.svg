@@ -1,0 +1,16 @@
+<svg viewBox="0 0 360 337" role="img" aria-label="פי העגל — מבט מהצד: החוטין החיצונות, התיומת והפנימיים">
+  <defs><clipPath id="c-calf-mouth"><rect x="0" y="0" width="360" height="269" rx="10"/></clipPath></defs>
+  <image href="/figs/head-calf.webp" x="-50" y="-230" width="720" height="538" clip-path="url(#c-calf-mouth)" preserveAspectRatio="xMidYMid slice"/>
+  <ellipse cx="112" cy="178" rx="46" ry="17" style="fill:none;stroke:#e05a5a;stroke-width:2;stroke-dasharray:5 3"/>
+  <path d="M186,92 L186,186" style="stroke:#fbf8f1;stroke-width:2.6;stroke-dasharray:6 4"/>
+  <ellipse cx="238" cy="138" rx="54" ry="30" style="fill:none;stroke:#fbf8f1;stroke-width:2;stroke-dasharray:5 3"/>
+  <path d="M66,221 L82,190 M186,82 L186,92 M293,184 L280,160" style="stroke:#fbf8f1;stroke-width:1.2"/>
+  <g data-on-img="1"><circle cx="60" cy="228" r="8" style="fill:#fbf8f1;stroke:#a33"/><text x="60" y="232" style="text-anchor:middle;fill:#a33;font-size:11px;font-weight:700" data-seg="39a.10">1</text><circle cx="186" cy="74" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="186" y="78" style="text-anchor:middle;fill:#1d1814;font-size:11px;font-weight:700" data-seg="39a.10">2</text><circle cx="300" cy="190" r="8" style="fill:#fbf8f1;stroke:#1d1814"/><text x="300" y="194" style="text-anchor:middle;fill:#1d1814;font-size:11px;font-weight:700" data-seg="39a.13">3</text></g>
+  <g data-on-img="1"><circle cx="350" cy="284" r="6" style="fill:#fbf8f1;stroke:#a33;stroke-width:.8"/><text x="350" y="287.5" style="text-anchor:middle;fill:#a33;font-size:9px;font-weight:700" data-seg="39a.10">1</text></g>
+  <text x="338" y="288" class="no" data-seg="39a.10">החוטין החיצונות — נפגמו, נגממו — מום</text>
+  <g data-on-img="1"><circle cx="350" cy="298" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="301.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="39a.10">2</text></g>
+  <text x="338" y="302" data-seg="39a.10">התיומת</text>
+  <g data-on-img="1"><circle cx="350" cy="312" r="6" style="fill:#fbf8f1;stroke:#1d1814;stroke-width:.8"/><text x="350" y="315.5" style="text-anchor:middle;fill:#1d1814;font-size:9px;font-weight:700" data-seg="39a.13">3</text></g>
+  <text x="338" y="316" data-seg="39a.13">מן התיומת ולפנים — פנימיים</text>
+  <text x="338" y="330" data-seg="39a.13">ותיומת עצמה כלפנים</text>
+</svg>
