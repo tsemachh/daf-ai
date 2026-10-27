@@ -1,10 +1,10 @@
-keritot/15
-keritot/16
-keritot/17
-keritot/18
-keritot/19
-keritot/20
-keritot/21
+!keritot/15
+!keritot/16
+!keritot/17
+!keritot/18
+!keritot/19
+!keritot/20
+!keritot/21
 keritot/22
 keritot/23
 keritot/24
