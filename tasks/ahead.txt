@@ -1,5 +1,4 @@
 !keritot/16
-!keritot/17
 keritot/22
 keritot/23
 keritot/24
