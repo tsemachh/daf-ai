@@ -1,0 +1,60 @@
+<svg viewBox="0 40 360 258" role="img" aria-label="דיר בעל שני פתחים במבט מלמעלה: ששה טלאים יצאו בפתח הימני, ארבעה בפתח השמאלי, וארבעה נשתיירו בדיר. אם הארבעה יצאו בפתח הששה — יש שם עשרה ונוטל אחד מהם, והארבעה שבפתח האחר מצטרפין לגורן אחר">
+  <!-- the pen (דיר) from above: ground, then the wall with a gap (door) in the right and left walls -->
+  <rect x="125" y="92" width="110" height="110" style="fill:#c9b98f;fill-opacity:.35;stroke:none"/>
+  <path d="M125,132 V92 H235 V132 M235,162 V202 H125 V162" style="fill:none;stroke:#8a7a62;stroke-width:6;stroke-linejoin:round"/>
+  <!-- door posts -->
+  <g style="fill:#6e5a3c"><rect x="230" y="128" width="10" height="5"/><rect x="230" y="161" width="10" height="5"/><rect x="120" y="128" width="10" height="5"/><rect x="120" y="161" width="10" height="5"/></g>
+
+  <!-- the 4 that remained inside (heads toward the six's door) -->
+  <g class="sk" style="stroke-width:1.2">
+    <circle cx="168" cy="139" r="7"/><circle cx="188" cy="139" r="7"/><circle cx="168" cy="157" r="7"/><circle cx="188" cy="157" r="7"/>
+  </g>
+  <g style="fill:#8a7a62"><circle cx="176" cy="139" r="3"/><circle cx="196" cy="139" r="3"/><circle cx="176" cy="157" r="3"/><circle cx="196" cy="157" r="3"/></g>
+
+  <!-- the 6 that went out the right door -->
+  <path d="M238,137 H284" style="fill:none;stroke:#6e5a3c;stroke-width:2"/>
+  <path d="M290,137 L281,132.5 L281,141.5 Z" style="fill:#6e5a3c"/>
+  <g class="sk" style="stroke-width:1.2">
+    <circle cx="301" cy="128" r="7"/><circle cx="319" cy="128" r="7"/><circle cx="337" cy="128" r="7"/>
+    <circle cx="301" cy="147" r="7"/><circle cx="319" cy="147" r="7"/><circle cx="337" cy="147" r="7"/>
+  </g>
+
+  <!-- the 4 that went out the left door -->
+  <path d="M122,147 H76" style="fill:none;stroke:#6e5a3c;stroke-width:2"/>
+  <path d="M70,147 L79,142.5 L79,151.5 Z" style="fill:#6e5a3c"/>
+  <g class="sk" style="stroke-width:1.2">
+    <circle cx="40" cy="138" r="7"/><circle cx="58" cy="138" r="7"/><circle cx="40" cy="156" r="7"/><circle cx="58" cy="156" r="7"/>
+  </g>
+
+  <!-- if the remaining 4 go out the six's door: dashed path and the 4 joining the six (dashed) -> ten -->
+  <path d="M204,157 H234 C252,157 258,170 270,175" style="fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:4 3"/>
+  <path d="M277,177 L267,179 L270,170 Z" style="fill:var(--accent)"/>
+  <g style="fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:2.5 2">
+    <circle cx="287" cy="172" r="7"/><circle cx="305" cy="172" r="7"/><circle cx="323" cy="172" r="7"/><circle cx="341" cy="172" r="7"/>
+  </g>
+  <rect x="276" y="117" width="75" height="66" rx="8" style="fill:none;stroke:var(--muted);stroke-width:1"/>
+
+  <g class="lb">
+    <text x="262" y="60" style="font-weight:700" data-seg="59b.12">ארבעה עשר טלאים בדיר</text>
+    <text x="232" y="75" class="sm" data-seg="59b.12">שהיה לדיר שני פתחים</text>
+
+    <text x="352" y="96" style="font-weight:700" data-seg="59b.12">פתח הששה</text>
+    <text x="352" y="111" class="sm" data-seg="59b.12">יצאו ששה</text>
+    <text x="8" y="106" class="l" style="font-weight:700" data-seg="59b.12">פתח אחר</text>
+    <text x="8" y="121" class="sm l" data-seg="59b.12">יצאו ארבעה</text>
+
+    <text x="223" y="113" class="sm" data-seg="59b.12">ארבעה נשתיירו</text>
+    <text x="229" y="192" class="sm" style="fill:var(--accent)" data-seg="59b.12">אם בפתח הששה יצאו</text>
+
+    <text x="352" y="214" style="font-weight:700;fill:var(--accent)" data-seg="59b.12">עשרה — נוטל אחד מהם</text>
+    <text x="352" y="229" class="sm" data-seg="59b.12">יצאו עשרה באותו פתח</text>
+    <text x="8" y="214" class="l" style="font-weight:700;fill:var(--accent)" data-seg="59b.12">והשאר מצטרפין לגורן אחר</text>
+    <text x="8" y="229" class="sm l" data-seg="59b.12">לא נשתיירו בדיר אלא ארבעה</text>
+
+    <text x="352" y="260" style="font-weight:700" data-seg="59b.13">ואם לאו:</text>
+    <text x="8" y="260" class="sm l" data-seg="59b.13">שלא יצאו בפתח הששה</text>
+    <text x="352" y="276" data-seg="59b.13">גמרא: ששה פטורין, וארבעה ארבעה מצטרפין</text>
+    <text x="352" y="291" class="sm" data-seg="59b.13">רש״י גורס: ארבעה ראשונים והששה פטורין</text>
+  </g>
+  <path d="M8,244 H352" style="fill:none;stroke:var(--muted);stroke-width:.6;stroke-dasharray:3 3"/>
+</svg>
