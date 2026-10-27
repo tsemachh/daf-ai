@@ -1,4 +1,3 @@
-!keritot/2
 !keritot/3
 !keritot/4
 !keritot/5
