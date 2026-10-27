@@ -525,6 +525,7 @@ details.aids[open]>summary{margin-bottom:4px}
 
 /* worked numbers */
 .cl ul{list-style:none;margin:0;padding:0}
+.ch.cl{max-width:520px}  /* a wide box puts each value at the far edge from its label (reader note #43) */
 .cl li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 16px;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px}
 .cl li.full{grid-template-columns:1fr}
 .cl li.long{grid-template-columns:1fr}
