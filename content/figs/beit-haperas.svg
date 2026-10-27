@@ -1,4 +1,4 @@
-<svg viewBox="0 0 360 300" role="img" aria-label="בית הפרס: שדה שנחרש בה קבר ושתי השדות שבכיוון החרישה — לרבנן ולרבי אליעזר">
+<svg viewBox="0 0 360 320" role="img" aria-label="בית הפרס: שדה שנחרש בה קבר ושתי השדות שבכיוון החרישה — לרבנן ולרבי אליעזר">
   <g style="fill:#a8b48a;fill-opacity:.4;stroke:#7d7454;stroke-width:1.2">
     <rect x="152" y="28" width="56" height="56"/><rect x="92" y="88" width="56" height="56"/><rect x="152" y="88" width="56" height="56"/><rect x="212" y="88" width="56" height="56"/><rect x="152" y="148" width="56" height="56"/>
   </g>
@@ -12,7 +12,7 @@
   <rect x="172" y="111" width="16" height="9" rx="2" style="fill:#5e5850;stroke:#3d3832"/>
   <path d="M128,150 V156 H148 V150 M212,150 V156 H232 V150" style="fill:none;stroke:#b5652a;stroke-width:1.3"/>
   <g class="lb">
-    <text x="352" y="16" data-seg="12b.13">רבנן: שלש שדות ושתי מענות</text>
+    <text x="352" y="16" data-seg="13a.1">רבנן: שלש שדות ושתי מענות</text>
     <text x="352" y="112" data-seg="13a.1">מזרח</text>
     <text x="8" y="122" class="l" data-seg="13a.1">מערב</text>
     <text x="8" y="44" class="l" data-seg="13a.1">שדה שהיה בה הקבר —</text>
@@ -21,18 +21,24 @@
     <text x="148" y="184" class="sm" data-seg="13a.1">מאה אמה</text>
     <text x="212" y="170" class="l" data-seg="13a.1">מלא מענה</text>
     <text x="212" y="184" class="sm l" data-seg="13a.1">מאה אמה</text>
-    <text x="352" y="44" data-seg="13a.1">לחרוש מזרח ומערב —</text>
-    <text x="352" y="58" class="sm" data-seg="13a.1">אבל לא לארבע רוחות</text><path class="ld" d="M296,64 L210,66"/>
+    <text x="8" y="200" class="sm l" data-seg="13a.1">(לא בשיעור)</text>
+    <text x="352" y="36" class="sm" data-seg="13a.1">אם דרך לחרוש מזרח ומערב;</text>
+    <text x="352" y="50" class="sm" data-seg="13a.1">ואם צפון ודרום —</text>
+    <text x="352" y="64" class="sm" data-seg="13a.1">שדה לצפון ושדה לדרום</text>
+    <text x="352" y="78" class="sm" data-seg="13a.1">אבל לא לארבע רוחות</text><path class="ld" d="M300,84 L250,102"/>
     <path d="M8,214 H352" style="stroke:#7d7454;stroke-width:.6;stroke-dasharray:1 3"/>
   </g>
   <g style="fill:#b5652a;fill-opacity:.55;stroke:#7d7454;stroke-width:1">
-    <rect x="44" y="224" width="22" height="22"/><rect x="20" y="248" width="22" height="22"/><rect x="44" y="248" width="22" height="22"/><rect x="68" y="248" width="22" height="22"/><rect x="44" y="272" width="22" height="22"/>
+    <rect x="44" y="234" width="22" height="22"/><rect x="20" y="258" width="22" height="22"/><rect x="44" y="258" width="22" height="22"/><rect x="68" y="258" width="22" height="22"/><rect x="44" y="282" width="22" height="22"/>
   </g>
-  <rect x="51" y="255" width="8" height="6" rx="1" style="fill:#5e5850"/>
+  <rect x="44" y="258" width="22" height="22" style="fill:none;stroke:#5e5850;stroke-width:2"/>
+  <rect x="51" y="265" width="8" height="6" rx="1" style="fill:#5e5850"/>
   <g class="lb">
-    <text x="352" y="242" data-seg="12b.12">ר׳ אליעזר: בית הפרס עושה בית הפרס</text>
-    <text x="352" y="258" class="sm" data-seg="12b.12">כל ארבע השדות שסביב — אם נחרשו</text>
-    <rect x="296" y="274" width="12" height="10" style="fill:#b5652a;fill-opacity:.55"/>
-    <text x="290" y="283" class="sm" data-seg="12b.12">= בית הפרס</text>
+    <text x="100" y="236" class="sm l" data-seg="12b.12">בית הפרס</text><path class="ld" d="M98,240 L62,262"/>
+    <text x="352" y="236" data-seg="12b.12">ר׳ אליעזר: בית הפרס עושה בית הפרס</text>
+    <text x="352" y="252" class="sm" data-seg="12b.12">כל ארבע השדות שסביב — אם נחרשו</text>
+    <text x="352" y="272" class="sm" data-seg="12b.12">רבנן: אין בית הפרס עושה בית הפרס</text>
+    <rect x="296" y="290" width="12" height="10" style="fill:#b5652a;fill-opacity:.55"/>
+    <text x="290" y="299" class="sm" data-seg="12b.12">= בית הפרס</text>
   </g>
 </svg>
