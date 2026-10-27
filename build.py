@@ -909,15 +909,13 @@ d.addEventListener('click',function(e){if(e.target===d)d.close()});d.addEventLis
 
 
 def home_data():
-    """What the home tiles need from the build: the latest site change and the active lab comparison."""
+    """What the home tiles need from the build: the latest site change, site totals and the drawings count."""
     log = changelog()
     wn = {"d": fmt_day(log[0]["date"]), "x": re.sub("<[^>]+>", "", log[0]["items"][0])[:90]} if log and log[0]["items"] else None
-    lab = None
-    if LAB:
-        e = list(LAB.values())[-1]
-        lab = {"page": f"{e['slug']}/{e['daf']}", "title": e["title"]}
     nfig = len({f["src"] for d in DAFS.values() for x in d["sections"] for f in (x.get("fig") or []) if os.path.exists(os.path.join(FIGS, f["src"] + ".svg"))})
-    return jscript({"wn": wn, "lab": lab, "figs": nfig}, id="home-data")
+    pages = list(DAFS.values())
+    return jscript({"wn": wn, "figs": nfig, "pages": len(pages), "mas": len({d["slug"] for d in pages}),
+                    "steps": sum(len(x.get("steps") or []) for d in pages for x in d["sections"])}, id="home-data")
 
 
 def render_home(by_slug, latest, about):
@@ -1199,8 +1197,6 @@ def main():
             out = os.path.join(DIST, slug, str(d["daf"]))
             os.makedirs(out, exist_ok=True)
             html = render_daf(d, prev, nxt, glossary, sources)
-            if (slug, d["daf"]) in LAB:
-                html = html.replace("</header>", f'</header>\n<p class="lab-link"><a href="/lab/{slug}/{d["daf"]}/">🧪 ניסוי: השוו את הדף הזה לגרסה שהכין מודל אחר ←</a></p>', 1)
             open(os.path.join(out, "index.html"), "w", encoding="utf8").write(html)
             alld.append(d)
         open(os.path.join(DIST, slug, "index.html"), "w", encoding="utf8").write(render_masechet(slug, ds))
@@ -1249,7 +1245,14 @@ def main():
         f'<p class="thesis">כל השיפורים, מהחדש לישן.</p></header>{whatsnew(None, link=False)}'
         f'<footer>{FOOT}</footer></section></div>', "שינויים ושיפורים באתר", depth=1))
     os.makedirs(os.path.join(DIST, "drawings"), exist_ok=True)
-    _, dr_html = render_drawings(alld)
+    nfigs, dr_html = render_drawings(alld)
+    ap = os.path.join(DIST, "architecture.html")   # keep the architecture page's headline numbers current
+    if os.path.exists(ap):
+        nums = {"pages": len(alld), "mas": len(by_slug), "steps": sum(len(x.get("steps") or []) for d in alld for x in d["sections"]),
+                "gloss": len(glossary), "figs": nfigs}
+        a = open(ap, encoding="utf8").read()
+        a = re.sub(r'(<(b|span) data-n="(\w+)">)[^<]*(</\2>)', lambda m: m.group(1) + (f"{nums[m.group(3)]:,}" if m.group(3) in nums else "") + m.group(4), a)
+        open(ap, "w", encoding="utf8").write(a)
     open(os.path.join(DIST, "drawings", "index.html"), "w", encoding="utf8").write(dr_html)
     os.makedirs(os.path.join(DIST, "stats"), exist_ok=True)
     open(os.path.join(DIST, "stats", "index.html"), "w", encoding="utf8").write(page(

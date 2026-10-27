@@ -103,12 +103,13 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
   <div class="eyebrow">Architecture notes · October 2026</div>
   <h1>Inside daf-ai</h1>
   <p class="eyebrow"><a href="/">← daf.tsemach.dev</a></p>
-  <p class="lede">How AI agents write interactive Talmud study pages every night, check them against the Gemara, and stay within a token budget — and how the page itself now answers learners' questions. Written by Tsemach Hadad, three weeks and 360 commits in.</p>
+  <p class="lede">How AI agents write interactive Talmud study pages every night, check them against the Gemara, and stay within a token budget — and how the page itself answers learners' questions and draws what is hard to picture. Written by Tsemach Hadad, four weeks and 539 commits in.</p>
   <div class="facts">
-    <span><b>135</b> pages · 4 masechtot</span>
-    <span><b>8,184</b> argument steps</span>
-    <span><b>964</b> glossary entries</span>
-    <span><b>328 / 360</b> commits by Claude</span>
+    <span><b data-n="pages">205</b> pages · <span data-n="mas">6</span> masechtot</span>
+    <span><b data-n="steps">12,986</b> argument steps</span>
+    <span><b data-n="gloss">1,157</b> glossary entries</span>
+    <span><b data-n="figs">27</b> checked drawings</span>
+    <span><b>520 / 539</b> commits by Claude</span>
   </div>
   <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://github.com/tsemachh/daf-ai" target="_blank" rel="noopener">github.com/tsemachh/daf-ai</a></p>
 </header>
@@ -134,7 +135,10 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
     <li><i class="node"></i><div class="step"><code>check_page.py</code><p>Every segment covered, argument-tree links valid, quote share at most 30%, a summary on every step, milestones on every long sugya, quiz shape, glossary candidates.</p></div></li>
     <li class="m"><i class="node"></i><div class="step"><code>Opus / Fable · reviewer</code><p>Checks against the Gemara and returns patches only, tagged ERROR, OMISSION or THIN. Never a rewritten page.</p></div></li>
     <li><i class="node"></i><div class="step"><code>apply_review.py</code><p>Applies the patches.</p></div></li>
-    <li><i class="node"></i><div class="step"><code>validate · build · Playwright · push</code><p>Phone and desktop screenshots, a share image, then Cloudflare Pages.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>gloss_contexts.mjs</code><p>Prints every underlined term with the sentence it sits in and the definition the popup will show. A wrong sense (״קבלה״ as a contract, where the Gemara means receiving the blood) gets a new sense or a skip rule before the page ships.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>swdaf.py</code><p>Links Simon Wolf's charts for the daf (with permission, at the source), titled in Hebrew; explanatory sheets go into the sugya's aids, advanced ones stay in the daf-level list.</p></div></li>
+    <li class="m"><i class="node"></i><div class="step"><code>drawings, when a sugya needs one</code><p>Only where no outside chart covers it. Three checks before it ships — see below.</p></div></li>
+    <li><i class="node"></i><div class="step"><code>validate · build · Playwright · push</code><p>Phone and desktop screenshots, a share image, a ״מה חדש״ line for anything changed outside the note queue, then Cloudflare Pages.</p></div></li>
     <li class="m"><i class="node"></i><div class="step"><code>recheck before the learning day</code><p>Pages are built weeks ahead; summaries published later (Daf Spoiler, Sinai) trigger a second look at tomorrow's and today's page.</p></div></li>
     <li><i class="node"></i><div class="step"><code>a human reads tomorrow's page</code><p>Every day I read the next page and send notes; they come back through the same note queue as readers' notes.</p></div></li>
   </ol>
@@ -150,6 +154,19 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
     <li><p><b>A window into confusion.</b> The log shows where learners get stuck — the best input for the next round of fixes.</p></li>
   </ul>
   <p>Two smaller runtime pieces: a Gemara quote whose Steinsaltz only repeats the words and has no Rashi is shown as plain text, not a link to an empty popup (checked in the browser, per sugya, against the same Sefaria data). And a read-only <a href="/feed/">JSON feed</a> lets a non-commercial study app show the pages in its own design, with credit and a "report a mistake" link back.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Pictures for what is hard to picture</div>
+  <h2>Drawings, checked like text</h2>
+  <p>Some sugyot are about a shape: where on the eye a blemish sits, how a schach rests on two trees, which houses count as a walled city. Where Simon Wolf's charts don't cover it, the agent draws an SVG — labels in the site's fonts, themed for light and dark, inlined in the sugya's aids. A drawing is a claim about the Gemara, so it gets checks of its own:</p>
+  <ul class="rules">
+    <li><p><b>Every label has a source.</b> Each text element names the Gemara segment it comes from, and <code>check_page.py</code> rejects a label whose words aren't in that daf's Gemara, Rashi or our own explanation.</p></li>
+    <li><p><b>A layout lint.</b> <code>fig_lint.mjs</code> renders the drawing in a headless browser, light and dark, and fails on cut-off text, overlapping labels and low contrast.</p></li>
+    <li><p><b>A blind review.</b> A strong model that never saw our explanation gets only the Gemara, Rashi and the picture, and says what's wrong. It caught a thin film (דק) drawn as a stain, a blemish placed outside the ear's cartilage, and a tail drawn cut where the Mishnah means one born short.</p></li>
+    <li><p><b>A cold read for clarity.</b> A second model is asked which way we're looking and what each colour means; eight drawings were redrawn after it couldn't tell. Every drawing now states its viewpoint and carries a key for the colours it uses.</p></li>
+  </ul>
+  <p>For anatomy, line art wasn't enough. Gemini draws the realistic base (a calf's eye, an ear, a hoof); Claude overlays the numbered marks and a legend from the sources, so the picture is pretty and the claims stay checkable. Each drawing says it was made by AI and has a "report a mistake" button. All of them are on <a href="https://daf.tsemach.dev/drawings/" target="_blank" rel="noopener">one page</a>.</p>
 </section>
 
 <section>
@@ -180,7 +197,7 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
     </tbody>
   </table></div>
   <p>A cheap writer plus a strong reviewer is not automatically cheaper. On Berachot 2, a strong model writing alone used about half the tokens. The real saving comes from what the model reads and writes, not from which model it is.</p>
-  <p class="note">Token counts are per-agent totals reported by the tools, not billing figures. Blind votes are open at <a href="https://daf.tsemach.dev/lab/bechorot/18/" target="_blank" rel="noopener">Bechorot 18</a> and <a href="https://daf.tsemach.dev/lab/berachot/2/" target="_blank" rel="noopener">Berachot 2</a>; no winner yet.</p>
+  <p class="note">Token counts are per-agent totals reported by the tools, not billing figures. The blind reader vote closed with only four votes, too few to call; the nightly run settled on Sonnet writing and one strong-model review. The versions stay up at <a href="https://daf.tsemach.dev/lab/bechorot/18/" target="_blank" rel="noopener">Bechorot 18</a> and <a href="https://daf.tsemach.dev/lab/berachot/2/" target="_blank" rel="noopener">Berachot 2</a>.</p>
 </section>
 
 <section>
@@ -196,13 +213,15 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
     <div class="g"><h3>Summaries from half a step</h3><p>Bulk agents writing 2,407 one-line summaries read only the first 200 characters of long steps, and one couldn't rule out pairing a summary with the wrong step.</p><p class="fix">Alignment checked by key, then a second set of agents compared every summary with the full step: 67 fixed — wrong speaker, missing conclusion, invented claim.</p></div>
     <div class="g"><h3>A layout bug that read as content</h3><p>A reader said the ״סדר האירועים״ box was "very long and unreadable" on mobile. It borrowed a two-column grid and squeezed every item into a 62-pixel column.</p><p class="fix">Numbered cards with arrows, the move bold and its answer beneath. Half the height, all 13 boxes fixed at once.</p></div>
     <div class="g"><h3>A pilot that hid the text</h3><p>On phones, milestone steps showed only their one-line summary until tapped. In learning mode that hid the explanation people came for.</p><p class="fix">Full text by default; one-line summaries stay where they belong, in the תמצית reading level.</p></div>
+    <div class="g"><h3>The right word, the wrong sense</h3><p>The glossary underlined ״קבלה״ in a sugya about receiving the blood and explained it as a contract. A reader asked who wrote that.</p><p class="fix">An audit of all 6,460 underlined words in context: 66 fixed with new senses and skip rules, 270 ordinary words no longer underlined, and the same check now runs every night.</p></div>
+    <div class="g"><h3>A drawing that looked right</h3><p>A tail drawn cut short, under a Mishnah about a tail born short; a membrane drawn as a stain. Clean, confident, wrong.</p><p class="fix">Labels must cite a segment, and a blind reviewer sees only the Gemara, Rashi and the picture.</p></div>
     <div class="g"><h3>The human slip</h3><p>I pushed private source material to the public repo.</p><p class="fix">The agent flagged it on the next push. History rewritten, <code>.gitignore</code> tightened.</p></div>
   </div>
 </section>
 
 <section>
   <div class="eyebrow">Stack</div>
-  <div class="stack"><span>Claude Code routines</span><span>Sonnet</span><span>Opus</span><span>Fable</span><span>Haiku (runtime)</span><span>Anthropic API</span><span>Python</span><span>Vanilla JS</span><span>Sefaria API</span><span>Hebcal</span><span>Cloudflare Pages</span><span>D1</span><span>Turnstile</span><span>Access</span><span>Resend</span><span>Playwright</span></div>
+  <div class="stack"><span>Claude Code routines</span><span>Sonnet</span><span>Opus</span><span>Fable</span><span>Haiku (runtime)</span><span>Anthropic API</span><span>Python</span><span>Vanilla JS</span><span>Sefaria API</span><span>Hebcal</span><span>Cloudflare Pages</span><span>D1</span><span>Turnstile</span><span>Access</span><span>Resend</span><span>Playwright</span><span>Gemini (image bases)</span></div>
 </section>
 
 <section>
@@ -212,7 +231,7 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
 </section>
 
 <footer>
-  <p>Texts from Sefaria and Steinsaltz. Summaries from Rav Uri Brilliant, the Sinai site and Daf Spoiler by Rav Naftali Ramati (with permission). Tokens from Shefing.</p>
+  <p>Texts from Sefaria and Steinsaltz. Summaries from Rav Uri Brilliant, the Sinai site and Daf Spoiler by Rav Naftali Ramati (with permission). Charts courtesy of Simon Wolf (<a href="https://www.swdaf.com/" target="_blank" rel="noopener">www.swdaf.com</a>). Tokens from Shefing.</p>
   <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://tsemach.dev" target="_blank" rel="noopener">tsemach.dev</a></p>
 </footer>
 </div>

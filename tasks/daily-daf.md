@@ -55,6 +55,11 @@ missing or the API fails, note it in the report and continue with §2.
      commit a reader would notice (a new kind of aid, a drawing, a display change, a new source, a bug fix — not "Add <daf>",
      cache, rush-order or internal tooling commits) a line under its own date, unless an existing line already covers it.
      Group related commits into one line.
+   - **Architecture page (`site/static/architecture.html`, English).** Its headline numbers (pages, masechtot, steps,
+     glossary, drawings) are filled in by build.py — don't edit those. When the same catch-up finds a new pipeline step,
+     check, kind of aid or model change, update the matching prose there (the pipeline rail, the drawings section, the
+     models table, a glitch card if something broke and a rule came out of it) and the commit count in the lede and facts
+     (`git log --oneline | wc -l`; Claude's = commits with "Co-Authored-By: Claude"). Plain facts, no hype.
 4. Email is automatic: send `status` and `reply` in the SAME `POST /update` call. When a note with
    `notify` reaches fixed / feature / rejected, the server emails the author the reply and page link once
    and clears the address (response field `mail.sent`). Never email readers yourself.
