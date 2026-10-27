@@ -180,7 +180,8 @@ Then, with scripts only:
   `footer`: copy from the previous daf.
 - Glossary (site format `{"<key>": {"t": "תנא|אמורא|מושג|מונח|מקום", "d": "<text>"}}`, general — never page-specific): write entries ONLY for the printed candidates that are real names/terms (types תנא / אמורא /
   מושג / מונח / מקום; a sage gets generation, Tanna/Amora, Eretz Yisrael/Bavel and one identifying fact;
-  every compound or epithet name its own key, e.g. "רבי יוסי הגלילי"). Add them with a short script that
+  every compound or epithet name its own key, e.g. "רבי יוסי הגלילי"). A term with a second common sense in Shas gets both senses in its entry, the Temple sense
+  first (״קבלה״ = קבלת הדם בכלי / עסקת קבלה — reader note, Bechorot 39). Add them with a short script that
   loads, updates and saves `data/glossary.json` — never read the whole file into context.
 
 ## 5. Verify, then publish
