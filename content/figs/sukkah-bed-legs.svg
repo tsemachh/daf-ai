@@ -1,0 +1,48 @@
+<svg viewBox="0 0 360 300" role="img" aria-label="מבט מהצד: סכך על כרעי המטה, על שפודי ברזל, ועל יתידות בין מטות">
+  <path d="M8,108 L352,108 M8,200 L352,200" style="stroke:#8a7a62;stroke-width:.5;fill:none;opacity:.6"/>
+  <path d="M44,94 L150,94 M44,188 L150,188 M44,294 L150,294" style="stroke:#8a7a62;stroke-width:1.2;fill:none"/>
+  <g style="fill:#8aa35f;stroke:#566e36;stroke-width:1">
+    <rect x="54" y="24" width="20" height="6"/><rect x="78" y="24" width="20" height="6"/><rect x="102" y="24" width="20" height="6"/><rect x="126" y="24" width="20" height="6"/>
+    <rect x="62" y="122" width="20" height="6"/><rect x="86" y="122" width="20" height="6"/><rect x="110" y="122" width="20" height="6"/>
+    <rect x="66" y="228" width="18" height="6"/><rect x="88" y="228" width="18" height="6"/><rect x="110" y="228" width="18" height="6"/>
+  </g>
+  <rect x="62" y="60" width="74" height="7" rx="2" style="fill:#d8c7a3;stroke:#8a6a4a;stroke-width:1"/>
+  <rect x="58" y="67" width="82" height="6" style="fill:#8a6a4a"/>
+  <path d="M60,94 L60,30 M138,94 L138,30" style="fill:none;stroke:#8a6a4a;stroke-width:4"/>
+  <rect x="44" y="188" width="106" height="8" style="fill:#8a7a62;fill-opacity:.3;stroke:none"/>
+  <path d="M72,194 L72,128 M120,194 L120,128" style="fill:none;stroke:#7d8794;stroke-width:3"/>
+  <g style="fill:#8a6a4a">
+    <rect x="56" y="244" width="6" height="50"/><rect x="138" y="244" width="6" height="50"/>
+    <rect x="48" y="248" width="8" height="4"/><rect x="48" y="286" width="8" height="4"/>
+    <rect x="144" y="248" width="8" height="4"/><rect x="144" y="286" width="8" height="4"/>
+  </g>
+  <path d="M70,294 L70,234 M126,294 L126,234" style="fill:none;stroke:#b08a5a;stroke-width:3"/>
+  <path class="ld" d="M24,30 L52,28 M52,47 L58,47 M24,70 L56,70 M24,124 L60,125 M30,160 L70,160 M24,234 L64,231 M34,262 L68,262 M24,280 L55,280"/>
+  <g class="lb">
+    <text x="2" y="33" class="sm l" data-seg="21b.10">סכך</text>
+    <text x="2" y="51" class="sm l" data-seg="21b.10">כרעי המטה</text>
+    <text x="2" y="74" class="sm l" data-seg="21b.10">מטה</text>
+    <text x="2" y="128" class="sm l" data-seg="21b.12">סכך</text>
+    <text x="2" y="157" class="sm l" data-seg="21b.12">שפודין</text>
+    <text x="2" y="170" class="sm l" data-seg="21b.12">של ברזל</text>
+    <text x="2" y="237" class="sm l" data-seg="21b.13">סכך</text>
+    <text x="2" y="266" class="sm l" data-seg="21b.13">יתידות</text>
+    <text x="2" y="284" class="sm l" data-seg="21b.13">מטה</text>
+    <text x="352" y="18" data-seg="21b.10">הסומך סוכתו בכרעי המטה</text>
+    <text x="352" y="36" class="ok" data-seg="21b.10">התנא הראשון: כשרה</text>
+    <text x="352" y="54" class="no" data-seg="21b.10">ר׳ יהודה: פסולה</text>
+    <text x="352" y="68" class="sm" data-seg="21b.10">אם אינה יכולה לעמוד בפני עצמה</text>
+    <text x="352" y="85" class="sm" data-seg="21b.11">חד אמר: אין לה קבע</text>
+    <text x="352" y="99" class="sm" data-seg="21b.11">וחד: מעמידה בדבר המקבל טומאה</text>
+    <text x="352" y="126" data-seg="21b.12">נעץ שפודין של ברזל וסיכך</text>
+    <text x="352" y="144" class="ok" data-seg="21b.12">למאן דאמר אין לה קבע: כשרה</text>
+    <text x="352" y="158" class="sm" data-seg="21b.12">הרי יש לה קבע</text>
+    <text x="352" y="176" class="no" data-seg="21b.12">למאן דאמר המקבל טומאה: פסולה</text>
+    <text x="352" y="190" class="sm" data-seg="21b.12">הברזל מקבל טומאה</text>
+    <text x="352" y="218" data-seg="21b.13">אביי: סיכך על גב המטה</text>
+    <text x="352" y="233" class="sm" data-seg="21b.13">המטות דפנות, הסכך על יתידות (רש״י)</text>
+    <text x="352" y="252" class="ok" data-seg="21b.13">אביי: כשרה לשני הטעמים</text>
+    <text x="352" y="268" class="sm" data-seg="21b.13">הרי יש לה קבע</text>
+    <text x="352" y="284" class="sm" data-seg="21b.13">ואין מעמידה בדבר המקבל טומאה</text>
+  </g>
+</svg>
