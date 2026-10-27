@@ -535,6 +535,7 @@
       if(hw&&seen) g.appendChild(howTile());
       if(HD.lab){ var lk=HD.lab.page, voted=false; try{voted=!!(localStorage.getItem('lab-vote-'+lk)||localStorage.getItem('lab-hide-'+lk))}catch(e){}
         if(!voted) g.appendChild(tile('','/lab/'+lk+'/','🧪','ניסוי',HD.lab.title,'שני מודלים, אותו דף — השוו והצביעו')); }
+      if(HD.figs) g.appendChild(tile('','/drawings/','🖼','איורים',String(HD.figs),'כל האיורים שציירנו לסוגיות, לפי מסכת'));
       if(HD.wn) g.appendChild(tile('','/changes/','✨','מה חדש · '+HD.wn.d,null,HD.wn.x+'…'));
       var gb=tile('',null,'⚙','קצב והגדרות',null,S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי'); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
       if(window.__fbTile) g.appendChild(window.__fbTile);

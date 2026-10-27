@@ -1037,3 +1037,7 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .fig .fig-view{font-size:.82em;font-weight:600;color:var(--ink);margin:0 0 4px;text-align:start}
 .fig .fig-key{font-size:.78em;color:var(--muted);margin:2px 0 4px}
 .fig .k-no{color:var(--no);font-weight:700}.fig .k-ok{color:var(--ok);font-weight:700}
+.dr-m{margin:28px 0 10px;font-size:1.25rem}
+.dr-card{border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 16px;background:var(--card)}
+.dr-card .fig{margin:0}
+.dr-go{margin:8px 0 0;font-size:.95rem;display:flex;flex-wrap:wrap;gap:6px 14px}

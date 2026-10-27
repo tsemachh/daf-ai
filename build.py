@@ -467,6 +467,41 @@ def render_fig(figs):
     return "".join(out)
 
 
+def render_drawings(alld):
+    """/drawings/: every drawing on the site in one place, by masechet, each linking to its sugya's עזרים."""
+    groups, seen = {}, {}
+    for d in alld:
+        for s in d["sections"]:
+            for f in s.get("fig") or []:
+                if not os.path.exists(os.path.join(FIGS, f["src"] + ".svg")):
+                    continue
+                k = f["src"]
+                link = (f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{s["id"]}-aids', f'{d["title"]} · {s.get("title", "")}')
+                if k in seen:
+                    seen[k]["links"].append(link); continue
+                seen[k] = {"f": f, "links": [link]}
+                groups.setdefault(d["tractate_he"], []).append(k)
+    n = len(seen)
+    toc = " ".join(f'<a class="back" href="#m-{i}">{esc(m)} ({len(ks)})</a>' for i, (m, ks) in enumerate(groups.items()))
+    body = []
+    for i, (m, ks) in enumerate(groups.items()):
+        cards = []
+        for k in ks:
+            e = seen[k]
+            fig = re.sub(r'<p class="fig-ai">.*?</p>', "", render_fig([e["f"]]), flags=re.S)
+            links = " ".join(f'<a href="{h}">{esc(t)} ←</a>' for h, t in e["links"])
+            cards.append(f'<article class="dr-card">{fig}<p class="dr-go">{links}</p></article>')
+        body.append(f'<h2 class="dr-m" id="m-{i}">מסכת {esc(m)}</h2>' + "".join(cards))
+    return n, page(
+        "איורים · " + SITE_TITLE,
+        f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
+        f'<div class="eyebrow">עזרים</div><h1>כל האיורים</h1>'
+        f'<p class="thesis">{n} איורים שציירנו לסוגיות — מומים, סוכה, מקומות ומידות. כל איור מוביל לסוגיה שלו.</p></header>'
+        f'<p class="about-link">{toc}</p>'
+        f'<p class="fig-ai">האיורים נוצרו על ידי AI ונבדקו מול הגמרא ורש״י. ראיתם טעות? כתבו הערה מתוך הסוגיה עצמה.</p>'
+        f'{"".join(body)}<footer>{FOOT}</footer></section></div>', "כל האיורים באתר, לפי מסכת", depth=1)
+
+
 def render_scale(sc):
     """Measures drawn to scale, so the learner sees how the opinions / sizes compare:
     {"title", "groups": [{"label", "unit", "min"?, "bars": [{"name", "v", "note"?}], "note"?}]}.
@@ -881,7 +916,8 @@ def home_data():
     if LAB:
         e = list(LAB.values())[-1]
         lab = {"page": f"{e['slug']}/{e['daf']}", "title": e["title"]}
-    return jscript({"wn": wn, "lab": lab}, id="home-data")
+    nfig = len({f["src"] for d in DAFS.values() for x in d["sections"] for f in (x.get("fig") or []) if os.path.exists(os.path.join(FIGS, f["src"] + ".svg"))})
+    return jscript({"wn": wn, "lab": lab, "figs": nfig}, id="home-data")
 
 
 def render_home(by_slug, latest, about):
@@ -896,7 +932,7 @@ def render_home(by_slug, latest, about):
 <div id="progress-home"></div>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
-<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
+<p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./drawings/">כל האיורים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
 {credits('')}
 <footer>{FOOT}</footer>
 </section></div>
@@ -1212,6 +1248,9 @@ def main():
         f'<div class="eyebrow">התקדמות</div><h1>מה חדש באתר</h1>'
         f'<p class="thesis">כל השיפורים, מהחדש לישן.</p></header>{whatsnew(None, link=False)}'
         f'<footer>{FOOT}</footer></section></div>', "שינויים ושיפורים באתר", depth=1))
+    os.makedirs(os.path.join(DIST, "drawings"), exist_ok=True)
+    _, dr_html = render_drawings(alld)
+    open(os.path.join(DIST, "drawings", "index.html"), "w", encoding="utf8").write(dr_html)
     os.makedirs(os.path.join(DIST, "stats"), exist_ok=True)
     open(os.path.join(DIST, "stats", "index.html"), "w", encoding="utf8").write(page(
         "נתוני ביקורים · " + SITE_TITLE,
@@ -1229,7 +1268,7 @@ def main():
     open(os.path.join(DIST, "privacy", "index.html"), "w", encoding="utf8").write(render_privacy())
     os.makedirs(os.path.join(DIST, "notes"), exist_ok=True)
     open(os.path.join(DIST, "notes", "index.html"), "w", encoding="utf8").write(render_notes(by_slug))
-    urls = ["", "about/", "ideas/", "changes/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
+    urls = ["", "about/", "ideas/", "changes/", "drawings/", "stats/", "notes/", "privacy/"] + [f"{slug}/" for slug in by_slug] + [f"{d['slug']}/{d['daf']}/" for d in alld]
     gd = git_dates()
     lm = {f"{d['slug']}/{d['daf']}/": gd[f"data/{d['slug']}/{d['daf']}.json"] for d in alld if f"data/{d['slug']}/{d['daf']}.json" in gd}
     for slug in by_slug:   # a masechet page changes when any of its dapim do
