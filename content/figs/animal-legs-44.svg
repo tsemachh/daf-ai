@@ -6,7 +6,7 @@
 <path style="fill:none;stroke:var(--muted);stroke-width:.6" d="M8,210 L352,210 M240,218 L240,312 M120,218 L120,312"/>
 <path style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" d="M293,240 L307,240 L307,274 C318,276 332,280 338,285 Q342,292 334,293 L268,293 Q259,293 259,286 C260,279 280,276 293,274 Z"/>
 <path style="fill:none;stroke:var(--no);stroke-width:3;stroke-linecap:round" d="M292,275 C278,277 261,279 259,286 Q259,293 268,293"/>
-<path class="ld" d="M319,258 L309,258"/>
+<path class="ld" d="M319,255 L309,255"/>
 <path style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" d="M152,262 C150,288 160,296 180,296 C200,296 210,288 208,262 C206,252 154,252 152,262 Z"/>
 <ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="158" cy="250" rx="6" ry="6.5"/>
 <ellipse style="fill:#ecd0b0;stroke:#8a6a4a;stroke-width:1.5" cx="169" cy="248" rx="4.5" ry="5.5"/>
@@ -35,7 +35,9 @@
 <text x="354" y="230" class="sm" data-seg="45a.1">ג · כף הרגל מן הצד</text>
 <text x="234" y="230" class="sm" data-seg="45a.1">ד · כף הרגל מלמטה</text>
 <text x="114" y="230" class="sm" data-seg="45a.1">ה · הגודל מלמעלה</text>
-<text x="322" y="262" class="l" data-seg="45a.5">שוקו</text>
+<text x="322" y="244" class="l" data-seg="45a.5">שוקו</text>
+<text x="322" y="258" class="l" data-seg="45a.5">באמצע</text>
+<text x="322" y="272" class="l" data-seg="45a.5">רגלו</text>
 <text x="300" y="309" class="no" style="text-anchor:middle" data-seg="45a.1">עקיבו יוצא לאחוריו</text>
 <text x="180" y="309" class="no" style="text-anchor:middle" data-seg="45a.1">רחבות כשל אווז</text>
 <text x="60" y="309" class="no" style="text-anchor:middle" data-seg="45a.1">פיקה יוצא מגודלו</text>
