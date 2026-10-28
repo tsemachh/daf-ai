@@ -144,6 +144,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    `"scale":{"title","groups":[{"label","unit","min"?,"bars":[{"name","v":<number>,"note"?}],"note"?}]}` — one group per
    comparison, values in one unit, `min` only to zoom in on small differences. Every number stated by G or credited
    to S/R; never a modern conversion (cm, grams).
+13. **One word, two senses** (reader notes, Bechorot 43): when opinions read the same word differently (״גבין״ = גבות
+   העיניים for the mishnah, גב הגוף for ר׳ חנינא), the step of the later opinion says so in plain words — never let the
+   reader carry the first sense over.
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
