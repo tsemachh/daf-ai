@@ -154,7 +154,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     (״הא…״, ״דווקא…״, ״מכלל ד…״), ״מנא תימרא״ from another clause — give the step `"ctx"`: 1–2 short sentences naming
     those cases plainly (e.g. ״במשנה שני מקרים. <b>רישא</b>: … <b>סיפא</b>: …״). The page shows it as a ״רקע:״ line
     above the body. Then write the `body` as short sentences: what the move says, the inference, why — one idea each.
-    Most steps need no `ctx`; never repeat the previous step.
+    Most steps need no `ctx`; never repeat the previous step. No `ctx` on a conclusion (מסקנה / תיובתא / שמע מינה) that closes the
+    sugya's own chain — the learner just read it; one clause in the body is enough.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
