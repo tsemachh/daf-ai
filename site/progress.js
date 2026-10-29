@@ -332,7 +332,7 @@
     painters.push(paint);
     /* progress rail: a thin bar on the page edge, one segment per sugya (height ∝ its length), coloured by
        state (opened / learned) with a marker for the reading position; a small pill shows "x/n" while
-       scrolling. Purely visual (pointer-events:none), so it never blocks a tap. */
+       scrolling. Tap or drag on it to jump to a sugya (only while it is shown). */
     (function(){
       if(RM||!P.n.length) return;
       var ids=P.n.filter(function(id){return secs[id]}); if(!ids.length) return;
@@ -359,6 +359,19 @@
       window.addEventListener('scroll',function(){ if(q) return; q=true; requestAnimationFrame(function(){q=false; pos(true)}); },{passive:true});
       var rt=null; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){layout(); pos(false)},150); });
       document.addEventListener('toggle',function(){ clearTimeout(rt); rt=setTimeout(function(){layout(); pos(false)},150); },true);
+      /* tap or drag along the rail to jump between sugyot: the pill names the sugya under the finger, release scrolls there */
+      function idxAt(y){ var r=rail.getBoundingClientRect(); return Math.max(0,Math.min(n-1,Math.floor((y-r.top)/Math.max(1,r.height)*n))); }
+      function ttl(id){ var h=secs[id].querySelector('h2,h3'); return h?h.textContent.trim():''; }
+      var drag=-1;
+      function show(i){ var t=ttl(ids[i]); pill.textContent='סוגיה '+(i+1)+' מתוך '+n+(t?' · '+(t.length>34?t.slice(0,33)+'…':t):'');
+        pill.style.top='calc(12vh + '+(((i+0.5)/n)*76).toFixed(2)+'vh)'; pill.classList.add('on'); clearTimeout(pillT); }
+      rail.addEventListener('pointerdown',function(e){ if(!rail.classList.contains('on')) return; e.preventDefault(); drag=idxAt(e.clientY); show(drag);
+        try{rail.setPointerCapture(e.pointerId)}catch(x){} });
+      rail.addEventListener('pointermove',function(e){ if(drag<0) return; var i=idxAt(e.clientY); if(i!==drag){drag=i; show(i);} });
+      function end(){ if(drag<0) return; var id=ids[drag]; drag=-1;
+        var y=secs[id].getBoundingClientRect().top+window.scrollY-70; window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+        pillT=setTimeout(function(){pill.classList.remove('on')},1200); }
+      rail.addEventListener('pointerup',end); rail.addEventListener('pointercancel',function(){drag=-1; pill.classList.remove('on');});
       painters.push(colour); var p0=paint; paint=function(){p0(); colour();};
       setTimeout(function(){ layout(); colour(); pos(false); },300);
       window.addEventListener('load',function(){ layout(); pos(false); });
