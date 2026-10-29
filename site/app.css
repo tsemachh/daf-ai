@@ -1060,3 +1060,5 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .dr-card>details>summary{cursor:pointer;font-weight:700;padding:4px 0}
 .dr-card[hidden]{display:none}
 .dr-card>details>.ch>.mtx-h,.dr-card>details>div>.mtx-h,.dr-card>details>.mtx-h{display:none}
+.st-ctx{display:block;margin:0 0 6px;padding:6px 10px;border-inline-start:3px solid var(--accent);background:var(--card);font-size:.94em;color:var(--ink);border-radius:4px}
+.st-ctx ul{margin:4px 0 0;padding-inline-start:18px}

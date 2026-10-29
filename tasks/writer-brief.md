@@ -149,6 +149,13 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    reader carry the first sense over.
 14. **Every verse gets its citation** (reader note, Bechorot 45): a quoted pasuk is followed by its place in parentheses,
    as S gives it — ״<b>כגבה ארזים גבהו</b>״ (עמוס ב, ט) — the site turns only such citations into a link to the full verse.
+15. **Context before a move that leans on other text (`ctx`)** (reader note, Bechorot 46): when a step's move rests on
+    cases or words the learner must hold in mind — ״איידי דסיפא״ / ״רישא… סיפא…״, ״מאי קא משמע לן״, a close reading
+    (״הא…״, ״דווקא…״, ״מכלל ד…״), ״מנא תימרא״ from another clause — give the step `"ctx"`: 1–2 short sentences naming
+    those cases plainly (e.g. ״במשנה שני מקרים. <b>רישא</b>: … <b>סיפא</b>: …״). The page shows it as a ״רקע:״ line
+    above the body. Then write the `body` as short sentences: what the move says, the inference, why — one idea each.
+    Most steps need no `ctx`; never repeat the previous step.
+
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
