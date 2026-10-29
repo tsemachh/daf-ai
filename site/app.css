@@ -1063,3 +1063,10 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .dr-card>details>.ch>.mtx-h,.dr-card>details>div>.mtx-h,.dr-card>details>.mtx-h{display:none}
 .st-ctx{display:block;margin:0 0 6px;padding:6px 10px;border-inline-start:3px solid var(--accent);background:var(--card);font-size:.94em;color:var(--ink);border-radius:4px}
 .st-ctx ul{margin:4px 0 0;padding-inline-start:18px}
+/* quiz options read as tappable choices in both themes: a radio ring, a firmer border, a hover lift */
+.opt{display:flex;align-items:center;gap:10px;width:100%;cursor:pointer;border-color:color-mix(in srgb,var(--muted) 45%,var(--line));box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.opt::before{content:"";flex:none;width:16px;height:16px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 70%,var(--muted));box-sizing:border-box}
+.opt:hover{border-color:var(--accent)}
+.opt.right::before{background:var(--ok);border-color:var(--ok)}
+.opt.wrong::before{background:var(--no);border-color:var(--no)}
+.opt:disabled{cursor:default}
