@@ -147,6 +147,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 13. **One word, two senses** (reader notes, Bechorot 43): when opinions read the same word differently (״גבין״ = גבות
    העיניים for the mishnah, גב הגוף for ר׳ חנינא), the step of the later opinion says so in plain words — never let the
    reader carry the first sense over.
+14. **Every verse gets its citation** (reader note, Bechorot 45): a quoted pasuk is followed by its place in parentheses,
+   as S gives it — ״<b>כגבה ארזים גבהו</b>״ (עמוס ב, ט) — the site turns only such citations into a link to the full verse.
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
