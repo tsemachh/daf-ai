@@ -5,5 +5,5 @@ import { isReviewer } from "../reviewed.js";
 
 export async function onRequestGet({ request, env }) {
   const u = await currentUser(request, env).catch(() => null);
-  return json({ ok: true, user: u ? { name: u.name, email: u.email, reviewer: isReviewer(u, env) } : null });
+  return json({ ok: true, user: u ? { name: u.name, email: u.email, reviewer: isReviewer(u, env), reviewer_from: isReviewer(u, env) ? String(env.REVIEWER_FROM || "2026-09-27") : undefined } : null });
 }

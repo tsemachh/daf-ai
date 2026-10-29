@@ -142,11 +142,12 @@
   function revSync(){
     if(!(SY.user&&SY.user.reviewer)) return;
     var sent={}; try{sent=JSON.parse(localStorage.getItem('rv-sent')||'{}')}catch(e){}
-    var t=today(), items=[], first={};
-    L.forEach(function(p){ var e=S.pages[p.k]; if(e&&(e.done||stateOf(p)==='learned')){ if(first[p.s]==null||p.d<first[p.s]) first[p.s]=p.d; } });
+    var t=today(), items=[], from=SY.user.reviewer_from||'', ch=false;
     L.forEach(function(p){ var e=S.pages[p.k], fin=e&&(e.done||stateOf(p)==='learned');
-      var inRun=first[p.s]!=null&&p.d>=first[p.s]&&p.y<=t;
-      if((fin||inRun)&&!sent[p.k]) items.push({page:p.s+'/'+p.d,at:(e&&e.done)||p.y,k:p.k}); });
+      var inRun=from&&p.y>=from&&p.y<=t;   /* the reviewer learns every daf from that date */
+      if(inRun&&!fin){ e=entry(p.k); p.n.forEach(function(id){ e.s[id]='learned'; }); e.done=e.done||p.y; ch=true; fin=true; }
+      if(fin&&!sent[p.k]) items.push({page:p.s+'/'+p.d,at:(e&&e.done)||p.y,k:p.k}); });
+    if(ch){ touch(); save(); refresh(); }
     if(!items.length) return;
     fetch('/api/reviewed',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},
       body:JSON.stringify({items:items.map(function(x){return {page:x.page,at:x.at}}),on:true})})
@@ -241,21 +242,22 @@
     paint.w=box; syncEls.push(paint); paint();
   })();
   api('/api/auth/me').then(function(j){ SY.checked=true; if(j&&j.user){SY.user=j.user; paintSync(); pull()} else paintSync(); }).catch(function(){});
-  /* human review mark on a daf page: a badge for everyone; reviewers (signed in, listed server-side) can set or clear it */
+  /* human review mark: a stamp icon beside the daf title; tap it for who checked the page and when */
   (function(){
-    var art=document.querySelector('article.daf'), meta=art&&art.querySelector('header .meta'); if(!art||!meta) return;
+    var art=document.querySelector('article.daf'), h1=art&&art.querySelector('header .titlerow h1'); if(!h1) return;
     var m=location.pathname.match(/^\/([a-z]+)\/(\d+)\/?$/); if(!m) return; var page=m[1]+'/'+m[2];
-    var badge=el('span','hr-badge'), btn=null, cur=null; badge.hidden=true; meta.appendChild(badge);
-    function fmt(d){ var p=(d||'').split('-'); return p.length===3?(+p[2])+'.'+(+p[1]):''; }
-    function show(r){ cur=r; badge.hidden=!r; if(r) badge.textContent='✓ נבדק על ידי אדם'+(r.at?' · '+fmt(r.at):'');
-      if(btn){ btn.textContent=r?'בטל ״נבדק על ידי אדם״':'סמן ״נבדק על ידי אדם״'; btn.setAttribute('aria-pressed',!!r); } }
+    var STAMP='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.2"/><path d="M6.5 15.5c.8-2.6 3-4 5.5-4s4.7 1.4 5.5 4"/><path d="M4 18.5h16"/><path d="M5.5 21h13"/></svg>';
+    var b=el('button','hr-stamp'); b.type='button'; b.innerHTML=STAMP; b.hidden=true; b.setAttribute('aria-expanded','false');
+    var pop=el('div','hr-pop'); pop.hidden=true; h1.appendChild(b); h1.parentNode.appendChild(pop);
+    function fmt(d){ var p=(d||'').split('-'); return p.length===3?(+p[2])+'.'+(+p[1])+'.'+p[0]:''; }
+    function show(r){ b.hidden=!r; if(!r){ pop.hidden=true; return; }
+      b.setAttribute('aria-label','נבדק על ידי אדם — פרטים'); b.title='נבדק על ידי אדם';
+      pop.innerHTML=''; pop.append(el('b',null,'✓ נבדק על ידי אדם'), el('span',null,r.by?'בודק: '+r.by:''), el('span',null,r.at?'תאריך: '+fmt(r.at):''),
+        el('span','hr-note','הדף נקרא ונבדק מול הגמרא על ידי לומד, בנוסף לבדיקות האוטומטיות.')); }
+    b.onclick=function(e){ e.stopPropagation(); pop.hidden=!pop.hidden; b.setAttribute('aria-expanded',!pop.hidden); };
+    document.addEventListener('click',function(e){ if(!pop.hidden&&!pop.contains(e.target)){ pop.hidden=true; b.setAttribute('aria-expanded','false'); } });
     function load(){ fetch('/api/reviewed?page='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(j){ show(j&&j.review); }).catch(function(){}); }
     load(); window.__rvRefresh=load;
-    api('/api/auth/me').then(function(j){ if(!(j&&j.user&&j.user.reviewer)) return;
-      btn=el('button','hr-btn'); btn.type='button'; meta.appendChild(btn); show(cur);
-      btn.onclick=function(){ btn.disabled=true; fetch('/api/reviewed',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,on:!cur})})
-        .then(function(r){return r.json()}).then(function(j){ btn.disabled=false; if(j&&j.ok){ show(j.review); toast(j.review?'הדף סומן ״נבדק על ידי אדם״':'הסימון בוטל'); } }).catch(function(){ btn.disabled=false; }); };
-    }).catch(function(){});
   })();
   var toastEl=null, toastT=null;
   function toast(msg,undo){
@@ -333,7 +335,7 @@
       lb.onclick=function(){ var was=E.s[id]; E.s[id]=was==='learned'?'opened':'learned';
         if(E.s[id]==='learned'){ delete S.later[P.k+'#'+id]; markDay(); } touch(); save(); paint();
         toast(E.s[id]==='learned'?'הסוגיה סומנה כנלמדה':'הסימון ״נלמד״ בוטל',function(){ if(was) E.s[id]=was; else delete E.s[id]; save(); paint(); }); };
-      tl.insertBefore(lb,tl.firstChild); learnB[id]=lb;
+      var h3=sec.querySelector(':scope > h3'); if(h3){ h3.classList.add('has-lrn'); h3.appendChild(lb); } else tl.insertBefore(lb,tl.firstChild); learnB[id]=lb;
     });
     /* finished the daf: a clear banner after the last sugya, leading to the understanding questions */
     var qsec=document.getElementById(art.id+'-quiz'), dban=null;

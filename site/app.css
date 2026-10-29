@@ -1073,6 +1073,13 @@ html.lab .sug-end,html.lab .stg-tools{display:none}
 .stg-h .stg-tools{position:absolute;top:8px;inset-inline-end:44px;margin:0}
 .stg-h .stg-x{position:absolute;top:8px;inset-inline-end:8px;margin:0}
 .stg-h .stg-c{min-height:30px;display:flex;align-items:center;padding-inline-end:150px}
-.hr-badge{display:inline-flex;align-items:center;font-size:13px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:2px 10px}
-.hr-btn{font:inherit;font-size:13px;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:999px;padding:2px 10px;cursor:pointer}
 .pg-lrn .pg-tick.grey{opacity:.55}
+.titlerow{position:relative}
+.hr-stamp{display:inline-grid;place-items:center;width:34px;height:34px;padding:0;margin-inline-start:10px;vertical-align:middle;font-size:16px;border:1.5px solid var(--ok);border-radius:50%;background:var(--ok-soft);color:var(--ok);cursor:pointer}
+.hr-pop{position:absolute;z-index:30;top:100%;inset-inline-start:0;display:grid;gap:3px;max-width:320px;margin-top:6px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.15);font-size:14px}
+.hr-pop b{color:var(--ok)}
+.hr-pop .hr-note{color:var(--muted);font-size:12.5px}
+/* the sugya's learned mark sits at the far (left) end of its title */
+h3.has-lrn{display:flex;align-items:flex-start;gap:10px}
+h3.has-lrn>.pg-lrn{margin-inline-start:auto;flex:none;font-size:16px;margin-top:4px;display:inline-grid;place-items:center;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;background:var(--card);cursor:pointer;padding:0}
+h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
