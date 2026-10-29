@@ -135,7 +135,25 @@
   function pull(){ return api('/api/progress').then(function(j){
     if(j&&j.ok&&j.data&&j.data.v===1){ merge(norm(j.data)); try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){} refresh(); }
     if(j&&j.ok) SY.push();
+    revSync();
   }); }
+  /* reviewer: every daf the reviewer finished is marked ״נבדק על ידי אדם״ — and in a masechet, every daf from the first one
+     they finished up to today (they learn the daf daily). Sent once per page; the server keeps the first date. */
+  function revSync(){
+    if(!(SY.user&&SY.user.reviewer)) return;
+    var sent={}; try{sent=JSON.parse(localStorage.getItem('rv-sent')||'{}')}catch(e){}
+    var t=today(), items=[], first={};
+    L.forEach(function(p){ var e=S.pages[p.k]; if(e&&(e.done||stateOf(p)==='learned')){ if(first[p.s]==null||p.d<first[p.s]) first[p.s]=p.d; } });
+    L.forEach(function(p){ var e=S.pages[p.k], fin=e&&(e.done||stateOf(p)==='learned');
+      var inRun=first[p.s]!=null&&p.d>=first[p.s]&&p.y<=t;
+      if((fin||inRun)&&!sent[p.k]) items.push({page:p.s+'/'+p.d,at:(e&&e.done)||p.y,k:p.k}); });
+    if(!items.length) return;
+    fetch('/api/reviewed',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},
+      body:JSON.stringify({items:items.map(function(x){return {page:x.page,at:x.at}}),on:true})})
+      .then(function(r){return r.json()}).then(function(j){ if(j&&j.ok){ items.forEach(function(x){sent[x.k]=1});
+        try{localStorage.setItem('rv-sent',JSON.stringify(sent))}catch(e){} if(window.__rvRefresh) window.__rvRefresh(); } }).catch(function(){});
+  }
+  SY.rev=revSync;
   function paintSync(){ syncEls=syncEls.filter(function(f){return f.w.isConnected}); syncEls.forEach(function(f){f()});
     bkEls=bkEls.filter(function(b){return b.isConnected}); bkEls.forEach(function(b){b.hidden=!!SY.user}) }
   function loadGsi(){ return gsi||(gsi=new Promise(function(res){
@@ -231,7 +249,8 @@
     function fmt(d){ var p=(d||'').split('-'); return p.length===3?(+p[2])+'.'+(+p[1]):''; }
     function show(r){ cur=r; badge.hidden=!r; if(r) badge.textContent='✓ נבדק על ידי אדם'+(r.at?' · '+fmt(r.at):'');
       if(btn){ btn.textContent=r?'בטל ״נבדק על ידי אדם״':'סמן ״נבדק על ידי אדם״'; btn.setAttribute('aria-pressed',!!r); } }
-    fetch('/api/reviewed?page='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(j){ show(j&&j.review); }).catch(function(){});
+    function load(){ fetch('/api/reviewed?page='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(j){ show(j&&j.review); }).catch(function(){}); }
+    load(); window.__rvRefresh=load;
     api('/api/auth/me').then(function(j){ if(!(j&&j.user&&j.user.reviewer)) return;
       btn=el('button','hr-btn'); btn.type='button'; meta.appendChild(btn); show(cur);
       btn.onclick=function(){ btn.disabled=true; fetch('/api/reviewed',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,on:!cur})})
@@ -417,7 +436,7 @@
         if(!st&&acc[id]>=3000){E.s[id]='opened'; st='opened'; ch=true}
         if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)){E.s[id]='learned'; markDay(); ch=true}
       });
-      if(ch){ var was=E.done; E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); if(E.done&&!was) nudge(); }
+      if(ch){ var was=E.done; E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); if(E.done&&!was){ nudge(); revSync(); } }
     }
     if(!RM) setInterval(tick,1000);
     document.addEventListener('visibilitychange',function(){lastT=Date.now()});
@@ -434,7 +453,7 @@
     if(allB) allB.addEventListener('click',function(){
       var all=nLearned(P)===P.n.length, snap=JSON.stringify({s:E.s,done:E.done,later:S.later});
       P.n.forEach(function(id){ if(all) E.s[id]='opened'; else { E.s[id]='learned'; delete S.later[P.k+'#'+id]; } });
-      if(!all) markDay(); var was=E.done; E.done=all?null:(E.done||today()); touch(); save(); paint(); if(E.done&&!was) setTimeout(nudge,5500);
+      if(!all) markDay(); var was=E.done; E.done=all?null:(E.done||today()); touch(); save(); paint(); if(E.done&&!was){ setTimeout(nudge,5500); revSync(); }
       toast(all?'הסימון בוטל':'סומנו '+P.n.length+' סוגיות כנלמדו',function(){ var o=JSON.parse(snap); E.s=o.s; E.done=o.done; S.later=o.later; save(); paint(); });
     });
     /* quiz: best score + missed questions for later review (not needed for "learned") */

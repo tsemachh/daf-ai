@@ -31,6 +31,15 @@ export async function onRequestPost({ request, env }) {
   const u = await currentUser(request, env).catch(() => null);
   if (!isReviewer(u, env)) return json({ ok: false, error: "forbidden" }, 403);
   const b = await request.json().catch(() => ({}));
+  if (Array.isArray(b.items)) {   // bulk: mark many pages, keeping the first date already stored
+    await ensure(env.DB);
+    const ok = b.items.slice(0, 500).filter((x) => x && PAGE.test(String(x.page || "")));
+    const st = env.DB.prepare(`INSERT OR IGNORE INTO reviews (page, by_name, by_email, at) VALUES (?,?,?,?)`);
+    const today = new Date().toISOString().slice(0, 10);
+    if (ok.length) await env.DB.batch(ok.map((x) => st.bind(String(x.page), u.name || "", u.email,
+      /^\d{4}-\d{2}-\d{2}$/.test(String(x.at || "")) && String(x.at) <= today ? String(x.at) : today)));
+    return json({ ok: true, n: ok.length });
+  }
   const page = String(b.page || "");
   if (!PAGE.test(page)) return json({ ok: false, error: "bad_page" }, 400);
   await ensure(env.DB);
