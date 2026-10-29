@@ -223,6 +223,21 @@
     paint.w=box; syncEls.push(paint); paint();
   })();
   api('/api/auth/me').then(function(j){ SY.checked=true; if(j&&j.user){SY.user=j.user; paintSync(); pull()} else paintSync(); }).catch(function(){});
+  /* human review mark on a daf page: a badge for everyone; reviewers (signed in, listed server-side) can set or clear it */
+  (function(){
+    var art=document.querySelector('article.daf'), meta=art&&art.querySelector('header .meta'); if(!art||!meta) return;
+    var m=location.pathname.match(/^\/([a-z]+)\/(\d+)\/?$/); if(!m) return; var page=m[1]+'/'+m[2];
+    var badge=el('span','hr-badge'), btn=null, cur=null; badge.hidden=true; meta.appendChild(badge);
+    function fmt(d){ var p=(d||'').split('-'); return p.length===3?(+p[2])+'.'+(+p[1]):''; }
+    function show(r){ cur=r; badge.hidden=!r; if(r) badge.textContent='✓ נבדק על ידי אדם'+(r.at?' · '+fmt(r.at):'');
+      if(btn){ btn.textContent=r?'בטל ״נבדק על ידי אדם״':'סמן ״נבדק על ידי אדם״'; btn.setAttribute('aria-pressed',!!r); } }
+    fetch('/api/reviewed?page='+encodeURIComponent(page)).then(function(r){return r.json()}).then(function(j){ show(j&&j.review); }).catch(function(){});
+    api('/api/auth/me').then(function(j){ if(!(j&&j.user&&j.user.reviewer)) return;
+      btn=el('button','hr-btn'); btn.type='button'; meta.appendChild(btn); show(cur);
+      btn.onclick=function(){ btn.disabled=true; fetch('/api/reviewed',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({page:page,on:!cur})})
+        .then(function(r){return r.json()}).then(function(j){ btn.disabled=false; if(j&&j.ok){ show(j.review); toast(j.review?'הדף סומן ״נבדק על ידי אדם״':'הסימון בוטל'); } }).catch(function(){ btn.disabled=false; }); };
+    }).catch(function(){});
+  })();
   var toastEl=null, toastT=null;
   function toast(msg,undo){
     if(!toastEl){toastEl=el('div','pg-toast'); toastEl.setAttribute('role','status'); toastEl.setAttribute('aria-live','polite'); document.body.appendChild(toastEl);}
@@ -247,7 +262,7 @@
   var E=null;
   if(art&&P){
     var RM=/(^|[?&])r(=|&|$)/.test(location.search.slice(1));   /* ?r = חזרה: summaries, verdicts and the summary table only */
-    var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}; E=entry(P.k);
+    var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}, learnB={}; E=entry(P.k);
     if(RM){ art.classList.add('review-mode');
       art.querySelectorAll('details.flowd,details.storyline,details.aids').forEach(function(d){d.open=true});
       art.querySelectorAll('section.sugya ol.steps').forEach(function(ol){ var b=el('button','btn pg-steps','הצג את השקלא וטריא'); b.type='button';
@@ -294,6 +309,12 @@
         if(was) delete S.later[k]; else {S.later[k]=Date.now(); touch();} save(); paint();
         toast(was?'הוסר מ״ללמוד אחר כך״':'נשמר ל״ללמוד אחר כך״ — מופיע בדף הבית',function(){ if(was) S.later[k]=was; else delete S.later[k]; save(); paint(); }); };
       b.innerHTML=BOOK; tl.insertBefore(b,tl.firstChild); laterB[id]=b;
+      /* learned mark on the sugya itself: shows ✓ / ✓✓ and toggles learned <-> not learned */
+      var lb=el('button','fb-sec pg-lrn'); lb.type='button';
+      lb.onclick=function(){ var was=E.s[id]; E.s[id]=was==='learned'?'opened':'learned';
+        if(E.s[id]==='learned'){ delete S.later[P.k+'#'+id]; markDay(); } touch(); save(); paint();
+        toast(E.s[id]==='learned'?'הסוגיה סומנה כנלמדה':'הסימון ״נלמד״ בוטל',function(){ if(was) E.s[id]=was; else delete E.s[id]; save(); paint(); }); };
+      tl.insertBefore(lb,tl.firstChild); learnB[id]=lb;
     });
     /* finished the daf: a clear banner after the last sugya, leading to the understanding questions */
     var qsec=document.getElementById(art.id+'-quiz'), dban=null;
@@ -319,6 +340,9 @@
       if(ab&&ab.dataset.all!==String(nLearned(P)===P.n.length)){ var all=nLearned(P)===P.n.length; ab.dataset.all=String(all); ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
         ab.title=all?'כל הסוגיות סומנו כנלמדו — הקש לביטול':'סמן את כל הסוגיות בדף כנלמדו'; }
       P.n.forEach(function(id){
+        var lb=learnB[id]; if(lb){ var st=E.s[id], lr=st==='learned', sg=st||'-'; if(lb.dataset.sig!==sg){ lb.dataset.sig=sg; lb.innerHTML='';
+          var tk=ticks(lr?'learned':'opened'); if(tk) lb.appendChild(tk); lb.classList.toggle('on',lr); lb.setAttribute('aria-pressed',lr);
+          lb.dataset.tip=lr?'נלמד — הקש לביטול':'סמן את הסוגיה כנלמדה'; lb.setAttribute('aria-label',lb.dataset.tip); } }
         var on=!!S.later[P.k+'#'+id], b=laterB[id];
         if(b){ b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); b.dataset.tip=on?'סומן ללמוד אחר כך — הקש לביטול':'ללמוד אחר כך'; b.setAttribute('aria-label',b.dataset.tip); }
         var a=navA[id]; if(!a) return; var sig=(E.s[id]||'')+(on?'+b':''), o=a.querySelector('.pg-mk');
@@ -415,6 +439,18 @@
     });
     /* quiz: best score + missed questions for later review (not needed for "learned") */
     var qb=art.querySelector('[data-role="quizBox"]');
+    var qRest=false;
+    if(qb) qb.addEventListener('click',function(ev){ var o=ev.target.closest('.opt'); if(!o||qRest) return;
+      var qi=[].indexOf.call(qb.querySelectorAll('.qitem'),o.closest('.qitem'));
+      if(qi>=0&&o.dataset.j!=null){ E.qa=E.qa||{}; if(E.qa[qi]==null){ E.qa[qi]=+o.dataset.j; touch(); save(); } } });
+    var rq=art.querySelector('[data-role="resetQuiz"]'); if(rq) rq.addEventListener('click',function(){ if(E.qa){ delete E.qa; touch(); save(); } });
+    /* answers given before show again when the page is reopened (״התחל מחדש״ clears them) */
+    if(qb&&E.qa) setTimeout(function(){ qRest=true; var its=qb.querySelectorAll('.qitem');
+      Object.keys(E.qa).forEach(function(i){ var it=its[+i]; if(!it||it.dataset.done) return; var bt=it.querySelector('.opt[data-j="'+E.qa[i]+'"]'); if(bt) bt.click(); });
+      qRest=false; var n=Object.keys(E.qa).length;
+      if(n&&!qb.querySelector('.q-was')){ var w=el('p','q-was','ענית כבר על '+n+' מתוך '+its.length+' שאלות — התשובות שלך מוצגות. ״התחל מחדש״ למטה מאפס אותן.'); qb.before(w);
+        var rq2=art.querySelector('[data-role="resetQuiz"]'); if(rq2) rq2.addEventListener('click',function(){ w.remove(); },{once:true}); }
+    },60);
     if(qb) qb.addEventListener('click',function(ev){ if(!ev.target.closest('.opt')) return; setTimeout(function(){
       var items=qb.querySelectorAll('.qitem'), done=qb.querySelectorAll('.qitem[data-done]'); if(!items.length||done.length<items.length) return;
       var right=0, spare=2; items.forEach(function(q,i){ var ok=!q.querySelector('.opt.wrong'); if(ok) right++;

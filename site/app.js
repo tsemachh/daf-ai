@@ -664,7 +664,7 @@
         var order=item.o.map(function(_,j){return j}); for(var x=order.length-1;x>0;x--){var r=Math.floor(Math.random()*(x+1)),tmp=order[x];order[x]=order[r];order[r]=tmp;}
         var btns={};
         order.forEach(function(j){ var t=item.o[j];
-          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=t; btns[j]=b;
+          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.dataset.j=j; b.textContent=t; btns[j]=b;
           b.addEventListener('click',function(){
             if(d.dataset.done) return; d.dataset.done=1;
             var ok=j===item.a, v=document.createElement('b'); v.className='qv '+(ok?'ok':'no'); v.textContent=ok?'✓ נכון.':'✗ לא בדיוק.';
