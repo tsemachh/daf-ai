@@ -7,8 +7,8 @@ no text-heavy tables, one summary slide.
 
 Imagery (Tsemach, 2026-10-30): diagrams, arrows, icons and text only.
 - Never unclothed figures (no Vitruvian man, no anatomy drawings of people).
-- No women, no depictions of Moshe, Aharon or the sages.
-- No coins/images with human faces.
+- People are allowed when clothed and modest: modest women, or cartoon-style women; Moshe and Aharon allowed (respectful, modest dress).
+- Coins with an emperor's face: avoid (idolatrous image).
 - Modesty / body-organ sugyot: one factual text line, no illustration.
 
 Review every slide before publishing (tools/slides_publish.py --drop): wrong attribution, garbled text,
