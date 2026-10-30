@@ -473,7 +473,7 @@ def render_fig(figs):
 
 
 AID_KINDS = [("fig", "איורים", "🖼"), ("table", "טבלאות שיטות", "▦"), ("decide", "אם… אז…", "⑂"), ("seq", "סדר האירועים", "⇢"),
-             ("chain", "שרשראות לימוד", "⛓"), ("calc", "חשבונות", "∑"), ("scale", "מידות בקנה מידה", "📏"), ("sw", "Simon Wolf", "📊")]
+             ("chain", "שרשראות לימוד", "⛓"), ("calc", "חשבונות", "∑"), ("scale", "מידות בקנה מידה", "📏"), ("sl", "מצגות", "🎞"), ("sw", "Simon Wolf", "📊")]
 
 
 def render_aids(alld):
@@ -496,6 +496,18 @@ def render_aids(alld):
                           ("calc", render_calc), ("scale", render_scale)):
                 for t in ([s[k]] if isinstance(s.get(k), dict) else s.get(k) or []):
                     add(k, t.get("title") or s.get("title", ""), fn(t))
+        for sid, files in ((d.get("slides") or {}).get("g") or {}).items():   # NotebookLM decks, one card per sugya
+            if not files or sid in ("intro", "end"):
+                continue
+            s = next((x for x in d["sections"] if x["id"] == sid), None)
+            if not s:
+                continue
+            go = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{sid}-slides'
+            n = len(files)
+            items.append({"k": "sl", "m": d["slug"], "mh": d["tractate_he"], "t": s.get("title", ""),
+                          "h": f'<a class="sl-th" href="{go}"><img src="../{files[0]}" alt="" width="1376" height="768" loading="lazy" decoding="async">'
+                               f'<span>{esc(re.sub("<[^>]+>", "", s.get("title", "")))} · {n} {"שקף" if n == 1 else "שקפים"}</span></a>',
+                          "links": [(go, f'{d["title"]} · {s.get("title", "")}')]})
         for c in sw_charts(d["slug"], d["daf"]):
             sec = next((x for x in d["sections"] if x["id"] == c["sec"]), None)
             items.append({"k": "sw", "m": d["slug"], "mh": d["tractate_he"], "t": c["title"],
@@ -513,7 +525,7 @@ def render_aids(alld):
     for x in items:
         n, ic = names[x["k"]]
         go = " ".join(f'<a href="{h}">{esc(t)} ←</a>' for h, t in x["links"])
-        body = x["h"] if x["k"] in ("fig", "sw") else f'<details><summary>{esc(re.sub("<[^>]+>", "", x["t"]))}</summary>{x["h"]}</details>'
+        body = x["h"] if x["k"] in ("fig", "sw", "sl") else f'<details><summary>{esc(re.sub("<[^>]+>", "", x["t"]))}</summary>{x["h"]}</details>'
         cards.append(f'<article class="dr-card ax-{x["k"]}" data-k="{x["k"]}" data-m="{x["m"]}"><p class="ax-tag">{ic} {n} · מסכת {esc(x["mh"])}</p>'
                      f'{body}<p class="dr-go">{go}</p></article>')
     js = """<script>(function(){var k='',m='',cs=document.querySelectorAll('.ax-c'),as=document.querySelectorAll('.dr-card'),
@@ -527,7 +539,7 @@ var h=location.hash.slice(1).split('/');h.forEach(function(x){if(document.queryS
         "עזרים · " + SITE_TITLE,
         f'<div class="wrap" id="app"><section><a class="back" href="../">→ דף הבית</a><header>'
         f'<div class="eyebrow">כל העזרים</div><h1>עזרים לסוגיות</h1>'
-        f'<p class="thesis">איורים, טבלאות שיטות, חשבונות, סדרי אירועים ודפי העזר של Simon Wolf — מכל הדפים באתר. סננו לפי סוג ומסכת; כל עזר מוביל לסוגיה שלו.</p></header>'
+        f'<p class="thesis">איורים, מצגות, טבלאות שיטות, חשבונות, סדרי אירועים ודפי העזר של Simon Wolf — מכל הדפים באתר. סננו לפי סוג ומסכת; כל עזר מוביל לסוגיה שלו.</p></header>'
         f'<div class="ax-f" role="toolbar" aria-label="סינון">{sel}{chips}</div><p class="ax-n" aria-live="polite"></p>'
         f'<p class="fig-ai">האיורים והטבלאות נוצרו על ידי AI ונבדקו מול הגמרא ורש״י. ראיתם טעות? כתבו הערה מתוך הסוגיה עצמה. '
         f'דפי Simon Wolf — באדיבותו (<a href="https://www.swdaf.com/" target="_blank" rel="noopener">www.swdaf.com</a>).</p>'

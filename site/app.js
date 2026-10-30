@@ -1512,5 +1512,7 @@ document.addEventListener('click',function(e){
     view.addEventListener('touchend',function(e){ if(!t0) return; var t=e.changedTouches[0], dx=t.clientX-t0.x, dy=t.clientY-t0.y; t0=null; if(Math.abs(dx)<50||Math.abs(dx)<1.5*Math.abs(dy)) return; go(dx>0?i+1:i-1); });
     setList(); go(0); x.focus();
   }
+  /* deep link from the עזרים page: #<daf>-<sugya>-slides opens that sugya's deck */
+  var hm=location.hash.match(/^#(.+)-slides$/); if(hm){ var sid0=hm[1].slice(key.length+1); if(SL.g[sid0]) setTimeout(function(){ var t=document.getElementById(key+'-'+sid0); if(t) t.scrollIntoView({block:'start'}); open(sid0); },300); }
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.sl-btn'); if(!b||!art.contains(b)) return; open(b.dataset.sl); });
 })();
