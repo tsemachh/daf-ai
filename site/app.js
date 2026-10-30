@@ -1292,8 +1292,10 @@ document.addEventListener('click',function(e){
       all.addEventListener('click',function(){ var open=all.dataset.on!=='1'; heads.forEach(function(x){x.set(open)}); all.dataset.on=open?'1':''; all.textContent=open?'קפל את השלבים':'פתח את כל השלבים'; });
       strip.appendChild(all);
       /* the "open all stages" link sits on the same row as the בקצרה pill when there is one */
-      var fd=sec.querySelector(':scope > details.flowd');
-      if(fd){ var row=document.createElement('div'); row.className='stg-row'; fd.before(row); row.append(fd,all); strip.remove(); }
+      var fd=sec.querySelector(':scope > details.flowd, :scope > .flow-row > details.flowd');
+      var fr=sec.querySelector(':scope > .flow-row');
+      if(fr){ fr.classList.add('stg-row'); fr.querySelector('.row-end').appendChild(all); strip.remove(); }
+      else if(fd){ var row=document.createElement('div'); row.className='stg-row'; fd.before(row); row.append(fd,all); strip.remove(); }
       else { var anchor=sec.querySelector('.cv-all')||ol; anchor.before(strip); }
     });
   }
@@ -1431,7 +1433,7 @@ document.addEventListener('click',function(e){
     zb.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(zb,x); h.append(h4,tools);
     var tabs=el('div','stg-tabs tz-tabs'); tabs.setAttribute('role','tablist');
     var view=el('div','tz-view'), pg=el('div','tz-pg'), img=el('img'); img.alt='צורת הדף'; img.decoding='async'; pg.appendChild(img); view.appendChild(pg);
-    var f=el('footer'), sp=el('span'), hint=el('span','tz-hint','הקש על סוגיה אחרת בדף כדי לעבור אליה'); f.append(hint,sp);
+    var f=el('footer'), sp=el('span'), hint=el('span','tz-hint',Object.keys(TZ).length>1&&'ontouchstart' in window?'החלק ימינה/שמאלה להחלפת עמוד · הקש על סוגיה כדי לעבור אליה':'הקש על סוגיה אחרת בדף כדי לעבור אליה'); f.append(hint,sp);
     d.append(h,tabs,view,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var zoom=true, cur=am;
     function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
@@ -1457,7 +1459,21 @@ document.addEventListener('click',function(e){
           if(!i){ var b=el('span','tz-n'+(on?' on':''),String(n)); b.dataset.c=(n-1)%5; b.style.cssText='left:'+(q[0]+q[2])+'%;top:'+q[1]+'%'; pg.appendChild(b); } }); });
       img.onload=place; img.src='/'+t.img; if(img.complete) place(); }
     function go(s){ close(); var t=document.getElementById(key+'-'+s); if(t){ t.scrollIntoView({behavior:'smooth',block:'start'}); history.replaceState(null,'','#'+t.id); } }
+    /* swipe between amudim like turning a page: finger to the right → next amud (ע״ב), to the left → back (ע״א);
+       only once the zoomed view is already at that edge, so a normal pan still pans */
+    var AMS=Object.keys(TZ).sort(), t0=null;
+    view.addEventListener('touchstart',function(e){ if(e.touches.length!==1){ t0=null; return; } var t=e.touches[0];
+      t0={x:t.clientX,y:t.clientY,l:view.scrollLeft<=2,r:view.scrollLeft>=view.scrollWidth-view.clientWidth-2}; },{passive:true});
+    view.addEventListener('touchend',function(e){ if(!t0) return; var t=e.changedTouches[0], dx=t.clientX-t0.x, dy=t.clientY-t0.y, i=AMS.indexOf(cur), s0=t0; t0=null;
+      if(Math.abs(dx)<60||Math.abs(dx)<1.6*Math.abs(dy)) return;
+      var nx=dx>0&&s0.l?AMS[i+1]:dx<0&&s0.r?AMS[i-1]:null; if(!nx) return;
+      pg.style.transition='transform .18s ease-in,opacity .18s'; pg.style.transform='translateX('+(dx>0?40:-40)+'px)'; pg.style.opacity='0';
+      setTimeout(function(){ pg.style.transition='none'; pg.style.transform='translateX('+(dx>0?-40:40)+'px)'; show(nx);
+        requestAnimationFrame(function(){ pg.style.transition='transform .2s ease-out,opacity .2s'; pg.style.transform=''; pg.style.opacity=''; }); },180); });
     show(am); x.focus();
   }
+  /* the בקצרה pill leaves room for whatever sits at the end of its row (צורת הדף, קפל את השלבים) */
+  function fit(){ art.querySelectorAll('.flow-row').forEach(function(fr){ var re=fr.querySelector('.row-end'); if(re) fr.style.setProperty('--re',(re.offsetWidth+8)+'px'); }); }
+  setTimeout(fit,60); setTimeout(fit,600); window.addEventListener('resize',fit);
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.tz-btn'); if(!b||!art.contains(b)) return; open(b.dataset.tz,(b.dataset.am||'a').split(' ')[0]); });
 })();

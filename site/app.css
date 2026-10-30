@@ -1112,3 +1112,11 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .tz-hint{font-size:13px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tz-view{background:#1b1f27}:root:not([data-theme="light"]) .tz-pg img{filter:invert(.9) hue-rotate(180deg)}}
 :root[data-theme="dark"] .tz-view{background:#1b1f27}:root[data-theme="dark"] .tz-pg img{filter:invert(.9) hue-rotate(180deg)}
+.flow-row{position:relative;margin:0 0 12px;min-height:44px}
+.flow-row>details.flowd{margin:0}
+.flow-row>details.flowd>summary{margin-inline-end:var(--re,130px)}
+.flow-row>.row-end{position:absolute;top:0;inset-inline-end:0;display:flex;gap:4px;align-items:center;min-height:44px}
+.row-end .tz-btn{margin:0;min-height:36px;padding:4px 12px;font-size:14px;white-space:nowrap}
+.row-end .stg-all{white-space:nowrap}
+@media (max-width:420px){.row-end .stg-all{font-size:13px;padding:2px}.row-end .tz-btn{padding:4px 9px;font-size:13px}details.flowd>summary{font-size:14px}}
+@media (max-width:420px){.flow-row .fl-more{display:none}}
