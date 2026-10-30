@@ -702,6 +702,8 @@ def render_section(d, s):
         tz_am = [a for a, t in sorted((d.get("tzurat") or {}).items()) if s["id"] in t.get("r", {})]
         tz = (f'<button class="tz-btn" type="button" data-tz="{s["id"]}" data-am="{" ".join(tz_am)}" title="איפה הסוגיה בצורת הדף (וילנא)">📜 צורת הדף</button>'
               if tz_am else "")   # where this sugya sits on the printed (Vilna) page — on the בקצרה row
+        if (d.get("slides") or {}).get("g", {}).get(s["id"]):   # a NotebookLM slide deck for this sugya
+            tz += f'<button class="sl-btn" type="button" data-sl="{s["id"]}" title="מצגת לסוגיה">📊 מצגת</button>'
         if s.get("flow"):
             fd = f'<details class="flowd"><summary>בקצרה<span class="fl-more"> — על מה הסוגיה</span></summary>{flow_paras(s["flow"])}</details>'
             parts.append(f'  <div class="flow-row">{fd}<span class="row-end">{tz}</span></div>' if tz else "  " + fd)
@@ -828,6 +830,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 
 {sections}
 {jscript(d["tzurat"], cls="tz-data") if d.get("tzurat") else ""}
+{jscript(d["slides"], cls="sl-data") if d.get("slides") else ""}
 <section class="sugya" id="{key}-quiz">
   <div class="amud">בסוף הדף</div>
   <h3>שאלות הבנה <span class="score" data-role="score"></span></h3>

@@ -1128,3 +1128,20 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .tz-dlg .x{width:32px;height:32px}
 .tz-dlg footer{display:block;padding:6px 12px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tz-dlg .tz-hint{font-size:12px}
+/* מצגת */
+.sl-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;margin:0;padding:4px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.sl-btn:hover{border-color:var(--accent)}
+.sl-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-width:420px){.row-end .sl-btn{padding:4px 9px;font-size:13px}}
+.sl-dlg{height:auto;max-height:100%}
+@media (min-width:700px){.sl-dlg{height:auto;max-width:1000px}}
+.sl-bg{align-items:center}
+.sl-view{position:relative;background:#111;display:flex;align-items:center;justify-content:center;touch-action:pan-y}
+.sl-view img{display:block;width:100%;height:auto;max-height:calc(100vh - 160px);object-fit:contain}
+.sl-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:56px;border:0;border-radius:10px;background:rgba(0,0,0,.35);color:#fff;font-size:30px;line-height:1;cursor:pointer}
+.sl-nav:disabled{opacity:0;pointer-events:none}
+.sl-prev{right:6px}.sl-next{left:6px}
+.sl-dots{display:flex;justify-content:center;gap:6px;padding:10px 12px;flex-wrap:wrap}
+.sl-dot{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--line);cursor:pointer}
+.sl-dot[aria-current="true"]{background:var(--accent);transform:scale(1.25)}
+@media (hover:none){.sl-nav{width:34px;height:48px;font-size:24px}}

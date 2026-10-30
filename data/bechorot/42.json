@@ -1127,5 +1127,39 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-42-01.webp"
+   ],
+   "s1": [
+    "sl-bechorot-42-02.webp",
+    "sl-bechorot-42-03.webp",
+    "sl-bechorot-42-04.webp"
+   ],
+   "s2": [
+    "sl-bechorot-42-05.webp",
+    "sl-bechorot-42-06.webp"
+   ],
+   "s3": [
+    "sl-bechorot-42-07.webp",
+    "sl-bechorot-42-08.webp"
+   ],
+   "s4": [
+    "sl-bechorot-42-10.webp",
+    "sl-bechorot-42-11.webp"
+   ],
+   "s5": [
+    "sl-bechorot-42-12.webp"
+   ],
+   "end": [
+    "sl-bechorot-42-14.webp",
+    "sl-bechorot-42-15.webp"
+   ]
+  }
  }
 }

@@ -1477,3 +1477,40 @@ document.addEventListener('click',function(e){
   setTimeout(fit,60); setTimeout(fit,600); window.addEventListener('resize',fit);
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.tz-btn'); if(!b||!art.contains(b)) return; open(b.dataset.tz,(b.dataset.am||'a').split(' ')[0]); });
 })();
+
+/* מצגת: a NotebookLM slide deck, split by sugya — opens at this sugya's slides; swipe / arrows to move, "כל המצגת" for the whole deck */
+(function(){
+  var dj=document.querySelector('script.sl-data'); if(!dj) return;
+  var SL; try{ SL=JSON.parse(dj.textContent); }catch(e){ return; }
+  var art=dj.closest('article.daf'); if(!art) return; var key=art.id;
+  var ORDER=['intro'].concat([].map.call(art.querySelectorAll('section.sugya[id]'),function(s){ return s.id.slice(key.length+1); })).concat(['end']);
+  var ALL=[], AT={}; ORDER.forEach(function(k){ (SL.g[k]||[]).forEach(function(f){ AT[f]=k; ALL.push(f); }); });
+  function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
+  function title(k){ if(k==='intro') return 'פתיחה'; if(k==='end') return 'סיכום'; var h=document.querySelector('#'+key+'-'+k+' h3'); return 'סוגיה '+(ORDER.indexOf(k))+(h?': '+h.textContent.replace(/\s*✓.*$/,'').trim():''); }
+  function open(sid){
+    var last=document.activeElement, bg=el('div','srcdlg-bg tz-bg sl-bg'), d=el('div','srcdlg tz-dlg sl-dlg');
+    d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','מצגת');
+    var h=el('header'), h4=el('h4'), tools=el('span','tz-tools'), ab=el('button','tz-z'), x=el('button','x','×');
+    ab.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(ab,x); h.append(h4,tools);
+    var view=el('div','sl-view'), img=el('img'); img.alt=''; img.width=SL.w; img.height=SL.h; view.appendChild(img);
+    var prev=el('button','sl-nav sl-prev','›'), next=el('button','sl-nav sl-next','‹'); prev.type=next.type='button'; prev.setAttribute('aria-label','השקף הקודם'); next.setAttribute('aria-label','השקף הבא'); view.append(prev,next);
+    var dots=el('div','sl-dots'), f=el('footer'), cap=el('span'); f.append(cap); d.append(h,view,dots,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
+    var all=false, list, i=0;
+    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb); if(last&&last.focus) last.focus(); }
+    function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft') go(i+1); else if(e.key==='ArrowRight') go(i-1); }
+    x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb);
+    function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; dots.innerHTML='';
+      list.forEach(function(_,j){ var b=el('button','sl-dot'); b.type='button'; b.setAttribute('aria-label','שקף '+(j+1)); b.onclick=function(){ go(j); }; dots.appendChild(b); }); }
+    function go(j){ if(j<0||j>=list.length) return; i=j; var f2=list[i]; img.src='/'+f2; h4.textContent=title(AT[f2]);
+      [].forEach.call(dots.children,function(b,k){ b.setAttribute('aria-current',k===i); });
+      prev.disabled=i===0; next.disabled=i===list.length-1; cap.textContent=(i+1)+' / '+list.length+' · נוצר ב-NotebookLM מתוך הגמרא ודף צמח · עלול לטעות';
+      var n=list[i+1]; if(n){ var p=new Image(); p.src='/'+n; } }
+    ab.onclick=function(){ var cur=list[i]; all=!all; setList(); var k=list.indexOf(cur); go(k<0?0:k); };
+    prev.onclick=function(){ go(i-1); }; next.onclick=function(){ go(i+1); };
+    /* RTL deck: swipe right → next slide */
+    var t0=null; view.addEventListener('touchstart',function(e){ if(e.touches.length===1) t0={x:e.touches[0].clientX,y:e.touches[0].clientY}; },{passive:true});
+    view.addEventListener('touchend',function(e){ if(!t0) return; var t=e.changedTouches[0], dx=t.clientX-t0.x, dy=t.clientY-t0.y; t0=null; if(Math.abs(dx)<50||Math.abs(dx)<1.5*Math.abs(dy)) return; go(dx>0?i+1:i-1); });
+    setList(); go(0); x.focus();
+  }
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.sl-btn'); if(!b||!art.contains(b)) return; open(b.dataset.sl); });
+})();
