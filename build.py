@@ -703,6 +703,9 @@ def render_section(d, s):
             parts.append(f'  <details class="flowd"><summary>בקצרה — על מה הסוגיה</summary>{flow_paras(s["flow"])}</details>')
         if s.get("pre"):
             parts.append("  " + s["pre"])
+        tz_am = [a for a, t in sorted((d.get("tzurat") or {}).items()) if s["id"] in t.get("r", {})]
+        if tz_am:   # where this sugya sits on the printed (Vilna) page
+            parts.append(f'  <button class="tz-btn" type="button" data-tz="{s["id"]}" data-am="{" ".join(tz_am)}">📜 איפה הסוגיה בצורת הדף</button>')
         if s.get("map"):   # say up front that a map exists — it helps most before learning the sugya
             parts.append('  <button class="aid-hint" type="button" data-open-aid="map">🗺️ יש מפת שיטות לסוגיה — מי אמר מה ואיך זה מתכנס. הצג ←</button>')
         if s.get("kt"):
@@ -821,7 +824,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 {story}
 
 {sections}
-
+{jscript(d["tzurat"], cls="tz-data") if d.get("tzurat") else ""}
 <section class="sugya" id="{key}-quiz">
   <div class="amud">בסוף הדף</div>
   <h3>שאלות הבנה <span class="score" data-role="score"></span></h3>

@@ -1413,3 +1413,51 @@ document.addEventListener('click',function(e){
   function go(){ add(!!window.dafAsk); }
   setTimeout(go,120); document.addEventListener('daf:ask-on',function(){ setTimeout(go,60); });
 })();
+
+/* צורת הדף: where each sugya sits on the printed Vilna page — the page image with each sugya's lines outlined
+   (data from tools/tzurat: OCR of the page aligned to the Gemara text). Tap another sugya on the page to jump to it. */
+(function(){
+  var dj=document.querySelector('script.tz-data'); if(!dj) return;
+  var TZ; try{ TZ=JSON.parse(dj.textContent); }catch(e){ return; }
+  var art=dj.closest('article.daf'); if(!art) return; var key=art.id;
+  var HEB=['','א','ב','ג','ד','ה','ו','ז','ח','ט'];
+  function heb(n){ var t=['','י','כ','ל','מ','נ','ס','ע','פ','צ'], h=['','ק','ר','ש','ת']; var s=(n>=100?h[Math.floor(n/100)]:'')+t[Math.floor(n%100/10)]+HEB[n%10]; return s.replace('יה','טו').replace('יו','טז'); }
+  var SIDS=[].map.call(art.querySelectorAll('section.sugya[id]'),function(s){ return s.id.slice(key.length+1); });
+  function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
+  function open(sid,am){
+    var last=document.activeElement, bg=el('div','srcdlg-bg tz-bg'), d=el('div','srcdlg tz-dlg');
+    d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','צורת הדף');
+    var h=el('header'), h4=el('h4'), tools=el('span','tz-tools'), zb=el('button','tz-z'), x=el('button','x','×');
+    zb.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(zb,x); h.append(h4,tools);
+    var tabs=el('div','stg-tabs tz-tabs'); tabs.setAttribute('role','tablist');
+    var view=el('div','tz-view'), pg=el('div','tz-pg'), img=el('img'); img.alt='צורת הדף'; img.decoding='async'; pg.appendChild(img); view.appendChild(pg);
+    var f=el('footer'), sp=el('span'), hint=el('span','tz-hint','הקש על סוגיה אחרת בדף כדי לעבור אליה'); f.append(hint,sp);
+    d.append(h,tabs,view,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
+    var zoom=true, cur=am;
+    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
+    function esc(e){ if(e.key==='Escape') close(); }
+    x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',esc);
+    Object.keys(TZ).sort().forEach(function(a){ var t=el('button','st-tog',a==='a'?'עמוד א':'עמוד ב'); t.type='button'; t.dataset.am=a;
+      if(TZ[a].r[sid]) t.classList.add('has'); t.onclick=function(){ show(a); }; tabs.appendChild(t); });
+    function bbox(a){ var r=TZ[a].r[sid]; if(!r) return null; var x0=1e9,y0=1e9,x1=0,y1=0; r.forEach(function(q){ x0=Math.min(x0,q[0]); y0=Math.min(y0,q[1]); x1=Math.max(x1,q[0]+q[2]); y1=Math.max(y1,q[1]+q[3]); }); return [x0,y0,x1,y1]; }
+    function place(){ var b=bbox(cur), z=zoom&&b?Math.min(3.4,Math.max(1,82/(b[2]-b[0]))):1;
+      pg.style.width=(z*100)+'%'; zb.textContent=zoom?'כל הדף':'הגדל';
+      zb.setAttribute('aria-label',zoom?'הצג את כל העמוד':'הגדל לסוגיה');
+      requestAnimationFrame(function(){ if(!b){ view.scrollTop=0; return; } var W=pg.clientWidth, H=pg.clientHeight;
+        view.scrollLeft=Math.max(0,(b[0]+b[2])/200*W-view.clientWidth/2); view.scrollTop=Math.max(0,b[1]/100*H-24); }); }
+    zb.onclick=function(){ zoom=!zoom; place(); };
+    function show(a){ cur=a; var t=TZ[a]; [].forEach.call(tabs.children,function(c){ c.setAttribute('aria-pressed',c.dataset.am===a); });
+      var dn=+art.dataset.daf; h4.textContent='צורת הדף · '+heb(dn)+(a==='a'?'.':':');
+      sp.textContent=t.src||''; pg.querySelectorAll('.tz-r,.tz-n').forEach(function(n){ n.remove(); });
+      img.width=t.w; img.height=t.h; pg.style.aspectRatio=t.w+'/'+t.h;
+      Object.keys(t.r).forEach(function(s){ var on=s===sid, n=SIDS.indexOf(s)+1;
+        t.r[s].forEach(function(q,i){ var r=el(on?'div':'button','tz-r'+(on?' on':'')); r.style.cssText='left:'+q[0]+'%;top:'+q[1]+'%;width:'+q[2]+'%;height:'+q[3]+'%';
+          r.dataset.c=(n-1)%5; if(!on){ r.type='button'; r.setAttribute('aria-label','עבור לסוגיה '+n); r.tabIndex=i?-1:0; r.onclick=function(){ go(s); }; }
+          pg.appendChild(r);
+          if(!i){ var b=el('span','tz-n'+(on?' on':''),String(n)); b.dataset.c=(n-1)%5; b.style.cssText='left:'+(q[0]+q[2])+'%;top:'+q[1]+'%'; pg.appendChild(b); } }); });
+      img.onload=place; img.src='/'+t.img; if(img.complete) place(); }
+    function go(s){ close(); var t=document.getElementById(key+'-'+s); if(t){ t.scrollIntoView({behavior:'smooth',block:'start'}); history.replaceState(null,'','#'+t.id); } }
+    show(am); x.focus();
+  }
+  document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.tz-btn'); if(!b||!art.contains(b)) return; open(b.dataset.tz,(b.dataset.am||'a').split(' ')[0]); });
+})();
