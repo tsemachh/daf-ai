@@ -1430,16 +1430,16 @@ document.addEventListener('click',function(e){
     var last=document.activeElement, bg=el('div','srcdlg-bg tz-bg'), d=el('div','srcdlg tz-dlg');
     d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','צורת הדף');
     var h=el('header'), h4=el('h4'), tools=el('span','tz-tools'), zb=el('button','tz-z'), x=el('button','x','×');
-    zb.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(zb,x); h.append(h4,tools);
-    var tabs=el('div','stg-tabs tz-tabs'); tabs.setAttribute('role','tablist');
+    var tabs=el('span','tz-tabs'); tabs.setAttribute('role','tablist');
+    zb.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(zb,x); h.append(h4,tabs,tools);
     var view=el('div','tz-view'), pg=el('div','tz-pg'), img=el('img'); img.alt='צורת הדף'; img.decoding='async'; pg.appendChild(img); view.appendChild(pg);
-    var f=el('footer'), sp=el('span'), hint=el('span','tz-hint',Object.keys(TZ).length>1&&'ontouchstart' in window?'החלק ימינה/שמאלה להחלפת עמוד · הקש על סוגיה כדי לעבור אליה':'הקש על סוגיה אחרת בדף כדי לעבור אליה'); f.append(hint,sp);
-    d.append(h,tabs,view,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
+    var f=el('footer'), sp=el('span'), hint=el('span','tz-hint',Object.keys(TZ).length>1&&'ontouchstart' in window?' · החלק להחלפת עמוד · הקש על סוגיה למעבר':' · הקש על סוגיה אחרת למעבר אליה'); f.append(sp,hint);
+    d.append(h,view,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var zoom=true, cur=am;
     function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
     function esc(e){ if(e.key==='Escape') close(); }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',esc);
-    Object.keys(TZ).sort().forEach(function(a){ var t=el('button','st-tog',a==='a'?'עמוד א':'עמוד ב'); t.type='button'; t.dataset.am=a;
+    Object.keys(TZ).sort().forEach(function(a){ var t=el('button','st-tog',a==='a'?'ע״א':'ע״ב'); t.setAttribute('role','tab'); t.type='button'; t.dataset.am=a;
       if(TZ[a].r[sid]) t.classList.add('has'); t.onclick=function(){ show(a); }; tabs.appendChild(t); });
     function bbox(a){ var r=TZ[a].r[sid]; if(!r) return null; var x0=1e9,y0=1e9,x1=0,y1=0; r.forEach(function(q){ x0=Math.min(x0,q[0]); y0=Math.min(y0,q[1]); x1=Math.max(x1,q[0]+q[2]); y1=Math.max(y1,q[1]+q[3]); }); return [x0,y0,x1,y1]; }
     function place(){ var b=bbox(cur), z=zoom&&b?Math.min(3.4,Math.max(1,82/(b[2]-b[0]))):1;
@@ -1449,7 +1449,7 @@ document.addEventListener('click',function(e){
         view.scrollLeft=Math.max(0,(b[0]+b[2])/200*W-view.clientWidth/2); view.scrollTop=Math.max(0,b[1]/100*H-24); }); }
     zb.onclick=function(){ zoom=!zoom; place(); };
     function show(a){ cur=a; var t=TZ[a]; [].forEach.call(tabs.children,function(c){ c.setAttribute('aria-pressed',c.dataset.am===a); });
-      var dn=+art.dataset.daf; h4.textContent='צורת הדף · '+heb(dn)+(a==='a'?'.':':');
+      var dn=+art.dataset.daf; h4.textContent='צורת הדף · '+heb(dn);
       sp.textContent=t.src||''; pg.querySelectorAll('.tz-r,.tz-n').forEach(function(n){ n.remove(); });
       img.width=t.w; img.height=t.h; pg.style.aspectRatio=t.w+'/'+t.h;
       Object.keys(t.r).forEach(function(s){ var on=s===sid, n=SIDS.indexOf(s)+1;

@@ -29,7 +29,7 @@ clusters = []
 for (sid, _), ws in rows.items():   # split a row on wide gaps (a neighbouring column); keep only pieces holding a matched word
     ws = sorted(ws, key=lambda w: w["x"]); cur = [ws[0]]
     for w in ws[1:]:
-        if w["x"] - max(v["x"] + v["w"] for v in cur) > 70: clusters.append((sid, cur)); cur = [w]
+        if w["x"] - max(v["x"] + v["w"] for v in cur) > 40: clusters.append((sid, cur)); cur = [w]
         else: cur.append(w)
     clusters.append((sid, cur))
 for sid, ws in sorted(clusters, key=lambda kv: (min(w["y"] for w in kv[1]), -max(w["x"] for w in kv[1]))):
