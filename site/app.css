@@ -1148,3 +1148,4 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .sl-th{display:block;text-decoration:none;color:inherit}
 .sl-th img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 .sl-th span{display:block;margin-top:6px;font-weight:700;font-size:15px}
+.sl-nav{direction:ltr;unicode-bidi:isolate}
