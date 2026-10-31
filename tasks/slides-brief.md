@@ -16,3 +16,5 @@ Imagery (Tsemach, 2026-10-30): diagrams, arrows, icons and text only.
 
 Review every slide before publishing (tools/slides_publish.py --drop): wrong attribution, garbled text,
 or any imagery above → fix in NotebookLM's per-slide edit, or drop.
+
+- Faint background figures (Vitruvian man, anatomy sketches) in an otherwise good slide: remove the background, keep the slide (Tsemach, 2026-10-31). Unclothed figures in the foreground: clothe them or drop the slide.
