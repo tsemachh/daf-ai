@@ -957,5 +957,40 @@
     "לָא, רַבִּי אֱלִיעֶזֶר"
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-17-01-76dce5.webp"
+   ],
+   "s1": [
+    "sl-bechorot-17-02-c2366a.webp",
+    "sl-bechorot-17-03-c03a5a.webp"
+   ],
+   "s2": [
+    "sl-bechorot-17-04-b65d72.webp",
+    "sl-bechorot-17-05-fe8ff7.webp"
+   ],
+   "s3": [
+    "sl-bechorot-17-06-39f448.webp"
+   ],
+   "s4": [
+    "sl-bechorot-17-07-1ced87.webp"
+   ],
+   "s5": [
+    "sl-bechorot-17-08-b635fa.webp",
+    "sl-bechorot-17-09-512a4b.webp"
+   ],
+   "s6": [
+    "sl-bechorot-17-10-53168e.webp",
+    "sl-bechorot-17-11-8edf99.webp"
+   ],
+   "end": [
+    "sl-bechorot-17-12-2ee426.webp"
+   ]
+  }
  }
 }

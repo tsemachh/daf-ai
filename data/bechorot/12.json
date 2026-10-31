@@ -1267,5 +1267,48 @@
     "אִי הָכִי, ״מִכָּאן וְאֵילָךְ אוֹ פּוֹדֵהוּ אוֹ עוֹבֵר עָלָיו״ מִיבְּעֵי לֵיהּ! אֶלָּא אָמַר רָבָא: לָא קַשְׁיָא, הָא רַבִּי אֱלִיעֶזֶר דְּמַקֵּשׁי, הָא רַבָּנַן דְּלָא מַקְּשִׁי."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-12-01-516c80.webp"
+   ],
+   "s1": [
+    "sl-bechorot-12-02-0fefeb.webp"
+   ],
+   "s2": [
+    "sl-bechorot-12-03-442d87.webp"
+   ],
+   "s3": [
+    "sl-bechorot-12-04-87d213.webp"
+   ],
+   "s4": [
+    "sl-bechorot-12-05-79a090.webp"
+   ],
+   "s5": [
+    "sl-bechorot-12-06-b3c882.webp"
+   ],
+   "s6": [
+    "sl-bechorot-12-07-674489.webp"
+   ],
+   "s7": [
+    "sl-bechorot-12-08-0cc251.webp"
+   ],
+   "s8": [
+    "sl-bechorot-12-09-46a383.webp"
+   ],
+   "s9": [
+    "sl-bechorot-12-10-87a6e8.webp"
+   ],
+   "s10": [
+    "sl-bechorot-12-11-ab3fd5.webp"
+   ],
+   "end": [
+    "sl-bechorot-12-12-139d8e.webp"
+   ]
+  }
  }
 }

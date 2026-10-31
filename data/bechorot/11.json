@@ -730,5 +730,42 @@
     "סָלְקָא דַעְתָּךְ אָמֵינָא, כֹּל כַּמָּה דְּלָא מְטָא לִידֵיהּ לָא זְכָה בֵּיהּ, קָא מַשְׁמַע לַן דְּמֵעִידָּנָא דְּאַפְרְשֵׁיהּ, בִּרְשׁוּתֵיהּ דְּכֹהֵן קָאֵי."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-11-01-b6868b.webp"
+   ],
+   "s1": [
+    "sl-bechorot-11-02-017396.webp"
+   ],
+   "s2": [
+    "sl-bechorot-11-03-f4984b.webp"
+   ],
+   "s3": [
+    "sl-bechorot-11-04-4b3084.webp"
+   ],
+   "s4": [
+    "sl-bechorot-11-05-cb74be.webp"
+   ],
+   "s5": [
+    "sl-bechorot-11-06-edf975.webp"
+   ],
+   "s6": [
+    "sl-bechorot-11-07-e2e4da.webp"
+   ],
+   "s7": [
+    "sl-bechorot-11-08-ce3ad9.webp"
+   ],
+   "s8": [
+    "sl-bechorot-11-09-092229.webp"
+   ],
+   "end": [
+    "sl-bechorot-11-10-e71da9.webp"
+   ]
+  }
  }
 }
