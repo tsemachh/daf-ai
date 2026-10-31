@@ -1171,36 +1171,34 @@
   "w": 1376,
   "h": 768,
   "g": {
-   "intro": [
-    "sl-bechorot-44-01.webp"
-   ],
+   "intro": [],
    "s1": [
-    "sl-bechorot-44-02.webp"
+    "sl-bechorot-44-a02-33d139.webp",
+    "sl-bechorot-44-a03-4d2865.webp"
    ],
    "s2": [
-    "sl-bechorot-44-03.webp"
+    "sl-bechorot-44-a04-e0b4df.webp"
    ],
    "s3": [
+    "sl-bechorot-44-a05-e23898.webp",
     "sl-bechorot-44-04-4683d4.webp"
    ],
    "s4": [
-    "sl-bechorot-44-05.webp"
+    "sl-bechorot-44-a06-39ba33.webp"
    ],
    "s5": [
-    "sl-bechorot-44-06.webp"
+    "sl-bechorot-44-a07-ff5cbf.webp"
    ],
    "s6": [
-    "sl-bechorot-44-07.webp"
+    "sl-bechorot-44-a08-1a00e1.webp"
    ],
    "s7": [
-    "sl-bechorot-44-08.webp"
+    "sl-bechorot-44-a09-035fda.webp"
    ],
    "s8": [
-    "sl-bechorot-44-09.webp"
+    "sl-bechorot-44-a10-7d754a.webp"
    ],
-   "end": [
-    "sl-bechorot-44-10.webp"
-   ]
+   "end": []
   }
  }
 }
