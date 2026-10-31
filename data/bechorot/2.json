@@ -906,5 +906,38 @@
     "וַחֲכָמִים אוֹמְרִים: כׇּל זְמַן שֶׁיַּד הַגּוֹי בָּאֶמְצַע — פְּטוּרָה מִן הַבְּכוֹרָה."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-2-01-759fea.webp"
+   ],
+   "s1": [
+    "sl-bechorot-2-02-0be6d6.webp"
+   ],
+   "s2": [
+    "sl-bechorot-2-03-6e6405.webp"
+   ],
+   "s3": [
+    "sl-bechorot-2-04-1cc6c3.webp",
+    "sl-bechorot-2-05-0a8b00.webp"
+   ],
+   "s4": [
+    "sl-bechorot-2-06-f33bd9.webp"
+   ],
+   "s5": [
+    "sl-bechorot-2-07-204eb6.webp",
+    "sl-bechorot-2-08-7f7565.webp"
+   ],
+   "s6": [
+    "sl-bechorot-2-10-19fcca.webp"
+   ],
+   "end": [
+    "sl-bechorot-2-11-bcd0ea.webp"
+   ]
+  }
  }
 }

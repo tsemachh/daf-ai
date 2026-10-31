@@ -1231,5 +1231,48 @@
     "לְעִנְיַן בְּכוֹרָה, כְּתִיב: ״אַךְ בְּכוֹר שׁוֹר״, עַד שֶׁיְּהֵא הוּא שׁוֹר וּבְכוֹרוֹ שׁוֹר. אֲבָל לַאֲכִילָה, גָּמָל הוּא דְּאָמַר רַחֲמָנָא דַּאֲסִיר, הָא"
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-6-01-6c0ca7.webp"
+   ],
+   "s1": [
+    "sl-bechorot-6-02-9ac35a.webp"
+   ],
+   "s2": [
+    "sl-bechorot-6-03-2849bf.webp"
+   ],
+   "s3": [
+    "sl-bechorot-6-04-f66732.webp"
+   ],
+   "s4": [
+    "sl-bechorot-6-05-37eaef.webp"
+   ],
+   "s5": [
+    "sl-bechorot-6-06-0258bc.webp"
+   ],
+   "s6": [
+    "sl-bechorot-6-07-fefdbd.webp"
+   ],
+   "s7": [
+    "sl-bechorot-6-08-ed4bca.webp"
+   ],
+   "s8": [
+    "sl-bechorot-6-09-bfaeb6.webp"
+   ],
+   "s9": [
+    "sl-bechorot-6-10-77235e.webp"
+   ],
+   "s10": [
+    "sl-bechorot-6-11-60259d.webp"
+   ],
+   "end": [
+    "sl-bechorot-6-12-14cfc4.webp"
+   ]
+  }
  }
 }

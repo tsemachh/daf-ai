@@ -1046,5 +1046,43 @@
     "מַתְנִי׳ כֹּהֲנִים וּלְוִיִּם פְּטוּרִין, מִקַּל וָחוֹמֶר: אִם פָּטְרוּ אֶת שֶׁל יִשְׂרָאֵל בַּמִּדְבָּר, דִּין הוּא שֶׁיִּפְטְרוּ אֶת שֶׁל עַצְמָן."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-3-01-86c8be.webp"
+   ],
+   "s1": [
+    "sl-bechorot-3-02-5d2ad0.webp"
+   ],
+   "s2": [
+    "sl-bechorot-3-03-1f84d0.webp"
+   ],
+   "s3": [
+    "sl-bechorot-3-04-bdffdd.webp"
+   ],
+   "s4": [
+    "sl-bechorot-3-05-a78837.webp"
+   ],
+   "s5": [
+    "sl-bechorot-3-06-262a19.webp"
+   ],
+   "s6": [
+    "sl-bechorot-3-07-83bd71.webp"
+   ],
+   "s7": [
+    "sl-bechorot-3-08-134f62.webp"
+   ],
+   "s8": [
+    "sl-bechorot-3-09-4fbb0a.webp"
+   ],
+   "s9": [
+    "sl-bechorot-3-10-9d006a.webp"
+   ],
+   "end": []
+  }
  }
 }

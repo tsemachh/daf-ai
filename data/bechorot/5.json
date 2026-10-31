@@ -1241,5 +1241,46 @@
     "וַעֲדַיִין אֲנִי אוֹמֵר: פִּטְרֵי חֲמוֹר בְּשֶׂה, פִּטְרֵי סוּסִים וּגְמַלִּים בְּכׇל דָּבָר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [],
+   "s1": [
+    "sl-bechorot-5-02-1f969b.webp"
+   ],
+   "s2": [
+    "sl-bechorot-5-03-dfb485.webp"
+   ],
+   "s3": [
+    "sl-bechorot-5-04-f4165d.webp"
+   ],
+   "s4": [
+    "sl-bechorot-5-05-61d723.webp"
+   ],
+   "s5": [
+    "sl-bechorot-5-06-644354.webp"
+   ],
+   "s6": [
+    "sl-bechorot-5-07-66c898.webp"
+   ],
+   "s7": [
+    "sl-bechorot-5-08-9d8319.webp"
+   ],
+   "s8": [
+    "sl-bechorot-5-09-42668f.webp"
+   ],
+   "s9": [
+    "sl-bechorot-5-10-ef6355.webp"
+   ],
+   "s10": [
+    "sl-bechorot-5-11-1b32c0.webp"
+   ],
+   "end": [
+    "sl-bechorot-5-12-07bbaa.webp"
+   ]
+  }
  }
 }

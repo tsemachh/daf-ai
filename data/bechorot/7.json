@@ -1107,5 +1107,52 @@
     "שְׁמַע מִינַּהּ, לַאֲכִילָה נָמֵי בָּעֵי רַבִּי שִׁמְעוֹן רֹאשׁוֹ וְרוּבּוֹ, שְׁמַע מִינַּהּ."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-7-01-deb9a9.webp"
+   ],
+   "s1": [
+    "sl-bechorot-7-02-c96136.webp"
+   ],
+   "s2": [
+    "sl-bechorot-7-03-dec72b.webp"
+   ],
+   "s3": [
+    "sl-bechorot-7-04-d5d698.webp"
+   ],
+   "s4": [
+    "sl-bechorot-7-05-f4080d.webp"
+   ],
+   "s5": [
+    "sl-bechorot-7-06-9fd564.webp"
+   ],
+   "s6": [
+    "sl-bechorot-7-07-3f99c2.webp"
+   ],
+   "s7": [
+    "sl-bechorot-7-08-e53c21.webp"
+   ],
+   "s8": [
+    "sl-bechorot-7-09-c5ac4e.webp"
+   ],
+   "s9": [
+    "sl-bechorot-7-10-c25dc0.webp"
+   ],
+   "s10": [
+    "sl-bechorot-7-11-5c1869.webp"
+   ],
+   "s11": [
+    "sl-bechorot-7-12-4ef4ea.webp"
+   ],
+   "s12": [
+    "sl-bechorot-7-13-b47f56.webp"
+   ],
+   "end": []
+  }
  }
 }
