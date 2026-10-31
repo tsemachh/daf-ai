@@ -18,3 +18,5 @@ Review every slide before publishing (tools/slides_publish.py --drop): wrong att
 or any imagery above → fix in NotebookLM's per-slide edit, or drop.
 
 - Faint background figures (Vitruvian man, anatomy sketches) in an otherwise good slide: remove the background, keep the slide (Tsemach, 2026-10-31). Unclothed figures in the foreground: clothe them or drop the slide.
+- Sages may be drawn (modest, respectful) — draw them as rabbis: tallit/kippah or turban-style head covering, beard, scholarly dress; not as shepherds or generic figures (Tsemach, 2026-10-31).
+- Arrow direction in generated images is not critical; RTL arrows can be added in the HTML viewer if needed.
