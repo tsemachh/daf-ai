@@ -18,8 +18,10 @@ files = {}
 for n, f in enumerate(imgs, 1):
     if n in drop:
         continue
-    name = f"sl-{slug}-{daf}-{n:02d}.webp"
-    Image.open(f).convert("RGB").save(os.path.join(ROOT, "site", "static", name), quality=76, method=6)
+    import hashlib, io
+    buf = io.BytesIO(); Image.open(f).convert("RGB").save(buf, "WEBP", quality=76, method=6)
+    name = f"sl-{slug}-{daf}-{n:02d}-{hashlib.sha1(buf.getvalue()).hexdigest()[:6]}.webp"   # content hash: images are cached by the browser and the service worker
+    open(os.path.join(ROOT, "site", "static", name), "wb").write(buf.getvalue())
     files[n] = name
 groups = {}
 for part in mp.split():
