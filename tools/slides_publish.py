@@ -12,7 +12,7 @@ if "--drop" in sys.argv:
 tmp = tempfile.mkdtemp()
 subprocess.run(["pdfimages", "-png", pdf, os.path.join(tmp, "i")], check=True)
 imgs = [f for f in sorted(glob.glob(os.path.join(tmp, "i-*.png"))) if Image.open(f).mode != "L" and Image.open(f).width > 600]
-for old in glob.glob(os.path.join(ROOT, "site", "static", f"sl-{slug}-{daf}-*.webp")):
+for old in glob.glob(os.path.join(ROOT, "site", "static", f"sl-{slug}-{daf}-*.webp")):  # NOTE: a patched slide must get a new file name (…v2) — images are browser-cached for a week
     os.remove(old)
 files = {}
 for n, f in enumerate(imgs, 1):
