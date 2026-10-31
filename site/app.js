@@ -1496,9 +1496,9 @@ document.addEventListener('click',function(e){
     var prev=el('button','sl-nav sl-prev','›'), next=el('button','sl-nav sl-next','‹'); prev.type=next.type='button'; prev.setAttribute('aria-label','השקף הקודם'); next.setAttribute('aria-label','השקף הבא'); view.append(prev,next);
     var dots=el('div','sl-dots'), f=el('footer'), cap=el('span'); f.append(cap); d.append(h,view,dots,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var all=false, list, i=0;
-    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb); if(last&&last.focus) last.focus(); }
-    function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft') go(i+1); else if(e.key==='ArrowRight') go(i-1); }
-    x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb);
+    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
+    function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft'){ e.preventDefault(); e.stopImmediatePropagation(); go(i+1); } else if(e.key==='ArrowRight'){ e.preventDefault(); e.stopImmediatePropagation(); go(i-1); } }
+    x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb,true);
     function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; dots.innerHTML='';
       list.forEach(function(_,j){ var b=el('button','sl-dot'); b.type='button'; b.setAttribute('aria-label','שקף '+(j+1)); b.onclick=function(){ go(j); }; dots.appendChild(b); }); }
     function go(j){ if(j<0||j>=list.length) return; i=j; var f2=list[i]; img.src='/'+f2; h4.textContent=title(AT[f2]);

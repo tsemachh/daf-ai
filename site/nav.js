@@ -88,7 +88,8 @@
 
   /* ←/→ on a daf page (RTL: ← is forward); never while typing or with a modifier */
   if(cur.d) document.addEventListener('keydown',function(e){
-    if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||(dlg&&!dlg.hidden)) return;
+    if(e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||(dlg&&!dlg.hidden)) return;
+    if(document.querySelector('[role=dialog][aria-modal=true], .srcdlg-bg')) return;   /* a dialog (slides, צורת הדף, sources) owns the arrows */
     var t=e.target, tag=t&&t.tagName; if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable)) return;
     var a=e.key==='ArrowLeft'?bar.querySelector('a.dn-next'):e.key==='ArrowRight'?bar.querySelector('a.dn-prev'):null;
     if(a){ e.preventDefault(); location.href=a.href; }
