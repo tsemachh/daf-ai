@@ -1084,5 +1084,46 @@
    "<span>9 סוגיות</span>",
    "<span>8 שאלות חזרה</span>"
   ]
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-25-01-9b6d73.webp"
+   ],
+   "s1": [
+    "sl-bechorot-25-02-516383.webp"
+   ],
+   "s2": [
+    "sl-bechorot-25-03-21fc38.webp"
+   ],
+   "s3": [
+    "sl-bechorot-25-04-5cdf1c.webp"
+   ],
+   "s4": [
+    "sl-bechorot-25-05-244752.webp"
+   ],
+   "s5": [
+    "sl-bechorot-25-06-62e46c.webp"
+   ],
+   "s6": [
+    "sl-bechorot-25-07-347282.webp"
+   ],
+   "s7": [
+    "sl-bechorot-25-08-a1aa9b.webp"
+   ],
+   "s8": [
+    "sl-bechorot-25-09-e20821.webp",
+    "sl-bechorot-25-10-bf6acf.webp"
+   ],
+   "s9": [
+    "sl-bechorot-25-11-e6e902.webp"
+   ],
+   "end": [
+    "sl-bechorot-25-12-ef727a.webp"
+   ]
+  }
  }
 }
