@@ -601,5 +601,29 @@
     "אֲמַר לֵיהּ: אִם טוּמְאָה עוֹרֶרֶת טוּמְאָה, טׇהֳרָה עוֹרֶרֶת טוּמְאָה?"
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-22-01-d2e57f.webp"
+   ],
+   "s1": [
+    "sl-bechorot-22-02-c5c029.webp"
+   ],
+   "s2": [
+    "sl-bechorot-22-03-9578aa.webp",
+    "sl-bechorot-22-04-6c2f4f.webp"
+   ],
+   "s3": [
+    "sl-bechorot-22-05-8b688d.webp",
+    "sl-bechorot-22-06-04d0cb.webp"
+   ],
+   "end": [
+    "sl-bechorot-22-07-b51355.webp"
+   ]
+  }
  }
 }
