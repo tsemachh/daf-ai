@@ -1284,7 +1284,7 @@ document.addEventListener('click',function(e){
         var f=document.createElement('div'); f.className='stg-f'; f.dataset.stg=i; f.textContent='✓ '+st.a;
         mine[mine.length-1].after(f);
         function set(open){ h.classList.toggle('open',open); h.setAttribute('aria-expanded',open); mine.forEach(function(li){li.classList.toggle('stg-hid',!open)}); f.classList.toggle('stg-hid',!open); }
-        h.addEventListener('click',function(e){ e.stopPropagation(); set(!h.classList.contains('open')); });
+        h.addEventListener('click',function(e){ e.stopPropagation(); if(e.target.closest&&e.target.closest('.stg-tools,button')) return; set(!h.classList.contains('open')); });
         h.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault(); h.click();} });
         set(true); heads.push({h:h,set:set});
       });
@@ -1391,7 +1391,8 @@ document.addEventListener('click',function(e){
   var N='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.2 3.6c-.5.4-1.3.1-1.3-.6V16A2.5 2.5 0 0 1 4 13.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
   var BK='<svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.2c2-.9 4-.9 6 .4v9.6c-2-1.3-4-1.3-6-.4z"/><path d="M14 3.2c-2-.9-4-.9-6 .4v9.6c2-1.3 4-1.3 6-.4z"/></svg>';
   function btn(cls,icon,label,fn){ var b=document.createElement('button'); b.type='button'; b.className=cls; b.innerHTML=icon; b.setAttribute('aria-label',label); b.title=label;
-    b.addEventListener('click',function(e){e.stopPropagation(); fn();}); return b; }
+    b.addEventListener('click',function(e){e.preventDefault(); e.stopPropagation(); fn();});
+    ['pointerdown','touchstart','mousedown'].forEach(function(t){ b.addEventListener(t,function(e){e.stopPropagation();},{passive:true}); }); return b; }
   function sidOf(sec){ return sec.id.slice(pre.length); }
   function titleOf(sec){ return ((sec.querySelector('h3')||{}).textContent||'').trim(); }
   function add(withAsk){
@@ -1436,7 +1437,7 @@ document.addEventListener('click',function(e){
     var f=el('footer'), sp=el('span'), hint=el('span','tz-hint',Object.keys(TZ).length>1&&'ontouchstart' in window?' · החלק להחלפת עמוד · הקש על סוגיה למעבר':' · הקש על סוגיה אחרת למעבר אליה'); f.append(sp,hint);
     d.append(h,view,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var zoom=true, cur=am;
-    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
+    function close(){ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
     function esc(e){ if(e.key==='Escape') close(); }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',esc);
     Object.keys(TZ).sort().forEach(function(a){ var t=el('button','st-tog',a==='a'?'ע״א':'ע״ב'); t.setAttribute('role','tab'); t.type='button'; t.dataset.am=a;
@@ -1496,7 +1497,7 @@ document.addEventListener('click',function(e){
     var prev=el('button','sl-nav sl-prev','›'), next=el('button','sl-nav sl-next','‹'); prev.type=next.type='button'; prev.setAttribute('aria-label','השקף הקודם'); next.setAttribute('aria-label','השקף הבא'); view.append(prev,next);
     var dots=el('div','sl-dots'), f=el('footer'), cap=el('span'); f.append(cap); d.append(h,view,dots,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var all=false, list, i=0;
-    function close(){ bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
+    function close(){ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
     function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft'){ e.preventDefault(); e.stopImmediatePropagation(); go(i+1); } else if(e.key==='ArrowRight'){ e.preventDefault(); e.stopImmediatePropagation(); go(i-1); } }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb,true);
     function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; dots.innerHTML='';
@@ -1508,8 +1509,39 @@ document.addEventListener('click',function(e){
     ab.onclick=function(){ var cur=list[i]; all=!all; setList(); var k=list.indexOf(cur); go(k<0?0:k); };
     prev.onclick=function(){ go(i-1); }; next.onclick=function(){ go(i+1); };
     /* RTL deck: swipe right → next slide */
-    var t0=null; view.addEventListener('touchstart',function(e){ if(e.touches.length===1) t0={x:e.touches[0].clientX,y:e.touches[0].clientY}; },{passive:true});
-    view.addEventListener('touchend',function(e){ if(!t0) return; var t=e.changedTouches[0], dx=t.clientX-t0.x, dy=t.clientY-t0.y; t0=null; if(Math.abs(dx)<50||Math.abs(dx)<1.5*Math.abs(dy)) return; go(dx>0?i+1:i-1); });
+    /* zoom: pinch, double-tap (or double-click) to zoom in/out, drag to pan while zoomed; swipe changes slide only at 1x */
+    var Z={s:1,x:0,y:0}, pinch=null, pan=null, t0=null, lastTap=0;
+    function clampZ(){ var r=view.getBoundingClientRect(), mx=r.width*(Z.s-1)/2, my=r.height*(Z.s-1)/2; Z.x=Math.max(-mx,Math.min(mx,Z.x)); Z.y=Math.max(-my,Math.min(my,Z.y)); }
+    function applyZ(){ if(Z.s<=1.01){ Z.s=1; Z.x=0; Z.y=0; } clampZ(); img.style.transform=Z.s===1?'':'translate('+Z.x+'px,'+Z.y+'px) scale('+Z.s+')'; view.classList.toggle('zoomed',Z.s>1); }
+    function resetZ(){ Z={s:1,x:0,y:0}; applyZ(); }
+    function zoomAt(cx,cy,s){ var r=view.getBoundingClientRect(), ox=cx-(r.left+r.width/2), oy=cy-(r.top+r.height/2), k=s/Z.s; Z.x=ox-(ox-Z.x)*k; Z.y=oy-(oy-Z.y)*k; Z.s=s; applyZ(); }
+    function dist(t){ return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY); }
+    view.addEventListener('touchstart',function(e){
+      if(e.touches.length===2){ t0=null; pan=null; pinch={d:dist(e.touches),s:Z.s,cx:(e.touches[0].clientX+e.touches[1].clientX)/2,cy:(e.touches[0].clientY+e.touches[1].clientY)/2}; e.preventDefault(); return; }
+      if(e.touches.length===1){ var t=e.touches[0]; if(Z.s>1){ pan={x:t.clientX,y:t.clientY,zx:Z.x,zy:Z.y}; e.preventDefault(); } else t0={x:t.clientX,y:t.clientY}; }
+    },{passive:false});
+    view.addEventListener('touchmove',function(e){
+      if(pinch&&e.touches.length===2){ e.preventDefault(); zoomAt(pinch.cx,pinch.cy,Math.max(1,Math.min(4,pinch.s*dist(e.touches)/pinch.d))); return; }
+      if(pan&&e.touches.length===1){ e.preventDefault(); Z.x=pan.zx+e.touches[0].clientX-pan.x; Z.y=pan.zy+e.touches[0].clientY-pan.y; applyZ(); }
+    },{passive:false});
+    view.addEventListener('touchend',function(e){
+      if(pinch){ if(e.touches.length<2) pinch=null; return; }
+      if(pan){ pan=null; return; }
+      if(!t0) return; var t=e.changedTouches[0], dx=t.clientX-t0.x, dy=t.clientY-t0.y; t0=null;
+      if(Math.abs(dx)<10&&Math.abs(dy)<10){ var now=Date.now(); if(now-lastTap<320&&!e.target.closest('.sl-nav')){ lastTap=0; if(Z.s>1) resetZ(); else zoomAt(t.clientX,t.clientY,2.5); e.preventDefault(); } else lastTap=now; return; }
+      if(Math.abs(dx)<50||Math.abs(dx)<1.5*Math.abs(dy)) return; go(dx>0?i+1:i-1);
+    });
+    img.addEventListener('dblclick',function(e){ if(Z.s>1) resetZ(); else zoomAt(e.clientX,e.clientY,2.5); });
+    var drag=null; img.addEventListener('mousedown',function(e){ if(Z.s>1){ drag={x:e.clientX,y:e.clientY,zx:Z.x,zy:Z.y}; e.preventDefault(); } });
+    window.addEventListener('mousemove',function(e){ if(drag){ Z.x=drag.zx+e.clientX-drag.x; Z.y=drag.zy+e.clientY-drag.y; applyZ(); } });
+    window.addEventListener('mouseup',function(){ drag=null; });
+    /* full screen: the button, or turning the phone sideways (CSS makes the dialog fill the screen in landscape) */
+    var fs=el('button','tz-z sl-fs','⛶'); fs.type='button'; fs.setAttribute('aria-label','מסך מלא'); fs.title='מסך מלא'; tools.insertBefore(fs,x);
+    fs.onclick=function(){ var on=!bg.classList.contains('sl-full'); bg.classList.toggle('sl-full',on); resetZ();
+      try{ if(on&&d.requestFullscreen) d.requestFullscreen().catch(function(){}); else if(!on&&document.fullscreenElement) document.exitFullscreen(); }catch(e){} };
+    document.addEventListener('fullscreenchange',function(){ if(!document.fullscreenElement) bg.classList.remove('sl-full'); });
+    window.addEventListener('orientationchange',resetZ); window.addEventListener('resize',function(){ clampZ(); applyZ(); });
+    var go0=go; go=function(j){ resetZ(); go0(j); };
     setList(); go(0); x.focus();
   }
   /* deep link from the עזרים page: #<daf>-<sugya>-slides opens that sugya's deck */

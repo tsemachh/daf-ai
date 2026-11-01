@@ -1136,7 +1136,10 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .sl-dlg{height:auto;max-height:100%}
 @media (min-width:700px){.sl-dlg{height:auto;max-width:1000px}}
 .sl-bg{align-items:center}
-.sl-view{position:relative;background:#111;display:flex;align-items:center;justify-content:center;touch-action:pan-y}
+.sl-view{position:relative;background:#111;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overflow:hidden}
+.sl-view img{transform-origin:center center;transition:transform .12s ease-out;will-change:transform}
+.sl-view.zoomed{touch-action:none;cursor:grab}
+.sl-view.zoomed .sl-nav{opacity:.25}
 .sl-view img{display:block;width:100%;height:auto;max-height:calc(100vh - 160px);object-fit:contain}
 .sl-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:56px;border:0;border-radius:10px;background:rgba(0,0,0,.35);color:#fff;font-size:30px;line-height:1;cursor:pointer}
 .sl-nav:disabled{opacity:0;pointer-events:none}
@@ -1149,3 +1152,25 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .sl-th img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line)}
 .sl-th span{display:block;margin-top:6px;font-weight:700;font-size:15px}
 .sl-nav{direction:ltr;unicode-bidi:isolate}
+
+/* stage-header tools: bigger tap targets on touch screens, and taps never reach the fold toggle */
+@media (pointer:coarse){.stg-h .stg-tools .stg-t{min-width:40px;min-height:40px}.stg-h .stg-tools{inset-inline-end:46px;top:4px}}
+.stg-h .stg-tools{z-index:2}
+
+/* slides: full screen (button) and automatically when a phone is turned sideways */
+.sl-bg.sl-full,.sl-full .sl-dlg{padding:0}
+.sl-full .sl-dlg,.sl-dlg:fullscreen{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border-radius:0;display:flex;flex-direction:column;background:#111}
+.sl-full .sl-view,.sl-dlg:fullscreen .sl-view{flex:1;min-height:0}
+.sl-full .sl-view img,.sl-dlg:fullscreen .sl-view img{width:100%;height:100%;max-height:none;object-fit:contain}
+.sl-full .sl-dots,.sl-full footer,.sl-dlg:fullscreen .sl-dots,.sl-dlg:fullscreen footer{display:none}
+.sl-full .sl-dlg header,.sl-dlg:fullscreen header{background:#111;color:#fff;padding-block:4px}
+.sl-full .sl-dlg header h4{font-size:14px}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
+  .sl-bg{padding:0}
+  .sl-dlg{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border-radius:0;display:flex;flex-direction:column;background:#111}
+  .sl-dlg header{position:absolute;top:0;inset-inline:0;z-index:3;background:linear-gradient(rgba(0,0,0,.55),transparent);color:#fff;border:0;padding:4px max(10px,env(safe-area-inset-right)) 4px max(10px,env(safe-area-inset-left))}
+  .sl-dlg header h4{font-size:13px;color:#fff}
+  .sl-dlg .sl-view{flex:1;min-height:0}
+  .sl-dlg .sl-view img{width:100%;height:100%;max-height:none;object-fit:contain}
+  .sl-dlg .sl-dots,.sl-dlg footer,.sl-fs{display:none}
+}
