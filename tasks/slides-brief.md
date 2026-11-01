@@ -28,4 +28,9 @@ Invest in verification before publishing. Every slide: zoom each text block and 
 Fix only what is certain. Everything not certain goes to the review page (artifact "Slides review") with links; Tsemach decides; his decisions are recorded below as rules.
 
 ## Rules learned from review decisions
+Tsemach, 2026-11-01. He gives rules, not item-by-item answers. Don't send him per-item questions; apply these.
+- Wrong-way arrow inside the drawing: mirror the arrow in the image yourself (flip just the arrow region). If the slide is too complex to do cleanly, drop the slide.
+- Rabbi who is not a party in the sugya: erase the figure from the image and keep the rest of the slide.
+- Content points (wording vs the Gemara, who said what, a missing qualifier, a wrong icon such as a calf for a lamb or a wheel for an עגלה ערופה): decide by our daf page. If the page is clear, fix the text or icon. If it stays unclear, drop the slide. Don't ask.
+- Small things: fix silently and don't report them. This covers made-up letters on coins or decorations (erase), duplicated items in summary slides (remove), a patched line in a slightly different font, and Gemara quotes without nikud (fine).
 
