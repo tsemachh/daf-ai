@@ -20,3 +20,12 @@ or any imagery above → fix in NotebookLM's per-slide edit, or drop.
 - Faint background figures (Vitruvian man, anatomy sketches) in an otherwise good slide: remove the background, keep the slide (Tsemach, 2026-10-31). Unclothed figures in the foreground: clothe them or drop the slide.
 - Sages may be drawn (modest, respectful) — draw them as rabbis: tallit/kippah or turban-style head covering, beard, scholarly dress; not as shepherds or generic figures (Tsemach, 2026-10-31).
 - Arrow direction in generated images is not critical; RTL arrows can be added in the HTML viewer if needed.
+- (Tsemach, 2026-11-01) Arrow direction DOES matter when it shows an order in time or logic: e.g. ערב יום טוב → לילה → בוקר יום טוב must flow right→left with heads toward the later step. Wrong-way arrows are errors: fix or flag.
+- (Tsemach, 2026-11-01) Draw a rabbi only when that sage is a party in the sugya (named beside the drawing). No generic/decorative rabbis (title slides, 'the learner', 'a person').
+
+## Verification (Tsemach, 2026-11-01)
+Invest in verification before publishing. Every slide: zoom each text block and read word by word (typos, repeated words at line wraps, garbled/gibberish labels), check arrows/timelines, imagery rules, and content vs our page.
+Fix only what is certain. Everything not certain goes to the review page (artifact "Slides review") with links; Tsemach decides; his decisions are recorded below as rules.
+
+## Rules learned from review decisions
+
