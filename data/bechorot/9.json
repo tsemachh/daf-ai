@@ -863,5 +863,37 @@
     "מַאי טַעְמָא? גָּמַר ״עֲרִיפָה״ ״עֲרִיפָה״ מֵעֶגְלָה עֲרוּפָה."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-9-01-272319.webp"
+   ],
+   "s0": [
+    "sl-bechorot-9-02-f0e004.webp"
+   ],
+   "s2": [
+    "sl-bechorot-9-04-cb3388.webp"
+   ],
+   "s3": [
+    "sl-bechorot-9-05-7bf091.webp"
+   ],
+   "s4": [
+    "sl-bechorot-9-06-c89b74.webp"
+   ],
+   "s5": [
+    "sl-bechorot-9-07-cd8753.webp",
+    "sl-bechorot-9-08-207351.webp"
+   ],
+   "s6": [
+    "sl-bechorot-9-09-3bcadc.webp"
+   ],
+   "end": [
+    "sl-bechorot-9-10-ba6872.webp"
+   ]
+  }
  }
 }

@@ -930,5 +930,42 @@
     "פְּשִׁיטָא! מַהוּ דְּתֵימָא כּוּלֵּי הַאי לָא? אִי נָמֵי, פַּטְרוֹזָא לָא? קָא מַשְׁמַע לַן."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-10-01-1b20bd.webp"
+   ],
+   "s1": [
+    "sl-bechorot-10-02-95def4.webp"
+   ],
+   "s2": [
+    "sl-bechorot-10-03-00d54b.webp"
+   ],
+   "s3": [
+    "sl-bechorot-10-04-f9d06f.webp"
+   ],
+   "s4": [
+    "sl-bechorot-10-05-e87d9d.webp"
+   ],
+   "s5": [
+    "sl-bechorot-10-06-ecbc99.webp"
+   ],
+   "s6": [
+    "sl-bechorot-10-07-812189.webp"
+   ],
+   "s7": [
+    "sl-bechorot-10-08-8f1c7d.webp"
+   ],
+   "s8": [
+    "sl-bechorot-10-09-a7b387.webp"
+   ],
+   "end": [
+    "sl-bechorot-10-10-90ad25.webp"
+   ]
+  }
  }
 }

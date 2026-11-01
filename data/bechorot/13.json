@@ -1089,5 +1089,45 @@
     "הַכֹּהֲנִים וְהַלְוִיִּם חַיָּיבִים, שֶׁלֹּא נִפְטְרוּ מִבְּכוֹר בְּהֵמָה טְהוֹרָה, אֶלָּא מִפִּדְיוֹן הַבֵּן וּמִפֶּטֶר חֲמוֹר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-bechorot-13-01-864e42.webp"
+   ],
+   "s2": [
+    "sl-bechorot-13-02-773c80.webp"
+   ],
+   "s3": [
+    "sl-bechorot-13-03-ff5edb.webp"
+   ],
+   "s4": [
+    "sl-bechorot-13-04-035df4.webp"
+   ],
+   "s5": [
+    "sl-bechorot-13-05-a20e6b.webp"
+   ],
+   "s6": [
+    "sl-bechorot-13-06-2fc828.webp"
+   ],
+   "s7": [
+    "sl-bechorot-13-07-424e1d.webp"
+   ],
+   "s8": [
+    "sl-bechorot-13-08-43de39.webp"
+   ],
+   "s9": [
+    "sl-bechorot-13-09-4af4f9.webp"
+   ],
+   "s10": [
+    "sl-bechorot-13-10-d5be65.webp"
+   ],
+   "end": [
+    "sl-bechorot-13-11-8c17b6.webp"
+   ]
+  }
  }
 }

@@ -688,5 +688,39 @@
     "לֵימָא קָסָבַר: מְטַנֶּפֶת אֵינָהּ חוֹזֶרֶת וְיוֹלֶדֶת בְּתוֹךְ שְׁנָתָהּ. אִם תִּימְצֵי לוֹמַר: מְטַנֶּפֶת חוֹזֶרֶת וְיוֹלֶדֶת בְּתוֹךְ שְׁנָתָהּ — יוֹלֶדֶת וַדַּאי אֵינָהּ חוֹזֶרֶת וְיוֹלֶדֶת בְּתוֹךְ שְׁנָתָהּ."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-20-01-5ee0a3.webp"
+   ],
+   "s1": [
+    "sl-bechorot-20-02-6ebe1e.webp"
+   ],
+   "s2": [
+    "sl-bechorot-20-03-7e6731.webp"
+   ],
+   "s3": [
+    "sl-bechorot-20-04-c6ca61.webp",
+    "sl-bechorot-20-05-213410.webp"
+   ],
+   "s4": [
+    "sl-bechorot-20-06-e4f09f.webp"
+   ],
+   "s5": [
+    "sl-bechorot-20-07-fe19d8.webp",
+    "sl-bechorot-20-08-4c6e7e.webp"
+   ],
+   "s6": [
+    "sl-bechorot-20-09-59133a.webp",
+    "sl-bechorot-20-10-3e2611.webp"
+   ],
+   "end": [
+    "sl-bechorot-20-11-fe7ed2.webp"
+   ]
+  }
  }
 }
