@@ -34,3 +34,6 @@ Tsemach, 2026-11-01. He gives rules, not item-by-item answers. Don't send him pe
 - Content points (wording vs the Gemara, who said what, a missing qualifier, a wrong icon such as a calf for a lamb or a wheel for an עגלה ערופה): decide by our daf page. If the page is clear, fix the text or icon. If it stays unclear, drop the slide. Don't ask.
 - Small things: fix silently and don't report them. This covers made-up letters on coins or decorations (erase), duplicated items in summary slides (remove), a patched line in a slightly different font, and Gemara quotes without nikud (fine).
 
+
+## Placement (Tsemach, 2026-11-01)
+Slides are a teacher aid, not part of daily learning: no per-sugya button. One "📊 מצגת הדף" button in the page header opens the whole deck; the עזרים page lists one card per daf under "מצגות למלמדים". Finish Bechorot so the set is complete; don't start other tractates unless asked.

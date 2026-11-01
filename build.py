@@ -473,7 +473,7 @@ def render_fig(figs):
 
 
 AID_KINDS = [("fig", "איורים", "🖼"), ("table", "טבלאות שיטות", "▦"), ("decide", "אם… אז…", "⑂"), ("seq", "סדר האירועים", "⇢"),
-             ("chain", "שרשראות לימוד", "⛓"), ("calc", "חשבונות", "∑"), ("scale", "מידות בקנה מידה", "📏"), ("sl", "מצגות", "🎞"), ("sw", "Simon Wolf", "📊")]
+             ("chain", "שרשראות לימוד", "⛓"), ("calc", "חשבונות", "∑"), ("scale", "מידות בקנה מידה", "📏"), ("sl", "מצגות למלמדים", "🎞"), ("sw", "Simon Wolf", "📊")]
 
 
 def render_aids(alld):
@@ -496,18 +496,14 @@ def render_aids(alld):
                           ("calc", render_calc), ("scale", render_scale)):
                 for t in ([s[k]] if isinstance(s.get(k), dict) else s.get(k) or []):
                     add(k, t.get("title") or s.get("title", ""), fn(t))
-        for sid, files in ((d.get("slides") or {}).get("g") or {}).items():   # NotebookLM decks, one card per sugya
-            if not files or sid in ("intro", "end"):
-                continue
-            s = next((x for x in d["sections"] if x["id"] == sid), None)
-            if not s:
-                continue
-            go = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{sid}-slides'
-            n = len(files)
-            items.append({"k": "sl", "m": d["slug"], "mh": d["tractate_he"], "t": s.get("title", ""),
-                          "h": f'<a class="sl-th" href="{go}"><img src="../{files[0]}" alt="" width="1376" height="768" loading="lazy" decoding="async">'
-                               f'<span>{esc(re.sub("<[^>]+>", "", s.get("title", "")))} · {n} {"שקף" if n == 1 else "שקפים"}</span></a>',
-                          "links": [(go, f'{d["title"]} · {s.get("title", "")}')]})
+        allsl = [f for k in (d.get("slides") or {}).get("g", {}).values() for f in k]   # NotebookLM deck: one card per daf (teacher aid)
+        if allsl:
+            go = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-slides'
+            n = len(allsl)
+            items.append({"k": "sl", "m": d["slug"], "mh": d["tractate_he"], "t": f'מצגת {d["title"]}',
+                          "h": f'<a class="sl-th" href="{go}"><img src="../{allsl[0]}" alt="" width="1376" height="768" loading="lazy" decoding="async">'
+                               f'<span>מצגת {esc(d["title"])} · {n} שקפים</span></a>',
+                          "links": [(go, f'מצגת {d["title"]}')]})
         for c in sw_charts(d["slug"], d["daf"]):
             sec = next((x for x in d["sections"] if x["id"] == c["sec"]), None)
             items.append({"k": "sw", "m": d["slug"], "mh": d["tractate_he"], "t": c["title"],
@@ -714,8 +710,6 @@ def render_section(d, s):
         tz_am = [a for a, t in sorted((d.get("tzurat") or {}).items()) if s["id"] in t.get("r", {})]
         tz = (f'<button class="tz-btn" type="button" data-tz="{s["id"]}" data-am="{" ".join(tz_am)}" title="איפה הסוגיה בצורת הדף (וילנא)">📜 צורת הדף</button>'
               if tz_am else "")   # where this sugya sits on the printed (Vilna) page — on the בקצרה row
-        if (d.get("slides") or {}).get("g", {}).get(s["id"]):   # a NotebookLM slide deck for this sugya
-            tz += f'<button class="sl-btn" type="button" data-sl="{s["id"]}" title="מצגת לסוגיה">📊 מצגת</button>'
         if s.get("flow"):
             fd = f'<details class="flowd"><summary>בקצרה<span class="fl-more"> — על מה הסוגיה</span></summary>{flow_paras(s["flow"])}</details>'
             parts.append(f'  <div class="flow-row">{fd}<span class="row-end">{tz}</span></div>' if tz else "  " + fd)
@@ -821,7 +815,7 @@ def render_daf(d, prev, nxt, glossary, sources):
   {f'<div class="eyebrow">{esc(eyebrow)}</div>' if eyebrow else ''}
   <div class="titlerow"><h1>{esc(d['title'])}</h1><span class="tmeta">{f'<span class="perek">{esc(perek)}</span>' if perek else ''}{f'<span>{mins}</span>' if mins else ''}<a class="src" target="_blank" rel="noopener" href="https://www.sefaria.org/{d['tractate']}.{d['daf']}a?lang=he">ספריא</a></span></div>
   <p class="thesis">{d['thesis']}</p>
-  <div class="meta">{meta}<span class="sec-tools pg-tools"></span></div>
+  <div class="meta">{meta}{'<button class="sl-btn sl-page" type="button" data-sl="*" title="מצגת לדף — למלמדים: תרשימים של כל הסוגיות">📊 מצגת הדף</button>' if d.get("slides") else ""}<span class="sec-tools pg-tools"></span></div>
   <div class="legend"><span class="lg-gem">״לשון הגמרא״</span><span>ביאור</span><span class="lp">חכם</span><span class="lt">מושג</span><span>— הקש על מילה מסומנת או על ציטוט להסבר</span></div>
   <div class="controls">
     <button class="btn btn-ic" data-role="prefs" aria-expanded="false" type="button" aria-label="הגדרות" title="הגדרות">⚙</button>

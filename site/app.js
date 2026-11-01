@@ -1488,7 +1488,7 @@ document.addEventListener('click',function(e){
   var ALL=[], AT={}; ORDER.forEach(function(k){ (SL.g[k]||[]).forEach(function(f){ AT[f]=k; ALL.push(f); }); });
   function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
   function title(k){ if(k==='intro') return 'פתיחה'; if(k==='end') return 'סיכום'; var h=document.querySelector('#'+key+'-'+k+' h3'); return 'סוגיה '+(ORDER.indexOf(k))+(h?': '+h.textContent.replace(/\s*✓.*$/,'').trim():''); }
-  function open(sid){
+  function open(sid,startSid){
     var last=document.activeElement, bg=el('div','srcdlg-bg tz-bg sl-bg'), d=el('div','srcdlg tz-dlg sl-dlg');
     d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','מצגת');
     var h=el('header'), h4=el('h4'), tools=el('span','tz-tools'), ab=el('button','tz-z'), x=el('button','x','×');
@@ -1496,11 +1496,11 @@ document.addEventListener('click',function(e){
     var view=el('div','sl-view'), img=el('img'); img.alt=''; img.width=SL.w; img.height=SL.h; view.appendChild(img);
     var prev=el('button','sl-nav sl-prev','›'), next=el('button','sl-nav sl-next','‹'); prev.type=next.type='button'; prev.setAttribute('aria-label','השקף הקודם'); next.setAttribute('aria-label','השקף הבא'); view.append(prev,next);
     var dots=el('div','sl-dots'), f=el('footer'), cap=el('span'); f.append(cap); d.append(h,view,dots,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
-    var all=false, list, i=0;
+    var all=sid==='*', list, i=0;
     function close(){ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
     function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft'){ e.preventDefault(); e.stopImmediatePropagation(); go(i+1); } else if(e.key==='ArrowRight'){ e.preventDefault(); e.stopImmediatePropagation(); go(i-1); } }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb,true);
-    function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; dots.innerHTML='';
+    function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; ab.hidden=sid==='*'; dots.innerHTML='';
       list.forEach(function(_,j){ var b=el('button','sl-dot'); b.type='button'; b.setAttribute('aria-label','שקף '+(j+1)); b.onclick=function(){ go(j); }; dots.appendChild(b); }); }
     function go(j){ if(j<0||j>=list.length) return; i=j; var f2=list[i]; img.src='/'+f2; h4.textContent=title(AT[f2]);
       [].forEach.call(dots.children,function(b,k){ b.setAttribute('aria-current',k===i); });
@@ -1542,9 +1542,10 @@ document.addEventListener('click',function(e){
     document.addEventListener('fullscreenchange',function(){ if(!document.fullscreenElement) bg.classList.remove('sl-full'); });
     window.addEventListener('orientationchange',resetZ); window.addEventListener('resize',function(){ clampZ(); applyZ(); });
     var go0=go; go=function(j){ resetZ(); go0(j); };
-    setList(); go(0); x.focus();
+    setList(); var st=0; if(startSid&&SL.g[startSid]&&SL.g[startSid][0]){ st=Math.max(0,list.indexOf(SL.g[startSid][0])); } go(st); x.focus();
   }
   /* deep link from the עזרים page: #<daf>-<sugya>-slides opens that sugya's deck */
-  var hm=location.hash.match(/^#(.+)-slides$/); if(hm){ var sid0=hm[1].slice(key.length+1); if(SL.g[sid0]) setTimeout(function(){ var t=document.getElementById(key+'-'+sid0); if(t) t.scrollIntoView({block:'start'}); open(sid0); },300); }
+  /* deep links: #<daf>-slides opens the whole deck; the old #<daf>-<sugya>-slides opens it at that sugya */
+  var hm=location.hash.match(/^#(.+)-slides$/); if(hm){ var sid0=hm[1]===key?null:hm[1].slice(key.length+1); setTimeout(function(){ open('*',sid0); },300); }
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.sl-btn'); if(!b||!art.contains(b)) return; open(b.dataset.sl); });
 })();
