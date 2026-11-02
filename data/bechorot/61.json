@@ -310,5 +310,34 @@
    "text": "הגמרא עם ביאור שטיינזלץ בספריא"
   }
  ],
- "footer": "נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב."
+ "footer": "נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-61-01-0fe945.webp",
+    "sl-bechorot-61-02-68a4e3.webp"
+   ],
+   "s1": [
+    "sl-bechorot-61-03-259364.webp",
+    "sl-bechorot-61-04-20688d.webp",
+    "sl-bechorot-61-05-452bcd.webp"
+   ],
+   "s2": [
+    "sl-bechorot-61-06-4cb35d.webp",
+    "sl-bechorot-61-07-3748ad.webp",
+    "sl-bechorot-61-08-5e7c3f.webp",
+    "sl-bechorot-61-09-4ef168.webp",
+    "sl-bechorot-61-10-0ce04e.webp",
+    "sl-bechorot-61-11-9b5d9a.webp"
+   ],
+   "end": [
+    "sl-bechorot-61-12-34400b.webp",
+    "sl-bechorot-61-13-f823c1.webp",
+    "sl-bechorot-61-14-0a8b81.webp"
+   ]
+  }
+ }
 }

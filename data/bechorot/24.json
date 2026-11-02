@@ -839,5 +839,37 @@
     "מוּתָּר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-bechorot-24-01-13d524.webp"
+   ],
+   "s1": [
+    "sl-bechorot-24-02-506e89.webp",
+    "sl-bechorot-24-03-2b884b.webp"
+   ],
+   "s2": [
+    "sl-bechorot-24-04-4149b2.webp",
+    "sl-bechorot-24-05-5c53fc.webp"
+   ],
+   "s3": [
+    "sl-bechorot-24-06-568927.webp",
+    "sl-bechorot-24-07-b4ecba.webp"
+   ],
+   "s4": [
+    "sl-bechorot-24-08-41e909.webp"
+   ],
+   "s5": [
+    "sl-bechorot-24-09-a63906.webp",
+    "sl-bechorot-24-10-1c637d.webp"
+   ],
+   "end": [
+    "sl-bechorot-24-11-7fce0b.webp"
+   ]
+  }
  }
 }
