@@ -1168,9 +1168,14 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 @media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
   .sl-bg{padding:0}
   .sl-dlg{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border-radius:0;display:flex;flex-direction:column;background:#111}
-  .sl-dlg header{position:absolute;top:0;inset-inline:0;z-index:3;background:linear-gradient(rgba(0,0,0,.55),transparent);color:#fff;border:0;padding:4px max(10px,env(safe-area-inset-right)) 4px max(10px,env(safe-area-inset-left))}
-  .sl-dlg header h4{font-size:13px;color:#fff}
-  .sl-dlg .sl-view{flex:1;min-height:0}
+  /* the header sits in a side column (the black margin a 16:9 slide leaves on a wide phone), never over the slide */
+  .sl-dlg{flex-direction:row}
+  .sl-dlg header{position:static;order:2;flex:0 0 auto;flex-direction:column;justify-content:space-between;align-items:center;gap:8px;background:#111;color:#fff;border:0;
+    padding:max(8px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom)) 6px}
+  .sl-dlg header h4{display:none}
+  .sl-dlg .tz-tools{flex-direction:column}
+  .sl-dlg .tz-tools .tz-z,.sl-dlg .tz-tools .x{color:#fff;border-color:#555}
+  .sl-dlg .sl-view{flex:1;min-height:0;min-width:0;order:1}
   .sl-dlg .sl-view img{width:100%;height:100%;max-height:none;object-fit:contain}
   .sl-dlg .sl-dots,.sl-dlg footer,.sl-fs{display:none}
 }
