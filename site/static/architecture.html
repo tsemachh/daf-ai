@@ -103,13 +103,13 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
   <div class="eyebrow">Architecture notes · October 2026</div>
   <h1>Inside daf-ai</h1>
   <p class="eyebrow"><a href="/">← daf.tsemach.dev</a></p>
-  <p class="lede">How AI agents write interactive Talmud study pages every night, check them against the Gemara, and stay within a token budget — and how the page itself answers learners' questions and draws what is hard to picture. Written by Tsemach Hadad, four weeks and 680 commits in.</p>
+  <p class="lede">How AI agents write interactive Talmud study pages every night, check them against the Gemara, and stay within a token budget — and how the page itself answers learners' questions and draws what is hard to picture. Written by Tsemach Hadad, four weeks and 683 commits in.</p>
   <div class="facts">
     <span><b data-n="pages">205</b> pages · <span data-n="mas">6</span> masechtot</span>
     <span><b data-n="steps">12,986</b> argument steps</span>
     <span><b data-n="gloss">1,157</b> glossary entries</span>
     <span><b data-n="figs">27</b> checked drawings</span>
-    <span><b>661 / 680</b> commits by Claude</span>
+    <span><b>660 / 683</b> commits by Claude</span>
   </div>
   <p><a href="https://daf.tsemach.dev" target="_blank" rel="noopener">daf.tsemach.dev</a> · <a href="https://github.com/tsemachh/daf-ai" target="_blank" rel="noopener">github.com/tsemachh/daf-ai</a></p>
 </header>
@@ -146,10 +146,10 @@ footer{font-size:.9rem;color:var(--muted);display:grid;gap:8px;border-top:1px so
 
 <section>
   <div class="eyebrow">While the learner reads</div>
-  <h2>A question box, grounded in one sugya</h2>
-  <p>Every sugya and every milestone has a ❔. The question goes to a Cloudflare function, which loads that sugya from the site's own JSON — its Gemara text, steps, milestones and summaries — and sends it with the question to <b>Haiku</b>. The instructions are narrow: answer from this material, say so when the answer isn't there, quote the Gemara in ״…״, no halachic rulings. Follow-ups carry the last three turns.</p>
+  <h2>A question box, grounded in the daf</h2>
+  <p>Every sugya and every milestone has a ❔. The question goes to a Cloudflare function, which loads the whole daf from the site's own JSON — every sugya's Gemara text, steps, milestones, tables and summaries, the review questions, and the other half of a sugya that crosses into the neighbouring daf — and sends it with the question, marked with the sugya it was asked on, to <b>Haiku</b>. The page block is prompt-cached, so questions on any sugya of the same daf reuse it. The instructions are narrow: answer about that sugya from this material, say so when the answer isn't there, quote the Gemara in ״…״, no halachic rulings. Follow-ups carry the last three turns.</p>
   <ul class="rules">
-    <li><p><b>Cheap by design.</b> A small model and a few thousand input tokens per question; a site-wide daily cap and a per-person cap. It runs on the monthly API credit that comes with Claude Max.</p></li>
+    <li><p><b>Cheap by design.</b> A small model and a cached page per daf; a site-wide daily cap and a per-person cap. It runs on the monthly API credit that comes with Claude Max.</p></li>
     <li><p><b>Shared, anonymously.</b> Questions and answers are stored without a name and shown to the next learner under ״שאלות קודמות״ on the same sugya; the owner can hide any of them.</p></li>
     <li><p><b>A window into confusion.</b> The log shows where learners get stuck — the best input for the next round of fixes.</p></li>
   </ul>
