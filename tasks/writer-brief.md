@@ -80,6 +80,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    or S (״ממון המוטל בספק״) is written and explained unquoted; a 2-word anchor S leaves unexplained (a bare name
    or place, ״כאילא ביבנה״) is lengthened into the words S does explain. Page references and your own words
    (״בדף כ״ה״, ״כאן״) are never inside ״…״.
+   A quote keeps G's exact prefixes (״דבנה כהן״, not ״בנה כהן״ — else it is not found), and a bare connective
+   (״לאו היינו״) is never the quote that carries a move: say it in words, quote the words with content (reader note, Bechorot 47).
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
