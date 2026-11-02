@@ -893,7 +893,7 @@ def card(d, href):
 
 def render_masechet(slug, dafim):
     first = dafim[0]
-    cards = "\n".join(card(d, f"./{d['daf']}/") for d in sorted(dafim, key=lambda x: -x["daf"]))
+    cards = "\n".join(card(d, f"./{d['daf']}/") for d in sorted(dafim, key=lambda x: x["daf"]))
     body = f"""<div class="wrap" id="app"><section>
 <a class="back" href="../">→ דף הבית</a>
 {navbar(slug, 0, '../')}
@@ -978,6 +978,7 @@ def render_home(by_slug, latest, about):
   <div class="meta"><span class="ai-badge">נוצר ע״י AI</span><span>נבדק בקריאה אנושית</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 {navbar()}
+<p class="home-teach"><a class="back" href="./aids/#sl">🎞 עזרים למלמד — מצגת לכל דף</a></p>
 <div id="progress-home"></div>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
