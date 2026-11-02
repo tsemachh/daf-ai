@@ -1,5 +1,5 @@
-// "שאל על הסוגיה" — a learner's question about one sugya, answered by Claude from that sugya's own material only
-// (its Gemara text, the page's steps and summaries). Env: ANTHROPIC_API_KEY (secret, required),
+// "שאל על הסוגיה" — a learner's question about one sugya, answered by Claude from the whole daf page
+// (every sugya's Gemara text, steps and summaries, plus the half of a sugya that crosses into a neighbouring daf). Env: ANTHROPIC_API_KEY (secret, required),
 // ASK_MODEL (optional, default below), ASK_DAILY_CAP (all users, per day), ASK_USER_CAP (per IP hash, per day).
 // D1 (binding DB) keeps an anonymous log: the question, the answer and token counts — to see what learners ask.
 import { json, clean, sha256 } from "../../_lib.js";
@@ -37,26 +37,58 @@ export async function onRequestGet({ request, env }) {
   return new Response(JSON.stringify(out), { headers: { "content-type": "application/json; charset=utf-8", "cache-control": page ? "public, max-age=60" : "public, max-age=300" } });
 }
 
-function context(d, sid) {
-  const sec = (d.sections || []).find((s) => s.id === sid);
-  if (!sec) return null;
-  const L = [];
-  L.push(`דף: ${d.title}. ${strip(d.thesis)}`);
-  L.push(`סוגיה: ${strip(sec.title)}`);
+// one sugya, written out in full: key, short flow, the Gemara's own words, stages, the step-by-step and the aids
+function sugyaText(d, sec) {
+  const L = [`סוגיה ${sec.id}: ${strip(sec.title)}${sec.amud ? ` (${strip(sec.amud)})` : ""}`];
+  if (sec.cont === "prev") L.push("(הסוגיה מתחילה בדף הקודם)");
+  if (sec.ends_next) L.push("(הסוגיה ממשיכה בדף הבא)");
   if (sec.unlock) L.push(`מפתח לסוגיה: ${strip(typeof sec.unlock === "string" ? sec.unlock : JSON.stringify(sec.unlock))}`);
   if (sec.flow) L.push(`בקצרה: ${strip(sec.flow)}`);
   const src = (d.srctext || {})[sec.ref];
   if (src && src.p) L.push(`לשון הגמרא (${src.t || sec.ref}):\n${src.p.map(strip).join("\n")}`);
-  if (sec.stages) L.push("שלבי הסוגיה:\n" + sec.stages.map((s, i) => `${i + 1}. ${s.q} — ${s.a}`).join("\n"));
-  L.push("מהלך הסוגיה, שלב אחר שלב:\n" + (sec.steps || []).map((st, i) =>
+  if (sec.stages) L.push("שלבי הסוגיה:\n" + sec.stages.map((s, i) => `${i + 1}. ${strip(s.q)} — ${strip(s.a)}`).join("\n"));
+  if (sec.steps) L.push("מהלך הסוגיה, שלב אחר שלב:\n" + sec.steps.map((st, i) =>
     `${i + 1}. [${strip(st.tag)}${st.p != null ? ` · על ${st.p + 1}` : ""}] ${strip(st.body)}`).join("\n"));
+  if (sec.table) L.push(`טבלה — ${strip(sec.table.title)}:\n` + [sec.table.cols, ...(sec.table.rows || [])].map((r) => (r || []).map(strip).join(" | ")).join("\n"));
+  if (sec.seq) L.push(`${strip(sec.seq.title)}:\n` + (sec.seq.items || []).map((x, i) => `${i + 1}. ${strip(x)}`).join("\n"));
   if (sec.post) L.push(`עזרים: ${strip(sec.post).slice(0, 1500)}`);
-  return { text: L.join("\n\n"), title: strip(sec.title), stages: sec.stages || [] };
+  return L.join("\n");
+}
+
+// the whole daf page — every sugya in full, the storyline and the review questions — so a question on one sugya
+// can lean on what came before and after it. Same text for every sugya of the page, so it is prompt-cached.
+function pageText(d, near) {
+  const L = [`דף: ${d.title}. ${strip(d.eyebrow)}`, `תמצית: ${strip(d.thesis)}`];
+  if (d.storyline) L.push(`מהלך הדף: ${strip(d.storyline)}`);
+  if (near.prev) L.push(`<prev_daf note="סוף הסוגיה מהדף הקודם, שממשיכה בדף זה">\n${near.prev}\n</prev_daf>`);
+  for (const sec of d.sections || []) if (sec.kind !== "intro") L.push(`<sugya id="${sec.id}">\n${sugyaText(d, sec)}\n</sugya>`);
+  if (near.next) L.push(`<next_daf note="המשך הסוגיה בדף הבא">\n${near.next}\n</next_daf>`);
+  if (Array.isArray(d.quiz) && d.quiz.length)
+    L.push("שאלות חזרה (עם התשובה הנכונה):\n" + d.quiz.map((x) => `[${x.s}] ${strip(x.q)} → ${strip((x.o || [])[x.a])}`).join("\n"));
+  return L.join("\n\n");
+}
+
+// a sugya that crosses a page boundary: bring its other half from the neighbouring daf
+async function neighbours(env, request, page, d) {
+  const secs = d.sections || [], [slug, n] = page.split("/"), out = {};
+  const load = async (k) => { const r = await env.ASSETS.fetch(new URL(`/feed/v1/${slug}/${k}.json`, request.url)).catch(() => null); return r && r.ok ? r.json() : null; };
+  if (secs.some((s) => s.cont === "prev")) {
+    const p = await load(+n - 1); const s = p && (p.sections || []).filter((x) => x.kind !== "intro").pop();
+    if (s) out.prev = sugyaText(p, s);
+  }
+  const last = secs.filter((x) => x.kind !== "intro").pop();
+  if (last && last.ends_next) {
+    const q = await load(+n + 1); const s = q && (q.sections || []).find((x) => x.cont === "prev");
+    if (s) out.next = sugyaText(q, s);
+  }
+  return out;
 }
 
 const SYSTEM = `אתה עוזר לימוד באתר ״דף צמח״ לחזרה על הדף היומי. לומד שואל שאלה על סוגיה אחת.
 ענה בעברית פשוטה וברורה, קצר (עד 120 מילים, פסקה אחת או שתיים), בלי כותרות ובלי סימוני Markdown.
-הסתמך רק על החומר של הסוגיה שמצורף (לשון הגמרא, מהלך הסוגיה והסיכומים). כשאתה מצטט את הגמרא — בתוך ״…״.
+מצורף כל הדף (כל הסוגיות, לשון הגמרא, מהלכים וסיכומים), ומצוין על איזו סוגיה נשאלה השאלה.
+ענה על הסוגיה הזו, ונעזר בשאר הדף כשזה מבהיר — מה שקדם לה, מה שבא אחריה, ומושגים שהוסברו בסוגיה אחרת.
+הסתמך רק על החומר המצורף. כשאתה מצטט את הגמרא — בתוך ״…״.
 אם התשובה אינה בחומר, אמור זאת בכנות והצע לעיין בגמרא, בשטיינזלץ או ברש״י — אל תמציא מקורות, שמות או דעות.
 אל תפסוק הלכה למעשה: אם נשאלת שאלה הלכתית מעשית, הסבר מה אומרת הסוגיה והוסף ״להלכה למעשה — יש לשאול רב״.
 אם השאלה אינה קשורה ללימוד הסוגיה, השב בנימוס שאתה עונה רק על הסוגיה.
@@ -90,18 +122,20 @@ export async function onRequestPost({ request, env }) {
   }
   const res = await env.ASSETS.fetch(new URL(`/feed/v1/${page}.json`, request.url));
   if (!res.ok) return json({ ok: false, error: "no_page" }, 404);
-  const ctx = context(await res.json(), section);
-  if (!ctx) return json({ ok: false, error: "no_section" }, 404);
+  const d = await res.json(), sec = (d.sections || []).find((x) => x.id === section);
+  if (!sec) return json({ ok: false, error: "no_section" }, 404);
+  const doc = pageText(d, await neighbours(env, request, page, d));
   // up to 3 earlier turns of this conversation (follow-up questions)
   const hist = (Array.isArray(b.history) ? b.history : []).slice(-3).flatMap((t) =>
     t && t.q && t.a ? [{ role: "user", content: clean(t.q, 500) }, { role: "assistant", content: clean(t.a, 1500) }] : []);
-  const messages = [{ role: "user", content: `החומר של הסוגיה:\n<sugya>\n${ctx.text}\n</sugya>\n\nאענה רק מתוך החומר הזה.` },
-    { role: "assistant", content: "קראתי את החומר של הסוגיה. מה השאלה?" }, ...hist,
-    { role: "user", content: stage != null && ctx.stages[stage] ? `(השאלה על שלב ${stage + 1} בסוגיה: ${ctx.stages[stage].q})\n${q}` : q }];
+  const focus = `השאלה על סוגיה ${sec.id}: ${strip(sec.title)}` + (stage != null && sec.stages && sec.stages[stage] ? `, שלב ${stage + 1}: ${strip(sec.stages[stage].q)}` : "");
+  const messages = [{ role: "user", content: `${focus}\nאענה מתוך הדף המצורף.` },
+    { role: "assistant", content: "קראתי את הדף ואת הסוגיה. מה השאלה?" }, ...hist, { role: "user", content: q }];
+  const system = [{ type: "text", text: SYSTEM }, { type: "text", text: `<daf>\n${doc}\n</daf>`, cache_control: { type: "ephemeral" } }];
   const r = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "x-api-key": env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: env.ASK_MODEL || MODEL, max_tokens: 600, system: SYSTEM, messages }),
+    body: JSON.stringify({ model: env.ASK_MODEL || MODEL, max_tokens: 600, system, messages }),
   }).catch(() => null);
   if (!r || !r.ok) return json({ ok: false, error: "upstream", status: r ? r.status : 0 }, 502);
   const j = await r.json();
@@ -112,7 +146,7 @@ export async function onRequestPost({ request, env }) {
   if (!a) return json({ ok: false, error: "empty" }, 502);
   const hide = tag && tag.toUpperCase() === "OK" ? 0 : 1;
   await env.DB.prepare("INSERT INTO asks (day, ip_hash, page, section, q, a, in_tok, out_tok, hidden) VALUES (?,?,?,?,?,?,?,?,?)")
-    .bind(d0, ipHash, page, section, q, a, j.usage?.input_tokens || 0, j.usage?.output_tokens || 0, hide).run();
+    .bind(d0, ipHash, page, section, q, a, (j.usage?.input_tokens || 0) + (j.usage?.cache_creation_input_tokens || 0) + (j.usage?.cache_read_input_tokens || 0), j.usage?.output_tokens || 0, hide).run();
   return json({ ok: true, a, shared: !hide });
 }
 
