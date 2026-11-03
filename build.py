@@ -71,6 +71,7 @@ SOURCES = [
     ("ישיבה — yeshiva.org.il", "https://www.yeshiva.org.il/wiki/", "ביאור ״פרשני״"),
     ("אתר סיני — שיעורי הדף היומי של הרב אורי בריליאנט", "https://www.sinai.org.il/", "שיעורים, סיכומים, תרשימים וחוברות ״דף מאיר״ — לבדיקת מהלך הסוגיות וההסברים"),
     ("Daf Spoiler — הכנה לדף היומי, הרב נפתלי רמתי", "https://dafspoiler.com/", "סיכום והכנה לכל דף בשאלות ותשובות — לבדיקת הרקע והמקרה של כל סוגיה (ברשות הכותב)"),
+    ("הוצאת ספרים ח. וגשל", "https://www.vagshalbooks.co.il/", "צורת הדף — תלמוד בבלי מהדורת נהרדעא החדש (באדיבות ההוצאה, © כל הזכויות שמורות)"),
     ("SW Daf — Simon Wolf", "https://www.swdaf.com/", "תרשימים, מפות ודפי מקורות לדף — מקושרים במקור (באדיבות Simon Wolf)"),
     ("דיקטה — הנקדן", "https://nakdan.dicta.org.il/", "ניקוד אוטומטי של הטקסט לפני ההקראה בקול"),
 ]
@@ -708,7 +709,7 @@ def render_section(d, s):
         if s.get("unlock"):   # the case / concept the Gemara assumes the learner knows — shown at every reading level
             parts.append(f'  <details class="unlock"><summary class="unlock-h">🔑 מפתח לסוגיה</summary><p>{s["unlock"]}</p></details>')
         tz_am = [a for a, t in sorted((d.get("tzurat") or {}).items()) if s["id"] in t.get("r", {})]
-        tz = (f'<button class="tz-btn" type="button" data-tz="{s["id"]}" data-am="{" ".join(tz_am)}" title="איפה הסוגיה בצורת הדף (וילנא)">📜 צורת הדף</button>'
+        tz = (f'<button class="tz-btn" type="button" data-tz="{s["id"]}" data-am="{" ".join(tz_am)}" title="איפה הסוגיה בצורת הדף">📜 צורת הדף</button>'
               if tz_am else "")   # where this sugya sits on the printed (Vilna) page — on the בקצרה row
         if s.get("flow"):
             fd = f'<details class="flowd"><summary>בקצרה<span class="fl-more"> — על מה הסוגיה</span></summary>{flow_paras(s["flow"])}</details>'

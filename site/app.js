@@ -1451,7 +1451,7 @@ document.addEventListener('click',function(e){
     zb.onclick=function(){ zoom=!zoom; place(); };
     function show(a){ cur=a; var t=TZ[a]; [].forEach.call(tabs.children,function(c){ c.setAttribute('aria-pressed',c.dataset.am===a); });
       var dn=+art.dataset.daf; h4.textContent='צורת הדף · '+heb(dn);
-      sp.textContent=t.src||''; pg.querySelectorAll('.tz-r,.tz-n').forEach(function(n){ n.remove(); });
+      sp.textContent=''; if(t.src&&t.url){ var ca=el('a',null,t.src); ca.href=t.url; ca.target='_blank'; ca.rel='noopener'; sp.appendChild(ca); } else sp.textContent=t.src||''; pg.querySelectorAll('.tz-r,.tz-n').forEach(function(n){ n.remove(); });
       img.width=t.w; img.height=t.h; pg.style.aspectRatio=t.w+'/'+t.h;
       Object.keys(t.r).forEach(function(s){ var on=s===sid, n=SIDS.indexOf(s)+1;
         t.r[s].forEach(function(q,i){ var r=el(on?'div':'button','tz-r'+(on?' on':'')); r.style.cssText='left:'+q[0]+'%;top:'+q[1]+'%;width:'+q[2]+'%;height:'+q[3]+'%';

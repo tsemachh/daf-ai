@@ -1,12 +1,18 @@
-"""Turn an aligned Vilna page (align.py output) into the site's tzurat-hadaf asset + data.
-usage: publish.py <slug> <daf> <amud a|b> <page.png> <match.json>
+"""Turn an aligned page (align.py / align_pdf.py output) into the site's tzurat-hadaf asset + data.
+usage: publish.py <slug> <daf> <amud a|b> <page.png> <match.json> [credit-key]
+credit-key: nehardea (default — the Nehardea edition pages, courtesy of Vagshal) or vilna (HebrewBooks scan)
 Writes site/static/tz-<slug>-<daf><amud>.png (4 grays) and data/<slug>/<daf>.json["tzurat"][amud]
 = {img,w,h,src,r:{sectionId:[[x,y,w,h] in % of the image]}}"""
-import json, sys, os
+import json, sys, os, re
 from collections import defaultdict
 from PIL import Image, ImageOps
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 slug, daf, amud, png, mj = sys.argv[1:6]
+CREDITS = {
+    "nehardea": ("תלמוד בבלי מהדורת נהרדעא החדש · באדיבות הוצאת ספרים ח. וגשל בע״מ © כל הזכויות שמורות", "https://www.vagshalbooks.co.il/"),
+    "vilna": ("HebrewBooks · ש״ס וילנא", "https://www.hebrewbooks.org/"),
+}
+credit = CREDITS[sys.argv[6] if len(sys.argv) > 6 else "nehardea"]
 im = Image.open(png).convert("L")
 box = ImageOps.invert(im).point(lambda v: 255 if v > 60 else 0).getbbox()
 x0, y0, x1, y1 = box; x0, y0 = max(0, x0 - 20), max(0, y0 - 20); x1, y1 = min(im.width, x1 + 20), min(im.height, y1 + 20)
@@ -15,11 +21,24 @@ name = f"tz-{slug}-{daf}{amud}.png"
 im.crop((x0, y0, x1, y1)).resize((W, H), Image.LANCZOS).quantize(4).save(os.path.join(ROOT, "site", "static", name), optimize=True)
 dp = os.path.join(ROOT, "data", slug, f"{daf}.json"); d = json.load(open(dp, encoding="utf8"))
 seg2s = {}
+def ref_segs(ref):
+    """'Bekhorot.8a.12-14' / 'Bekhorot.3b.15' / 'Bekhorot.32a.24-32b.1' → the segment numbers of THIS amud"""
+    m = re.match(r"^[A-Za-z_ ]+\.(\d+[ab])\.(\d+)(?:-(?:(\d+[ab])\.)?(\d+))?$", ref or "")
+    if not m: return []
+    a1, s1, a2, s2 = m.group(1), int(m.group(2)), m.group(3) or m.group(1), int(m.group(4) or m.group(2))
+    me = f"{daf}{amud}"
+    if a1 == me and a2 == me: return list(range(s1, s2 + 1))
+    if a1 == me: return list(range(s1, 200))
+    if a2 == me: return list(range(1, s2 + 1))
+    return []
 for s in d["sections"]:
     for st in s.get("steps", []):
         g = str(st.get("seg", ""))
         if g.startswith(f"{daf}{amud}."):
             seg2s.setdefault(int(g.split(".")[1]), s["id"])
+for s in d["sections"]:                      # the section's own ref fills what its steps don't name
+    for g in ref_segs(s.get("ref")):
+        seg2s.setdefault(g, s["id"])
 rows = defaultdict(list)
 for w in json.load(open(mj)):
     sid = seg2s.get(w["seg"]) or seg2s.get(max([k for k in seg2s if k <= w["seg"]] or [min(seg2s)]))
@@ -37,7 +56,7 @@ for sid, ws in sorted(clusters, key=lambda kv: (min(w["y"] for w in kv[1]), -max
     a = min(w["x"] for w in ws) - 6; b = min(w["y"] for w in ws) - 6; c = max(w["x"] + w["w"] for w in ws) + 6; e = max(w["y"] + w["h"] for w in ws) + 6
     r[sid].append([round((a - x0) * sc / W * 100, 2), round((b - y0) * sc / H * 100, 2), round((c - a) * sc / W * 100, 2), round((e - b) * sc / H * 100, 2)])
 tz = d.setdefault("tzurat", {})
-tz[amud] = {"img": name, "w": W, "h": H, "src": "HebrewBooks · ש״ס וילנא", "r": dict(r)}
+tz[amud] = {"img": name, "w": W, "h": H, "src": credit[0], "url": credit[1], "r": dict(r)}
 import re
 txt = json.dumps(d, ensure_ascii=False, indent=1)
 txt = re.sub(r"\[\s+(-?[\d.]+),\s+(-?[\d.]+),\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]", r"[\1,\2,\3,\4]", txt)
