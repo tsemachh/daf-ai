@@ -40,7 +40,7 @@ for s in d["sections"]:                      # the section's own ref fills what 
     for g in ref_segs(s.get("ref")):
         seg2s.setdefault(g, s["id"])
 rows = defaultdict(list)
-for w in json.load(open(mj)):
+for w in (json.load(open(mj)) if seg2s else []):      # an amud none of this page's sugyot touch: the page alone, no outlines
     sid = seg2s.get(w["seg"]) or seg2s.get(max([k for k in seg2s if k <= w["seg"]] or [min(seg2s)]))
     rows[(sid, round(w["y"] / 40))].append(w)
 r = defaultdict(list)

@@ -21,17 +21,44 @@ for i, t in enumerate(segs):
 subprocess.run(["pdftohtml", "-xml", "-i", "-q", "-zoom", str(ZOOM), pdf, out + "_x"], check=True)
 xml = open(out + "_x.xml", encoding="utf8").read(); os.remove(out + "_x.xml")
 fonts = {m.group(1): (float(m.group(2)), m.group(3)) for m in re.finditer(r'<fontspec id="(\d+)" size="([\d.]+)" family="([^"]+)"', xml)}
-def gemara_font(fid):
-    size, fam = fonts[fid]
-    return re.search(r"\+Vilna(,Bold)?$", fam) is not None and 17 <= size <= 50
+TEXT = re.compile(r'<text top="([\d.-]+)" left="([\d.-]+)" width="([\d.-]+)" height="([\d.-]+)" font="(\d+)">(.*?)</text>', re.S)
+def runs():
+    for m in TEXT.finditer(xml):
+        top, left, width, height = map(float, m.groups()[:4])
+        yield top, left, width, height, m.group(5), html.unescape(re.sub(r"<[^>]+>", "", m.group(6)))[::-1]   # pdftohtml hands RTL runs out reversed
+# Which fonts carry the Gemara itself? Font names differ between files (some are just TT4544Ao00), so decide by the
+# text: a font is a Gemara font when it is large enough and nearly all of its words occur in the Sefaria text of the
+# amud (Rashi and Tosafot quote the Gemara too, but only a third of their words are in it).
+from collections import defaultdict
+SW = {w for w in S if len(w) >= 3}
+tot, hit = defaultdict(int), defaultdict(int)
+for top, left, width, height, fid, txt in runs():
+    for w in txt.split():
+        n = norm(w)
+        if len(n) >= 3: tot[fid] += 1; hit[fid] += n in SW
+def wordy(fid):
+    size = fonts[fid][0]
+    if not 16 <= size <= 50 or not tot[fid]: return False
+    return hit[fid] / tot[fid] >= (0.75 if tot[fid] >= 4 else 0.5)
+# Rashi's and Tosafot's opening words (דיבור המתחיל) pass that test too — they quote the Gemara — so keep only the
+# fonts whose runs sit inside the Gemara column: on the same lines as runs of the body font (the one with most words).
+cand = [f for f in tot if wordy(f)]
+body = max(cand, key=lambda f: hit[f]) if cand else None
+body_runs = [(t, l, w, h) for t, l, w, h, f, _ in runs() if f == body]
+def in_column(t, l, w, h):
+    for bt, bl, bw, bh in body_runs:
+        if abs(bt - t) < 1.5 * max(h, bh) and min(l + w, bl + bw) - max(l, bl) > 0.5 * w: return True
+    return False
+ok = {}
+for f in cand:
+    rs = [(t, l, w, h) for t, l, w, h, ff, _ in runs() if ff == f]
+    ok[f] = f == body or sum(in_column(*r) for r in rs) >= 0.7 * len(rs)
+def gemara_font(fid): return ok.get(fid, False)
 subprocess.run(["pdftoppm", "-r", str(DPI), "-png", "-singlefile", pdf, out], check=True)
 sc = DPI / 72 / ZOOM
 O = []   # (norm, x, y, w, h, line-key)
-for m in re.finditer(r'<text top="([\d.-]+)" left="([\d.-]+)" width="([\d.-]+)" height="([\d.-]+)" font="(\d+)">(.*?)</text>', xml, re.S):
-    top, left, width, height, fid, txt = m.groups()
-    top, left, width, height = map(float, (top, left, width, height))
+for top, left, width, height, fid, txt in runs():
     if not gemara_font(fid) or top < 60 * ZOOM: continue
-    txt = html.unescape(re.sub(r"<[^>]+>", "", txt))[::-1]          # pdftohtml hands RTL runs out reversed
     words = txt.split()
     if not words: continue
     total = sum(len(w) for w in words) + len(words) - 1
