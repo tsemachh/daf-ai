@@ -1168,16 +1168,20 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 @media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
   .sl-bg{padding:0}
   .sl-dlg{width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border-radius:0;display:flex;flex-direction:column;background:#111}
-  /* the header sits in a side column (the black margin a 16:9 slide leaves on a wide phone), never over the slide */
-  .sl-dlg{flex-direction:row}
-  .sl-dlg header{position:static;order:2;flex:0 0 auto;flex-direction:column;justify-content:space-between;align-items:center;gap:8px;background:#111;color:#fff;border:0;
-    padding:max(8px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-left)) max(8px,env(safe-area-inset-bottom)) 6px}
-  .sl-dlg header h4{display:none}
-  .sl-dlg .tz-tools{flex-direction:column}
-  .sl-dlg .tz-tools .tz-z,.sl-dlg .tz-tools .x{color:#fff;border-color:#555}
-  .sl-dlg .sl-view{flex:1;min-height:0;min-width:0;order:1}
+  .sl-dlg .sl-view{flex:1;min-height:0}
   .sl-dlg .sl-view img{width:100%;height:100%;max-height:none;object-fit:contain}
   .sl-dlg .sl-dots,.sl-dlg footer,.sl-fs{display:none}
 }
+/* full screen (phone sideways, the ⛶ button, or the browser's own): the slide takes the whole screen;
+   only the close button floats in the top-right corner — the side margin a 16:9 slide leaves on a wide screen */
+@media (orientation:landscape) and (pointer:coarse) and (max-height:520px){
+  .sl-bg .sl-dlg header{position:absolute;top:0;right:0;left:auto;z-index:3;background:none;border:0;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) 0 0}
+  .sl-bg .sl-dlg header h4{display:none}
+  .sl-bg .sl-dlg .tz-tools .x{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(0,0,0,.35)}
+}
+.sl-full .sl-dlg header,.sl-dlg:fullscreen header{position:absolute;top:0;right:0;left:auto;z-index:3;background:none;border:0;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) 0 0}
+.sl-full .sl-dlg header h4,.sl-dlg:fullscreen header h4{display:none}
+.sl-full .sl-dlg .tz-tools .tz-z,.sl-full .sl-dlg .tz-tools .x,.sl-dlg:fullscreen .tz-tools .tz-z,.sl-dlg:fullscreen .tz-tools .x{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(0,0,0,.35)}
+.sl-full .sl-dlg,.sl-dlg:fullscreen{position:relative}
 .meta .sl-page{min-height:28px;padding:2px 10px;font-size:13px;margin-inline-start:6px}
 #home .home-teach{margin:10px 0 4px;font-size:15px}#home .home-teach .back{display:inline-flex;align-items:center;min-height:44px;padding-inline:4px}
