@@ -1190,3 +1190,4 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .teach-i{font-size:26px;line-height:1}
 .teach-x{display:grid;gap:2px;flex:1}.teach-x b{font-size:17px}.teach-x span{font-size:14px;color:var(--muted);line-height:1.45}
 .teach-go{font-size:22px;color:var(--accent)}
+@media (max-width:480px){.tmeta{white-space:normal;flex-wrap:wrap;row-gap:2px;max-width:100%}.tmeta .perek{white-space:normal}}
