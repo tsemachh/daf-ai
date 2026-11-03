@@ -979,8 +979,8 @@ def render_home(by_slug, latest, about):
   <div class="meta"><span class="ai-badge">נוצר ע״י AI</span><span>נבדק בקריאה אנושית</span><a id="today-users" class="back" href="./stats/" hidden></a></div>
 </header>
 {navbar()}
-<p class="home-teach"><a class="back" href="./aids/#sl">🎞 עזרים למלמד — מצגת לכל דף</a></p>
 <div id="progress-home"></div>
+<a class="teach" href="./aids/#sl"><span class="teach-i">🎞</span><span class="teach-x"><b>עזרים למלמד</b><span>מצגת לכל דף — תרשימים של כל הסוגיות, להקרנה בשיעור</span></span><span class="teach-go">←</span></a>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
 <p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./aids/">כל העזרים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
