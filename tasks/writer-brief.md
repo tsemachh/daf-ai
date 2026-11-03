@@ -158,6 +158,11 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     above the body. Then write the `body` as short sentences: what the move says, the inference, why — one idea each.
     Most steps need no `ctx`; never repeat the previous step. No `ctx` on a conclusion (מסקנה / תיובתא / שמע מינה) that closes the
     sugya's own chain — the learner just read it; one clause in the body is enough.
+16. **Arithmetic gets a `calc`** (reader note, Bechorot 49): a sugya that computes amounts (coins, weights, years) gets a
+    `calc` with each step of the sum, and each step's body shows its own numbers (״20 מעה ÷ 6 = 3⅓ דינרים״).
+17. **״בדרב X ורב Y קמיפלגי״ — one table row per rule** (reader note, Bechorot 48): when a dispute is recast as a dispute over
+    earlier amoraic rules, the `table` gives each rule its own row (what it says · who accepts it), and the section's `unlock`
+    restates those rules if they were set out in an earlier section.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
