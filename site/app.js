@@ -1454,8 +1454,8 @@ document.addEventListener('click',function(e){
       sp.textContent=''; if(t.src&&t.url){ var ca=el('a',null,t.src); ca.href=t.url; ca.target='_blank'; ca.rel='noopener'; sp.appendChild(ca); } else sp.textContent=t.src||''; pg.querySelectorAll('.tz-r,.tz-n').forEach(function(n){ n.remove(); });
       img.width=t.w; img.height=t.h; pg.style.aspectRatio=t.w+'/'+t.h;
       Object.keys(t.r).forEach(function(s){ var on=s===sid, n=SIDS.indexOf(s)+1;
-        t.r[s].forEach(function(q,i){ var r=el(on?'div':'button','tz-r'+(on?' on':'')); r.style.cssText='left:'+q[0]+'%;top:'+q[1]+'%;width:'+q[2]+'%;height:'+q[3]+'%';
-          r.dataset.c=(n-1)%5; if(!on){ r.type='button'; r.setAttribute('aria-label','עבור לסוגיה '+n); r.tabIndex=i?-1:0; r.onclick=function(){ go(s); }; }
+        t.r[s].forEach(function(q,i){ var r=el('button','tz-r'+(on?' on':'')); r.style.cssText='left:'+q[0]+'%;top:'+q[1]+'%;width:'+q[2]+'%;height:'+q[3]+'%';
+          r.dataset.c=(n-1)%5; r.type='button'; r.setAttribute('aria-label','עבור לסוגיה '+n); r.tabIndex=i?-1:0; r.onclick=function(){ go(s); };   /* the current sugya too: tap → close and land on it */
           pg.appendChild(r);
           if(!i){ var b=el('span','tz-n'+(on?' on':''),String(n)); b.dataset.c=(n-1)%5; b.style.cssText='left:'+(q[0]+q[2])+'%;top:'+q[1]+'%'; pg.appendChild(b); } }); });
       img.onload=place; img.src='/'+t.img; if(img.complete) place(); }
