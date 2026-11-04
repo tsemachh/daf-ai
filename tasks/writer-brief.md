@@ -30,6 +30,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
   Every segment of both amudim is in exactly one section.
 - An answer that brings a source (״כיוצא בה שמעתי, דתנן…״) and the story or discussion that continues it (״ויתיב רב…״)
   until the original question is resolved is ONE sugya, with `stages` — never split it where the source begins (Bechorot 37).
+- The opposite case: when the Gemara moves on to the NEXT clause of the mishnah (a new dibbur quoted from the mishnah, e.g.
+  ״לפיכך אם רצה הכהן…״) with its own question, that is a NEW section — never a stage of the previous sugya (Bechorot 51).
 - `seg` on EVERY step = the segment it explains (`2a.7`). A segment with M: hints needs at least one step.
 - `type`: q = question / challenge / request for a source / proof offered against; a = answer / rejection;
   c = conclusion / תיובתא / שמע מינה / ruling; "" = statement, Mishnah, background. In חברותא mode the
