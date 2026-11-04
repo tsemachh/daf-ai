@@ -228,7 +228,7 @@
      "short": "הזוכה בהגרלה מקבל את עבודת תרומת הדשן"
     }
    ],
-   "post": "<div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>כהן מבית האב רוצה להשתתף בהגרלה על תרומת הדשן, אבל <span class=\"nogl\">טבל</span> רק אחרי שהממונה דפק. האם יפיס?</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">לפי דברי הממונה — לא: ״מי שטבל — יבא ויפיס״, כלומר רק מי שכבר <span class=\"nogl\">טבל</span>. לכן המשנה אומרת שמשכימים וטובלים לפני שבא הממונה.</div></div>"
+   "post": "<div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>כהן מבית האב רוצה להשתתף בהגרלה על תרומת הדשן, אבל <span class=\"nogl\">טבל</span> רק אחרי שהממונה דפק. האם יפיס?</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">לפי דברי הממונה — לא: ״מי <span class=\"nogl\">שטבל</span> — יבא ויפיס״, כלומר רק מי שכבר <span class=\"nogl\">טבל</span>. לכן המשנה אומרת שמשכימים וטובלים לפני שבא הממונה.</div></div>"
   },
   {
    "id": "s4",
