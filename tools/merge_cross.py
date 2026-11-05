@@ -38,7 +38,7 @@ def save(p, d):
 
 def tag_daf(steps, n):
     for st in steps:
-        if f'דף {heb(n)}' not in st.get('tag', ''):
+        if 'דף ' not in st.get('tag', ''):   # a step already tagged with a daf keeps its own tag
             st['tag'] = f'{st["tag"]} · דף {heb(n)}'
 
 
@@ -73,7 +73,13 @@ def main():
         sb['ref'] = ref; sb.pop('cont', None); sb['starts_prev'] = True
         if sa.get('unlock') and not sb.get('unlock'):
             sb['unlock'] = sa['unlock']
-        A['to_next'] = sa['ref']
+        # to_next = only the segments of daf N (the ref may run onto N+1)
+        m = re.match(r'^([A-Za-z_]+)\.(\d+[ab]\.\d+)(?:-((?:\d+[ab]\.)?\d+))?$', sa['ref'])
+        keep_end = sa['ref']
+        if m and m[3] and '.' in m[3] and not m[3].startswith(str(a.n)):
+            last = [st['seg'] for st in sa['steps'] if str(st.get('seg', '')).startswith(str(a.n))]
+            keep_end = f'{m[1]}.{m[2]}' + (f'-{last[-1].split(".")[-1]}' if last and last[-1] != m[2] else '')
+        A['to_next'] = keep_end
         A['sections'] = [s for s in A['sections'] if s is not sa]
         A['nav'] = [x for x in A.get('nav', []) if x.get('id') != sa['id']]
         recv, removed_id, qpage = sb, sa['id'], A
