@@ -607,11 +607,11 @@
       if(HD.aids) g.appendChild(tile('','/aids/','🧩','עזרים',HD.aids.toLocaleString('he-IL'),'איורים, טבלאות, חשבונות ו־Simon Wolf — עם סינון'));
       if(HD.wn) g.appendChild(tile('','/changes/','✨','מה חדש · '+HD.wn.d,null,HD.wn.x+'…'));
       var gb=tile('',null,'⚙','קצב והגדרות',null,S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי'); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
+      var sp=settings(); sp.hidden=true; sp.classList.add('prefs','prefs-in');   /* opens right under its tile (full grid row), not at the bottom */
+      g.appendChild(sp);
+      gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden); if(!sp.hidden) sp.scrollIntoView({block:'nearest',behavior:'smooth'})};
       if(window.__fbTile) g.appendChild(window.__fbTile);
       home.appendChild(g);
-      var sp=settings(); sp.hidden=true; sp.classList.add('prefs');
-      gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden); if(!sp.hidden) sp.scrollIntoView({block:'nearest',behavior:'smooth'})};
-      home.appendChild(sp);
     }
     painters.push(paintHome); paintHome.w=home; syncEls.push(paintHome); paintHome();
   }
