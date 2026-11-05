@@ -599,9 +599,21 @@
         var pb=el('span','pg-bar'), pf=el('i'); pf.style.width=Math.max(done?2:0,Math.round(100*done/tot))+'%'; pb.appendChild(pf); pt.appendChild(pb); g.appendChild(pt); }
       var ll=laterList(); if(ll.length){ var x=ll[0]; g.appendChild(tile('',url(x.p)+'#'+x.p.s+x.p.d+'-'+x.id,'🔖','ללמוד אחר כך',String(ll.length),x.p.h+' · סוגיה '+(x.i+1))); }
       if(dow(today())>=4&&dow(today())<=5&&S.first) g.appendChild(tile('','/review/?week','🗓','חזרה שבועית','10 שאלות','מהדפים של השבוע — לקראת שבת'));
-      var mt=tile('mas',false,'📚','מסכתות'), mlist=el('span','tl-l');
-      Object.keys(C.mas).sort(function(a,b){return C.mas[a].o-C.mas[b].o}).forEach(function(s){ var a=el('a',null,C.mas[s].he); a.href='/'+s+'/'; mlist.appendChild(a); });
-      mt.appendChild(mlist); g.appendChild(mt);
+      /* masechtot by סדר: tabs for the sedarim that have dafim, opening on today's daf's seder (order index → seder) */
+      var SD=[['זרעים',0],['מועד',1],['נשים',13],['נזיקין',20],['קדשים',28],['טהרות',39]];
+      function sdOf(s){var o=C.mas[s].o,r=0; SD.forEach(function(x,i){if(o>=x[1]) r=i}); return r}
+      var mt=tile('mas',false,'📚','מסכתות'), keys=Object.keys(C.mas).sort(function(a,b){return C.mas[a].o-C.mas[b].o});
+      var have=[]; keys.forEach(function(s){var i=sdOf(s); if(have.indexOf(i)<0) have.push(i)});
+      var cur=tp&&C.mas[tp.s]?sdOf(tp.s):have[have.length-1];
+      try{var sv=+localStorage.getItem('mas-seder'); if(localStorage.getItem('mas-seder')!==null&&have.indexOf(sv)>=0) cur=sv}catch(e){}
+      var tabs=el('span','sd-tabs'), mlist=el('span','tl-l');
+      tabs.setAttribute('role','tablist');
+      function showSd(i){ cur=i; mlist.innerHTML='';
+        [].forEach.call(tabs.children,function(b){var on=+b.dataset.i===i; b.classList.toggle('on',on); b.setAttribute('aria-selected',on)});
+        keys.forEach(function(s){ if(sdOf(s)!==i) return; var a=el('a',null,C.mas[s].he); a.href='/'+s+'/'; mlist.appendChild(a); }); }
+      if(have.length>1) have.forEach(function(i){ var b=el('button','sd-tab','סדר '+SD[i][0]); b.type='button'; b.dataset.i=i; b.setAttribute('role','tab');
+        b.onclick=function(){showSd(i); try{localStorage.setItem('mas-seder',i)}catch(e){}}; tabs.appendChild(b); });
+      mt.append(tabs,mlist); showSd(cur); g.appendChild(mt);
       if(hw&&seen) g.appendChild(howTile());
       if(HD.pages) g.appendChild(tile('','/stats/','📊','באתר',HD.pages+' דפים',HD.mas+' מסכתות · '+HD.steps.toLocaleString('he-IL')+' שלבי סוגיה'));
       if(HD.aids) g.appendChild(tile('','/aids/','🧩','עזרים',HD.aids.toLocaleString('he-IL'),'איורים, טבלאות, חשבונות ו־Simon Wolf — עם סינון'));

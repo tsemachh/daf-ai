@@ -263,6 +263,9 @@ a.tl:hover,button.tl:hover{border-color:var(--accent);transform:translateY(-2px)
 .tl.new{border:2px solid var(--accent)}
 .tl.mas{grid-column:span 2}
 @media (max-width:420px){.tl.mas{grid-column:1/-1}}
+.sd-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sd-tab{font:inherit;font-size:14px;min-height:34px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--muted);cursor:pointer}
+.sd-tab.on{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .tl-l{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
 .tl-l a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--serif);font-size:19px}
 .tl-l a:hover{border-color:var(--accent)}
