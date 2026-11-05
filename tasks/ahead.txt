@@ -1,4 +1,3 @@
-tamid/32
 tamid/33
 middot/34
 middot/35
