@@ -342,6 +342,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#2B4C7E"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
+<script>try{{var f=localStorage.getItem("fs");if(f)document.documentElement.style.setProperty("--fs",f)}}catch(e){{}}</script>
 <style>{CSS}</style>
 </head><body>
 {body}
