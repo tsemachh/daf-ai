@@ -772,7 +772,7 @@ html.dn-open{overflow:hidden}
 .dn-h{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem 0.25rem;font-size:1.125rem}
 .dn-x{width:2.75rem;height:2.75rem;border:0;border-radius:62.4375rem;background:none;color:var(--muted);font-size:1.25rem;cursor:pointer}
 .dn-x:hover{background:var(--card)}
-.dn-tabs{display:flex;gap:0.375rem;overflow-x:auto;padding:0.375rem 1rem 0.625rem;border-bottom:1px solid var(--line);scrollbar-width:none}
+.dn-tabs{display:flex;flex:none;gap:0.375rem;overflow-x:auto;padding:0.375rem 1rem 0.625rem;border-bottom:1px solid var(--line);scrollbar-width:none}
 .dn-tab{flex:none;min-height:2.5rem;padding:0.25rem 0.875rem;border:1px solid var(--line);border-radius:62.4375rem;background:var(--card);color:var(--ink);font:inherit;font-size:0.9375rem;font-weight:600;cursor:pointer}
 .dn-tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .dn-sds{border-bottom:0;padding-bottom:0}
@@ -1212,3 +1212,4 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .steps li.mish+li.mish{margin-top:-0.625rem;border-start-start-radius:0;border-start-end-radius:0}
 .steps li.mish .tag:not(.q):not(.a):not(.c){background:var(--mish-b);color:#fff}
 .srcdlg>footer{margin-top:0}
+.dn-h,.dn-leg{flex:none}.dn-body{flex:1 1 auto;min-height:0}
