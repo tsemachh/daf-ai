@@ -1196,3 +1196,11 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .tz-nav .tz-z:disabled{opacity:.35;cursor:default}
 .tz-dlg.tz-other .tz-r{cursor:pointer}
 @media (max-width:520px){.tz-nav .tz-z{padding:0 8px;font-size:12.5px}}
+/* steps on the Mishnah's own words: a parchment band, so the משנה stands out from the Gemara around it */
+:root{--mish:#F6EFDD;--mish-b:#C9A962}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--mish:#2D2819;--mish-b:#8C7535}}
+:root[data-theme="dark"]{--mish:#2D2819;--mish-b:#8C7535}
+.steps li.mish{background:var(--mish);border-inline-start:3px solid var(--mish-b);border-radius:10px;padding:8px 10px;margin-inline:-6px}
+.steps li.mish:has(+li.mish){border-end-start-radius:0;border-end-end-radius:0}
+.steps li.mish+li.mish{margin-top:-10px;border-start-start-radius:0;border-start-end-radius:0}
+.steps li.mish .tag:not(.q):not(.a):not(.c){background:var(--mish-b);color:#fff}

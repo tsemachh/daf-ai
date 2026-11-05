@@ -350,10 +350,40 @@ def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
 
 
 # ---------------------------------------------------------------- daf page
-def render_steps(steps, ref=None):
+MISH_REF = re.compile(r"^[A-Z][A-Za-z_]+\.(\d+)([ab])\.(\d+)(?:-(?:(\d+)([ab])\.)?(\d+))?$")
+
+
+MISH_CACHE = {}
+
+
+def mishna_segs(d):
+    """The Gemara segments of this page that are Mishnah: from a segment opening ״מתני׳״ up to the next ״גמ׳״,
+    read in page order from each section's ref and its srctext (one text per segment). Mishnah-only tractates
+    (Kinnim, Middot — Sefaria's Mishnah text has no ״מתני׳״) get none: there everything is Mishnah."""
+    out, inm = set(), False
+    for sec in d.get("sections", []):
+        m = MISH_REF.match(sec.get("ref") or "")
+        p = ((d.get("srctext") or {}).get(sec.get("ref")) or {}).get("p") or []
+        if not m or not p:
+            continue
+        d1, a1, s1 = int(m[1]), m[2], int(m[3])
+        if m[4]:   # across the amud break: the rest of the first amud, then 1..s2 of the next
+            s2 = int(m[6]); n1 = len(p) - s2
+            ids = [f"{d1}{a1}.{i}" for i in range(s1, s1 + n1)] + [f"{m[4]}{m[5]}.{i}" for i in range(1, s2 + 1)]
+        else:
+            ids = [f"{d1}{a1}.{i}" for i in range(s1, int(m[6] or s1) + 1)]
+        for sid, t in zip(ids, p):
+            t = re.sub(r"[\u0591-\u05c7]|<[^>]+>", "", str(t)).strip()
+            if t.startswith("מתני") or sid == "2a.1": inm = True   # a masechet opens with a Mishnah (Berakhot 2a.1 has no ״מתני׳״ mark)
+            elif t.startswith("גמ׳") or t.startswith("גמרא"): inm = False
+            if inm: out.add(sid)
+    return out
+
+
+def render_steps(steps, ref=None, mish=()):
     out = ['  <ol class="steps">']
     for k, s in enumerate(steps):
-        cls = ""  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
+        cls = ' class="mish"' if s.get("seg") and str(s["seg"]) in mish else ""   # a step on the Mishnah's own words: its own background  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
         p = f' data-p="{s["p"]}"' if "p" in s else ""
         if s.get("seg"):   # the Gemara segment this step explains (מורחב shows it under the step)
             p += f' data-seg="{s["seg"]}"'
@@ -722,7 +752,7 @@ def render_section(d, s):
             parts.append('  <button class="aid-hint" type="button" data-open-aid="map">🗺️ יש מפת שיטות לסוגיה — מי אמר מה ואיך זה מתכנס. הצג ←</button>')
         if s.get("kt"):
             parts.append(render_kt(s["kt"]))
-        parts.append(render_steps(s["steps"], s.get("ref")))
+        parts.append(render_steps(s["steps"], s.get("ref"), MISH_CACHE.setdefault(d["key"], mishna_segs(d)) if "key" in d else ()))
         if s.get("scale"):
             parts.append(render_scale(s["scale"]))
         aids, names = [], []
