@@ -1,4 +1,5 @@
 /* shared study-page runtime: glossary, sources, tree, chavruta, settings, quiz */
+function remK(){ return (parseFloat(getComputedStyle(document.documentElement).fontSize)||16)/16 }   /* root size grows on wide screens (app.css) */
 (function(){
   var G={}; try{G=JSON.parse(document.getElementById('glossary').textContent)}catch(e){}
   var H='\u05d0-\u05ea';
@@ -143,7 +144,7 @@
     if(b){e.preventDefault(); if(cur===b){closePop();return} closePop(); var it=G[b.dataset.k]||{};
       pop.innerHTML=''; var pk=document.createElement('div'); pk.className='pk'; pk.textContent=it.t||''; var ph=document.createElement('div'); ph.className='ph'; ph.textContent=b.dataset.k; var pd=document.createElement('div'); pd.textContent=it.d||'';
       pop.append(pk,ph,pd); linkify(pop); pop.hidden=false; cur=b; b.setAttribute('aria-expanded','true');
-      var r=b.getBoundingClientRect(), w=Math.min(300,innerWidth-32); pop.style.width=w+'px';
+      var r=b.getBoundingClientRect(), w=Math.min(300*remK(),innerWidth-32); pop.style.width=w+'px';
       var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px'; return}
     if(!e.target.closest('.pop')) closePop();
   });
@@ -276,7 +277,7 @@
     var cr=document.createElement('div'); cr.className='st-cr';
     pop.append(tabs,pd,cr);
     if(!probe){ pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
-    var r=q.getBoundingClientRect(), w=Math.min(340,innerWidth-32); pop.style.width=w+'px';
+    var r=q.getBoundingClientRect(), w=Math.min(340*remK(),innerWidth-32); pop.style.width=w+'px';
     var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px'; }
     if(!key){ if(probe) return Promise.resolve(null); pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
     var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean), set={};
