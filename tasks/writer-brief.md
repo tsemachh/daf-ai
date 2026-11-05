@@ -39,12 +39,17 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 - `p` = index (in the section) of the earlier step this one responds to: objection → the claim it attacks
   (several objections to one claim are siblings); answer/rejection → the objection; proof → the claim;
   conclusion → the statement that falls or stands. איכא דאמרי, ואיבעית אימא, an independent new view → no `p`. "No `p`" means the key is omitted (never `p: 0` on a root).
-- `amud` labels: "עמוד א · משנה", "עמוד א · גמרא", "עמוד א–ב" (spans both), "עמוד א · המשך מדף X׳"
-  (continues from the previous daf: open with one רקע step recapping where it stands — see the pack's
-  "Previous daf" block; set `"cont":"prev"`).
-- Sugya running into the next daf: if the rest of the same give-and-take is ≤ ~8 segments (they are in
-  the pack), finish it here — extend `ref` across the break, tag those steps "… · דף X", set `"ends_next":true`.
-  Only if it is longer: end with one step on where it is heading, say so in `flow`, set `"cont":"next"`.
+- `amud` labels: "עמוד א · משנה", "עמוד א · גמרא", "עמוד א–ב" (spans both), "עמוד א · מתחיל בדף X׳"
+  (a sugya that starts at the end of the previous daf and is held here whole — see the next rule).
+- **A sugya or mishnah that crosses the daf break lives whole on ONE page — never split (owner, 2026-11-05;
+  Bechorot 51–52 was split and read badly).** Put it on the page that holds most of its segments (tie → where it
+  begins). On this page: if it runs into the next daf (the pack shows the next daf's opening), extend `ref`
+  across the break, tag those steps "… · דף X" and set `"ends_next":true`; if it began at the end of the previous
+  daf and most of it is here, the previous page left it out — start `ref` on the previous daf (its segments are in
+  the pack, under "the END of the PREVIOUS daf"), tag those steps "… · דף X", set `"starts_prev":true`. If the last
+  sugya starts here but most of it is on the next daf, leave it out and set the page's top-level
+  `"to_next": "<Tractate>.<daf><amud>.<first seg>-<last seg>"` (the trailing segments of this daf) — tomorrow's page holds it. The page that does not
+  hold it only says so in one clause of its `storyline`; the site adds the cross-link. Never `"cont":"next"`/`"prev"`.
 
 ## Writing rules (all required)
 0. **Key to the sugya (`unlock`, optional).** Many sugyot assume the learner already knows a case or concept —

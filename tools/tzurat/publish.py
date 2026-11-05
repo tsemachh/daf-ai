@@ -40,7 +40,25 @@ for s in d["sections"]:                      # the section's own ref fills what 
     for g in ref_segs(s.get("ref")):
         seg2s.setdefault(g, s["id"])
 rows = defaultdict(list)
-for w in (json.load(open(mj)) if seg2s else []):      # an amud none of this page's sugyot touch: the page alone, no outlines
+excl = set()   # segments of this amud held on a neighbouring page (prev page's ends_next, this page's to_next): no outline here
+def _amud_segs(ref):
+    m = re.match(r"^[A-Za-z_ ]+\.(\d+[ab])\.(\d+)(?:-(?:(\d+[ab])\.)?(\d+))?$", ref or "")
+    if not m: return []
+    a1, s1, a2, s2 = m.group(1), int(m.group(2)), m.group(3) or m.group(1), int(m.group(4) or m.group(2))
+    me = f"{daf}{amud}"
+    if a1 == me and a2 == me: return range(s1, s2 + 1)
+    if a1 == me: return range(s1, 200)
+    if a2 == me: return range(1, s2 + 1)
+    return []
+excl.update(_amud_segs(d.get("to_next")))
+pp = os.path.join(ROOT, "data", slug, f"{int(daf) - 1}.json")
+if os.path.exists(pp):
+    for s_ in json.load(open(pp, encoding="utf8"))["sections"]:
+        if s_.get("ends_next") or s_.get("cont") == "next": excl.update(_amud_segs(s_.get("ref")))
+for k in list(seg2s):
+    if k in excl: del seg2s[k]
+for w in (json.load(open(mj)) if seg2s else []):
+    if w["seg"] in excl: continue      # an amud none of this page's sugyot touch: the page alone, no outlines
     sid = seg2s.get(w["seg"]) or seg2s.get(max([k for k in seg2s if k <= w["seg"]] or [min(seg2s)]))
     rows[(sid, round(w["y"] / 40))].append(w)
 r = defaultdict(list)

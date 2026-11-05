@@ -651,8 +651,28 @@ def render_map(m, mid=""):
 
 
 def cont_link(d, s, way):
-    """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev")."""
+    """Links between the two parts of a sugya split across dapim (amud label or "cont": "next"/"prev").
+    A sugya that crosses the break now lives whole on one page: "ends_next" (finishes on the next daf) or
+    "starts_prev" (begins at the end of the previous daf) — the other page only points to it."""
     amud = s.get("amud", "")
+    mine0 = [x for x in d["sections"] if x.get("kind") != "raw" and x["id"] != "sum"]
+    if way == "prev" and s.get("starts_prev"):
+        p = DAFS.get((d["slug"], d["daf"] - 1))
+        h = f'../{p["daf"]}/' if p else ""
+        return (f'  <a class="cont prev" href="{h}">→ הסוגיה מתחילה בסוף דף {heb_num(d["daf"] - 1)} ומובאת כאן במלואה</a>' if p
+                else f'  <p class="cont prev nogl">הסוגיה מתחילה בסוף דף {heb_num(d["daf"] - 1)} ומובאת כאן במלואה</p>')
+    if way == "prev" and mine0 and mine0[0] is s and s.get("cont") != "prev":
+        p = DAFS.get((d["slug"], d["daf"] - 1))
+        pl = [x for x in (p or {}).get("sections", []) if x.get("kind") != "raw" and x["id"] != "sum"]
+        if pl and pl[-1].get("ends_next"):
+            return f'  <a class="cont prev" href="../{p["daf"]}/#{p["key"]}-{pl[-1]["id"]}">→ ראש הדף משלים סוגיה מדף {heb_num(p["daf"])} — היא מובאת שם במלואה</a>'
+    if way == "next" and mine0 and mine0[-1] is s and not s.get("ends_next") and s.get("cont") != "next":
+        n = DAFS.get((d["slug"], d["daf"] + 1))
+        f0 = next((x for x in (n or {}).get("sections", []) if x.get("kind") != "raw"), None)
+        if f0 and f0.get("starts_prev"):
+            return f'  <a class="cont" href="../{n["daf"]}/#{n["key"]}-{f0["id"]}">סוף הדף פותח סוגיה שמובאת במלואה בדף {heb_num(n["daf"])} ←</a>'
+        if d.get("to_next"):
+            return f'  <p class="cont nogl">סוף הדף פותח סוגיה שתובא במלואה בדף {heb_num(d["daf"] + 1)}</p>'
     if way == "next" and s.get("cont") != "next" and "ממשיך" not in amud and not s.get("ends_next"):
         # unlabelled: still link if this is the daf's last sugya and the next daf opens with "המשך מדף…"
         mine = [x for x in d["sections"] if x.get("kind") != "raw" and x["id"] != "sum"]

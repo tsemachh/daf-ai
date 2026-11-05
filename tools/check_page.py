@@ -99,6 +99,17 @@ def main():
                 for k in expand(s['ref'], a.cache, slug):
                     if k not in seen:
                         seen[k] = f'daf {daf - 1} {s["id"]}'; prevcov.add(k)
+    if d.get('to_next'):   # the trailing segments this page leaves for the next one (a sugya held there whole)
+        for k in expand(d['to_next'], a.cache, slug):
+            if k not in seen:
+                seen[k] = 'to_next'; prevcov.add(k)
+    next_p = os.path.join(os.path.dirname(os.path.abspath(a.page)), f'{daf + 1}.json')
+    if os.path.exists(next_p):   # the next daf may hold a sugya that starts at the end of this one (starts_prev) — covered there
+        for s in json.load(open(next_p, encoding='utf-8'))['sections']:
+            if s.get('ref') and s.get('starts_prev'):
+                for k in expand(s['ref'], a.cache, slug):
+                    if k not in seen:
+                        seen[k] = f'daf {daf + 1} {s["id"]}'; prevcov.add(k)
     for k in want:
         if k not in seen:
             errs.append(f'segment {k} is in no section')

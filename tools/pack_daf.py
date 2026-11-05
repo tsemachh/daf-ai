@@ -77,11 +77,22 @@ def build(cache, slug, daf):
     nx = amud(cache, slug, daf + 1, 'a')
     if nx:
         g, s, r = nx
-        out.append(f'## {daf+1}a — opening of the NEXT daf (only to finish a sugya that runs over; covered in full tomorrow)')
+        out.append(f'## {daf+1}a — opening of the NEXT daf: if the last sugya runs over, hold it whole on ONE page — here (`ends_next`) if most of it is on this daf, else leave its start for tomorrow (`to_next`)')
         for i, seg in enumerate(g[:NEXT_SEGS], 1):
             out += seg_lines(f'{daf+1}a', i, seg, s[i-1] if i-1 < len(s) else '', r[i-1] if i-1 < len(r) else [])
         out.append('')
     prev = os.path.join(ROOT, 'data', slug, f'{daf-1}.json')
+    if os.path.exists(prev) and json.load(open(prev, encoding='utf-8')).get('to_next'):
+        tn = json.load(open(prev, encoding='utf-8'))['to_next']   # e.g. "Bekhorot.51b.12-14": left for this page
+        m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)(?:-(\d+))?$', tn)
+        if m:
+            pa = amud(cache, slug, int(m[1]), m[2])
+            if pa:
+                g, s_, r_ = pa
+                out.append(f'## {m[1]}{m[2]} — the END of the PREVIOUS daf, left for this page ({tn}): this sugya starts there — hold it here whole: `ref` from {m[1]}{m[2]}.{m[3]}, those steps tagged "… · דף {m[1]}", `"starts_prev": true`')
+                for i in range(int(m[3]), int(m[4] or len(g)) + 1):
+                    out += seg_lines(f'{m[1]}{m[2]}', i, g[i-1], s_[i-1] if i-1 < len(s_) else '', r_[i-1] if i-1 < len(r_) else [])
+                out.append('')
     if os.path.exists(prev):
         p = json.load(open(prev, encoding='utf-8'))
         last = [x for x in p['sections'] if x.get('steps')][-1]
