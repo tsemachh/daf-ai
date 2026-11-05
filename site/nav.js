@@ -63,14 +63,26 @@
     var tabs=el('div','dn-tabs'); tabs.setAttribute('role','tablist');
     var body=el('div','dn-body');
     sel=cur.s&&C.mas[cur.s]?cur.s:(tp?tp.s:order[0]);
-    order.forEach(function(slug){
-      var t=el('button','dn-tab','מסכת '+C.mas[slug].he); t.type='button'; t.setAttribute('role','tab');
-      t.setAttribute('aria-selected',slug===sel); t.onclick=function(){ sel=slug;
-        [].forEach.call(tabs.children,function(b){b.setAttribute('aria-selected',b===t)}); grid(slug,body); };
-      tabs.append(t);
-    });
+    /* first row: the sedarim that have dafim; second row: that seder's masechtot */
+    var SD=[['זרעים',0],['מועד',1],['נשים',13],['נזיקין',20],['קדשים',28],['טהרות',39]];
+    function sdOf(s){var o=C.mas[s].o||0,r=0; SD.forEach(function(x,i){if(o>=x[1]) r=i}); return r}
+    var have=[]; order.forEach(function(s){var i=sdOf(s); if(have.indexOf(i)<0) have.push(i)});
+    var sds=el('div','dn-tabs dn-sds'); sds.setAttribute('role','tablist'); sds.setAttribute('aria-label','סדרים');
+    function masTabs(si){ tabs.textContent='';
+      order.forEach(function(slug){ if(sdOf(slug)!==si) return;
+        var t=el('button','dn-tab','מסכת '+C.mas[slug].he); t.type='button'; t.setAttribute('role','tab');
+        t.setAttribute('aria-selected',slug===sel); t.onclick=function(){ sel=slug;
+          [].forEach.call(tabs.children,function(b){b.setAttribute('aria-selected',b===t)}); grid(slug,body); };
+        tabs.append(t); }); }
+    have.forEach(function(si){
+      var b=el('button','dn-tab dn-sd','סדר '+SD[si][0]); b.type='button'; b.setAttribute('role','tab'); b.setAttribute('aria-selected',si===sdOf(sel));
+      b.onclick=function(){ [].forEach.call(sds.children,function(x){x.setAttribute('aria-selected',x===b)});
+        if(sdOf(sel)!==si){ sel=order.filter(function(s){return sdOf(s)===si})[0]; grid(sel,body); }
+        masTabs(si); };
+      sds.append(b); });
+    masTabs(sdOf(sel));
     var leg=el('div','dn-leg'); leg.innerHTML='<span><i class="is-learned"></i>נלמד</span><span><i class="is-today"></i>היום</span><span><i class="is-off"></i>טרם הוכן</span>';
-    box.append(h,tabs,body,leg); dlg.append(box); document.body.append(dlg);
+    box.append(h,have.length>1?sds:'',tabs,body,leg); dlg.append(box); document.body.append(dlg);
     dlg.addEventListener('click',function(e){ if(e.target===dlg) close(); });
     dlg.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
     dlg._body=body;
@@ -79,6 +91,7 @@
     if(!dlg) build();
     grid(sel,dlg._body); dlg.hidden=false; document.documentElement.classList.add('dn-open');
     pick.setAttribute('aria-expanded','true');
+    var mt=dlg.querySelector('.dn-tabs:not(.dn-sds) .dn-tab[aria-selected="true"]'); if(mt){ var row=mt.parentNode; row.scrollLeft+=mt.getBoundingClientRect().left-row.getBoundingClientRect().left-(row.clientWidth-mt.offsetWidth)/2; }   /* chosen masechet visible in its row */
     var f=dlg.querySelector('.dn-d.is-cur')||dlg.querySelector('.dn-tab[aria-selected="true"]');
     if(f){ f.focus({preventScroll:true}); if(f.scrollIntoView) f.scrollIntoView({block:'center'}); }
   }
