@@ -1106,7 +1106,7 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .tz-tabs{display:flex;gap:0.5rem;padding:0.5rem 0.875rem;border-bottom:1px solid var(--line)}
 .tz-tabs .st-tog.has::after{content:" •";color:var(--accent)}
 .tz-view{flex:1;min-height:0;overflow:auto;direction:ltr;background:#fff;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.tz-pg{position:relative;width:100%}
+.tz-pg{position:relative;width:100%;margin:0 auto}
 .tz-pg img{display:block;width:100%;height:auto}
 .tz-r{position:absolute;border:0;padding:0;margin:0;border-radius:0.1875rem;background:transparent;cursor:pointer;
   --c:#E5503C}
@@ -1211,3 +1211,4 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .steps li.mish:has(+li.mish){border-end-start-radius:0;border-end-end-radius:0}
 .steps li.mish+li.mish{margin-top:-0.625rem;border-start-start-radius:0;border-start-end-radius:0}
 .steps li.mish .tag:not(.q):not(.a):not(.c){background:var(--mish-b);color:#fff}
+.srcdlg>footer{margin-top:0}
