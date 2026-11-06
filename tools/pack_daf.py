@@ -84,7 +84,7 @@ def build(cache, slug, daf):
     prev = os.path.join(ROOT, 'data', slug, f'{daf-1}.json')
     if os.path.exists(prev) and json.load(open(prev, encoding='utf-8')).get('to_next'):
         tn = json.load(open(prev, encoding='utf-8'))['to_next']   # e.g. "Bekhorot.51b.12-14": left for this page
-        m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)(?:-(\d+))?$', tn)
+        m = re.match(r'^[A-Za-z_]+\.(\d+)([ab])\.(\d+)(?:-(?:\d+[ab]\.)?(\d+))?$', tn)   # also the long form 3b.13-3b.19
         if m:
             pa = amud(cache, slug, int(m[1]), m[2])
             if pa:
