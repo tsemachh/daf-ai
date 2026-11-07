@@ -72,7 +72,7 @@
     [['1','רגיל'],['1.2','גדול'],['1.4','גדול מאוד']].forEach(function(o){ var b=el('button',null,o[1]); b.type='button'; b.dataset.v=o[0];
       b.style.fontSize=(o[0]==='1'?1:+o[0]*0.9)+'em'; b.setAttribute('aria-pressed',o[0]===fsv);
       b.onclick=function(){ document.documentElement.style.setProperty('--fs',o[0]); try{o[0]==='1'?localStorage.removeItem('fs'):localStorage.setItem('fs',o[0])}catch(e){}
-        [].forEach.call(document.querySelectorAll('.fs-size button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); };
+        [].forEach.call(document.querySelectorAll('.fs-size button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); document.dispatchEvent(new Event('prefs:change')); };
       fsr.appendChild(b); });
     box.appendChild(fsr);
     var demo=el('div','fs-demo','אמר רבא: הלכה כרבי יהודה'); demo.appendChild(el('small',null,'כך ייראה הטקסט בדף'));   /* live preview of the chosen size */
@@ -83,7 +83,7 @@
     [['','אוטומטי'],['light','☀️ יום'],['dark','🌙 לילה']].forEach(function(o){ var b=el('button',null,o[1]); b.type='button'; b.dataset.v=o[0]; b.setAttribute('aria-pressed',o[0]===thv);
       b.onclick=function(){ var r=document.documentElement; if(o[0]) r.dataset.theme=o[0]; else delete r.dataset.theme;
         try{o[0]?localStorage.setItem('theme',o[0]):localStorage.removeItem('theme')}catch(e){}
-        [].forEach.call(document.querySelectorAll('.th-row button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); };
+        [].forEach.call(document.querySelectorAll('.th-row button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); document.dispatchEvent(new Event('prefs:change')); };
       thr.appendChild(b); });
     box.appendChild(thr);
     box.appendChild(el('div','prefs-h','קצב לימוד'));
@@ -637,8 +637,13 @@
       if(hw&&seen) g.appendChild(howTile());
       if(HD.pages) g.appendChild(tile('','/stats/','📊','באתר',HD.pages+' דפים',HD.mas+' מסכתות · '+HD.steps.toLocaleString('he-IL')+' שלבי סוגיה'));
       if(HD.aids) g.appendChild(tile('','/aids/','🧩','עזרים',HD.aids.toLocaleString('he-IL'),'איורים, טבלאות, חשבונות ו־Simon Wolf — עם סינון'));
+      if(HD.sl) g.appendChild(tile('','/aids/#sl','🎞','עזרים למלמד',HD.sl.toLocaleString('he-IL'),'מצגת לכל דף — תרשימים של כל הסוגיות, להקרנה בשיעור'));
       if(HD.wn) g.appendChild(tile('','/changes/','✨','מה חדש · '+HD.wn.d,null,HD.wn.x+'…'));
-      var gb=tile('',null,'⚙','קצב והגדרות',null,S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי'); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
+      /* tile summary: pace · text size · theme — refreshed when a setting changes */
+      function prefSum(){ var f='1',m=''; try{f=localStorage.getItem('fs')||'1'; m=localStorage.getItem('theme')||''}catch(e){}
+        return (S.pace.mode==='plan'?'לפי קצב אישי':'לפי הדף היומי')+' · טקסט '+({'1':'רגיל','1.2':'גדול','1.4':'גדול מאוד'}[f]||'רגיל')+' · '+({light:'☀️ יום',dark:'🌙 לילה'}[m]||'תצוגה אוטומטית'); }
+      var gb=tile('',null,'⚙','קצב והגדרות',null,prefSum()); gb.setAttribute('aria-expanded','false'); g.appendChild(gb);
+      document.addEventListener('prefs:change',function(){ var s=gb.querySelector('.tl-s'); if(s) s.textContent=prefSum(); });
       var sp=settings(); sp.hidden=true; sp.classList.add('prefs','prefs-in');   /* opens right under its tile (full grid row), not at the bottom */
       g.appendChild(sp);
       gb.onclick=function(){sp.hidden=!sp.hidden; gb.setAttribute('aria-expanded',!sp.hidden); if(!sp.hidden) sp.scrollIntoView({block:'nearest',behavior:'smooth'})};

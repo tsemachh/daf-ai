@@ -70,7 +70,7 @@
     var sds=el('div','dn-tabs dn-sds'); sds.setAttribute('role','tablist'); sds.setAttribute('aria-label','סדרים');
     function masTabs(si){ tabs.textContent='';
       order.forEach(function(slug){ if(sdOf(slug)!==si) return;
-        var t=el('button','dn-tab','מסכת '+C.mas[slug].he); t.type='button'; t.setAttribute('role','tab');
+        var t=el('button','dn-tab',C.mas[slug].he); t.type='button'; t.setAttribute('role','tab');
         t.setAttribute('aria-selected',slug===sel); t.onclick=function(){ sel=slug;
           [].forEach.call(tabs.children,function(b){b.setAttribute('aria-selected',b===t)}); grid(slug,body); };
         tabs.append(t); }); }

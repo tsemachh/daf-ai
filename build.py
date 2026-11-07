@@ -1016,7 +1016,8 @@ def home_data():
     naid = nfig + sum(1 for d in pages for x in d["sections"] for k in ("table", "decide", "seq", "chain", "calc", "scale")
                       for _ in ([x[k]] if isinstance(x.get(k), dict) else x.get(k) or [])) \
         + sum(len(sw_charts(d["slug"], d["daf"])) for d in pages)
-    return jscript({"wn": wn, "figs": nfig, "aids": naid, "pages": len(pages), "mas": len({d["slug"] for d in pages}),
+    nsl = sum(1 for d in pages if (d.get("slides") or {}).get("g"))   # dafim with a teacher deck
+    return jscript({"wn": wn, "figs": nfig, "aids": naid, "sl": nsl, "pages": len(pages), "mas": len({d["slug"] for d in pages}),
                     "steps": sum(len(x.get("steps") or []) for d in pages for x in d["sections"])}, id="home-data")
 
 
@@ -1030,7 +1031,6 @@ def render_home(by_slug, latest, about):
 </header>
 {navbar()}
 <div id="progress-home"></div>
-<a class="teach" href="./aids/#sl"><span class="teach-i">🎞</span><span class="teach-x"><b>עזרים למלמד</b><span>מצגת לכל דף — תרשימים של כל הסוגיות, להקרנה בשיעור</span></span><span class="teach-go">←</span></a>
 <noscript><p class="home-mas">{mas}</p></noscript>
 {howto_block()}
 <p class="about-link"><a class="back" href="./about/">איך נבנים הדפים</a> <a class="back" href="./ideas/">רעיונות לשיפור</a> <a class="back" href="./notes/">הערות קוראים</a> <a class="back" href="./stats/">נתוני ביקורים</a> <a class="back" href="./changes/">כל השינויים</a> <a class="back" href="./aids/">כל העזרים</a> <a class="back" href="./privacy/">פרטיות</a> <a class="back" href="#contact" data-contact>✉ צור קשר</a></p>
