@@ -1213,3 +1213,8 @@ h3.has-lrn>.pg-lrn.on{border-color:var(--accent);background:var(--accent-soft)}
 .steps li.mish .tag:not(.q):not(.a):not(.c){background:var(--mish-b);color:#fff}
 .srcdlg>footer{margin-top:0}
 .dn-h,.dn-leg{flex:none}.dn-body{flex:1 1 auto;min-height:0}
+.logo-dk{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo-lt.has-dk{display:none}:root:not([data-theme="light"]) .logo-dk{display:block}}
+:root[data-theme="dark"] .logo-lt.has-dk{display:none}:root[data-theme="dark"] .logo-dk{display:block}
+.fs-demo{margin:0.5rem 0 0.25rem;padding:0.5rem 0.75rem;border:1px dashed var(--line);border-radius:0.5rem;font-family:var(--serif);font-size:1.3125rem;line-height:1.6;color:var(--ink)}
+.fs-demo small{display:block;font-family:var(--sans);font-size:0.875rem;color:var(--muted)}

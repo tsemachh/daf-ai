@@ -80,14 +80,13 @@ SOURCES = [
 def logo_html(up):
     st = os.path.join(ROOT, "site", "static")
     if os.path.exists(os.path.join(st, "shefing-logo.png")):
-        dark = ""
-        if os.path.exists(os.path.join(st, "shefing-logo-white.webp")):
-            dark = (f'<source srcset="{up}shefing-logo-white.webp" type="image/webp" width="91" height="28" '
-                    f'media="(prefers-color-scheme: dark)">')
+        dark = ""   # the white logo is a separate <img> toggled by CSS (follows the chosen theme, not only the OS)
         light = f'<source srcset="{up}shefing-logo.webp" type="image/webp" width="128" height="28">' \
             if os.path.exists(os.path.join(st, "shefing-logo.webp")) else ""
-        return (f'<picture>{dark}{light}<img class="sponsor-logo" src="{up}shefing-logo.png" alt="Shefing" '
-                f'width="128" height="28" loading="lazy" decoding="async"></picture>')
+        white = (f'<img class="sponsor-logo logo-dk" src="{up}shefing-logo-white.webp" alt="Shefing" width="91" height="28" '
+                 f'loading="lazy" decoding="async">') if os.path.exists(os.path.join(st, "shefing-logo-white.webp")) else ""
+        return (f'<picture class="logo-lt{" has-dk" if white else ""}">{light}<img class="sponsor-logo" src="{up}shefing-logo.png" alt="Shefing" '
+                f'width="128" height="28" loading="lazy" decoding="async"></picture>{white}')
     return '<span class="sponsor-word">Shefing</span>'
 
 
@@ -342,7 +341,7 @@ def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
 <link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#2B4C7E"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
-<script>try{{var f=localStorage.getItem("fs");if(f)document.documentElement.style.setProperty("--fs",f)}}catch(e){{}}</script>
+<script>try{{var f=localStorage.getItem("fs"),m=localStorage.getItem("theme");if(f)document.documentElement.style.setProperty("--fs",f);if(m)document.documentElement.dataset.theme=m}}catch(e){{}}</script>
 <style>{CSS}</style>
 </head><body>
 {body}

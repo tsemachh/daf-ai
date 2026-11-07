@@ -68,13 +68,24 @@
     var box=el('div','pg-set');
     /* text size: scales the whole site (root size × --fs), remembered in this browser */
     box.appendChild(el('div','prefs-h','גודל טקסט'));
-    var fsr=el('div','fs-row'), fsv; try{fsv=localStorage.getItem('fs')||'1'}catch(e){fsv='1'}
+    var fsr=el('div','fs-row fs-size'), fsv; try{fsv=localStorage.getItem('fs')||'1'}catch(e){fsv='1'}
     [['1','רגיל'],['1.2','גדול'],['1.4','גדול מאוד']].forEach(function(o){ var b=el('button',null,o[1]); b.type='button'; b.dataset.v=o[0];
       b.style.fontSize=(o[0]==='1'?1:+o[0]*0.9)+'em'; b.setAttribute('aria-pressed',o[0]===fsv);
       b.onclick=function(){ document.documentElement.style.setProperty('--fs',o[0]); try{o[0]==='1'?localStorage.removeItem('fs'):localStorage.setItem('fs',o[0])}catch(e){}
-        [].forEach.call(document.querySelectorAll('.fs-row button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); };
+        [].forEach.call(document.querySelectorAll('.fs-size button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); };
       fsr.appendChild(b); });
     box.appendChild(fsr);
+    var demo=el('div','fs-demo','אמר רבא: הלכה כרבי יהודה'); demo.appendChild(el('small',null,'כך ייראה הטקסט בדף'));   /* live preview of the chosen size */
+    box.appendChild(demo);
+    /* theme: auto (follows the device) / light / dark, remembered in this browser */
+    box.appendChild(el('div','prefs-h','תצוגה'));
+    var thr=el('div','fs-row th-row'), thv; try{thv=localStorage.getItem('theme')||''}catch(e){thv=''}
+    [['','אוטומטי'],['light','☀️ יום'],['dark','🌙 לילה']].forEach(function(o){ var b=el('button',null,o[1]); b.type='button'; b.dataset.v=o[0]; b.setAttribute('aria-pressed',o[0]===thv);
+      b.onclick=function(){ var r=document.documentElement; if(o[0]) r.dataset.theme=o[0]; else delete r.dataset.theme;
+        try{o[0]?localStorage.setItem('theme',o[0]):localStorage.removeItem('theme')}catch(e){}
+        [].forEach.call(document.querySelectorAll('.th-row button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); };
+      thr.appendChild(b); });
+    box.appendChild(thr);
     box.appendChild(el('div','prefs-h','קצב לימוד'));
     var r1=el('label'), c1=el('input'); c1.type='radio'; c1.name='pgpace'; c1.checked=S.pace.mode!=='plan';
     r1.append(c1,document.createTextNode(' לפי לוח הדף היומי'));
