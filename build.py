@@ -1222,7 +1222,7 @@ def write_pwa():
     sw = open(os.path.join(ROOT, "site", "sw.js"), encoding="utf8").read().replace("__ASSET_V__", ASSET_V)
     open(os.path.join(DIST, "sw.js"), "w", encoding="utf8").write(sw)
     man = {"name": SITE_TITLE, "short_name": BRAND, "lang": "he", "dir": "rtl", "start_url": "/?source=pwa", "scope": "/",
-           "display": "standalone", "background_color": "#12161E", "theme_color": "#12161E",
+           "display": "fullscreen", "display_override": ["fullscreen", "standalone"], "background_color": "#12161E", "theme_color": "#12161E",
            "description": "דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה. עובד גם בלי חיבור.",
            "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
                      {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
