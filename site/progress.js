@@ -22,6 +22,11 @@
   var L=C.pages.slice().sort(function(a,b){return a.y<b.y?-1:a.y>b.y?1:a.d-b.d});
   function byKey(k){for(var i=0;i<L.length;i++) if(L[i].k===k) return L[i]; return null}
   function entry(k){return S.pages[k]||(S.pages[k]={s:{}})}
+  /* steps read inside a sugya: e.st[sid] = bitmask of step indexes, base 36 (dropped once the sugya is learned) */
+  function bHas(v,i){return Math.floor(v/Math.pow(2,i))%2===1}
+  function bOr(x,y){var r=0,q=1; while(x>0||y>0){ if(x%2===1||y%2===1) r+=q; x=Math.floor(x/2); y=Math.floor(y/2); q*=2; } return r}
+  function stOf(e,id){return e&&e.st&&e.st[id]?parseInt(e.st[id],36):0}
+  function firstUnread(e,id){var v=stOf(e,id),i=0; while(bHas(v,i)) i++; return i}
   function nLearned(p){var e=S.pages[p.k]; if(!e) return 0; return p.n.filter(function(id){return e.s[id]==='learned'}).length}
   function laterIn(p){return p.n.filter(function(id){return S.later[p.k+'#'+id]})}
   function stateOf(p){var c=nLearned(p); if(p.n.length&&c===p.n.length&&!laterIn(p).length) return 'learned'; var e=S.pages[p.k]; return e&&Object.keys(e.s).length||laterIn(p).length?'progress':'new'}
@@ -135,6 +140,7 @@
     Object.keys(o.pages).forEach(function(k){var a=entry(k), b=o.pages[k]||{s:{}};
       Object.keys(b.s||{}).forEach(function(id){ if((rank[b.s[id]]||0)>(rank[a.s[id]]||0)) a.s[id]=b.s[id]; });
       if(b.quiz&&(!a.quiz||b.quiz.best>a.quiz.best)) a.quiz=b.quiz; if(b.done&&!a.done) a.done=b.done;
+      Object.keys(b.st||{}).forEach(function(id){ if(a.s[id]==='learned') return; a.st=a.st||{}; a.st[id]=bOr(stOf(a,id),stOf(b,id)).toString(36); });
     });
     o.days.forEach(function(d){if(S.days.indexOf(d)<0) S.days.push(d)}); S.days.sort();
     o.review.forEach(function(r){ if(!S.review.some(function(x){return x.page===r.page&&x.q===r.q})) S.review.push(r); });
@@ -304,7 +310,7 @@
   var E=null;
   if(art&&P){
     var RM=/(^|[?&])r(=|&|$)/.test(location.search.slice(1));   /* ?r = חזרה: summaries, verdicts and the summary table only */
-    var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}, learnB={}; E=entry(P.k);
+    var firstVisit=!S.pages[P.k], pre=art.id+'-', secs={}, navA={}, laterB={}, learnB={}, stepEls={}, stcB={}; E=entry(P.k);
     if(RM){ art.classList.add('review-mode');
       art.querySelectorAll('details.flowd,details.storyline,details.aids').forEach(function(d){d.open=true});
       art.querySelectorAll('section.sugya ol.steps').forEach(function(ol){ var b=el('button','btn pg-steps','הצג את השקלא וטריא'); b.type='button';
@@ -357,6 +363,8 @@
         if(E.s[id]==='learned'){ delete S.later[P.k+'#'+id]; markDay(); } touch(); save(); paint();
         toast(E.s[id]==='learned'?'הסוגיה סומנה כנלמדה':'הסימון ״נלמד״ בוטל',function(){ if(was) E.s[id]=was; else delete E.s[id]; save(); paint(); }); };
       var h3=sec.querySelector(':scope > h3'); if(h3){ h3.classList.add('has-lrn'); h3.appendChild(lb); } else tl.insertBefore(lb,tl.firstChild); learnB[id]=lb;
+      stepEls[id]=[].slice.call(sec.querySelectorAll('.steps > li[data-k]'));
+      if(stepEls[id].length){ var sc=el('span','pg-stc'); sc.hidden=true; lb.before(sc); stcB[id]=sc; }
     });
     /* finished the daf: a clear banner after the last sugya, leading to the understanding questions */
     var qsec=document.getElementById(art.id+'-quiz'), dban=null;
@@ -382,6 +390,9 @@
       if(ab&&ab.dataset.all!==String(nLearned(P)===P.n.length)){ var all=nLearned(P)===P.n.length; ab.dataset.all=String(all); ab.setAttribute('aria-pressed',all); ab.innerHTML=''; if(all) ab.appendChild(ticks('learned')); ab.appendChild(document.createTextNode((all?' ':'')+'למדתי'));
         ab.title=all?'כל הסוגיות סומנו כנלמדו — הקש לביטול':'סמן את כל הסוגיות בדף כנלמדו'; }
       P.n.forEach(function(id){
+        var se=stepEls[id]; if(se&&se.length){ var lrn=E.s[id]==='learned', v=stOf(E,id), nr=0;
+          se.forEach(function(li){ var r=lrn||bHas(v,+li.dataset.k); if(r) nr++; if(li.classList.contains('rd')!==r) li.classList.toggle('rd',r); });
+          var sc=stcB[id]; if(sc){ var show=!lrn&&nr>0, tx=nr+'/'+se.length; sc.hidden=!show; if(show&&sc.textContent!==tx){ sc.textContent=tx; sc.title='נקראו '+nr+' מתוך '+se.length+' שלבים'; } } }
         var lb=learnB[id]; if(lb){ var st=E.s[id], lr=st==='learned', sg=st||'-'; if(lb.dataset.sig!==sg){ lb.dataset.sig=sg; lb.innerHTML='';
           var tk=ticks(lr?'learned':'opened'); if(tk) lb.appendChild(tk); lb.classList.toggle('on',lr); lb.setAttribute('aria-pressed',lr);
           lb.dataset.tip=lr?'נלמד — הקש לביטול':'סמן את הסוגיה כנלמדה'; lb.setAttribute('aria-label',lb.dataset.tip); } }
@@ -443,9 +454,9 @@
       window.addEventListener('load',function(){ layout(); pos(false); });
     })();
     /* viewing rule: time counts while a sugya fills a good part of the screen (≥40% of it, or ≥60% of the
-       sugya); ~3s → opened (✓). Learned (✓✓) once its end has been on screen and it got enough time for its
-       length (4–20s), so scrolling through while reading counts, a fast fling does not. */
-    var cur=null, acc={}, sawEnd={}, lastT=Date.now();
+       sugya); ~3s → opened (✓). Learned (✓✓) once its end has been on screen, it got enough time for its
+       length (4–20s) and at least 70% of its steps were read (each step: on screen long enough for its words). */
+    var cur=null, acc={}, sAcc={}, sawEnd={}, lastT=Date.now();
     function need(h,vh){ return Math.min(20,Math.max(4,h/vh*2.5))*1000; }
     function tick(){
       var now=Date.now(), dt=Math.min(now-lastT,2000); lastT=now; if(document.hidden) return;
@@ -457,8 +468,22 @@
         if(r.bottom<=vh+4) sawEnd[id]=true;
         var st=E.s[id];
         if(!st&&acc[id]>=3000){E.s[id]='opened'; st='opened'; ch=true}
-        if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)){E.s[id]='learned'; markDay(); ch=true}
+        var se=stepEls[id], enough=!se||!se.length||(function(){var v=stOf(E,id),c=0; se.forEach(function(li){ if(bHas(v,+li.dataset.k)) c++; }); return c>=Math.ceil(se.length*0.7);})();   /* auto ✓✓ needs most steps read */
+        if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)&&enough){E.s[id]='learned'; markDay(); ch=true}
       });
+      /* steps: reading time goes to the first unread step fully on screen (or filling half of it); ~5 words a second, 1.5–8s */
+      var pick=null;
+      for(var qi=0; qi<P.n.length&&!pick; qi++){ var sid=P.n[qi], se=stepEls[sid]; if(!se||!se.length||E.s[sid]==='learned') continue;
+        var sr=secs[sid].getBoundingClientRect(); if(sr.bottom<0||sr.top>vh) continue; var sv=stOf(E,sid);
+        for(var j=0;j<se.length;j++){ var k=+se[j].dataset.k; if(bHas(sv,k)) continue; var lr=se[j].getBoundingClientRect(); if(!lr.height) continue;
+          if(lr.bottom<0) continue; if(lr.top>vh) break;
+          if((lr.top>=0&&lr.bottom<=vh)||Math.min(lr.bottom,vh)-Math.max(lr.top,0)>=0.5*vh){ pick={id:sid,k:k,li:se[j],v:sv}; break; }
+          if(lr.top<0) continue; break; } }   /* a step half scrolled past doesn't block the ones below it */
+      if(pick){ var key=pick.id+':'+pick.k; sAcc[key]=(sAcc[key]||0)+dt;
+        var words=(pick.li.textContent||'').trim().split(/\s+/).length, needS=Math.min(8000,Math.max(1500,words*200));
+        if(sAcc[key]>=needS){ E.st=E.st||{}; E.st[pick.id]=(pick.v+Math.pow(2,pick.k)).toString(36); ch=true;
+          if(S.last&&S.last.page===P.k&&S.last.section===pick.id&&!(S.last.step>pick.k)) S.last.step=pick.k; } }
+      Object.keys(E.st||{}).forEach(function(sid){ if(E.s[sid]==='learned') delete E.st[sid]; });
       if(ch){ var was=E.done; E.done=nLearned(P)===P.n.length?(E.done||today()):null; touch(); save(); paint(); if(E.done&&!was){ nudge(); revSync(); } }
     }
     if(!RM) setInterval(tick,1000);
@@ -467,10 +492,14 @@
       var io=new IntersectionObserver(function(es){es.forEach(function(en){
         if(!en.isIntersecting) return; cur=en.target.id.slice(pre.length);
         var li=S.last&&S.last.page===P.k?P.n.indexOf(S.last.section):-1;
-        if(P.n.indexOf(cur)>=li){ S.last={page:P.k,section:cur,ts:Date.now()}; save(); }  /* resume = furthest point reached */
+        if(P.n.indexOf(cur)>=li&&!(S.last&&S.last.page===P.k&&S.last.section===cur)){ S.last={page:P.k,section:cur,ts:Date.now()}; save(); }  /* resume = furthest point reached */
       })},{rootMargin:'-45% 0px -50% 0px'});
       Object.keys(secs).forEach(function(id){io.observe(secs[id])});
     }
+    (function(){ var m=location.hash.match(/^#(.+)@(\d+)$/); if(!m) return; var sec=document.getElementById(m[1]); if(!sec) return;
+      var li=sec.querySelector('.steps > li[data-k="'+m[2]+'"]'); if(!li) return;
+      function go(){ li.scrollIntoView({block:'center'}); li.classList.add('pg-here'); setTimeout(function(){li.classList.remove('pg-here')},2200); }
+      setTimeout(go,350); })();
     /* "למדתי" in the top bar: mark every sugya learned (press again to undo) */
     var allB=art.querySelector('.controls [data-role="learned"]');
     if(allB) allB.addEventListener('click',function(){
@@ -604,8 +633,8 @@
       if(S.last){ var lp=byKey(S.last.page), k0=lp?L.indexOf(lp):-1, rs=null;
         for(var q=k0; q>=0&&q<L.length&&!rs; q++){ var pq=L[q]; if(pq.s!==lp.s) break; if(learnedP(pq)) continue;
           var eq=S.pages[pq.k], idq=pq.n.filter(function(id){ return !(eq&&eq.s[id]==='learned'); })[0];
-          if(idq) rs={p:pq,id:idq,i:pq.n.indexOf(idq)}; }
-        if(rs) g.insertBefore(tile('hot',url(rs.p)+(rs.i>0?'#'+rs.p.s+rs.p.d+'-'+rs.id:''),'↩','המשך מהמקום',rs.p.h,'סוגיה '+(rs.i+1)+' מתוך '+rs.p.n.length),g.firstChild); }
+          if(idq) rs={p:pq,id:idq,i:pq.n.indexOf(idq),k:firstUnread(eq,idq)}; }
+        if(rs) g.insertBefore(tile('hot',url(rs.p)+(rs.i>0||rs.k>0?'#'+rs.p.s+rs.p.d+'-'+rs.id+(rs.k>0?'@'+rs.k:''):''),'↩','המשך מהמקום',rs.p.h,'סוגיה '+(rs.i+1)+' מתוך '+rs.p.n.length+(rs.k>0?' · שלב '+(rs.k+1):'')),g.firstChild); }
       if(S.first||S.review.length){
       var dl=dueList(), rv;
       var sn=Math.min(dl.length,RVN);   /* one short session, not the whole backlog — the rest waits for the next days */
