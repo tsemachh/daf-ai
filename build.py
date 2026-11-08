@@ -888,6 +888,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 {sections}
 {jscript(d["tzurat"], cls="tz-data") if d.get("tzurat") else ""}
 {jscript(d["slides"], cls="sl-data") if d.get("slides") else ""}
+{'<div class="pre-quiz"><span>לפני השאלות — מומלץ לעבור על <b>מצגת הדף</b>: תרשים לכל סוגיה, חזרה מהירה על כל הדף.</span><button class="sl-btn" type="button" data-sl="*">📊 לצפייה במצגת</button></div>' if d.get("slides") else ""}
 <section class="sugya" id="{key}-quiz">
   <div class="amud">בסוף הדף</div>
   <h3>שאלות הבנה <span class="score" data-role="score"></span></h3>
