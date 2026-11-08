@@ -82,6 +82,7 @@
     var thr=el('div','fs-row th-row'), thv; try{thv=localStorage.getItem('theme')||''}catch(e){thv=''}
     [['','אוטומטי'],['light','☀️ יום'],['dark','🌙 לילה']].forEach(function(o){ var b=el('button',null,o[1]); b.type='button'; b.dataset.v=o[0]; b.setAttribute('aria-pressed',o[0]===thv);
       b.onclick=function(){ var r=document.documentElement; if(o[0]) r.dataset.theme=o[0]; else delete r.dataset.theme;
+          [].forEach.call(document.querySelectorAll('meta[name=theme-color]'),function(x){ x.content=o[0]?(o[0]==='dark'?'#12161E':'#F3F4EF'):(/dark/.test(x.media)?'#12161E':'#F3F4EF'); });   /* phone status/nav bars follow the theme */
         try{o[0]?localStorage.setItem('theme',o[0]):localStorage.removeItem('theme')}catch(e){}
         [].forEach.call(document.querySelectorAll('.th-row button'),function(x){x.setAttribute('aria-pressed',x.dataset.v===o[0])}); document.dispatchEvent(new Event('prefs:change')); };
       thr.appendChild(b); });

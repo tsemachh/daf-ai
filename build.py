@@ -338,10 +338,10 @@ def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
 <meta property="og:site_name" content="{BRAND}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:image" content="{ogi}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{ogi}">
-<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#2B4C7E"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#F3F4EF" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#12161E" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/assistant-hebrew.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/frank-hebrew.woff2" as="font" type="font/woff2" crossorigin>
-<script>try{{var f=localStorage.getItem("fs"),m=localStorage.getItem("theme");if(f)document.documentElement.style.setProperty("--fs",f);if(m)document.documentElement.dataset.theme=m}}catch(e){{}}</script>
+<script>try{{var f=localStorage.getItem("fs"),m=localStorage.getItem("theme");if(f)document.documentElement.style.setProperty("--fs",f);if(m){{document.documentElement.dataset.theme=m;document.querySelectorAll("meta[name=theme-color]").forEach(function(x){{x.content=m=="dark"?"#12161E":"#F3F4EF"}})}}}}catch(e){{}}</script>
 <style>{CSS}</style>
 </head><body>
 {body}
@@ -1222,7 +1222,7 @@ def write_pwa():
     sw = open(os.path.join(ROOT, "site", "sw.js"), encoding="utf8").read().replace("__ASSET_V__", ASSET_V)
     open(os.path.join(DIST, "sw.js"), "w", encoding="utf8").write(sw)
     man = {"name": SITE_TITLE, "short_name": BRAND, "lang": "he", "dir": "rtl", "start_url": "/?source=pwa", "scope": "/",
-           "display": "standalone", "background_color": "#F3F4EF", "theme_color": "#2B4C7E",
+           "display": "standalone", "background_color": "#12161E", "theme_color": "#12161E",
            "description": "דף אינטראקטיבי לכל יום — לחזרה, לסיכום ולבדיקת ההבנה. עובד גם בלי חיבור.",
            "icons": [{"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
                      {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
