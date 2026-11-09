@@ -37,5 +37,7 @@ background — the prompt now forbids coins; if they still appear, regenerate or
 ## 4. Publish
 `python3 tools/slides_publish.py <slug> <daf> deck.pdf "intro:1 s1:2-3 … end:N" [--drop 7,9] [--replace 2=fixed.png]`
 (map keys are the page's real section ids, in order — after merges they may start at s2; "סוגיה N" in the deck = the N-th section.
-A slide fixed by hand — e.g. a decorative rabbi erased with `cv2.inpaint` on the `pdfimages` PNG — goes in with `--replace`.)
+A slide fixed by hand — e.g. a decorative rabbi erased with `cv2.inpaint` on the `pdfimages` PNG — goes in with `--replace`;
+several fixes go comma-separated in ONE flag: `--replace 5=a.png,9=b.png`. Erasing text: fill with the flat background colour
+(inpaint leaves grey smudges next to letters); a word doubled at a line wrap: move the original pixels rather than redraw.)
 then `python3 build.py`, commit (data + site/static/sl-*.webp) and push. Remove nothing else.
