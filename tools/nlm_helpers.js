@@ -37,8 +37,15 @@ window.makeDeck = async function (srcs, title, rows, go) {
   const picked = await pickDlg(srcs); await sleep(300);
   const ok = btn(ov, /^אישור$/); if (!ok) return 'no ok'; ok.click(); await sleep(1000);
   const n = setPrompt(mk(title, rows)); await sleep(300);
-  let how = 'filled';   // out of quota → only "ליצירה בהמשך" is offered: NotebookLM queues it and builds it on its servers later
+  let how = 'filled';   // out of quota → only "יצירה בהמשך" is offered; it did NOT reliably produce a deck — re-run that daf later
   if (go) { const g = btn(ov, /^ליצירה$/) || btn(ov, /^ליצירה בהמשך$/); if (!g) return 'no create'; how = norm(g.innerText); g.click(); await sleep(1500); }
   return { picked, n, how };
 };
+// Studio list / download helpers:
+//   studio()                       → titles of decks in Studio (and "generating" rows)
+//   rectOf(title)                  → scrolls that deck row into view, returns [x,y]; then click its ⋮ at (70,y) with the computer tool
+//   pdfItem()                      → in the open ⋮ menu, clicks "הורדת מסמך PDF" (file lands in ~/Downloads)
+window.studio = () => { const out = []; document.querySelectorAll('*').forEach(e => { if (e.children.length === 0) { const t = norm(e.textContent); if (/מקורות · |יוצרת את המצגת/.test(t)) out.push(norm(e.parentElement.parentElement.innerText).slice(0, 90)); } }); return [...new Set(out)] };
+window.rectOf = t => { let leaf = null; document.querySelectorAll('*').forEach(e => { if (!leaf && e.children.length === 0 && norm(e.textContent) === t) leaf = e; }); if (!leaf) return null; leaf.scrollIntoView({ block: 'center' }); const r = leaf.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top + r.height / 2)] };
+window.pdfItem = () => { const it = [...document.querySelectorAll('.cdk-overlay-container [role=menuitem]')].find(x => /PDF/.test(x.innerText)); if (it) { it.click(); return 'ok' } return 'none' };
 'ok';
