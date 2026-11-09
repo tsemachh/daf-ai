@@ -2,7 +2,6 @@ middot/34
 middot/35
 middot/36
 middot/37
-niddah/10
 niddah/11
 niddah/12
 niddah/13
