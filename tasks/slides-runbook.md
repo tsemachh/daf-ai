@@ -14,10 +14,10 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
   ערכין: notebook "מסכת ערכין" — https://notebook.google.com/notebook/56c90b56-c348-4ae4-bc1c-e4de1cbd3fbe
   (new masechet: "יצירת נוטבוק" → rename → "הוספת מקורות" → "אתרים" → paste all URLs space-separated → "הוספה").
 - Paste `tools/nlm_helpers.js` into the tab once (javascript_tool).
-- Per daf: Studio → "מצגת" opens "התאמה אישית של המצגת". Keep "מצגת מפורטת", עברית, ברירת מחדל.
-  "מקורות" dropdown → `await pickDlg(['Arakhin 5a |','Arakhin 5b |','ערכין ה׳ ·'])` → "אישור"
-  → `setPrompt(<output of python3 tools/slides_prompt.py arachin 5>)` → "ליצירה".
-  Several decks can generate at once; each takes ~10 minutes.
+- Per daf: paste the line from `python3 tools/slides_prompt.py arachin 5 --js` — `await makeDeck([...3 sources], title, [sugya rows], true)`.
+  It opens Studio → "מצגת" ("התאמה אישית של המצגת": מצגת מפורטת, עברית, ברירת מחדל), picks exactly the 3 sources,
+  fills the prompt and presses "ליצירה"; it returns the picked sources — check them. Wait ~2s between decks.
+  Several decks generate at once; each takes ~10 minutes.
 
 ## 2. Download
 - A ready deck appears in Studio as an English title ("Tractate Arakhin 2 …", "3 מקורות"); hover it → ⋮ (left end of the row)
