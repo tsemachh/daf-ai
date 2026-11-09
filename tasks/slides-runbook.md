@@ -25,8 +25,8 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 - Stage it into the container (`device_stage_files` with the ~/Downloads path) and work on the copy there.
 - Quota: each deck is roughly 10% of the "שימוש ב-AI" bar (Pro) → about 9–10 decks per quota window, regenerations
   included. Near the end NotebookLM shows "You're getting close to your AI usage limit. Limit resets at <time>".
-- Out of quota, the dialog offers only "יצירה בהמשך". Don't rely on it: decks sent that way on Nov 9 had not appeared in
-  Studio hours later. When `makeDeck` reports how="ליצירה בהמשך", re-run that daf after the quota frees (it refills gradually).
+- Out of quota, the dialog offers only "יצירה בהמשך": NotebookLM builds those decks on its servers when quota frees
+  (on Nov 9 they appeared ~3 hours later). Before generating a daf, check `studio()` — it may already be there.
 - Review can run in parallel: one subagent per deck with the steps of §3–4 (they must not commit; commit once at the end).
 
 ## 3. Review (every slide — see the brief)

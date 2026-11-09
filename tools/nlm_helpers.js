@@ -37,7 +37,7 @@ window.makeDeck = async function (srcs, title, rows, go) {
   const picked = await pickDlg(srcs); await sleep(300);
   const ok = btn(ov, /^אישור$/); if (!ok) return 'no ok'; ok.click(); await sleep(1000);
   const n = setPrompt(mk(title, rows)); await sleep(300);
-  let how = 'filled';   // out of quota → only "יצירה בהמשך" is offered; it did NOT reliably produce a deck — re-run that daf later
+  let how = 'filled';   // out of quota → only "יצירה בהמשך": NotebookLM builds it later (hours); check studio() before re-running a daf
   if (go) { const g = btn(ov, /^ליצירה$/) || btn(ov, /^ליצירה בהמשך$/); if (!g) return 'no create'; how = norm(g.innerText); g.click(); await sleep(1500); }
   return { picked, n, how };
 };
