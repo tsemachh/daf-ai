@@ -25,6 +25,8 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 - Stage it into the container (`device_stage_files` with the ~/Downloads path) and work on the copy there.
 - Quota: each deck is roughly 10% of the "שימוש ב-AI" bar (Pro) → about 9–10 decks per quota window, regenerations
   included. Near the end NotebookLM shows "You're getting close to your AI usage limit. Limit resets at <time>".
+- Out of quota, the dialog offers only "ליצירה בהמשך" ("ייווצר בתוך כמה שעות"): makeDeck presses it, and NotebookLM builds
+  the deck on its own servers when quota frees — the Mac doesn't need to be awake for that, only for download/review.
 - Review can run in parallel: one subagent per deck with the steps of §3–4 (they must not commit; commit once at the end).
 
 ## 3. Review (every slide — see the brief)

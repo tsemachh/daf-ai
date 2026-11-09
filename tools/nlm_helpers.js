@@ -1,6 +1,7 @@
 // Paste into the NotebookLM notebook tab (Claude in Chrome javascript_tool) once per page load.
 // Then for each daf paste the line printed by `python3 tools/slides_prompt.py <slug> <daf> --js`, i.e.
 //   await makeDeck(['Arakhin 5a |','Arakhin 5b |','ערכין ה׳ ·'], 'ערכין ה׳', [<sugya rows>], true)
+// Call ONE makeDeck per javascript_tool call (a batch in one call hits the 45s tool timeout).
 // It opens Studio → מצגת, picks exactly those 3 sources, fills the prompt and presses "ליצירה" (false = fill only).
 window.sleep = ms => new Promise(r => setTimeout(r, ms));
 window.norm = s => (s || '').replace(/[‎‏‪-‮]/g, '').trim().replace(/^[a-z_]+\s+/, '').replace(/\s+/g, ' ');
@@ -36,8 +37,8 @@ window.makeDeck = async function (srcs, title, rows, go) {
   const picked = await pickDlg(srcs); await sleep(300);
   const ok = btn(ov, /^אישור$/); if (!ok) return 'no ok'; ok.click(); await sleep(1000);
   const n = setPrompt(mk(title, rows)); await sleep(300);
-  const chosen = norm((btn(ov, /^\d+ מקורות/) || {}).innerText);
-  if (go) { const g = btn(ov, /^ליצירה$/); if (!g) return 'no create'; g.click(); await sleep(1500); }
-  return { picked, n, chosen, go: !!go };
+  let how = 'filled';   // out of quota → only "ליצירה בהמשך" is offered: NotebookLM queues it and builds it on its servers later
+  if (go) { const g = btn(ov, /^ליצירה$/) || btn(ov, /^ליצירה בהמשך$/); if (!g) return 'no create'; how = norm(g.innerText); g.click(); await sleep(1500); }
+  return { picked, n, how };
 };
 'ok';
