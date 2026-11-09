@@ -31,6 +31,7 @@ for part in mp.split():
     k, r = part.split(":")
     a, _, b = r.partition("-")
     groups[k] = [files[i] for i in range(int(a), int(b or a) + 1) if i in files]
+    if not groups[k]: del groups[k]   # every slide of this group was dropped
 dp = os.path.join(ROOT, "data", slug, f"{daf}.json")
 d = json.load(open(dp, encoding="utf8"))
 d["slides"] = {"src": "NotebookLM", "w": 1376, "h": 768, "g": groups}
