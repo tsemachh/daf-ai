@@ -744,5 +744,26 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-sukkah-21-01-5ef38e.webp",
+    "sl-sukkah-21-02-62f5f6.webp"
+   ],
+   "s2": [
+    "sl-sukkah-21-03-ad4d11.webp",
+    "sl-sukkah-21-04-bd7b36.webp"
+   ],
+   "s3": [
+    "sl-sukkah-21-05-e84a4d.webp"
+   ],
+   "end": [
+    "sl-sukkah-21-06-d01c7b.webp"
+   ]
+  }
  }
 }
