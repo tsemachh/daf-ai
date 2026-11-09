@@ -6,7 +6,7 @@ Runs on Tsemach's Mac (Claude in Chrome + device bridge). The Mac stays awake on
 
 ## 0. What to make
 `python3 tools/slides_queue.py 6` → next dafim without a deck, in daf-yomi order (Arachin first, then Temurah …).
-One chunk = as many decks as the NotebookLM quota allows (about 6 a day on Tsemach's Pro plan; the
+One chunk = as many decks as the NotebookLM quota allows (about 9–10 per window on Tsemach's Pro plan; the
 deck dialog shows "שימוש ב-AI": stop when the used part + the estimate would pass the end of the bar).
 
 ## 1. Generate (Chrome, NotebookLM)
@@ -23,7 +23,9 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 - A ready deck appears in Studio as an English title ("Tractate Arakhin 2 …", "3 מקורות"); hover it → ⋮ (left end of the row)
   → "הורדת מסמך PDF (.pdf)". It lands in ~/Downloads as `<Title_with_underscores>.pdf` (~10 MB).
 - Stage it into the container (`device_stage_files` with the ~/Downloads path) and work on the copy there.
-- Quota: each deck is roughly 7% of the "שימוש ב-AI" bar (Pro), so about a dozen a day, regenerations included.
+- Quota: each deck is roughly 10% of the "שימוש ב-AI" bar (Pro) → about 9–10 decks per quota window, regenerations
+  included. Near the end NotebookLM shows "You're getting close to your AI usage limit. Limit resets at <time>".
+- Review can run in parallel: one subagent per deck with the steps of §3–4 (they must not commit; commit once at the end).
 
 ## 3. Review (every slide — see the brief)
 Typical misses seen on the first Arachin run: a ריבוי attached to the wrong word of the Mishnah (check every
