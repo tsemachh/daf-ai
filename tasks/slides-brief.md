@@ -11,6 +11,7 @@ Imagery (Tsemach, 2026-10-30): diagrams, arrows, icons and text only.
 - Never unclothed figures (no Vitruvian man, no anatomy drawings of people).
 - People are allowed when clothed and modest: modest women, or cartoon-style women; Moshe and Aharon allowed (respectful, modest dress).
 - Coins are fine; when drawing coins prefer Israeli-style coins (e.g. ancient Jewish shekel motifs).
+- Never Roman/Greek coins with emperor portraits or standing deity figures, not even faint in the background (NotebookLM adds them to money sugyot — the prompt now asks for a plain parchment background with no coins).
 - Modesty / body-organ sugyot: one factual text line, no illustration.
 - A modest woman may be drawn when the sugya is about a woman; when the sugya is about a baby (נפלים, יצא ראשו, פטר רחם, פדיון הבן) — the baby is the focus; a modest mother may appear only when she is relevant to the point.
 
