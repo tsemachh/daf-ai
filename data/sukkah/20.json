@@ -847,5 +847,40 @@
    }
   }
  },
- "to_next": "Sukkah.20b.13-14"
+ "to_next": "Sukkah.20b.13-14",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-sukkah-20-01-6acafd.webp"
+   ],
+   "s1": [
+    "sl-sukkah-20-02-3c4f75.webp",
+    "sl-sukkah-20-03-d67a7d.webp"
+   ],
+   "s2": [
+    "sl-sukkah-20-04-057633.webp"
+   ],
+   "s3": [
+    "sl-sukkah-20-05-7bdaff.webp",
+    "sl-sukkah-20-06-77aec1.webp"
+   ],
+   "s4": [
+    "sl-sukkah-20-07-91ffa2.webp",
+    "sl-sukkah-20-08-93b3de.webp"
+   ],
+   "s5": [
+    "sl-sukkah-20-09-78090c.webp"
+   ],
+   "s6": [
+    "sl-sukkah-20-10-e5b727.webp",
+    "sl-sukkah-20-11-df8138.webp"
+   ],
+   "end": [
+    "sl-sukkah-20-12-8a7faf.webp"
+   ]
+  }
+ }
 }
