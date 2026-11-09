@@ -701,5 +701,35 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-arachin-9-01-8d74b7.webp"
+   ],
+   "s2": [
+    "sl-arachin-9-02-b36a9f.webp",
+    "sl-arachin-9-03-189655.webp"
+   ],
+   "s3": [
+    "sl-arachin-9-04-22390d.webp"
+   ],
+   "s4": [
+    "sl-arachin-9-05-cbdfc1.webp",
+    "sl-arachin-9-06-adbaa1.webp"
+   ],
+   "s6": [
+    "sl-arachin-9-07-5c5332.webp"
+   ],
+   "s7": [
+    "sl-arachin-9-08-9b127d.webp"
+   ],
+   "end": [
+    "sl-arachin-9-09-a08358.webp"
+   ]
+  }
  }
 }
