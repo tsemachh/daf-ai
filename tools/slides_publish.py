@@ -1,5 +1,5 @@
 """Publish a NotebookLM slide deck (PDF export) onto a daf page.
-usage: slides_publish.py <slug> <daf> <deck.pdf> <map> [--drop 9,13]
+usage: slides_publish.py <slug> <daf> <deck.pdf> <map> [--drop 9,13] [--replace 2=fixed.png,5=other.png]
 map: which slides belong to which sugya, 1-based, e.g. "intro:1 s1:2-4 s2:5-6 s3:7-9 s4:10-11 s5:12-13 end:14-15"
 Writes site/static/sl-<slug>-<daf>-NN.webp and data/<slug>/<daf>.json["slides"]."""
 import json, os, re, subprocess, sys, tempfile, glob
@@ -9,6 +9,9 @@ slug, daf, pdf, mp = sys.argv[1:5]
 drop = set()
 if "--drop" in sys.argv:
     drop = {int(x) for x in sys.argv[sys.argv.index("--drop") + 1].split(",")}
+rep = {}
+if "--replace" in sys.argv:   # slides fixed by hand (erased figure, corrected label): 1-based slide number = image path
+    rep = {int(a): b for a, b in (x.split("=", 1) for x in sys.argv[sys.argv.index("--replace") + 1].split(","))}
 tmp = tempfile.mkdtemp()
 subprocess.run(["pdfimages", "-png", pdf, os.path.join(tmp, "i")], check=True)
 imgs = [f for f in sorted(glob.glob(os.path.join(tmp, "i-*.png"))) if Image.open(f).mode != "L" and Image.open(f).width > 600]
@@ -19,7 +22,7 @@ for n, f in enumerate(imgs, 1):
     if n in drop:
         continue
     import hashlib, io
-    buf = io.BytesIO(); Image.open(f).convert("RGB").save(buf, "WEBP", quality=76, method=6)
+    buf = io.BytesIO(); Image.open(rep.get(n, f)).convert("RGB").save(buf, "WEBP", quality=76, method=6)
     name = f"sl-{slug}-{daf}-{n:02d}-{hashlib.sha1(buf.getvalue()).hexdigest()[:6]}.webp"   # content hash: images are cached by the browser and the service worker
     open(os.path.join(ROOT, "site", "static", name), "wb").write(buf.getvalue())
     files[n] = name

@@ -1402,5 +1402,54 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-arachin-3-01-d1ef54.webp"
+   ],
+   "s2": [
+    "sl-arachin-3-02-eb7de2.webp"
+   ],
+   "s3": [
+    "sl-arachin-3-03-fa420d.webp"
+   ],
+   "s4": [
+    "sl-arachin-3-04-8bdd4b.webp"
+   ],
+   "s5": [
+    "sl-arachin-3-05-e6871f.webp"
+   ],
+   "s6": [
+    "sl-arachin-3-06-f7a2cb.webp"
+   ],
+   "s7": [
+    "sl-arachin-3-07-ea15ea.webp"
+   ],
+   "s8": [
+    "sl-arachin-3-08-2a2faf.webp"
+   ],
+   "s9": [
+    "sl-arachin-3-09-fc8f7d.webp"
+   ],
+   "s10": [
+    "sl-arachin-3-10-6878f1.webp"
+   ],
+   "s11": [
+    "sl-arachin-3-11-57de20.webp"
+   ],
+   "s12": [
+    "sl-arachin-3-12-9da1ad.webp"
+   ],
+   "s13": [
+    "sl-arachin-3-13-f109d8.webp"
+   ],
+   "end": [
+    "sl-arachin-3-14-ec6d44.webp"
+   ]
+  }
  }
 }

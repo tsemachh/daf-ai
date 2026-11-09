@@ -33,5 +33,7 @@ background — the prompt now forbids coins; if they still appear, regenerate or
 (fix what is certain, drop what isn't; small things silently). Note the slide → sugya map from the "סוגיה N" titles.
 
 ## 4. Publish
-`python3 tools/slides_publish.py <slug> <daf> deck.pdf "intro:1 s1:2-3 … end:N" [--drop 7,9]`
+`python3 tools/slides_publish.py <slug> <daf> deck.pdf "intro:1 s1:2-3 … end:N" [--drop 7,9] [--replace 2=fixed.png]`
+(map keys are the page's real section ids, in order — after merges they may start at s2; "סוגיה N" in the deck = the N-th section.
+A slide fixed by hand — e.g. a decorative rabbi erased with `cv2.inpaint` on the `pdfimages` PNG — goes in with `--replace`.)
 then `python3 build.py`, commit (data + site/static/sl-*.webp) and push. Remove nothing else.
