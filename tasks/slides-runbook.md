@@ -12,6 +12,8 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 ## 1. Generate (Chrome, NotebookLM)
 - One notebook per masechet, holding Sefaria `<Name>.<daf>a/b?lang=he` + `https://daf.tsemach.dev/<slug>/<daf>/` for every daf.
   ערכין: notebook "מסכת ערכין" — https://notebook.google.com/notebook/56c90b56-c348-4ae4-bc1c-e4de1cbd3fbe
+  סוכה (20–29): https://notebook.google.com/notebook/b4fab24f-372b-48be-afa6-3bf1e118ccf2
+  תמורה: https://notebook.google.com/notebook/d1f78114-f6ad-426c-9ba9-5f101e8a2bca
   (new masechet: "יצירת נוטבוק" → rename → "הוספת מקורות" → "אתרים" → paste all URLs space-separated → "הוספה").
 - Paste `tools/nlm_helpers.js` into the tab once (javascript_tool).
 - Per daf: paste the line from `python3 tools/slides_prompt.py arachin 5 --js` — `await makeDeck([...3 sources], title, [sugya rows], true)`.
@@ -22,6 +24,8 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 ## 2. Download
 - A ready deck appears in Studio as an English title ("Tractate Arakhin 2 …", "3 מקורות"); hover it → ⋮ (left end of the row)
   → "הורדת מסמך PDF (.pdf)". It lands in ~/Downloads as `<Title_with_underscores>.pdf` (~10 MB).
+- The ⋮ click must be a real (computer-tool) click; a JS click on ⋮ opens the menu but the PDF download never starts.
+- The create button is now labelled "יצירה" (was "ליצירה"); when quota is out, "יצירה בהמשך" may itself be disabled.
 - Stage it into the container (`device_stage_files` with the ~/Downloads path) and work on the copy there.
 - Quota: each deck is roughly 10% of the "שימוש ב-AI" bar (Pro) → about 9–10 decks per quota window, regenerations
   included. Near the end NotebookLM shows "You're getting close to your AI usage limit. Limit resets at <time>".
