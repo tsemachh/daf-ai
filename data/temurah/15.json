@@ -807,5 +807,27 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s2": [
+    "sl-temurah-15-02-26190e.webp",
+    "sl-temurah-15-03-132045.webp"
+   ],
+   "s3": [
+    "sl-temurah-15-04-4c5027.webp",
+    "sl-temurah-15-05-fed8cd.webp"
+   ],
+   "s4": [
+    "sl-temurah-15-06-79dd7b.webp",
+    "sl-temurah-15-07-d9d613.webp"
+   ],
+   "end": [
+    "sl-temurah-15-08-2962c5.webp"
+   ]
+  }
  }
 }
