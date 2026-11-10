@@ -838,5 +838,32 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-temurah-2-01-ab2f0f.webp"
+   ],
+   "s1": [
+    "sl-temurah-2-02-4953f9.webp"
+   ],
+   "s2": [
+    "sl-temurah-2-03-aa4bb1.webp",
+    "sl-temurah-2-04-84fd78.webp"
+   ],
+   "s3": [
+    "sl-temurah-2-05-7937cd.webp"
+   ],
+   "s4": [
+    "sl-temurah-2-06-dd2996.webp",
+    "sl-temurah-2-07-c1aedd.webp"
+   ],
+   "end": [
+    "sl-temurah-2-08-3ef9ec.webp"
+   ]
+  }
  }
 }
