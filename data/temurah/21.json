@@ -917,5 +917,32 @@
    }
   }
  },
- "to_next": "Temurah.21b.15"
+ "to_next": "Temurah.21b.15",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-temurah-21-01-9afa26.webp"
+   ],
+   "s1": [
+    "sl-temurah-21-02-67896b.webp"
+   ],
+   "s2": [
+    "sl-temurah-21-03-9f138d.webp"
+   ],
+   "s3": [
+    "sl-temurah-21-04-f20944.webp",
+    "sl-temurah-21-05-97aa54.webp"
+   ],
+   "s4": [
+    "sl-temurah-21-06-9af2ab.webp"
+   ],
+   "s5": [
+    "sl-temurah-21-07-33c9b6.webp",
+    "sl-temurah-21-08-f6b768.webp"
+   ]
+  }
+ }
 }
