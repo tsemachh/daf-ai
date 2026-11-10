@@ -356,5 +356,22 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-arachin-34-01-caac87.webp"
+   ],
+   "s2": [
+    "sl-arachin-34-02-b4231a.webp",
+    "sl-arachin-34-03-632f23.webp"
+   ],
+   "end": [
+    "sl-arachin-34-04-41f73a.webp"
+   ]
+  }
  }
 }
