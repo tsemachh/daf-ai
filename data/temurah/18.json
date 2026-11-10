@@ -1110,5 +1110,41 @@
    }
   }
  },
- "to_next": "Temurah.18b.17-19"
+ "to_next": "Temurah.18b.17-19",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-temurah-18-01-2b41f2.webp"
+   ],
+   "s1": [
+    "sl-temurah-18-02-8f2834.webp"
+   ],
+   "s2": [
+    "sl-temurah-18-03-2e63bc.webp"
+   ],
+   "s3": [
+    "sl-temurah-18-04-a1bd42.webp"
+   ],
+   "s4": [
+    "sl-temurah-18-05-d73bd5.webp",
+    "sl-temurah-18-06-72ef3b.webp"
+   ],
+   "s5": [
+    "sl-temurah-18-07-606a99.webp"
+   ],
+   "s6": [
+    "sl-temurah-18-08-14a86a.webp"
+   ],
+   "s7": [
+    "sl-temurah-18-09-51cc2d.webp",
+    "sl-temurah-18-10-d62a2c.webp"
+   ],
+   "end": [
+    "sl-temurah-18-11-343100.webp"
+   ]
+  }
+ }
 }
