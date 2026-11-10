@@ -839,5 +839,33 @@
    }
   }
  },
- "to_next": "Temurah.5b.19-25"
+ "to_next": "Temurah.5b.19-25",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-temurah-5-01-e96f51.webp"
+   ],
+   "s2": [
+    "sl-temurah-5-02-8ebc76.webp",
+    "sl-temurah-5-03-420ab0.webp"
+   ],
+   "s3": [
+    "sl-temurah-5-04-1d7150.webp"
+   ],
+   "s4": [
+    "sl-temurah-5-05-87b4be.webp",
+    "sl-temurah-5-06-9bd9c7.webp"
+   ],
+   "s5": [
+    "sl-temurah-5-07-9db56c.webp",
+    "sl-temurah-5-08-a0c047.webp"
+   ],
+   "end": [
+    "sl-temurah-5-09-3a37ca.webp"
+   ]
+  }
+ }
 }
