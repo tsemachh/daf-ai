@@ -22,5 +22,4 @@
 !niddah/57
 !niddah/58
 !niddah/59
-!niddah/72
 !niddah/73
