@@ -1,8 +1,6 @@
-!middot/35
 !middot/36
 !middot/37
 !niddah/32
-!niddah/35
 !niddah/36
 !niddah/37
 !niddah/38
