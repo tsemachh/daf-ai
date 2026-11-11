@@ -137,6 +137,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    question and its answer. `q` ≤10 words ending in ״?״ (״האם ״לא יגאל״ מופנה?״); `a` ≤18 words, what the stage
    concludes — say so when it ends in תיובתא / קשיא / תיקו. A run of parallel בעיות (״ואם תמצא לומר…״) that all end in
    one תיקו is ONE stage, not split by topic (reader note, Bechorot 38).
+   An `a` (and a step's `short`) states the accepted answer's outcome; the reason a simpler answer was rejected is
+   marked as a rejection (״נדחה, כי…״) and never reads as the outcome itself (reader note, Bechorot 59).
 9. **Mishnah steps are explained too** (reader note, Bechorot 26): every clause gets its reason or what it
    means in practice (from S/R), and every step names who acts and on what — never a bare restatement or a
    sentence that leans on the previous step ("שוב מחדש", "עליהן") for its subject.

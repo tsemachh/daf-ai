@@ -33,6 +33,7 @@ Tsemach, 2026-11-01. He gives rules, not item-by-item answers. Don't send him pe
 - Wrong-way arrow inside the drawing: mirror the arrow in the image yourself (flip just the arrow region). If the slide is too complex to do cleanly, drop the slide.
 - Rabbi who is not a party in the sugya: erase the figure from the image and keep the rest of the slide.
 - Content points (wording vs the Gemara, who said what, a missing qualifier, a wrong icon such as a calf for a lamb or a wheel for an עגלה ערופה): decide by our daf page. If the page is clear, fix the text or icon. If it stays unclear, drop the slide. Don't ask.
+- Count every drawn group (sheep, coins, people) against the numbers in the Gemara and our page — 15 = 10 out + 5 left, 19 = 9 + 9 + 1. A wrong count is a content error: repaint the group (copy one icon, clear the row, re-lay it) or drop the slide (reader notes, Bechorot 59).
 - Small things: fix silently and don't report them. This covers made-up letters on coins or decorations (erase), duplicated items in summary slides (remove), a patched line in a slightly different font, and Gemara quotes without nikud (fine).
 
 
