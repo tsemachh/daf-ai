@@ -93,7 +93,7 @@ missing or the API fails, note it in the report and continue with §2.
   a gist, and check step `type`s (answers = a/c). Keep every section id and all correct content; verify
   with one sub-agent against the cache; commit "Refresh Bechorot N: quiz and summaries" and remove the line.
 - **Priority lines:** lines in `tasks/ahead.txt` that start with `!` (e.g. `!sukkah/20`) are an owner's rush order: build ALL of
-  them in this run (up to 7), one daf at a time, committing and pushing each daf as soon as it is verified (so a stop
+  them in this run (up to 14 — owner, 2026-11-11: double pages until the rush is done), one daf at a time, committing and pushing each daf as soon as it is verified (so a stop
   loses nothing); remove each line in its commit. They come right after the calendar targets and before the 2 ordinary lines.
 - **Ahead queue:** then take up to 2 lines from `tasks/ahead.txt` (two ahead dapim per run, one after the other — with the 04:47 and 12:47 runs that is 4 a day; if the run nears its limit after the first, leave the second in the queue for the next run) (`<slug>/<daf>` of the next masechtot,
   prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date with
