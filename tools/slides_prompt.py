@@ -10,7 +10,7 @@ for i, s in enumerate(d["sections"], 1):
     rows.append(f"סוגיה {i}: {re.sub('<[^>]+>', '', s['title'])} ({am})")
 if "--js" in sys.argv:   # sources: Sefaria pages are titled "<Name> 5a | …", our pages "<מסכת> ה׳ · …"
     sef = {"arachin": "Arakhin", "temurah": "Temurah", "keritot": "Keritot", "meilah": "Meilah", "kinnim": "Kinnim", "tamid": "Tamid",
-           "middot": "Middot", "niddah": "Niddah", "berachot": "Berakhot", "sukkah": "Sukkah", "bechorot": "Bekhorot"}[slug]
+           "middot": "Middot", "niddah": "Niddah", "berachot": "Berakhot", "sukkah": "Sukkah", "bechorot": "Bekhorot", "beitzah": "Beitzah"}[slug]
     j = lambda x: json.dumps(x, ensure_ascii=False)
     print(f"await makeDeck({j([f'{sef} {daf}a |', f'{sef} {daf}b |', d.get('title', '') + ' ·'])}, {j(d.get('title', ''))}, {j([r.split(': ', 1)[1] for r in rows])}, true)")
     sys.exit()

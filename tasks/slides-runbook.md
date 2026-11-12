@@ -14,6 +14,8 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
   ערכין: notebook "מסכת ערכין" — https://notebook.google.com/notebook/56c90b56-c348-4ae4-bc1c-e4de1cbd3fbe
   סוכה (20–29): https://notebook.google.com/notebook/b4fab24f-372b-48be-afa6-3bf1e118ccf2
   תמורה: https://notebook.google.com/notebook/d1f78114-f6ad-426c-9ba9-5f101e8a2bca
+  כריתות: https://notebook.google.com/notebook/bd04881d-ca39-42d6-9869-48dc5437e04a
+  ביצה (35): https://notebook.google.com/notebook/1a6f39fc-bd34-4018-b29f-bed729f1f322
   (new masechet: "יצירת נוטבוק" → rename → "הוספת מקורות" → "אתרים" → paste all URLs space-separated → "הוספה").
 - Paste `tools/nlm_helpers.js` into the tab once (javascript_tool).
 - Per daf: paste the line from `python3 tools/slides_prompt.py arachin 5 --js` — `await makeDeck([...3 sources], title, [sugya rows], true)`.
