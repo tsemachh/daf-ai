@@ -74,8 +74,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    Mishnah's case and what each number or time span in it measures — the learner did not see it on this page.
    The same holds for a Gemara section on a later amud that dissects a phrase of a Mishnah given in an earlier
    section (״גמ׳ … אימת?״): restate the Mishnah's rule and what hinges on that phrase — readers jump in by amud.
-   A sugya whose title names a halachic category the page has not defined yet (אתנן, מחיר כלב, מוקצה) gets an
-   `unlock` saying what it is and why it matters in this sugya — reader note, Bechorot 56.
+   A sugya whose title names a halachic category the page has not defined yet (אתנן, מחיר כלב, מוקצה, זב) gets an
+   `unlock` saying what it is and why it matters in this sugya — reader notes, Bechorot 56, Arachin 3.
    Every claim in `unlock` must be stated in S or R — background that "everyone knows" but the sources don't say is
    where errors creep in.
 1. **Complete shakla vetarya.** Every move is its OWN step: every question (מיתיבי, ורמינהו, מאי טעמא,
