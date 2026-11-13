@@ -863,5 +863,25 @@
    }
   }
  },
- "to_next": "Keritot.10b.17-20"
+ "to_next": "Keritot.10b.17-20",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-keritot-10-01-f42771.webp"
+   ],
+   "s1": [
+    "sl-keritot-10-02-fb5f02.webp"
+   ],
+   "s2": [
+    "sl-keritot-10-04-eec5d8.webp",
+    "sl-keritot-10-05-d7f844.webp"
+   ],
+   "end": [
+    "sl-keritot-10-06-cbf19b.webp"
+   ]
+  }
+ }
 }
