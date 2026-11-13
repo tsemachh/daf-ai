@@ -1238,5 +1238,35 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-keritot-11-01-6114ff.webp"
+   ],
+   "s1": [
+    "sl-keritot-11-02-56e562.webp"
+   ],
+   "s2": [
+    "sl-keritot-11-04-feac73.webp"
+   ],
+   "s3": [
+    "sl-keritot-11-05-523377.webp"
+   ],
+   "s4": [
+    "sl-keritot-11-07-329509.webp",
+    "sl-keritot-11-08-b6a66f.webp"
+   ],
+   "s5": [
+    "sl-keritot-11-09-98adbe.webp",
+    "sl-keritot-11-10-56a2e3.webp"
+   ],
+   "end": [
+    "sl-keritot-11-11-4ee838.webp"
+   ]
+  }
  }
 }
