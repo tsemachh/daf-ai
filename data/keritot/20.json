@@ -620,5 +620,32 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-keritot-20-01-28e469.webp"
+   ],
+   "s2": [
+    "sl-keritot-20-02-3f3bfa.webp",
+    "sl-keritot-20-03-9b9684.webp"
+   ],
+   "s3": [
+    "sl-keritot-20-04-5095e6.webp"
+   ],
+   "s4": [
+    "sl-keritot-20-05-6cac1e.webp"
+   ],
+   "s5": [
+    "sl-keritot-20-06-759626.webp",
+    "sl-keritot-20-07-da1b85.webp"
+   ],
+   "end": [
+    "sl-keritot-20-08-5237ca.webp"
+   ]
+  }
  }
 }
