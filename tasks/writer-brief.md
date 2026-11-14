@@ -44,8 +44,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 - `amud` labels: "עמוד א · משנה", "עמוד א · גמרא", "עמוד א–ב" (spans both), "עמוד א · מתחיל בדף X׳"
   (a sugya that starts at the end of the previous daf and is held here whole — see the next rule).
 - **A sugya or mishnah that crosses the daf break lives whole on ONE page — never split (owner, 2026-11-05;
-  Bechorot 51–52 was split and read badly).** Put it on the page that holds most of its segments (tie → where it
-  begins). On this page: if it runs into the next daf (the pack shows the next daf's opening), extend `ref`
+  Bechorot 51–52 was split and read badly).** Put it on the LATER daf — where its main part and its resolution are (owner, 2026-11-14: a sugya that
+  starts at the end of a daf belongs to the next daf when its main part is there) — unless the earlier daf clearly
+  holds most of it: at least 60% of its Gemara text (`python tools/move_sugya.py --scan` measures this). On this page: if it runs into the next daf (the pack shows the next daf's opening), extend `ref`
   across the break, tag those steps "… · דף X" and set `"ends_next":true`; if it began at the end of the previous
   daf and most of it is here, the previous page left it out — start `ref` on the previous daf (its segments are in
   the pack, under "the END of the PREVIOUS daf"), tag those steps "… · דף X", set `"starts_prev":true`. If the last

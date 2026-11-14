@@ -95,6 +95,14 @@ missing or the API fails, note it in the report and continue with §2.
 - **Priority lines:** lines in `tasks/ahead.txt` that start with `!` (e.g. `!sukkah/20`) are an owner's rush order: build ALL of
   them in this run (up to 7), one daf at a time, committing and pushing each daf as soon as it is verified (so a stop
   loses nothing); remove each line in its commit. They come right after the calendar targets and before the 2 ordinary lines.
+- **Move queue (owner, 2026-11-14):** before the ahead queue, take up to 3 lines from `tasks/move.txt` (top first; they are in
+  Daf Yomi order). Each line is a published sugya held on the wrong page under the rule in writer-brief ("crosses the daf
+  break"). Run `python tools/move_sugya.py <slug> <daf> --to next|prev`, then fix by hand what it prints: both storylines
+  (the giving page says in one clause that the sugya is held whole on the other daf; the receiving page opens with it),
+  thesis, card topics, the סוגיות count and reading time, and the quiz — back to exactly 8 on each page (write new
+  questions for the giving page by the quiz rules; drop the weakest extras on the receiving page). validate, check_page,
+  build, look at both pages, and commit them together with the line removed. Section ids are never renumbered (the
+  script picks a free id).
 - **Ahead queue:** then take up to 1 line from `tasks/ahead.txt` (one ahead daf per run — with the 04:47 and 12:47 runs that is 2 a day; owner, 2026-11-14) (`<slug>/<daf>` of the next masechtot,
   prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date with
   `python -c "import build; print(build.yomi_date('<slug>', <daf>))"` (the cycle nearest today — may be years ahead, e.g. a masechet
@@ -210,8 +218,9 @@ term, also after a ו/ב/ה/כ/ל/מ/ש/ד prefix) is used in that sense here; a
 (״בציר״ = פחות, not ציר) gets `nogl`, and a word a first reading gets wrong (פִּסֵּחַ וְעִוֵּר) gets its niqqud.
 **(4) ״לימא כתנאי״** — every such section has a `kt` box (writer-brief rule 11) whose question, two sides, tannaim and rounds match G; patch `sN.kt`.
 **(5) a sugya across the daf break** lives whole on ONE page (owner, 2026-11-05; writer-brief "crosses the daf break"): a
-`"cont":"next"`/`"prev"` split is an ERROR — either finish it here (`ends_next`, steps tagged "… · דף X") when most of it is
-on this daf, or leave it for the next page (`to_next`) / take it whole from the previous one (`starts_prev`).
+`"cont":"next"`/`"prev"` split is an ERROR — finish it here (`ends_next`, steps tagged "… · דף X") only when at least 60% of
+its Gemara text is on this daf; otherwise leave it for the next page (`to_next`) / take it whole from the previous one
+(`starts_prev`) — owner, 2026-11-14: a sugya that starts at the end of a daf belongs to the next daf when its main part is there.
 
 **c. Apply** every ERROR, OMISSION and THIN patch with `python tools/apply_review.py data/<slug>/<daf>.json <cache>/<slug>/<daf>/review.json` (the reviewer writes its patches and glossary entries there) (insert new steps without renumbering
 section ids; recheck `p` indexes after inserts); flag DOUBTFUL in the report. Re-run `fill_srctext.py`
