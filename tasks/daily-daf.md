@@ -95,7 +95,7 @@ missing or the API fails, note it in the report and continue with §2.
 - **Priority lines:** lines in `tasks/ahead.txt` that start with `!` (e.g. `!sukkah/20`) are an owner's rush order: build ALL of
   them in this run (up to 7), one daf at a time, committing and pushing each daf as soon as it is verified (so a stop
   loses nothing); remove each line in its commit. They come right after the calendar targets and before the 2 ordinary lines.
-- **Ahead queue:** then take up to 2 lines from `tasks/ahead.txt` (two ahead dapim per run, one after the other — with the 04:47 and 12:47 runs that is 4 a day; if the run nears its limit after the first, leave the second in the queue for the next run) (`<slug>/<daf>` of the next masechtot,
+- **Ahead queue:** then take up to 1 line from `tasks/ahead.txt` (one ahead daf per run — with the 04:47 and 12:47 runs that is 2 a day; owner, 2026-11-14) (`<slug>/<daf>` of the next masechtot,
   prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date with
   `python -c "import build; print(build.yomi_date('<slug>', <daf>))"` (the cycle nearest today — may be years ahead, e.g. a masechet
   learned out of order), or `python tools/dafyomi.py <date>` to confirm; fetch its
@@ -103,7 +103,7 @@ missing or the API fails, note it in the report and continue with §2.
   then the same §3–§5 process, with that date in `card.date` / `meta`. Remove the line in the commit that
   adds the daf. The home page only lists dapim within the coming week, so early dapim stay out of sight
   until their time; their masechet page shows them.
-- **Queue order (owner, 2026-10-18):** finish Berachot, then the rest of this cycle in Shas order — Temurah, Keritot,
+- **Queue order (owner, 2026-10-18; Berachot and this cycle are done as of 2026-11-14 — the queue now runs into Shabbat):** finish Berachot, then the rest of this cycle in Shas order — Temurah, Keritot,
   Meilah, Kinnim, Tamid, Middot, Niddah — as listed in `tasks/ahead.txt`. A masechet's first daf may need its perakim
   in `data/perakim.json` (add them from Sefaria's index if missing, e.g. Kinnim, Middot). Kinnim and Middot are Mishnah
   without Gemara: build the page on the Mishnah text the same way (sugyot = mishnayot, steps explain each clause);
