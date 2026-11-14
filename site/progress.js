@@ -42,7 +42,12 @@
     return o+(n?'אבגדהוזחט'.charAt(n-1):''); }
   function url(p){return '/'+p.k+'/'}
   function touch(){if(!S.first) S.first=today()}
-  function markDay(){var t=today(); if(S.days.indexOf(t)<0){S.days.push(t); S.days=S.days.slice(-500)}}
+  /* the streak counts Daf Yomi learning only (owner, 2026-11-14): a daf whose Daf Yomi date has come — today's or an
+     earlier one being caught up — or, on a personal plan, a daf inside that plan. Browsing other masechtot does not count. */
+  function yomiP(p){ if(!p) return false;
+    if(S.pace.mode==='plan'){ for(var i=0;i<L.length;i++){ if(L[i].k===S.pace.start) break; if(L[i]===p) return false; } return true; }
+    return !!p.y&&p.y<=today(); }
+  function markDay(p){var t=today(); if(!yomiP(p)) return; if(S.days.indexOf(t)<0){S.days.push(t); S.days=S.days.slice(-500)}}
   function streak(){
     var t=today(), d=S.days.indexOf(t)>=0?t:addDays(t,-1), n=0, g=0;
     while(g++<500){ if(S.days.indexOf(d)>=0) n++; else if(!rest(d)) break; d=addDays(d,-1); }
@@ -318,7 +323,7 @@
         ol.before(b); });
       var rb=el('div','pg-rmode'); rb.appendChild(el('span',null,'מצב חזרה — תקצירים, מסקנות וסיכום בלבד')); var full=el('a',null,'לדף המלא'); full.href=location.pathname; rb.appendChild(full);
       var ctr0=art.querySelector('.controls'); (ctr0||art.querySelector('header')).after(rb);
-      setTimeout(function(){ markDay(); touch(); save(); },20000);   /* a review visit counts for the streak */
+      setTimeout(function(){ markDay(P); touch(); save(); },20000);   /* a review visit counts for the streak */
     }
     var pn=art.querySelector('.prefs'); if(pn) pn.appendChild(settings());
     /* starting in the middle of a masechet: offer to mark the earlier dapim as learned (asked once per masechet) */
@@ -360,7 +365,7 @@
       /* learned mark on the sugya itself: shows ✓ / ✓✓ and toggles learned <-> not learned */
       var lb=el('button','fb-sec pg-lrn'); lb.type='button';
       lb.onclick=function(){ var was=E.s[id]; E.s[id]=was==='learned'?'opened':'learned';
-        if(E.s[id]==='learned'){ delete S.later[P.k+'#'+id]; markDay(); } touch(); save(); paint();
+        if(E.s[id]==='learned'){ delete S.later[P.k+'#'+id]; markDay(P); } touch(); save(); paint();
         toast(E.s[id]==='learned'?'הסוגיה סומנה כנלמדה':'הסימון ״נלמד״ בוטל',function(){ if(was) E.s[id]=was; else delete E.s[id]; save(); paint(); }); };
       var h3=sec.querySelector(':scope > h3'); if(h3){ h3.classList.add('has-lrn'); h3.appendChild(lb); } else tl.insertBefore(lb,tl.firstChild); learnB[id]=lb;
       stepEls[id]=[].slice.call(sec.querySelectorAll('.steps > li[data-k]'));
@@ -469,7 +474,7 @@
         var st=E.s[id];
         if(!st&&acc[id]>=3000){E.s[id]='opened'; st='opened'; ch=true}
         var se=stepEls[id], enough=!se||!se.length||(function(){var v=stOf(E,id),c=0; se.forEach(function(li){ if(bHas(v,+li.dataset.k)) c++; }); return c>=Math.ceil(se.length*0.7);})();   /* auto ✓✓ needs most steps read */
-        if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)&&enough){E.s[id]='learned'; markDay(); ch=true}
+        if(st!=='learned'&&sawEnd[id]&&acc[id]>=need(h,vh)&&enough){E.s[id]='learned'; markDay(P); ch=true}
       });
       /* steps: reading time goes to the first unread step fully on screen (or filling half of it); ~5 words a second, 1.5–8s */
       var pick=null;
@@ -505,7 +510,7 @@
     if(allB) allB.addEventListener('click',function(){
       var all=nLearned(P)===P.n.length, snap=JSON.stringify({s:E.s,done:E.done,later:S.later});
       P.n.forEach(function(id){ if(all) E.s[id]='opened'; else { E.s[id]='learned'; delete S.later[P.k+'#'+id]; } });
-      if(!all) markDay(); var was=E.done; E.done=all?null:(E.done||today()); touch(); save(); paint(); if(E.done&&!was){ setTimeout(nudge,5500); revSync(); }
+      if(!all) markDay(P); var was=E.done; E.done=all?null:(E.done||today()); touch(); save(); paint(); if(E.done&&!was){ setTimeout(nudge,5500); revSync(); }
       toast(all?'הסימון בוטל':'סומנו '+P.n.length+' סוגיות כנלמדו',function(){ var o=JSON.parse(snap); E.s=o.s; E.done=o.done; S.later=o.later; save(); paint(); });
     });
     /* quiz: best score + missed questions for later review (not needed for "learned") */
@@ -580,9 +585,9 @@
   var LADDER=[1,3,7,21,60];
   function bank(){ return window.__qb||(window.__qb=fetch('/quiz.json').then(function(r){return r.json()}).catch(function(){return {}})); }
   function dueList(){ var t=today(); return S.review.filter(function(r){return r.due<=t}).sort(function(a,b){return a.due<b.due?-1:a.due>b.due?1:0}); }
-  function enqueue(k,i,ok){ if(!ok&&!S.review.some(function(r){return r.page===k&&r.q===i})) S.review.push({page:k,q:i,due:addDays(today(),1),n:0}); markDay(); touch(); save(); }
+  function enqueue(k,i,ok){ if(!ok&&!S.review.some(function(r){return r.page===k&&r.q===i})) S.review.push({page:k,q:i,due:addDays(today(),1),n:0}); markDay(byKey(k)); touch(); save(); }
   function grade(r,ok){ if(ok){ r.n=(r.n||0)+1; if(r.n>=LADDER.length) S.review.splice(S.review.indexOf(r),1); else r.due=addDays(today(),LADDER[r.n]); }
-    else { r.n=0; r.due=addDays(today(),1); } markDay(); touch(); save(); }
+    else { r.n=0; r.due=addDays(today(),1); } markDay(byKey(r.page)); touch(); save(); }
   /* one multiple-choice question: shuffled options, explanation (and why the chosen option is wrong, when the data has it) */
   function renderQ(w,item,p,cb){
     if(p){ var cx=el('div','q-ctx'); var ca=el('a',null,p.h+(item.st?' · '+item.st:'')); ca.href=url(p)+(item.s?'#'+p.s+p.d+'-'+item.s:''); cx.appendChild(ca); w.appendChild(cx); }
@@ -641,7 +646,7 @@
       if(dl.length) rv=tile('hot','/review/','🔁','חזרה היום',sn+(sn===1?' שאלה':' שאלות'),'כ־'+Math.max(1,Math.round(sn*0.5))+' דק׳ · לפני הדף החדש');
       else rv=tile('','/review/','🔁','חזרה היום',S.review.length?'✓ הכול':'—',S.review.length?'השאלות הבאות יחזרו לפי הלוח':'שאלה שטעיתם בה תחזור לכאן');
       g.appendChild(rv);
-      var sk=streak(); g.appendChild(tile(sk?'warm':'',false,'🔥','רצף',sk?sk+(sk===1?' יום':' ימים'):'0',sk?'ימי לימוד ברציפות (שבת לא שוברת)':'לומדים כל יום? הרצף נספר כאן'));
+      var sk=streak(); g.appendChild(tile(sk?'warm':'',false,'🔥','רצף',sk?sk+(sk===1?' יום':' ימים'):'0',sk?'ימי לימוד הדף היומי ברציפות (שבת לא שוברת)':'לומדים את הדף היומי כל יום? הרצף נספר כאן'));
       }
       var ms=tp?tp.s:Object.keys(C.mas)[0];
       if(ms&&C.mas[ms]){ var m=C.mas[ms], tot=m.last-m.first+1, done=0; for(var dd=m.first; dd<=m.last; dd++){ if(dafState(ms,dd,byKey(ms+'/'+dd))==='learned') done++; }
