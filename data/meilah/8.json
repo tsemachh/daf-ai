@@ -726,5 +726,29 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-meilah-8-01-69a2c3.webp"
+   ],
+   "s2": [
+    "sl-meilah-8-02-5dea43.webp",
+    "sl-meilah-8-03-3e9910.webp"
+   ],
+   "s3": [
+    "sl-meilah-8-04-cd10ee.webp"
+   ],
+   "s4": [
+    "sl-meilah-8-05-746ace.webp",
+    "sl-meilah-8-06-d7d179.webp"
+   ],
+   "end": [
+    "sl-meilah-8-07-99e152.webp"
+   ]
+  }
  }
 }
