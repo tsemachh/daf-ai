@@ -602,5 +602,19 @@
    }
   }
  },
- "to_next": "Meilah.4b.11-4b.14"
+ "to_next": "Meilah.4b.11-4b.14",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-meilah-4-01-7f9751.webp",
+    "sl-meilah-4-02-5dcbab.webp"
+   ],
+   "end": [
+    "sl-meilah-4-03-fda42f.webp"
+   ]
+  }
+ }
 }
