@@ -102,7 +102,11 @@ missing or the API fails, note it in the report and continue with §2.
   thesis, card topics, the סוגיות count and reading time, and the quiz — back to exactly 8 on each page (write new
   questions for the giving page by the quiz rules; drop the weakest extras on the receiving page). validate, check_page,
   build, look at both pages, and commit them together with the line removed. Section ids are never renumbered (the
-  script picks a free id).
+  script picks a free id). Then צורת הדף: the moved sugya has no outline on its new daf until both touched amudim are
+  republished (`tools/tzurat/README.md`). The page PDFs sit in bundles on the owner's Mac, `~/Downloads/tz-<slug>-all.bin`
+  (lines `tz-<slug>-<daf><a|b>.pdf <bytes>` + the PDF bytes): if the Mac is reachable, stage the bundle, unpack, and run
+  align_pdf + publish for the receiving amud and the giving amud; if it is not, append `<slug>/<daf><amud>` to
+  `tasks/tzurat-todo.txt` and move on.
 - **Ahead queue:** then take up to 1 line from `tasks/ahead.txt` (one ahead daf per run — with the 04:47 and 12:47 runs that is 2 a day; owner, 2026-11-14) (`<slug>/<daf>` of the next masechtot,
   prepared early, top first; skip lines whose JSON exists). Find each daf's Daf Yomi date with
   `python -c "import build; print(build.yomi_date('<slug>', <daf>))"` (the cycle nearest today — may be years ahead, e.g. a masechet
