@@ -342,5 +342,22 @@
    }
   }
  },
- "to_next": "Meilah.3b.8-15"
+ "to_next": "Meilah.3b.8-15",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-meilah-3-01-5d9749.webp"
+   ],
+   "s2": [
+    "sl-meilah-3-02-4c7305.webp",
+    "sl-meilah-3-03-d2f3bd.webp"
+   ],
+   "end": [
+    "sl-meilah-3-04-90b5a8.webp"
+   ]
+  }
+ }
 }
