@@ -827,5 +827,30 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-meilah-9-01-a3eb93.webp"
+   ],
+   "s1": [
+    "sl-meilah-9-02-b214ed.webp",
+    "sl-meilah-9-03-d65ae8.webp"
+   ],
+   "s2": [
+    "sl-meilah-9-04-d7d6f4.webp",
+    "sl-meilah-9-05-6698a0.webp"
+   ],
+   "s3": [
+    "sl-meilah-9-06-c89a70.webp",
+    "sl-meilah-9-07-0b691d.webp"
+   ],
+   "end": [
+    "sl-meilah-9-08-e41fd2.webp"
+   ]
+  }
  }
 }
