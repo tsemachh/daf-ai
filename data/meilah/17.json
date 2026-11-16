@@ -668,5 +668,35 @@
    "href": "https://www.sefaria.org/Meilah.17a?lang=he",
    "text": "הגמרא עם ביאור שטיינזלץ בספריא"
   }
- ]
+ ],
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-meilah-17-01-f37bf2.webp"
+   ],
+   "s2": [
+    "sl-meilah-17-02-7aaaef.webp",
+    "sl-meilah-17-03-b7ef2e.webp"
+   ],
+   "s3": [
+    "sl-meilah-17-04-ce54a1.webp"
+   ],
+   "s4": [
+    "sl-meilah-17-05-397795.webp",
+    "sl-meilah-17-06-1e6f5f.webp"
+   ],
+   "s5": [
+    "sl-meilah-17-07-de7e11.webp"
+   ],
+   "s6": [
+    "sl-meilah-17-08-64b00a.webp"
+   ],
+   "end": [
+    "sl-meilah-17-09-357b77.webp"
+   ]
+  }
+ }
 }
