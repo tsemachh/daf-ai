@@ -372,5 +372,22 @@
     ]
    }
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-meilah-16-01-d42085.webp"
+   ],
+   "s2": [
+    "sl-meilah-16-02-a2c690.webp",
+    "sl-meilah-16-03-e4997e.webp"
+   ],
+   "end": [
+    "sl-meilah-16-04-8168bf.webp"
+   ]
+  }
  }
 }
