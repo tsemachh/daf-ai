@@ -36,6 +36,7 @@ deck dialog shows "שימוש ב-AI": stop when the used part + the estimate wou
 - Review can run in parallel: one subagent per deck with the steps of §3–4 (they must not commit; commit once at the end).
 
 ## 3. Review (every slide — see the brief)
+Spelling (reader note #72, Arachin 5): read every Hebrew word letter by letter — NotebookLM swaps look-alike letters (ז/ח/ד: ״אחוחה״, ״לבזק״) and doubles letters (״ההייקש״, ״הגוי׳יים״); fix by copying the right glyph from the same slide.
 Typical misses seen on the first Arachin run: a ריבוי attached to the wrong word of the Mishnah (check every
 arrow/row against our page), duplicated labels, and Roman coins with emperor portraits or idol figures in the
 background — the prompt now forbids coins; if they still appear, regenerate or drop those slides.
