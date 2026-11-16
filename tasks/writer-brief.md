@@ -179,6 +179,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 17. **״בדרב X ורב Y קמיפלגי״ — one table row per rule** (reader note, Bechorot 48): when a dispute is recast as a dispute over
     earlier amoraic rules, the `table` gives each rule its own row (what it says · who accepts it), and the section's `unlock`
     restates those rules if they were set out in an earlier section.
+18. **A question names its subject** (reader note, Arachin 6): when the Gemara's question leaves its subject implied
+    (״אלא לא נערך אמאי לא?״, ״ואידך?״, ״מאי טעמא?״ after a list), the step names who or what it asks about, with the
+    defining detail (״ואילו יוצא ליהרג, שנגזר דינו…״) — never only the `short` line or the stage `q`.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
