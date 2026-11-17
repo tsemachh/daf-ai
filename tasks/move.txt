@@ -1,7 +1,4 @@
 # sugyot to move across the daf break (owner, 2026-11-14) — tools/move_sugya.py <slug> <daf> --to next|prev; top first, by Daf Yomi date
-temurah/16 s6 --to next   # Temurah.16b.7-17a.2 — 59% on the earlier daf
-temurah/24 s7 --to next   # Temurah.24b.10-25a.5 — 4% on the earlier daf
-temurah/26 s8 --to next   # Temurah.26b.8-27a.4 — 43% on the earlier daf
 keritot/2 s4 --to next   # Keritot.2b.17-3a.9 — 59% on the earlier daf
 keritot/5 s7 --to next   # Keritot.5b.27-6a.5 — 43% on the earlier daf
 keritot/8 s7 --to next   # Keritot.8b.16-9a.7 — 48% on the earlier daf
