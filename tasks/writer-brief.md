@@ -183,6 +183,10 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     (״אלא לא נערך אמאי לא?״, ״ואידך?״, ״מאי טעמא?״ after a list), the step names who or what it asks about, with the
     defining detail (״ואילו יוצא ליהרג, שנגזר דינו…״) — never only the `short` line or the stage `q`.
 
+19. **Rules first when many cases follow from them** (reader notes, Arachin 8): when a list of cases or numbers all follow from
+    one or two underlying rules (a cycle of days, a lien set by the order of vows), the `unlock` states the rules and the `pre`
+    shows them applied per case in a small table before the steps — the learner should not have to rebuild them from the steps.
+
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
 Then ONE re-read against pack.md: every segment covered, every move its own step, `p` and `type` right,
