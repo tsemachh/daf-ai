@@ -1,7 +1,4 @@
 # sugyot to move across the daf break (owner, 2026-11-14) — tools/move_sugya.py <slug> <daf> --to next|prev; top first, by Daf Yomi date
-arachin/31 s10 --to next   # Arakhin.31b.18-32a.4 — 33% on the earlier daf
-arachin/32 s7 --to next   # Arakhin.32b.15-33a.7 — 37% on the earlier daf
-temurah/4 s4 --to next   # Temurah.4b.14-5a.6 — 19% on the earlier daf
 temurah/16 s6 --to next   # Temurah.16b.7-17a.2 — 59% on the earlier daf
 temurah/24 s7 --to next   # Temurah.24b.10-25a.5 — 4% on the earlier daf
 temurah/26 s8 --to next   # Temurah.26b.8-27a.4 — 43% on the earlier daf
