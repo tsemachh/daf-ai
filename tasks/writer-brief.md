@@ -185,7 +185,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
 
 19. **Rules first when many cases follow from them** (reader notes, Arachin 8): when a list of cases or numbers all follow from
     one or two underlying rules (a cycle of days, a lien set by the order of vows), the `unlock` states the rules and the `pre`
-    shows them applied per case in a small table before the steps — the learner should not have to rebuild them from the steps.
+    shows them applied per case in a small table before the steps — the learner should not have to rebuild them from the steps. Each numbered rule
+    starts its own line (its own `<p class="explain">`), never (1) (2) (3) run together in one paragraph (reader note, Arachin 8).
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
