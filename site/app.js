@@ -654,23 +654,26 @@ function remK(){ return (parseFloat(getComputedStyle(document.documentElement).f
       setTimeout(function(){ setLevel(P.lvl||'norm',false); },0);
       setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
     })();
+    /* arithmetic reads left to right (״8 − 1 = 7״), as build.py ltr_math does for the page — reader note #85 */
+    var MATH=/(?<![\p{L}\p{N}.])(?:\d+(?:,\d{3})*(?:\.\d+)?½?|[½¼¾])(?:\s?×\s?(?:\d+(?:,\d{3})*(?:\.\d+)?½?|[½¼¾]))*(?:\s?[+−=×÷]\s?(?:\d+(?:,\d{3})*(?:\.\d+)?½?|[½¼¾])(?:\s?×\s?(?:\d+(?:,\d{3})*(?:\.\d+)?½?|[½¼¾]))*)+(?![\p{L}\p{N}])/gu;
+    function setMath(n,t){ n.textContent=''; var last=0; String(t).replace(MATH,function(m,i){ if(i>last) n.append(t.slice(last,i)); var b=document.createElement('bdi'); b.dir='ltr'; b.textContent=m; n.append(b); last=i+m.length; return m; }); if(last<t.length) n.append(t.slice(last)); }
     var Q=[]; try{Q=JSON.parse(art.querySelector('.qdata').textContent)}catch(e){}
     var box=art.querySelector('[data-role="quizBox"]'), scoreEl=art.querySelector('[data-role="score"]');
     function render(){
       if(!box) return; box.innerHTML=''; var right=0; scoreEl.textContent='';
       Q.forEach(function(item,i){
         var d=document.createElement('div'); d.className='qitem';
-        var p=document.createElement('p'); p.textContent=(i+1)+'. '+item.q; d.appendChild(p);
+        var p=document.createElement('p'); setMath(p,(i+1)+'. '+item.q); d.appendChild(p);
         var opts=document.createElement('div'); opts.className='opts'; var fb=document.createElement('div'); fb.className='fb'; fb.setAttribute('aria-live','polite');
         var order=item.o.map(function(_,j){return j}); for(var x=order.length-1;x>0;x--){var r=Math.floor(Math.random()*(x+1)),tmp=order[x];order[x]=order[r];order[r]=tmp;}
         var btns={};
         order.forEach(function(j){ var t=item.o[j];
-          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.dataset.j=j; b.textContent=t; btns[j]=b;
+          var b=document.createElement('button'); b.type='button'; b.className='opt'; b.dataset.j=j; setMath(b,t); btns[j]=b;
           b.addEventListener('click',function(){
             if(d.dataset.done) return; d.dataset.done=1;
             var ok=j===item.a, v=document.createElement('b'); v.className='qv '+(ok?'ok':'no'); v.textContent=ok?'✓ נכון.':'✗ לא בדיוק.';
             if(ok){b.classList.add('right'); right++;} else{b.classList.add('wrong'); btns[item.a].classList.add('right');}
-            fb.textContent=''; fb.append(v,document.createTextNode(' '+(!ok&&item.w&&item.w[j]?item.w[j]+' ':'')+item.e));
+            var ft=document.createElement('span'); setMath(ft,' '+(!ok&&item.w&&item.w[j]?item.w[j]+' ':'')+item.e); fb.textContent=''; fb.append(v,ft);
             scoreEl.textContent='· '+right+'/'+Q.length;
             if(box.querySelectorAll('.qitem[data-done]').length===Q.length){
               var sm=document.createElement('div'); sm.className='qsum'; sm.setAttribute('role','status');

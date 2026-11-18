@@ -322,8 +322,25 @@ CONTACT_JS = ("""<script>(function(){function go(){if(window.dafContact)return w
               """if(location.hash==='#contact')go()})();</script>""")
 
 
+_NUM = r"(?:\d+(?:,\d{3})*(?:\.\d+)?½?|[½¼¾])"
+_TERM = rf"{_NUM}(?:\s?×\s?{_NUM})*"
+MATH_RE = re.compile(rf"(?<![\w.]){_TERM}(?:\s?[+−=×÷]\s?{_TERM})+(?![\w])")
+_TAGS_RE = re.compile(r"(<script\b.*?</script>|<style\b.*?</style>|<[^>]+>)", re.S)
+
+
+def ltr_math(html):
+    """Arithmetic in Hebrew text (״8 − 1 = 7״, ״4×30 + 8×29 = 352״) reads left to right, as in a maths book.
+    In an RTL line the browser shows it reversed (״7 = 1 − 8״) — reader note #85, Arachin 9 — so each
+    expression is isolated as LTR. Tags, scripts and styles are left alone."""
+    parts = _TAGS_RE.split(html)
+    for i in range(0, len(parts), 2):
+        parts[i] = MATH_RE.sub(lambda m: f'<bdi dir="ltr">{m[0]}</bdi>', parts[i])
+    return "".join(parts)
+
+
 def page(title, body, desc="", depth=0, og="site.png", canonical="", ld=""):
     up = "../" * depth
+    body = ltr_math(body)
     ogi = f"{SITE_URL}/og/{og}"
     canon = f'<link rel="canonical" href="{canonical}">\n' if canonical else ""
     body = re.sub(r'((?:app|progress)\.js)(")', rf'\1?v={ASSET_V}\2', body)
