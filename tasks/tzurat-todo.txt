@@ -28,3 +28,5 @@ keritot/6a
 keritot/5b
 keritot/9a
 keritot/8b
+keritot/15a
+keritot/14b
