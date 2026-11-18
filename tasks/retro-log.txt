@@ -1,0 +1,4 @@
+2026-11-18 bechorot/61 minutes=2 tokens=n/a changed=line breaks + one-case-per-line in 10 steps/unlock
+2026-11-18 arachin/2 minutes=1 tokens=n/a changed=split lists/opinions onto lines in 15 steps (s1-s3,s5,s6)
+2026-11-18 arachin/3 minutes=1 tokens=n/a changed=one case/opinion per line in 15 steps + s3 unlock; s3 table head shortened
+2026-11-18 arachin/4 minutes=1 tokens=n/a changed=to-scale bars for ערך סתום (50/3/1 שקלים) at s7 step; lines split in 11 steps
