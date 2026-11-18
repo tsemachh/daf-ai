@@ -30,3 +30,7 @@ keritot/9a
 keritot/8b
 keritot/15a
 keritot/14b
+keritot/20a
+keritot/19b
+keritot/21a
+keritot/20b
