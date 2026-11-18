@@ -2,3 +2,15 @@
 2026-11-18 arachin/2 minutes=1 tokens=n/a changed=split lists/opinions onto lines in 15 steps (s1-s3,s5,s6)
 2026-11-18 arachin/3 minutes=1 tokens=n/a changed=one case/opinion per line in 15 steps + s3 unlock; s3 table head shortened
 2026-11-18 arachin/4 minutes=1 tokens=n/a changed=to-scale bars for ערך סתום (50/3/1 שקלים) at s7 step; lines split in 11 steps
+2026-11-18 arachin/5 minutes=1.4 tokens=n/a changed=one case/opinion per line in 19 steps; s2 table labels/heads shortened
+2026-11-18 arachin/6 minutes=0.9 tokens=n/a changed=sentence-per-line in 22 steps; s1 three cases as list
+2026-11-18 arachin/7 minutes=1.6 tokens=n/a changed=scale 1/5/50 סלעים at s8 mishnah step; short lines/lists in ~26 steps
+2026-11-18 arachin/8 minutes=1.2 tokens=n/a changed=time-span scale (2-3 / 9-11 / 8-12 days) at s8; short lines in ~20 steps, s2 unlock as list
+2026-11-18 arachin/9 minutes=2.1 tokens=n/a changed=year-length scale 352/354/356/365 (zoomed) at s6; short lines in 15 steps; s6 cases as list
+2026-11-18 arachin/10 minutes=0.8 tokens=n/a changed=range scale (תקיעות 21-48, נבלים 2-6, חלילים 2-12) at s2; opinions one per line; short lines in 16 steps
+2026-11-18 arachin/11 minutes=1.4 tokens=n/a changed=calc 10x10 vs 10x100 מיני זמר at s1; opinions as lists in s2/s3/s5/s6; s6 table labels shortened; short lines ~25 steps
+2026-11-18 arachin/12 minutes=1.1 tokens=n/a changed=short lines in 25 steps, s1 two sides as list; s3 table labels shortened (no measure aid: calendar calc already present)
+2026-11-18 arachin/13 minutes=0.8 tokens=n/a changed=scale 7/8/10 נימין at s7; short lines in 17 steps
+2026-11-18 arachin/14 minutes=1.7 tokens=n/a changed=lists for the four להקל ולהחמיר topics and שור המועד cases; short lines in ~25 steps; found+fixed quote-link bug from line breaks
+2026-11-18 arachin/15 minutes=1.5 tokens=n/a changed=scale 50 vs 100 סלעים at 'האומר בפיו חמור'; seq of 10 trials merged to 6 cards; short lines in 15 steps
+2026-11-18 arachin/16 minutes=0.9 tokens=n/a changed=seven causes of נגעים as a list; short lines in 12 steps (aggadic, no measures)
