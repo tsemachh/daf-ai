@@ -649,7 +649,7 @@ function remK(){ return (parseFloat(getComputedStyle(document.documentElement).f
         setOpen(v!=='norm' || val('open'));
       }
       pn.insertBefore(lv, hd.nextSibling);   /* רמת פירוט lives in the settings panel */
-      art.addEventListener('click',function(e){ if(!art.classList.contains('lvl-short')||e.target.closest('button,a')) return;
+      art.addEventListener('click',function(e){ if(!art.classList.contains('lvl-short')||e.target.closest('button,a,.st-aid')) return;
         var li=e.target.closest('ol.steps>li'); if(li) li.classList.toggle('lv-open'); });
       setTimeout(function(){ setLevel(P.lvl||'norm',false); },0);
       setTimeout(function(){ OPTS.forEach(function(o){ if(val(o[0])) apply(o[0],true); }); },0);
@@ -1168,7 +1168,7 @@ function remK(){ return (parseFloat(getComputedStyle(document.documentElement).f
     else if(w==='close'){ stop(); bar.hidden=true; document.body.classList.remove('tts-open'); } });
   rate.addEventListener('change',function(){ try{P=JSON.parse(localStorage.getItem('dafPrefs')||'{}')||{}; P.ttsRate=+rate.value; localStorage.setItem('dafPrefs',JSON.stringify(P))}catch(e){} if(playing) play(); });
   /* tap a step while the bar is open → read from there */
-  art.addEventListener('click',function(e){ if(bar.hidden||e.target.closest('button,a,.gq,.term')) return; var li=e.target.closest('ol.steps > li'); if(!li) return; var n=Q.findIndex(function(q){return q.el===li}); if(n>=0){ i=n; j=0; play(); } });
+  art.addEventListener('click',function(e){ if(bar.hidden||e.target.closest('button,a,.gq,.term,.st-aid')) return; var li=e.target.closest('ol.steps > li'); if(!li) return; var n=Q.findIndex(function(q){return q.el===li}); if(n>=0){ i=n; j=0; play(); } });
   window.addEventListener('pagehide',function(){ S.cancel(); });
 })();
 

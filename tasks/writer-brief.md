@@ -15,7 +15,8 @@ summary is only a cross-check of the flow — paraphrase, never copy any comment
  "storyline":"<one paragraph of prose: how the daf moves from sugya to sugya>",
  "sections":[{"id":"s1","kind":"sugya","amud":"עמוד א · משנה","ref":"Berakhot.2a.1-4","title":"…",
    "flow":"<בקצרה 1–3 sentences: the question, why it arises, how it ends>",
-   "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>","short":"<the move in ≤12 words>"}],
+   "steps":[{"seg":"2a.2","tag":"קושיה","type":"q","hideable":true,"p":0,"body":"<html>","short":"<the move in ≤12 words>",
+             "aid"?:{"table"|"calc"|"scale"|"seq"|"chain"|"decide":{…},"fig"?:[…]}}],   // inline aid, shown right after this step (rule 3a)
    "unlock"?:"<optional, 1–2 sentences: the case or concept the sugya assumes the learner already knows>",
    "post":"<optional think box, EXACTLY this HTML — question visible, answer collapsed: <div class=\"think\"><div class=\"lbl\">חשבו לפני שממשיכים</div><p>QUESTION</p><button class=\"reveal\" type=\"button\">הצג תשובה</button><div class=\"ans\" hidden=\"\">ANSWER from the Gemara</div></div>>",
    "table"?:{…},"decide"?:{…},"chain"?:{…},"calc"?:{…},"seq"?:{…},
@@ -94,6 +95,12 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    (״בדף כ״ה״, ״כאן״) are never inside ״…״.
    A quote keeps G's exact prefixes (״דבנה כהן״, not ״בנה כהן״ — else it is not found), and a bare connective
    (״לאו היינו״) is never the quote that carries a move: say it in words, quote the words with content (reader note, Bechorot 47).
+2a. **Teach in order, in short lines** (owner from reader notes; Arachin 8–9, notes #80–84; Bechorot 46): write each
+   explanation the way a teacher builds it — what is asked → why it is a question (the assumption it rests on) → the
+   answer → what follows from it. Short sentences, one idea each. A body longer than ~3 sentences is broken with `<br>`
+   into short lines; when a step (or `unlock`) names several rules, cases or opinions, each starts its own line
+   (`<br>• …`), never run together in one paragraph; in `pre` each gets its own `<p class="explain">`. A body that needs
+   more than ~6 sentences is usually two moves (split it) or needs a `ctx` line or an inline aid (3a). No walls of text.
 3. **Aids only when they clarify, never invented** (most sugyot need none): `table` {"title","cols":["","<שיטה>",…],
    "rows":[["<מקרה>","<תשובה>",…]]} when ≥2 opinions × ≥2 cases, max 2 per daf; `decide` {"title","branches":
    [{"if","then":[…]}]}; `chain` {"title","links":[{"k":"פסוק|דרשה|דין|תוצאה","t"}],"note"?}; `calc`
@@ -110,6 +117,15 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    the answer) — reader note, Bechorot 42.
    The same for a chain of ≥3 קושיות each answered by a new distinction (״הא ב… הא ב…״): one row per case with its ruling and
    the distinction that decides it, and the `pre` names those distinctions up front — reader note, Arachin 4–5.
+3a. **Put the aid where it is needed (step `aid`)** (owner, 2026-11-18): a section aid shows only at the end of the sugya,
+   in the folded עזרים panel. When the learner needs the aid to follow a particular step — the candidates of a run of
+   rejected proposals, a sum in the middle of the sugya, the measures being compared, the two cases a distinction splits
+   — attach it to that step instead: `"aid":{"table":{…}}` (same objects as on a section: `table`, `calc`, `scale`, `seq`,
+   `chain`, `decide`, or `fig`:[{src,cap,view}]); it renders right under that step. Put it on the step where its data is
+   complete and before the move that uses it. In חברותא mode an aid on an answer step (a/c) stays hidden until the answer
+   is revealed — so an aid that would give the answer away goes on the answer step, and one the question needs goes on
+   the question step. Never the same aid twice (step and section); inline tables count toward the 2-per-daf limit. Most
+   sugyot need none — only when it fits.
 4. **Quiz: exactly 8**, testing understanding: 4 reasoning (why the ruling / why a proof failed / what the
    הו״א was), 2 principle or distinction, 2 application to a new case. At most 1 "who said". Never a recall stem (״מה הקשה אביי?״, ״מה מקור שיטתו?״) — ask
    why the objection works, what it shows, or what changes in a new case; the learner should be able to answer from
@@ -157,11 +173,17 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    shown open above the steps, so the learner sees what is tied to what and where each round lands. Every line is
    stated by G (or credited to S/R). When a section has `kt`, its `flow` does not retell the rounds: one or two sentences — what
    the sugya is about and where it ends up.
-12. **Measures to scale (`scale`)** (reader note, Bechorot 39): when the sugya compares sizes or measures (שיעורים,
-   אמות, טפחים, אצבעות, כזית/כביצה, distances) between opinions or objects, add
-   `"scale":{"title","groups":[{"label","unit","min"?,"bars":[{"name","v":<number>,"note"?}],"note"?}]}` — one group per
-   comparison, values in one unit, `min` only to zoom in on small differences. Every number stated by G or credited
-   to S/R; never a modern conversion (cm, grams).
+12. **מידות בקנה מידה (`scale`)** (reader note, Bechorot 39; owner, 2026-11-18): in a range / measurement / math sugya —
+   distances, areas, volumes, שיעורים, אמות, טפחים, אצבעות, מילין, כזית/כביצה, counts, time spans — add an aid that lets
+   the learner SEE the proportions, when it fits:
+   - comparing lengths, amounts or time spans → `"scale":{"title","groups":[{"label","unit","min"?,"bars":[{"name",
+     "v":<number>,"note"?}],"note"?}]}` — one group per comparison, all values in ONE unit (convert by the sugya's own
+     equivalences: אמה = 6 טפחים, מיל = 2000 אמה), `min` only to zoom in on small differences;
+   - a shape, area or layout (a sukkah's walls, a square vs a circle, a field, a distance with a midpoint) → ask for a
+     to-scale `fig` drawing (daily-daf §5d, "מידות בקנה מידה"): say in your reply which step needs it and its numbers;
+   - attach it to the step where the measures are given (rule 3a), not only at the end of the sugya.
+   Every number stated by G or credited to S/R; never a modern conversion (cm, grams). Don't force it: a measure only
+   mentioned in passing, or numbers whose proportion teaches nothing, get no aid.
 13. **One word, two senses** (reader notes, Bechorot 43): when opinions read the same word differently (״גבין״ = גבות
    העיניים for the mishnah, גב הגוף for ר׳ חנינא), the step of the later opinion says so in plain words — never let the
    reader carry the first sense over.
@@ -178,6 +200,7 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     `calc` with each step of the sum, and each step's body shows its own numbers (״20 מעה ÷ 6 = 3⅓ דינרים״).
     Calendar reckoning counts too (reader notes, Arachin 9): full/missing months, days the moon is early or late, weekday
     shifts between festivals — one `calc` per opinion, with the day totals (6×30 + 6×29 = 354) and the weeks + remainder.
+    When the sugya goes on past the sum, put the `calc` on the step that makes it (rule 3a), so the numbers sit where they are used.
 17. **״בדרב X ורב Y קמיפלגי״ — one table row per rule** (reader note, Bechorot 48): when a dispute is recast as a dispute over
     earlier amoraic rules, the `table` gives each rule its own row (what it says · who accepts it), and the section's `unlock`
     restates those rules if they were set out in an earlier section.
@@ -189,6 +212,16 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     one or two underlying rules (a cycle of days, a lien set by the order of vows), the `unlock` states the rules and the `pre`
     shows them applied per case in a small table before the steps — the learner should not have to rebuild them from the steps. Each numbered rule
     starts its own line (its own `<p class="explain">`), never (1) (2) (3) run together in one paragraph (reader note, Arachin 8).
+
+20. **When the Gemara gives no reason, say so** (reader note, Bechorot 49): never supply a reason for a ruling or a
+    preference (״הלכה כשמואל״) that G/S/R do not give — write that the Gemara does not explain it here.
+21. **Two cases that look alike get their difference in plain words** (reader note, Bechorot 44): when neighbouring cases
+    or terms could be confused (eyes set high vs. eyes looking up and down), the step says in one sentence how they
+    differ — never leave the learner to infer it from the tags.
+22. **A think box follows the sugya that answers it** (reader note, Bechorot 56): `post` goes on the section whose steps
+    hold the answer — never on an earlier sugya, and never asks about something the page has not reached yet.
+23. **Every Aramaic phrase that carries a story's point is explained** (reader note, Bechorot 45, ״פשע בינוקי״): what it
+    means and why it matters to the outcome, from S/R.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).

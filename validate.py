@@ -10,6 +10,38 @@ REQ = ["key", "tractate", "slug", "tractate_he", "daf", "title", "eyebrow", "the
 STEP_TYPES = {"", "q", "a", "c"}
 
 
+STEP_AIDS = {"table", "calc", "scale", "seq", "chain", "decide", "fig"}
+
+
+def check_aids(s, where, E):
+    """table / decide / chain / calc / seq / scale on a section — or inside one step's "aid" object."""
+    t = s.get("table")
+    if t is not None:
+        if not isinstance(t, dict) or not t.get("cols") or not t.get("rows"):
+            E(f"{where}: table needs cols and rows")
+        elif any(len(r) != len(t["cols"]) for r in t["rows"]):
+            E(f"{where}: every table row needs {len(t['cols'])} cells")
+    dc = s.get("decide")
+    if dc is not None and (not isinstance(dc, dict) or not dc.get("branches")
+                           or any(not b.get("if") or not b.get("then") for b in dc["branches"])):
+        E(f"{where}: decide needs branches with 'if' and 'then'")
+    ch = s.get("chain")
+    if ch is not None and (not isinstance(ch, dict) or len(ch.get("links", [])) < 2
+                           or any(not x.get("k") or not x.get("t") for x in ch["links"])):
+        E(f"{where}: chain needs ≥2 links with 'k' and 't'")
+    cl = s.get("calc")
+    if cl is not None and (not isinstance(cl, dict) or not cl.get("rows") or any(len(r) < 2 for r in cl["rows"])):
+        E(f"{where}: calc needs rows of [label, value, cite?]")
+    sc = s.get("scale")
+    if sc is not None and (not isinstance(sc, dict) or not sc.get("groups")
+                           or any(not g.get("bars") or any(not isinstance(b.get("v"), (int, float)) or not b.get("name") for b in g["bars"])
+                                  for g in sc["groups"])):
+        E(f"{where}: scale needs groups with bars {{name, v:number}}")
+    sq = s.get("seq")
+    if sq is not None and (not isinstance(sq, dict) or len(sq.get("items", [])) < 2):
+        E(f"{where}: seq needs ≥2 items")
+
+
 def check(path, glossary):
     errs, warns = [], []
     d = json.load(open(path, encoding="utf8"))
@@ -33,23 +65,7 @@ def check(path, glossary):
     sugyot = 0
     for s in d["sections"]:
         where = f'section {s["id"]}'
-        t = s.get("table")
-        if t is not None:
-            if not isinstance(t, dict) or not t.get("cols") or not t.get("rows"):
-                E(f"{where}: table needs cols and rows")
-            elif any(len(r) != len(t["cols"]) for r in t["rows"]):
-                E(f"{where}: every table row needs {len(t['cols'])} cells")
-        dc = s.get("decide")
-        if dc is not None and (not isinstance(dc, dict) or not dc.get("branches")
-                               or any(not b.get("if") or not b.get("then") for b in dc["branches"])):
-            E(f"{where}: decide needs branches with 'if' and 'then'")
-        ch = s.get("chain")
-        if ch is not None and (not isinstance(ch, dict) or len(ch.get("links", [])) < 2
-                               or any(not x.get("k") or not x.get("t") for x in ch["links"])):
-            E(f"{where}: chain needs ≥2 links with 'k' and 't'")
-        cl = s.get("calc")
-        if cl is not None and (not isinstance(cl, dict) or not cl.get("rows") or any(len(r) < 2 for r in cl["rows"])):
-            E(f"{where}: calc needs rows of [label, value, cite?]")
+        check_aids(s, where, E)
         sg = s.get("stages")
         if sg is not None:
             n_ = len(s.get("steps", []))
@@ -65,9 +81,6 @@ def check(path, glossary):
                 tos = l.get("to") if isinstance(l.get("to"), list) else [l.get("to")]
                 if l.get("from") not in ids or any(t not in ids for t in tos) or not l.get("k"):
                     E(f"{where}: map link {l} points to an unknown node or has no k")
-        sq = s.get("seq")
-        if sq is not None and (not isinstance(sq, dict) or len(sq.get("items", [])) < 2):
-            E(f"{where}: seq needs ≥2 items")
         if s.get("cont") not in (None, "next", "prev"):
             E(f"{where}: cont must be 'next' or 'prev'")
         if s.get("ends_next") not in (None, True) or (s.get("ends_next") and s.get("cont") == "next"):
@@ -90,6 +103,14 @@ def check(path, glossary):
                     E(f'{where} step {i}: parent {st["p"]} must be an earlier step')
                 if not st.get("body", "").strip():
                     E(f"{where} step {i}: empty body")
+                if "aid" in st:   # an inline aid shown right after this step
+                    a = st["aid"]
+                    if not isinstance(a, dict) or not a or set(a) - STEP_AIDS:
+                        E(f"{where} step {i}: aid must be an object with keys from {sorted(STEP_AIDS)}")
+                    else:
+                        check_aids(a, f"{where} step {i} aid", E)
+                        if "fig" in a and (not isinstance(a["fig"], list) or not all(isinstance(f, dict) and f.get("src") for f in a["fig"])):
+                            E(f"{where} step {i}: aid.fig must be a list of {{src, …}}")
             if len(steps) > 2 and not s.get("flow"):
                 warns.append(f"{where}: no 'בקצרה' summary")
         elif s["kind"] != "raw":

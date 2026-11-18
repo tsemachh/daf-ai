@@ -118,7 +118,12 @@ account with that file as the prompt and give it write access to this repo.
 - `chain`: source chain — `{"title", "links": [{"k": "פסוק|דרשה|דין|תוצאה", "t": str}], "note"?: str}`.
 - `calc`: worked numbers — `{"title", "rows": [[label, value, cite?]], "lines": [[label, value, cite?]], "note"?}`.
 - `seq`: order of events — `{"title", "items": [str, …]}`.
+- `scale`: measures drawn to scale — `{"title", "groups": [{"label", "unit", "min"?, "bars": [{"name", "v": number, "note"?}], "note"?}]}`
+  (shown open right after the steps).
   table / decide / chain / calc / seq render together in a collapsed "עזרים" panel.
+- Step `aid` (inline aid): `{"table"|"calc"|"scale"|"seq"|"chain"|"decide": {…same object as above…}, "fig"?: [{src, …}]}` on a
+  step renders right under that step (`#<key>-<sid>-k<i>-aid`), hidden in חברותא until an answer step is revealed; the /aids/
+  index lists it with a link to the step. validate.py checks it like a section aid.
 - `cont`: `"next"` / `"prev"` for a sugya split across dapim (otherwise inferred from the amud label).
 
 ### What's new

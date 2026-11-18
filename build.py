@@ -380,7 +380,27 @@ def mishna_segs(d):
     return out
 
 
-def render_steps(steps, ref=None, mish=()):
+STEP_AID_KINDS = ("table", "calc", "scale", "seq", "chain", "decide", "fig")   # aids that may sit inside a step (step["aid"])
+
+
+def step_aids(st):
+    """[(kind, aid)] of a step's inline aids: step["aid"] = {"<kind>": {…same object as on a section…}, …};
+    a kind may also hold a list (fig is always a list)."""
+    a = st.get("aid") or {}
+    return [(k, x) for k in STEP_AID_KINDS if k in a
+            for x in ([a[k]] if k == "fig" or isinstance(a[k], dict) else a[k] or [])]
+
+
+def render_step_aid(st, aid_id=""):
+    """A step's inline aid, rendered right under the step it belongs to (not only in the sugya's עזרים at the end)."""
+    fns = {"table": render_table, "calc": render_calc, "scale": render_scale, "seq": render_seq,
+           "chain": render_chain, "decide": render_decide}
+    html = "".join(render_fig(x if isinstance(x, list) else [x]) if k == "fig" else fns[k](x) for k, x in step_aids(st))
+    idattr = f' id="{aid_id}"' if aid_id else ""
+    return f'<div class="st-aid"{idattr}>{html}</div>' if html else ""
+
+
+def render_steps(steps, ref=None, mish=(), sid=""):
     out = ['  <ol class="steps">']
     for k, s in enumerate(steps):
         cls = ' class="mish"' if s.get("seg") and str(s["seg"]) in mish else ""   # a step on the Mishnah's own words: its own background  # חברותא hides answer steps (type a/c) client-side; the old per-step "hideable" flag is ignored
@@ -398,7 +418,8 @@ def render_steps(steps, ref=None, mish=()):
         short = f'<span class="sbody">{s["short"]}</span>' if s.get("short") else ""   # תמצית: the step in one line
         if s.get("ctx"):   # the cases the move leans on (רישא / סיפא, the word being read closely), before the move itself
             body = f'<span class="st-ctx"><b>רקע:</b> {s["ctx"]}</span>' + body
-        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{body}</span>{short}</li>')
+        aid = render_step_aid(s, f"{sid}-k{k}-aid" if sid else "") if s.get("aid") else ""   # inline aid, right after this step
+        out.append(f'    <li{cls} data-k="{k}"{p}><span class="tag{t}">{tg}</span><span class="body">{body}</span>{short}{aid}</li>')
     out.append("  </ol>")
     return "\n".join(out)
 
@@ -527,6 +548,13 @@ def render_aids(alld):
                           ("calc", render_calc), ("scale", render_scale)):
                 for t in ([s[k]] if isinstance(s.get(k), dict) else s.get(k) or []):
                     add(k, t.get("title") or s.get("title", ""), fn(t))
+            for i, st in enumerate(s.get("steps") or []):   # inline aids inside a step link to that step
+                for k, t in step_aids(st):
+                    if k == "fig":
+                        continue
+                    h = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-{s["id"]}-k{i}-aid'
+                    items.append({"k": k, "m": d["slug"], "mh": d["tractate_he"], "t": t.get("title") or s.get("title", ""),
+                                  "h": render_step_aid({"aid": {k: t}}), "links": [(h, where)]})
         allsl = [f for k in (d.get("slides") or {}).get("g", {}).values() for f in k]   # NotebookLM deck: one card per daf (teacher aid)
         if allsl:
             go = f'../{d["slug"]}/{d["daf"]}/#{d["key"]}-slides'
@@ -772,7 +800,7 @@ def render_section(d, s):
             parts.append('  <button class="aid-hint" type="button" data-open-aid="map">🗺️ יש מפת שיטות לסוגיה — מי אמר מה ואיך זה מתכנס. הצג ←</button>')
         if s.get("kt"):
             parts.append(render_kt(s["kt"]))
-        parts.append(render_steps(s["steps"], s.get("ref"), MISH_CACHE.setdefault(d["key"], mishna_segs(d)) if "key" in d else ()))
+        parts.append(render_steps(s["steps"], s.get("ref"), MISH_CACHE.setdefault(d["key"], mishna_segs(d)) if "key" in d else (), sid))
         if s.get("scale"):
             parts.append(render_scale(s["scale"]))
         aids, names = [], []
@@ -1016,6 +1044,7 @@ def home_data():
     pages = list(DAFS.values())
     naid = nfig + sum(1 for d in pages for x in d["sections"] for k in ("table", "decide", "seq", "chain", "calc", "scale")
                       for _ in ([x[k]] if isinstance(x.get(k), dict) else x.get(k) or [])) \
+        + sum(1 for d in pages for x in d["sections"] for st in x.get("steps") or [] for k, _ in step_aids(st) if k != "fig") \
         + sum(len(sw_charts(d["slug"], d["daf"])) for d in pages)
     nsl = sum(1 for d in pages if (d.get("slides") or {}).get("g"))   # dafim with a teacher deck
     return jscript({"wn": wn, "figs": nfig, "aids": naid, "sl": nsl, "pages": len(pages), "mas": len({d["slug"] for d in pages}),

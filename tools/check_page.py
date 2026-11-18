@@ -205,7 +205,8 @@ def main():
     # worked-numbers boxes: every row and total is [label, value] or [label, value, cite] — a bare string breaks the
     # two-column layout (it was split letter by letter: ״ס״ | ״ך״), and the cite is for readers (״משנה״, ״ו׳ ע״א״), not a seg id
     for s in d['sections']:
-        for c_ in ([s['calc']] if isinstance(s.get('calc'), dict) else s.get('calc') or []):
+        calcs = [s] + [st['aid'] for st in s.get('steps', []) if isinstance(st.get('aid'), dict)]   # also inline aids in steps
+        for c_ in [c for o in calcs for c in ([o['calc']] if isinstance(o.get('calc'), dict) else o.get('calc') or [])]:
             for part in ('rows', 'lines'):
                 for r_ in c_.get(part, []):
                     if not (isinstance(r_, list) and 2 <= len(r_) <= 3 and all(isinstance(x, str) for x in r_)):
@@ -214,7 +215,8 @@ def main():
                         errs.append(f'{s["id"]}: calc cite ״{r_[2]}״ is a segment id — write a source a reader knows (משנה, ברייתא, רש״י, ו׳ ע״א)')
     # our own drawings (content/figs/*.svg): every label names its Gemara line (data-seg) and says nothing the sugya
     # doesn't — its words must be found in the Gemara, Rashi or our explanation of this daf (no invented terms)
-    figs = [(s['id'], f['src']) for s in d['sections'] for f in s.get('fig', [])]
+    figs = [(s['id'], f['src']) for s in d['sections'] for f in s.get('fig', [])] + [   # also drawings inside a step's aid
+        (s['id'], f['src']) for s in d['sections'] for st in s.get('steps', []) for f in (st.get('aid') or {}).get('fig', [])]
     if figs:
         corpus = ' '.join(TAG.sub('', st.get('body', '')) for s in d['sections'] for st in s.get('steps', []))
         corpus += ' ' + ' '.join(clean(x) for am in 'ab' for x in nseg(a.cache, slug, daf, am)[1])
