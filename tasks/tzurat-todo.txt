@@ -22,3 +22,9 @@ temurah/25a
 temurah/24b
 temurah/27a
 temurah/26b
+keritot/3a
+keritot/2b
+keritot/6a
+keritot/5b
+keritot/9a
+keritot/8b
