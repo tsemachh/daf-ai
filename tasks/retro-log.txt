@@ -14,3 +14,21 @@
 2026-11-18 arachin/14 minutes=1.7 tokens=n/a changed=lists for the four להקל ולהחמיר topics and שור המועד cases; short lines in ~25 steps; found+fixed quote-link bug from line breaks
 2026-11-18 arachin/15 minutes=1.5 tokens=n/a changed=scale 50 vs 100 סלעים at 'האומר בפיו חמור'; seq of 10 trials merged to 6 cards; short lines in 15 steps
 2026-11-18 arachin/16 minutes=0.9 tokens=n/a changed=seven causes of נגעים as a list; short lines in 12 steps (aggadic, no measures)
+2026-11-18 arachin/17 minutes=2.4 tokens=n/a changed=short lines in 28 steps; four rules of השג יד as list; s6 label shortened (no measures)
+2026-11-18 arachin/18 minutes=0.8 tokens=n/a changed=short lines in 32 steps; s7 list of 5 שנים מעת לעת; s4 labels shortened (ages table covers the measures)
+2026-11-18 arachin/19 minutes=0.7 tokens=n/a changed=short lines in 30 steps; lists in s1/s7/s9 (יד measures are anatomical: fig would be needed, not a bar scale)
+2026-11-18 arachin/20 minutes=0.7 tokens=n/a changed=short lines in 29 steps; s11 labels shortened (no measures)
+2026-11-18 arachin/21 minutes=0.5 tokens=n/a changed=scale 30/60 days at s8 mishnah; short lines in 26 steps; s6 labels shortened
+2026-11-18 arachin/22 minutes=0.7 tokens=n/a changed=short lines in 33 steps (s1 already has table+calc of the days)
+2026-11-18 arachin/23 minutes=0.4 tokens=n/a changed=short lines in 35 steps; s5 ערב/קבלן list; s9 label shortened
+2026-11-18 arachin/24 minutes=1.1 tokens=n/a changed=calc 2400 פונדיון/49 years at s11 step 6; short lines in 32 steps; s11 table heads/labels shortened
+2026-11-18 arachin/25 minutes=1.1 tokens=n/a changed=short lines in 27 steps (s3 fig already shows the 10-טפחים measures)
+2026-11-18 arachin/26 minutes=0.8 tokens=n/a changed=short lines in 31 steps (no measures)
+2026-11-18 arachin/27 minutes=0.4 tokens=n/a changed=calc 21+5¼+5=31¼ at s12 step 4; short lines in 32 steps
+2026-11-18 arachin/28 minutes=0.7 tokens=n/a changed=short lines in 27 steps (no measures)
+2026-11-18 arachin/29 minutes=0.4 tokens=n/a changed=short lines in 37 steps (שתי שנים/שלוש תבואות: no proportion to show)
+2026-11-18 arachin/30 minutes=0.7 tokens=n/a changed=short lines in 16 steps (מנה/מאתים cases already one per step)
+2026-11-18 arachin/31 minutes=0.4 tokens=n/a changed=scale 354/365 days at s8 step 1; short lines in 10 steps
+2026-11-18 arachin/32 minutes=0.8 tokens=n/a changed=short lines in 11 steps (figs already show walls/houses)
+2026-11-18 arachin/33 minutes=0.4 tokens=n/a changed=short lines in 17 steps (no measures)
+2026-11-18 arachin/34 minutes=0.4 tokens=n/a changed=short lines in 5 steps
