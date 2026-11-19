@@ -815,5 +815,45 @@
     "הֲדַרַן עֲלָךְ בִּזְמַן שֶׁכֹּהֵן גָּדוֹל וּסְלִיקָא לַהּ מַסֶּכֶת תָּמִיד"
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-tamid-33-01-05c4ad.webp"
+   ],
+   "s1": [
+    "sl-tamid-33-02-e4121b.webp"
+   ],
+   "s2": [
+    "sl-tamid-33-03-902743.webp"
+   ],
+   "s3": [
+    "sl-tamid-33-04-b69247.webp"
+   ],
+   "s4": [
+    "sl-tamid-33-05-2219eb.webp"
+   ],
+   "s5": [
+    "sl-tamid-33-06-a93b2b.webp"
+   ],
+   "s6": [
+    "sl-tamid-33-07-836507.webp"
+   ],
+   "s7": [
+    "sl-tamid-33-08-1cf6f9.webp"
+   ],
+   "s8": [
+    "sl-tamid-33-09-6f3b76.webp"
+   ],
+   "s9": [
+    "sl-tamid-33-10-578eeb.webp"
+   ],
+   "end": [
+    "sl-tamid-33-11-dd3313.webp"
+   ]
+  }
  }
 }
