@@ -416,7 +416,7 @@
        state (opened / learned) with a marker for the reading position; a small pill shows "x/n" while
        scrolling. Tap or drag on it to jump to a sugya (only while it is shown). */
     (function(){
-      if(RM||!P.n.length) return;
+      if(!P.n.length) return;   /* shown in חזרה (?r) too: learned dapim open in that mode */
       var ids=P.n.filter(function(id){return secs[id]}); if(!ids.length) return;
       var rail=el('div','pg-rail'), mark=el('i','pg-rail-at'), pill=el('div','pg-rail-pill'), seg={}, pillT=null;
       rail.setAttribute('aria-hidden','true'); pill.setAttribute('aria-hidden','true');
