@@ -780,5 +780,35 @@
   }
  ],
  "footer": "נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.",
- "to_next": "Tamid.31b.15"
+ "to_next": "Tamid.31b.15",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-tamid-31-01-a55c26.webp"
+   ],
+   "s2": [
+    "sl-tamid-31-02-0b9c07.webp",
+    "sl-tamid-31-03-b14bce.webp"
+   ],
+   "s3": [
+    "sl-tamid-31-04-843fee.webp",
+    "sl-tamid-31-05-e4dbaa.webp"
+   ],
+   "s4": [
+    "sl-tamid-31-06-abe4a5.webp"
+   ],
+   "s5": [
+    "sl-tamid-31-07-f07abb.webp"
+   ],
+   "s6": [
+    "sl-tamid-31-08-64f029.webp"
+   ],
+   "end": [
+    "sl-tamid-31-09-7588a7.webp"
+   ]
+  }
+ }
 }
