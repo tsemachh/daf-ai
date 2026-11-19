@@ -639,5 +639,29 @@
    "href": "https://www.sefaria.org/Tamid.29a?lang=he",
    "text": "הגמרא עם ביאור שטיינזלץ בספריא"
   }
- ]
+ ],
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-tamid-29-01-41192a.webp"
+   ],
+   "s1": [
+    "sl-tamid-29-02-91611f.webp"
+   ],
+   "s2": [
+    "sl-tamid-29-03-dfba56.webp",
+    "sl-tamid-29-04-599b55.webp"
+   ],
+   "s3": [
+    "sl-tamid-29-05-35ab38.webp",
+    "sl-tamid-29-06-527814.webp"
+   ],
+   "end": [
+    "sl-tamid-29-07-2bd2b9.webp"
+   ]
+  }
+ }
 }
