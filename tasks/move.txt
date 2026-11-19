@@ -1,5 +1,4 @@
 # sugyot to move across the daf break (owner, 2026-11-14) — tools/move_sugya.py <slug> <daf> --to next|prev; top first, by Daf Yomi date
-meilah/13 s5 --to next   # Meilah.13b.10-14a.9 — 13% on the earlier daf
 meilah/15 s6 --to next   # Meilah.15b.14-16a.7 — 10% on the earlier daf
 meilah/19 s6 --to next   # Meilah.19b.12-20a.3 — 11% on the earlier daf
 tamid/26 s9 --to next   # Tamid.26b.10-27a.1 — 37% on the earlier daf
