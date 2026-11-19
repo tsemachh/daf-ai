@@ -182,6 +182,8 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
    - a shape, area or layout (a sukkah's walls, a square vs a circle, a field, a distance with a midpoint) → ask for a
      to-scale `fig` drawing (daily-daf §5d, "מידות בקנה מידה"): say in your reply which step needs it and its numbers;
    - attach it to the step where the measures are given (rule 3a), not only at the end of the sugya.
+   - a sugya that argues over a count in several rounds (each קושיה/תירוץ recounts the years or amounts) gets a `scale` on
+     EVERY round's step, with that round's own numbers and the target number beside them (reader note, Arachin 12).
    Every number stated by G or credited to S/R; never a modern conversion (cm, grams). Don't force it: a measure only
    mentioned in passing, or numbers whose proportion teaches nothing, get no aid.
 13. **One word, two senses** (reader notes, Bechorot 43): when opinions read the same word differently (״גבין״ = גבות
