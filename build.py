@@ -894,7 +894,7 @@ def render_daf(d, prev, nxt, glossary, sources):
                   + "".join(f'<li><a href="{esc(c["href"])}" target="_blank" rel="noopener" data-external="1" title="{esc(c["en"])}">{esc(c["title"])} <small>(PDF)</small></a>'
                           + (f' · <a href="#{key}-{c["sec"]}-aids">בסוגיה ↑</a>' if c["sec"] else "") + '</li>' for c in sw)
                   + '</ul></li>')
-    sw_top = (f'<a class="to-quiz to-sw" href="#{key}-more"><span>📊 {"דף עזר" if len(sw) == 1 else f"{len(sw)} דפי עזר"} לדף · <bdi dir="ltr">Simon Wolf</bdi> ↓</span></a>' if sw else "")
+    sw_top = ""   # top-of-page link to Simon Wolf's sheets removed (owner, 19 Nov); the sheets stay in "עוד" and on /aids/
     pn = []
     for k, fmt in ((neighbour(d["slug"], d["daf"], -1), '→ {}'), (neighbour(d["slug"], d["daf"], 1), '{} ←')):
         if k:
