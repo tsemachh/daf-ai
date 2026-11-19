@@ -926,7 +926,7 @@ def render_daf(d, prev, nxt, glossary, sources):
 {nav}
   </ol>
 </nav>
-<a class="to-quiz" href="#{key}-quiz">✎ שאלות הבנה על הדף — בסוף הדף ↓</a>
+<div class="to-quiz-row"><a class="to-quiz" href="#{key}-quiz">✎ שאלות הבנה על הדף — בסוף הדף ↓</a>{'<button class="to-quiz sl-btn" type="button" data-sl="*">📊 מצגת הדף — לחזרה מהירה</button>' if d.get("slides") else ""}</div>
 {sw_top}
 {story}
 
