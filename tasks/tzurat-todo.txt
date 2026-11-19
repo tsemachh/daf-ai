@@ -40,3 +40,7 @@ keritot/28a
 keritot/27b
 meilah/9a
 meilah/8b
+meilah/11a
+meilah/10b
+meilah/12a
+meilah/11b
