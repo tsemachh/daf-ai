@@ -24,6 +24,11 @@ API base `https://daf-ai.pages.dev/admin/api`, headers `CF-Access-Client-Id: $DA
 missing or the API fails, note it in the report and continue with §2.
 1. `GET /list?status=new&limit=10` (oldest first). Each note has `id, page` (e.g. `bechorot/9`),
    `section` (e.g. `s5`), `section_title`, `kind` (fix | missing | feature), `text`, `email`, `notify`.
+   A note with `section` = `slides-<n>` is about slide n of the daf's NotebookLM deck (1-based over the whole
+   deck, `section_title` names its sugya; the link is `/<slug>/<daf>/#<slug><daf>-slides-<n>`). The slide is the
+   n-th entry of the page's `slides.g` lists in section order (intro, sugyot, end). Fix it as in
+   `tasks/slides-runbook.md` §3 (patch the image with `/home/claude/sl/patch.py`-style edits, or drop the slide)
+   and republish with `tools/slides_publish.py … --replace n=<png>` / `--drop n`; never edit the daf text for it.
 2. Validate against the verbatim Gemara on Sefaria (same fetch method as §3) and the daf JSON.
 3. Decide, act, then `POST /update` with `{id, status, reply}` (reply: 1–2 Hebrew sentences, shown
    publicly and to the author; never repeat the author's name or email):

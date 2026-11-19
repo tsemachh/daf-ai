@@ -1447,7 +1447,7 @@ document.addEventListener('click',function(e){
     function arm(){ [[pb,D.daf-1],[nb,D.daf+1]].forEach(function(z){ z[0].disabled=true; load(z[1]).then(function(d){ z[0].disabled=!d; }); }); }
     function goDaf(n,a){ load(n).then(function(d){ if(!d) return; D=d; sid=null; tabs.textContent=''; mkTabs(); var ams=Object.keys(D.tz).sort(); show(a&&D.tz[a]?a:(a==='last'?ams[ams.length-1]:ams[0])); arm(); }); }
     pb.onclick=function(){ goDaf(D.daf-1,'last'); }; nb.onclick=function(){ goDaf(D.daf+1,'a'); };
-    function close(){ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
+    function close(){ try{ history.replaceState(history.state,'',h0); }catch(e){} try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',esc); if(last&&last.focus) last.focus(); }
     function esc(e){ if(e.key==='Escape') close(); }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',esc);
     function mkTabs(){ Object.keys(D.tz).sort().forEach(function(a){ var t=el('button','st-tog',a==='a'?'ע״א':'ע״ב'); t.setAttribute('role','tab'); t.type='button'; t.dataset.am=a;
@@ -1500,8 +1500,8 @@ document.addEventListener('click',function(e){
   var ALL=[], AT={}; ORDER.forEach(function(k){ (SL.g[k]||[]).forEach(function(f){ AT[f]=k; ALL.push(f); }); });
   function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
   function title(k){ if(k==='intro') return 'פתיחה'; if(k==='end') return 'סיכום'; var h=document.querySelector('#'+key+'-'+k+' h3'); return 'סוגיה '+(ORDER.indexOf(k))+(h?': '+h.textContent.replace(/\s*✓.*$/,'').trim():''); }
-  function open(sid,startSid){
-    var last=document.activeElement, bg=el('div','srcdlg-bg tz-bg sl-bg'), d=el('div','srcdlg tz-dlg sl-dlg');
+  function open(sid,startSid,startN){
+    var h0=location.href, last=document.activeElement, bg=el('div','srcdlg-bg tz-bg sl-bg'), d=el('div','srcdlg tz-dlg sl-dlg');
     d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','מצגת');
     var h=el('header'), h4=el('h4'), tools=el('span','tz-tools'), ab=el('button','tz-z'), x=el('button','x','×');
     ab.type='button'; x.type='button'; x.setAttribute('aria-label','סגור'); tools.append(ab,x); h.append(h4,tools);
@@ -1509,7 +1509,7 @@ document.addEventListener('click',function(e){
     var prev=el('button','sl-nav sl-prev','›'), next=el('button','sl-nav sl-next','‹'); prev.type=next.type='button'; prev.setAttribute('aria-label','השקף הקודם'); next.setAttribute('aria-label','השקף הבא'); view.append(prev,next);
     var dots=el('div','sl-dots'), f=el('footer'), cap=el('span'); f.append(cap); d.append(h,view,dots,f); bg.appendChild(d); document.body.appendChild(bg); document.documentElement.classList.add('tz-lock');
     var all=sid==='*', list, i=0;
-    function close(){ try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
+    function close(){ try{ history.replaceState(history.state,'',h0); }catch(e){} try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){} bg.remove(); document.documentElement.classList.remove('tz-lock'); document.removeEventListener('keydown',kb,true); if(last&&last.focus) last.focus(); }
     function kb(e){ if(e.key==='Escape') close(); else if(e.key==='ArrowLeft'){ e.preventDefault(); e.stopImmediatePropagation(); go(i+1); } else if(e.key==='ArrowRight'){ e.preventDefault(); e.stopImmediatePropagation(); go(i-1); } }
     x.onclick=close; bg.addEventListener('click',function(e){ if(e.target===bg) close(); }); document.addEventListener('keydown',kb,true);
     function setList(){ list=all?ALL:SL.g[sid]; ab.textContent=all?'רק הסוגיה':'כל המצגת'; ab.hidden=sid==='*'; dots.innerHTML='';
@@ -1517,7 +1517,9 @@ document.addEventListener('click',function(e){
     function go(j){ if(j<0||j>=list.length) return; i=j; var f2=list[i]; img.src='/'+f2; h4.textContent=title(AT[f2]);
       [].forEach.call(dots.children,function(b,k){ b.setAttribute('aria-current',k===i); });
       prev.disabled=i===0; next.disabled=i===list.length-1; cap.textContent=(i+1)+' / '+list.length+' · נוצר ב-NotebookLM מתוך הגמרא ודף צמח · עלול לטעות';
-      var n=list[i+1]; if(n){ var p=new Image(); p.src='/'+n; } }
+      var n=list[i+1]; if(n){ var p=new Image(); p.src='/'+n; }
+      /* the address bar names this slide (#<daf>-slides-<n>, n counts the whole deck) — a link to copy, and the target of a note on it */
+      try{ history.replaceState(history.state,'',location.pathname+location.search+'#'+key+'-slides-'+(ALL.indexOf(f2)+1)); }catch(e){} }
     ab.onclick=function(){ var cur=list[i]; all=!all; setList(); var k=list.indexOf(cur); go(k<0?0:k); };
     prev.onclick=function(){ go(i-1); }; next.onclick=function(){ go(i+1); };
     /* RTL deck: swipe right → next slide */
@@ -1553,11 +1555,17 @@ document.addEventListener('click',function(e){
       try{ if(on&&d.requestFullscreen) d.requestFullscreen().catch(function(){}); else if(!on&&document.fullscreenElement) document.exitFullscreen(); }catch(e){} };
     document.addEventListener('fullscreenchange',function(){ if(!document.fullscreenElement) bg.classList.remove('sl-full'); });
     window.addEventListener('orientationchange',resetZ); window.addEventListener('resize',function(){ clampZ(); applyZ(); });
+    /* note on this exact slide: closes the deck and opens the reader-note form for "slides-<n>" */
+    if(window.dafNote){ var nb=el('button','tz-z sl-note','💬'); nb.type='button'; nb.setAttribute('aria-label','הערה על השקף'); nb.title='הערה על השקף הזה';
+      tools.insertBefore(nb,fs); nb.onclick=function(){ var f2=list[i], n=ALL.indexOf(f2)+1, t='מצגת · שקף '+n+' מתוך '+ALL.length+' · '+title(AT[f2]);
+        close(); try{ history.replaceState(history.state,'',location.pathname+location.search+'#'+key+'-slides-'+n); }catch(e){} window.dafNote('slides-'+n,t.length>150?t.slice(0,149)+'…':t); }; }
     var go0=go; go=function(j){ resetZ(); go0(j); };
-    setList(); var st=0; if(startSid&&SL.g[startSid]&&SL.g[startSid][0]){ st=Math.max(0,list.indexOf(SL.g[startSid][0])); } go(st); x.focus();
+    setList(); var st=0; if(startSid&&SL.g[startSid]&&SL.g[startSid][0]){ st=Math.max(0,list.indexOf(SL.g[startSid][0])); } if(startN>0&&startN<=list.length) st=startN-1; go(st); x.focus();
   }
   /* deep link from the עזרים page: #<daf>-<sugya>-slides opens that sugya's deck */
   /* deep links: #<daf>-slides opens the whole deck; the old #<daf>-<sugya>-slides opens it at that sugya */
-  var hm=location.hash.match(/^#(.+)-slides$/); if(hm){ var sid0=hm[1]===key?null:hm[1].slice(key.length+1); setTimeout(function(){ open('*',sid0); },300); }
+  /* #<daf>-slides-<n> opens the whole deck at slide n (the link the deck puts in the address bar, and in notes on a slide) */
+  var hn=location.hash.match(/^#(.+)-slides-(\d+)$/); if(hn&&hn[1]===key){ setTimeout(function(){ open('*',null,+hn[2]); },300); }
+  var hm=!hn&&location.hash.match(/^#(.+)-slides$/); if(hm){ var sid0=hm[1]===key?null:hm[1].slice(key.length+1); setTimeout(function(){ open('*',sid0); },300); }
   document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.sl-btn'); if(!b||!art.contains(b)) return; open(b.dataset.sl); });
 })();
