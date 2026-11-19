@@ -1447,5 +1447,40 @@
    "href": "https://www.sefaria.org/Mishnah_Kinnim.1?lang=he",
    "text": "המשנה עם פירוש הברטנורא בספריא"
   }
- ]
+ ],
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-kinnim-23-01-95fca6.webp"
+   ],
+   "s2": [
+    "sl-kinnim-23-02-058d0a.webp"
+   ],
+   "s3": [
+    "sl-kinnim-23-03-c12c23.webp"
+   ],
+   "s4": [
+    "sl-kinnim-23-04-817f8c.webp"
+   ],
+   "s5": [
+    "sl-kinnim-23-05-f08a8b.webp"
+   ],
+   "s6": [
+    "sl-kinnim-23-06-dd7b32.webp"
+   ],
+   "s7": [
+    "sl-kinnim-23-07-54253c.webp"
+   ],
+   "s8": [
+    "sl-kinnim-23-08-1cce81.webp",
+    "sl-kinnim-23-09-0c6cbd.webp"
+   ],
+   "end": [
+    "sl-kinnim-23-10-20bbcc.webp"
+   ]
+  }
+ }
 }
