@@ -52,3 +52,5 @@ meilah/20a
 meilah/19b
 tamid/27a
 tamid/26b
+tamid/27b
+tamid/28a
