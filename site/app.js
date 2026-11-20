@@ -281,6 +281,17 @@ function remK(){ return (parseFloat(getComputedStyle(document.documentElement).f
     if(!probe){ pop.hidden=false; cur=q; q.setAttribute('aria-expanded','true');
     var r=q.getBoundingClientRect(), w=Math.min(340*remK(),innerWidth-32); pop.style.width=w+'px';
     var left=Math.max(16,Math.min(innerWidth-w-16, r.left+r.width/2-w/2)); pop.style.left=(left+scrollX)+'px'; pop.style.top=(r.bottom+scrollY+8)+'px'; }
+    /* Rambam pages: a quote opens the halacha it comes from (the Rambam's own words, from the page) — no Steinsaltz/Rashi lookup */
+    var artR=q.closest('article.daf');
+    if(artR&&artR.dataset.kind==='rambam'){
+      var it=(window.__SRC||{})[key];
+      if(probe) return Promise.resolve(it?{rambam:1}:null);
+      tabs.remove(); pd.textContent='';
+      var hq=document.createElement('p'); hq.className='cm-r'; var bq=document.createElement('b'); bq.textContent='״'+q.textContent.replace(/^[״"]|[״"]$/g,'')+'״'; hq.append(bq,document.createTextNode(' — מתוך '+(it?it.t:'לשון הרמב״ם')+':')); pd.appendChild(hq);
+      ((it&&it.p)||[]).forEach(function(t){ var pp=document.createElement('p'); pp.className='stg-gm'; pp.textContent=t; pd.appendChild(pp); });
+      if(!it) pd.appendChild(document.createTextNode('לשון ההלכה לא נמצאה בדף.'));
+      cr.textContent='לשון הרמב״ם · ספריא'; return;
+    }
     if(!key){ if(probe) return Promise.resolve(null); pd.textContent='לא נמצא ביאור לציטוט זה.'; return; }
     var full=norm(q.textContent.split(/\.\.\.|…/)[0]), qw=norm(q.textContent).split(' ').filter(Boolean), set={};
     qw.forEach(function(x){ if(x.length>1) set[x]=1; });
