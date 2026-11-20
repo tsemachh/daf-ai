@@ -30,10 +30,14 @@ SW_DIR = {"sukkah": "succah", "rosh-hashanah": "rosh_hashana", "megillah": "megi
           "avodah-zarah": "avoda_zara", "chullin": "chulin", "keritot": "kreitot", "niddah": "nidah"}
 
 
+SW_HIDE = {"nidah017_Anatomy.pdf"}   # sheets the owner chose not to link (19-20 Nov: detailed anatomy drawing)
+
+
 def sw_charts(slug, daf):
     """Simon Wolf's charts / source sheets for a daf — linked at the source (with permission), so his updates show through."""
     out, dr = [], SW_DIR.get(slug, slug)
     for f in SWDAF.get(dr, {}).get(str(daf), []):
+        if f in SW_HIDE: continue
         t = re.sub(r"^[A-Za-z_]+?\d+_?", "", f).rsplit(".", 1)[0].replace("_", " ").strip() or "דף עזר"
         out.append({"href": f"https://www.swdaf.com/docDownload/{dr}/{f}", "title": SWHE.get(f, t), "en": t, "sec": SWSEC.get(f"{dr}/{f}", "")})
     return out
