@@ -700,5 +700,36 @@
     "בַּר מִינֵּיהּ דְּהַהִיא, דְּתָנֵי רַב הוֹשַׁעְיָא: בִּרְשׁוּת הַיָּחִיד — סְפֵקוֹ טָמֵא, בִּרְשׁוּת הָרַבִּים — טָהוֹר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-5-01-e4040d.webp"
+   ],
+   "s1": [
+    "sl-niddah-5-02-91eaa2.webp",
+    "sl-niddah-5-03-54c899.webp"
+   ],
+   "s2": [
+    "sl-niddah-5-04-97fc53.webp",
+    "sl-niddah-5-05-ce5991.webp"
+   ],
+   "s3": [
+    "sl-niddah-5-06-39c9cd.webp"
+   ],
+   "s4": [
+    "sl-niddah-5-07-03ea07.webp",
+    "sl-niddah-5-08-fa4555.webp"
+   ],
+   "s5": [
+    "sl-niddah-5-09-eccddf.webp"
+   ],
+   "end": [
+    "sl-niddah-5-10-1090ce.webp"
+   ]
+  }
  }
 }
