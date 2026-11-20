@@ -54,3 +54,5 @@ tamid/27a
 tamid/26b
 tamid/27b
 tamid/28a
+niddah/10b
+niddah/11a
