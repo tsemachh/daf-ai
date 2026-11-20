@@ -1131,6 +1131,52 @@ def lab_version_page(d, slug, glossary, sources, model):
     return html
 
 
+# ---------------------------------------------------------------- Rambam chapter pages (/rambam/<work>/<perek>/)
+RAMBAM_WORKS = {"teshuva": {"he": "הלכות תשובה", "sef": "Mishneh_Torah,_Repentance", "chapters": 10}}
+
+
+def render_rambam(glossary, sources):
+    """Learning pages for a chapter of the Rambam, in the daf page's layout. Data: data_rambam/<work>/<n>.json
+    (same schema as a daf page; `ref` = the Sefaria ref of a halacha, srctext keyed by it). Kept out of data/ so
+    the Daf Yomi catalog, feed and quiz index don't see them."""
+    root = os.path.join(ROOT, "data_rambam")
+    if not os.path.isdir(root):
+        return
+    for work in sorted(os.listdir(root)):
+        meta = RAMBAM_WORKS.get(work)
+        if not meta:
+            continue
+        files = sorted(glob.glob(os.path.join(root, work, "*.json")), key=lambda f: int(os.path.basename(f)[:-5]))
+        ds = [json.load(open(f, encoding="utf8")) for f in files]
+        have = {d["daf"] for d in ds}
+        sl = f"rambam-{work}"
+        BOUNDS[sl] = (meta["he"], 1, meta["chapters"]); ORDER[sl] = -99
+        cards = []
+        for d in ds:
+            n = d["daf"]
+            HAVE.update((sl, x) for x in have)
+            html = render_daf(d, None, None, glossary, sources)
+            html = (html.replace('"../../', '"../../../').replace("'../../", "'../../../")
+                        .replace(f'{sl}/', f'rambam/{work}/').replace(f"מסכת {meta['he']}", meta["he"])
+                        .replace(f"{meta['sef']}.{n}a?lang", f"{meta['sef']}.{n}?lang")
+                        .replace('<span class="lg-gem">״לשון הגמרא״</span>', '<span class="lg-gem">״לשון הרמב״ם״</span>')
+                        .replace('class="daf" id=', 'class="daf" data-kind="rambam" id=', 1)
+                        .replace("שאלות הבנה על הדף", "שאלות חשיבה על הפרק").replace("מצגת הדף", "מצגת הפרק")
+                        .replace("מהלך הדף", "מהלך הפרק").replace("מפתח לסוגיה", "מפתח לנושא").replace("על מה הסוגיה", "על מה ההלכה").replace("מפת הסוגיות", "מפת הנושאים").replace("הסיפור של הדף", "מבנה הפרק"))
+            out = os.path.join(DIST, "rambam", work, str(n))
+            os.makedirs(out, exist_ok=True)
+            open(os.path.join(out, "index.html"), "w", encoding="utf8").write(html)
+            cards.append(card(d, f"./{n}/"))
+        idx = page(f"{meta['he']} לרמב״ם · {BRAND}", f"""<div class="wrap" id="app"><section>
+<a class="back" href="../../">→ דף הבית</a>
+<h1>{meta['he']} לרמב״ם</h1>
+<p class="thesis">דפי לימוד לפי פרקים: לשון הרמב״ם, ביאור בשפה פשוטה, עזרים ושאלות חשיבה.</p>
+<div class="cards">
+{chr(10).join(cards)}
+</div></section></div>""", f"{meta['he']} לרמב״ם — דפי לימוד", depth=2)
+        open(os.path.join(DIST, "rambam", work, "index.html"), "w", encoding="utf8").write(idx)
+
+
 def render_lab(glossary, sources):
     for e in LAB.values():
         slug, daf = e["slug"], e["daf"]
@@ -1355,6 +1401,7 @@ def main():
             alld.append(d)
         open(os.path.join(DIST, slug, "index.html"), "w", encoding="utf8").write(render_masechet(slug, ds))
     render_lab(glossary, sources)
+    render_rambam(glossary, sources)
     about_p = os.path.join(ROOT, "content", "home_about.html")
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     # newest by Daf Yomi date; dapim prepared far ahead (the "ahead" queue) stay off the home page until their week
