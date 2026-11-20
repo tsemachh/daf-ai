@@ -42,7 +42,7 @@ Tsemach, 2026-11-01. He gives rules, not item-by-item answers. Don't send him pe
 Slides are a teacher aid, not part of daily learning: no per-sugya button. One "📊 מצגת הדף" button in the page header opens the whole deck; the עזרים page lists one card per daf under "מצגות למלמדים". Finish Bechorot so the set is complete; don't start other tractates unless asked.
 
 ## מסכת נדה (owner, 20 Nov 2026)
-- Decks are made like any other masechet: summaries, opinion diagrams (each sage: ruling + reason), timelines. No drawn people.
-- Any slide with a diagram or image of a sensitive subject (anatomy, examinations, stains): do NOT publish it on your own —
-  send it to Tsemach (SendUserFile) and wait for "approve" / what to fix. Text-only slides follow the normal review.
-- Simon Wolf's anatomy sheet (nidah017_Anatomy.pdf) is not linked (build.py SW_HIDE).
+- Use the regular prompt and the regular review, like any other masechet. No nudity, ever (as everywhere).
+- We don't draw anatomy ourselves — Simon Wolf's anatomy sheet (Niddah 17) is linked on the page and covers it.
+- Any slide that may need the owner's eye (a sensitive diagram or image): send it to Tsemach (SendUserFile) before
+  publishing; he approves or says what to fix / hold.

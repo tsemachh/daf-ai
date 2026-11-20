@@ -30,7 +30,7 @@ SW_DIR = {"sukkah": "succah", "rosh-hashanah": "rosh_hashana", "megillah": "megi
           "avodah-zarah": "avoda_zara", "chullin": "chulin", "keritot": "kreitot", "niddah": "nidah"}
 
 
-SW_HIDE = {"nidah017_Anatomy.pdf"}   # sheets the owner chose not to link (19-20 Nov: detailed anatomy drawing)
+SW_HIDE = set()   # sheets not to link (none: the owner wants all SW sheets linked, incl. Niddah 17 anatomy)
 
 
 def sw_charts(slug, daf):
