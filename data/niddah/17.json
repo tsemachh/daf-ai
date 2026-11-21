@@ -942,5 +942,33 @@
     "לָא קַשְׁיָא, כָּאן — כְּשֶׁנִּמְצָא בַּקַּרְקַע פְּרוֹזְדוֹר, וְכָאן — שֶׁנִּמְצָא בְּגַג פְּרוֹזְדוֹר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-niddah-17-01-8c4900.webp",
+    "sl-niddah-17-02-b2542f.webp"
+   ],
+   "s2": [
+    "sl-niddah-17-03-a84578.webp",
+    "sl-niddah-17-04-76e52c.webp"
+   ],
+   "s3": [
+    "sl-niddah-17-05-bec8dd.webp"
+   ],
+   "s4": [
+    "sl-niddah-17-06-1561ec.webp"
+   ],
+   "s6": [
+    "sl-niddah-17-08-40b674.webp",
+    "sl-niddah-17-09-efea1a.webp"
+   ],
+   "end": [
+    "sl-niddah-17-10-abb5db.webp"
+   ]
+  }
  }
 }
