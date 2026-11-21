@@ -1,0 +1,33 @@
+/* Rambam learning pages (/rambam/…): text → explanation, clause by clause. Loaded only on those pages. */
+.rmb .r-how{font-size:.95rem;color:var(--muted);margin:.5rem 0 .25rem}
+.rmb .r-t-chip{font-family:'Frank Ruhl Libre',serif;background:var(--accent-soft);color:var(--ink);padding:0 .4em;border-radius:.3em}
+.rmb .r-gist{background:var(--accent-soft);border-radius:.6rem;padding:.6rem .85rem;margin:.4rem 0 .9rem}
+.rmb .r-full{margin:0 0 .9rem}
+.rmb .r-full summary{cursor:pointer;color:var(--accent);font-size:.95rem}
+.rmb .r-text{font-family:'Frank Ruhl Libre',serif;font-size:1.18em;line-height:1.95;margin:.5rem 0 0}
+.rmb .r-sub{margin:1.1rem 0 .4rem;font-size:1.02rem;color:var(--accent)}
+.rmb ol.r-parts{list-style:none;margin:0;padding:0;counter-reset:rp}
+.rmb li.r-part{counter-increment:rp;position:relative;margin:0 0 .9rem;padding:0 2rem 0 0}
+.rmb li.r-part::before{content:counter(rp);position:absolute;right:0;top:.35rem;width:1.45rem;height:1.45rem;border-radius:50%;
+  background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:.78rem;display:flex;align-items:center;justify-content:center}
+.rmb .r-t{font-family:'Frank Ruhl Libre',serif;font-size:1.2em;line-height:1.9;margin:0;padding:.35rem .75rem;
+  background:var(--card);border:1px solid var(--line);border-right:4px solid var(--accent);border-radius:.5rem}
+.rmb .r-x{margin:.45rem .4rem 0 0;line-height:1.75}
+.rmb .r-x p{margin:.3rem 0}
+.rmb .r-w{font-size:.9rem;color:var(--muted)}
+.rmb .r-ask{margin:.5rem 0;padding:.45rem .7rem;border:1px dashed var(--line);border-radius:.5rem;font-size:.95rem}
+.rmb .r-ask .reveal{margin-inline-start:.5rem}
+.rmb .r-ask .ans{margin-top:.35rem}
+.rmb .r-sum{border-top:1px solid var(--line);padding-top:.6rem;margin-top:.4rem}
+/* self-test: explanations hidden until the clause is tapped */
+.rmb.rm-test .r-x{display:none}
+.rmb.rm-test li.r-part.open .r-x{display:block}
+.rmb.rm-test .r-t{cursor:pointer}
+.rmb.rm-test li.r-part:not(.open) .r-t::after{content:" · הקישי להסבר";font-family:'Assistant',sans-serif;font-size:.78rem;color:var(--accent)}
+/* text only: the halacha read straight through */
+.rmb.rm-text .r-x,.rmb.rm-text .r-gist,.rmb.rm-text .r-sum,.rmb.rm-text .think,.rmb.rm-text .r-full,.rmb.rm-text .r-sub,.rmb.rm-text li.r-part::before{display:none}
+.rmb.rm-text ol.r-parts{display:block}
+.rmb.rm-text li.r-part{display:inline;padding:0;margin:0}
+.rmb.rm-text .r-t{display:inline;background:none;border:0;padding:0;border-radius:0}
+.rmb.rm-text li.r-part::after{content:" "}
+@media (max-width:640px){.rmb li.r-part{padding-right:1.7rem}.rmb .r-t{font-size:1.12em}}
