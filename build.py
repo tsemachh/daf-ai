@@ -1359,7 +1359,7 @@ def main():
         open(os.path.join(DIST, slug, "index.html"), "w", encoding="utf8").write(render_masechet(slug, ds))
     render_lab(glossary, sources)
     import rambam
-    rambam.render_all(sys.modules[__name__], glossary)
+    rambam.render_all(sys.modules[__name__], glossary, sources)
     about_p = os.path.join(ROOT, "content", "home_about.html")
     about = open(about_p, encoding="utf8").read() if os.path.exists(about_p) else ""
     # newest by Daf Yomi date; dapim prepared far ahead (the "ahead" queue) stay off the home page until their week

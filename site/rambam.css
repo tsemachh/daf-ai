@@ -23,7 +23,7 @@
 .rmb.rm-test .r-x{display:none}
 .rmb.rm-test li.r-part.open .r-x{display:block}
 .rmb.rm-test .r-t{cursor:pointer}
-.rmb.rm-test li.r-part:not(.open) .r-t::after{content:" · הקישי להסבר";font-family:'Assistant',sans-serif;font-size:.78rem;color:var(--accent)}
+.rmb.rm-test li.r-part:not(.open) .r-t::after{content:" · הקישו להסבר";font-family:'Assistant',sans-serif;font-size:.78rem;color:var(--accent)}
 /* text only: the halacha read straight through */
 .rmb.rm-text .r-x,.rmb.rm-text .r-gist,.rmb.rm-text .r-sum,.rmb.rm-text .think,.rmb.rm-text .r-full,.rmb.rm-text .r-sub,.rmb.rm-text li.r-part::before{display:none}
 .rmb.rm-text ol.r-parts{display:block}
@@ -31,3 +31,5 @@
 .rmb.rm-text .r-t{display:inline;background:none;border:0;padding:0;border-radius:0}
 .rmb.rm-text li.r-part::after{content:" "}
 @media (max-width:640px){.rmb li.r-part{padding-right:1.7rem}.rmb .r-t{font-size:1.12em}}
+.r-ver{background:var(--accent-soft);border-radius:.6rem;padding:.5rem .8rem;margin:.6rem 0;font-size:.95rem}
+.r-ver a[aria-current]{font-weight:700;text-decoration:none;color:var(--ink)}

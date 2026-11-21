@@ -46,7 +46,7 @@ def parts_html(B, parts, hid, start):
         w = p.get("w") or []
         words = ("<p class=\"r-w\">" + " · ".join(f"<b>{B.esc(a)}</b> — {B.esc(b)}" for a, b in w) + "</p>") if w else ""
         ask = p.get("ask")
-        askh = (f'<div class="r-ask"><span class="r-ask-q">בדקי את עצמך: {ask["q"]}</span>'
+        askh = (f'<div class="r-ask"><span class="r-ask-q">בדקו את עצמכם: {ask["q"]}</span>'
                 f'<button class="reveal" type="button">הצג תשובה</button><div class="ans" hidden="">{ask["a"]}</div></div>') if ask else ""
         aid = B.render_step_aid({"aid": p["aid"]}, f"{hid}-aid{i}") if p.get("aid") else ""
         out.append(f'<li class="r-part" id="{hid}-{i}"><p class="r-t">{B.esc(p["t"])}</p>'
@@ -109,9 +109,9 @@ def render_page(B, d, meta, work, texts, have, glossary):
   <div class="r-how"><b>איך לומדים:</b> כל הלכה מחולקת לקטעים קצרים — קודם <span class="r-t-chip">לשון הרמב״ם</span> ומיד אחריו ההסבר.</div>
   <div class="controls r-modes" role="group" aria-label="אופן הלימוד">
     <button class="btn" data-rm="learn" aria-pressed="true" type="button" title="לשון הרמב״ם וההסבר אחרי כל קטע">לימוד</button>
-    <button class="btn" data-rm="test" aria-pressed="false" type="button" title="ההסברים מוסתרים — נסי להסביר לבד, והקישי על קטע לגילוי">בדיקה עצמית</button>
+    <button class="btn" data-rm="test" aria-pressed="false" type="button" title="ההסברים מוסתרים — נסו להסביר לבד, והקישו על קטע לגילוי">בדיקה עצמית</button>
     <button class="btn" data-rm="text" aria-pressed="false" type="button" title="רק לשון הרמב״ם, ברצף">רק הרמב״ם</button>
-    <button class="btn" data-role="learned" aria-pressed="false" type="button" title="סמני את כל ההלכות כנלמדו">למדתי</button>
+    <button class="btn" data-role="learned" aria-pressed="false" type="button" title="סמנו את כל ההלכות כנלמדו">למדתי</button>
   </div>
 </header>
 
@@ -161,7 +161,30 @@ def render_page(B, d, meta, work, texts, have, glossary):
                   canonical=f"{B.SITE_URL}/rambam/{work}/{n}/")
 
 
-def render_all(B, glossary):
+V_SWITCH = ('<div class="r-ver"><b>שתי גרסאות להשוואה:</b> '
+            '<a href="{a}"{ca}>גרסה א׳ — לפי נושאים</a> · <a href="{b}"{cb}>גרסה ב׳ — הלכה אחר הלכה, לשון והסבר</a></div>')
+
+
+def render_v1(B, d, meta, work, glossary, sources):
+    """Version A (topic layout, the daf page's structure), kept for comparison with the clause-by-clause version."""
+    n = d["daf"]
+    sl = f"rambam-{work}"
+    B.BOUNDS[sl] = (meta["he"], 1, meta["chapters"]); B.ORDER[sl] = -99
+    html = B.render_daf(d, None, None, glossary, sources)
+    html = (html.replace('"../../', '"../../../../').replace("'../../", "'../../../../")
+                .replace(f'{sl}/', f'rambam/{work}/').replace(f"מסכת {meta['he']}", meta["he"])
+                .replace('href="../">', 'href="../../">')
+                .replace(f"{meta['sef']}.{n}a?lang", f"{meta['sef']}.{n}?lang")
+                .replace('<span class="lg-gem">״לשון הגמרא״</span>', '<span class="lg-gem">״לשון הרמב״ם״</span>')
+                .replace('class="daf" id=', 'class="daf" data-kind="rambam" id=', 1)
+                .replace("שאלות הבנה על הדף", "שאלות חשיבה על הפרק").replace("מצגת הדף", "מצגת הפרק")
+                .replace("מהלך הדף", "מהלך הפרק").replace("הסיפור של הדף", "מבנה הפרק").replace("מפתח לסוגיה", "מפתח לנושא")
+                .replace("על מה הסוגיה", "על מה ההלכה").replace("מפת הסוגיות", "מפת הנושאים"))
+    sw = V_SWITCH.format(a="./", ca=' aria-current="page"', b="../", cb="")
+    return html.replace("<header>", '<link rel="stylesheet" href="../../../../rambam.css">' + sw + "\n<header>", 1)
+
+
+def render_all(B, glossary, sources=None):
     root = os.path.join(B.ROOT, "data_rambam")
     if not os.path.isdir(root):
         return
@@ -181,7 +204,14 @@ def render_all(B, glossary):
                 raise SystemExit(f"rambam {work} {n}: " + "; ".join(errs))
             out = os.path.join(B.DIST, "rambam", work, str(n))
             os.makedirs(out, exist_ok=True)
-            open(os.path.join(out, "index.html"), "w", encoding="utf8").write(render_page(B, d, meta, work, texts, have, glossary))
+            html = render_page(B, d, meta, work, texts, have, glossary)
+            v1 = os.path.join(root, work, "v1", f"{n}.json")
+            if os.path.exists(v1):
+                html = html.replace("<header>", V_SWITCH.format(a="./a/", ca="", b="./", cb=' aria-current="page"') + "\n<header>", 1)
+                os.makedirs(os.path.join(out, "a"), exist_ok=True)
+                open(os.path.join(out, "a", "index.html"), "w", encoding="utf8").write(
+                    render_v1(B, json.load(open(v1, encoding="utf8")), meta, work, glossary, sources or {}))
+            open(os.path.join(out, "index.html"), "w", encoding="utf8").write(html)
             cards.append(f'<a class="card" href="./{n}/"><span class="c-daf">פרק {hnum(n)}</span><span class="c-t">{B.esc(d["title"])}</span>'
                          f'<span class="c-s">{B.esc(re.sub("<[^>]+>", "", d["thesis"]))}</span></a>')
         idx = B.page(f"{meta['he']} לרמב״ם · {B.BRAND}", f"""<div class="wrap" id="app"><section>

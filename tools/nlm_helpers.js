@@ -49,3 +49,15 @@ window.studio = () => { const out = []; document.querySelectorAll('*').forEach(e
 window.rectOf = t => { let leaf = null; document.querySelectorAll('*').forEach(e => { if (!leaf && e.children.length === 0 && norm(e.textContent) === t) leaf = e; }); if (!leaf) return null; leaf.scrollIntoView({ block: 'center' }); const r = leaf.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top + r.height / 2)] };
 window.pdfItem = () => { const it = [...document.querySelectorAll('.cdk-overlay-container [role=menuitem]')].find(x => /PDF/.test(x.innerText)); if (it) { it.click(); return 'ok' } return 'none' };
 'ok';
+
+window.mkR=(title,rows)=>`מצגת לתלמידת כיתה ט׳ על ${title} — רק לפי המקורות שנבחרו (לשון הרמב״ם בספריא ודף הלימוד שלנו).
+עקוב בדיוק אחרי רשימת הנושאים של דף הלימוד שלנו, באותו סדר ובאותם שמות:
+${rows.map((r,i)=>'נושא '+(i+1)+': '+r).join('\n')}
+לכל נושא 1–2 שקפים. כותרת כל שקף: "נושא N: שם". בראש השקף ציטוט קצר מלשון הרמב״ם, ומתחתיו הסבר בעברית פשוטה וברורה לבני נוער.
+תרשימים, טבלאות קטנות וחצים מימין לשמאל. שקף סיכום אחד בסוף ושקף אחד של "שאלה למחשבה".
+איורים: תרשימים, אייקונים וטקסט. אנשים רק בלבוש צנוע. בלי מטבעות, פסלים ודיוקנאות. רקע נקי.
+שום דבר מחוץ לרמב״ם ולדף שלנו.`;
+window.makeDeckR=async function(srcs,title,rows){ const tile=btn(document,/^מצגת$/); tile.click(); await sleep(1500);
+ const ov=document.querySelector('.cdk-overlay-container'); btn(ov,/^\d+ מקורות/).click(); await sleep(1200);
+ const picked=await pickDlg(srcs); await sleep(300); btn(ov,/^אישור$/).click(); await sleep(1000);
+ const n=setPrompt(mkR(title,rows)); await sleep(300); const g=btn(ov,/^ל?יצירה$/)||btn(ov,/^ל?יצירה בהמשך$/); const how=norm(g.innerText); g.click(); await sleep(1500); return {picked,n,how}; };
