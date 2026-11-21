@@ -288,7 +288,18 @@ function remK(){ return (parseFloat(getComputedStyle(document.documentElement).f
       if(probe) return Promise.resolve(it?{rambam:1}:null);
       tabs.remove(); pd.textContent='';
       var hq=document.createElement('p'); hq.className='cm-r'; var bq=document.createElement('b'); bq.textContent='״'+q.textContent.replace(/^[״"]|[״"]$/g,'')+'״'; hq.append(bq,document.createTextNode(' — מתוך '+(it?it.t:'לשון הרמב״ם')+':')); pd.appendChild(hq);
-      ((it&&it.p)||[]).forEach(function(t){ var pp=document.createElement('p'); pp.className='stg-gm'; pp.textContent=t; pd.appendChild(pp); });
+      /* only the passage the quote comes from (its sentence), with the whole halacha one tap away */
+      var nk=function(x){ return x.replace(/[\u0591-\u05C7]/g,'').replace(/[^\u05D0-\u05EA ]+/g,' ').replace(/[וי]/g,'').replace(/\s+/g,' ').trim(); };   /* ktiv male / haser: compare without ו and י */
+      var qn=nk(q.textContent.split(/\.\.\.|…/)[0]).split(' ').slice(0,3).join(' ');
+      var sents=[]; ((it&&it.p)||[]).forEach(function(t){ (t.match(/[^.:;]+[.:;]?/g)||[t]).forEach(function(x){ if(x.trim()) sents.push(x.trim()); }); });
+      var hit=-1; for(var si=0;si<sents.length&&hit<0;si++){ if(qn.length>2&&nk(sents[si]).indexOf(qn)>=0) hit=si; }
+      if(hit<0) for(var sj=0;sj<sents.length-1&&hit<0;sj++){ if(qn.length>2&&nk(sents[sj]+' '+sents[sj+1]).indexOf(qn)>=0) hit=sj; }
+      var showAll=function(){ pd.querySelectorAll('.stg-gm,.r-more').forEach(function(e){e.remove()}); ((it&&it.p)||[]).forEach(function(t){ var pp=document.createElement('p'); pp.className='stg-gm'; pp.textContent=t; pd.appendChild(pp); }); };
+      if(hit>=0){
+        var pp=document.createElement('p'); pp.className='stg-gm'; var end=hit; while(end<sents.length-1&&qn&&nk(sents.slice(hit,end+1).join(' ')).indexOf(nk(q.textContent).split(' ').slice(-3).join(' '))<0&&end-hit<2) end++;
+        pp.textContent=(hit>0?'… ':'')+sents.slice(hit,end+1).join(' ')+(end<sents.length-1?' …':''); pd.appendChild(pp);
+        if(sents.length>end-hit+1){ var mb=document.createElement('button'); mb.type='button'; mb.className='r-more linkish'; mb.textContent='הצג את כל ההלכה'; mb.onclick=function(e){ e.stopPropagation(); showAll(); }; pd.appendChild(mb); }
+      } else showAll();
       if(!it) pd.appendChild(document.createTextNode('לשון ההלכה לא נמצאה בדף.'));
       cr.textContent='לשון הרמב״ם · ספריא'; return;
     }
