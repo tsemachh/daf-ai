@@ -58,3 +58,9 @@ niddah/10b
 niddah/11a
 niddah/14b
 niddah/15a
+niddah/22b
+niddah/23a
+niddah/23b
+niddah/24a
+niddah/32b
+niddah/33a
