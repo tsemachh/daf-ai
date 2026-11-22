@@ -104,3 +104,33 @@
 2026-11-20 meilah/11 minutes=0.15 tokens=n/a changed=short lines in 15 steps (no measures needing a scale)
 2026-11-20 meilah/12 minutes=0.15 tokens=n/a changed=short lines in 12 steps (no measures needing a scale)
 2026-11-20 meilah/13 minutes=0.15 tokens=n/a changed=short lines in 15 steps (no measures needing a scale)
+2026-11-22 meilah/14 minutes=1.1 tokens=n/a changed=short lines in 14 steps (no measures needing a scale)
+2026-11-22 meilah/15 minutes=0.1 tokens=n/a changed=short lines in 15 steps (no measures needing a scale)
+2026-11-22 meilah/16 minutes=0.1 tokens=n/a changed=short lines in 15 steps (no measures needing a scale)
+2026-11-22 meilah/17 minutes=0.1 tokens=n/a changed=short lines in 21 steps (no measures needing a scale)
+2026-11-22 meilah/18 minutes=0.3 tokens=n/a changed=to-scale שיעורי טומאה (בגד ¾ / שק 4 / עור 5 / מפץ 6 טפחים) at the mishnah step s2#0 and by intention (משכב 3 / מושב 1) at s2#3; short lines in 13 steps
+2026-11-22 meilah/19 minutes=0.1 tokens=n/a changed=short lines in 14 steps (no measures needing a scale)
+2026-11-22 meilah/20 minutes=0.1 tokens=n/a changed=short lines in 18 steps (no measures needing a scale)
+2026-11-22 meilah/21 minutes=0.1 tokens=n/a changed=short lines in 29 steps (no measures needing a scale)
+2026-11-22 meilah/22 minutes=0.1 tokens=n/a changed=short lines in 3 steps (no measures needing a scale)
+2026-11-22 kinnim/23 minutes=0.1 tokens=n/a changed=short lines in 22 steps (no measures needing a scale)
+2026-11-22 kinnim/24 minutes=0.1 tokens=n/a changed=short lines in 21 steps (no measures needing a scale)
+2026-11-22 kinnim/25 minutes=0.1 tokens=n/a changed=short lines in 16 steps (no measures needing a scale)
+2026-11-22 tamid/26 minutes=0.2 tokens=n/a changed=scale of אבני הרובדין (8/10 אמות) moved inline to אביי's step (s7#3); short lines in 14 steps
+2026-11-22 tamid/27 minutes=0.1 tokens=n/a changed=short lines in 20 steps (no measures needing a scale)
+2026-11-22 tamid/28 minutes=0.1 tokens=n/a changed=short lines in 18 steps (no measures needing a scale)
+2026-11-22 tamid/29 minutes=0.2 tokens=n/a changed=scale of the קטורת coals (5/8 סאין) moved inline to the שבת step (s1#7); short lines in 14 steps
+2026-11-22 tamid/30 minutes=0.1 tokens=n/a changed=short lines in 5 steps (no measures needing a scale)
+2026-11-22 tamid/31 minutes=0.1 tokens=n/a changed=short lines in 12 steps (no measures needing a scale)
+2026-11-22 tamid/32 minutes=0.1 tokens=n/a changed=short lines in 17 steps (no measures needing a scale)
+2026-11-22 tamid/33 minutes=0.1 tokens=n/a changed=short lines in 12 steps (no measures needing a scale)
+2026-11-22 middot/34 minutes=0.5 tokens=n/a changed=new scale of הר הבית around the עזרה (250/135/115, 213/187/100 אמות, דרך משל) + calc moved inline to s8#2; short lines in 36 steps
+2026-11-22 middot/35 minutes=0.6 tokens=n/a changed=new scales: gates 20×10 vs פתח האולם 40×20 (s1#4), altar 32→30→28→26→24 (s5#3); calcs moved inline (s2#2, s4#3, s5#3), שלמה/בני הגולה table to s5#7; short lines in 24 steps
+2026-11-22 middot/36 minutes=0.4 tokens=n/a changed=new scale of the five מלתראות 20→30 at s6#2; calcs/table moved inline (s5#3, s5#4, s6#2); short lines in 18 steps
+2026-11-22 middot/37 minutes=0.6 tokens=n/a changed=new scales: רום מאה layers (s4#3), ״צר מאחריו ורחב מלפניו״ 70 vs 100 (s5#5); יציעים scale, calcs and table moved inline (s2#0, s4#3-4, s5#3, s6#2); short lines in 18 steps
+2026-11-22 niddah/2 minutes=0.1 tokens=n/a changed=short lines in 13 steps (no measures needing a scale)
+2026-11-22 niddah/3 minutes=0.1 tokens=n/a changed=short lines in 16 steps (no measures needing a scale)
+2026-11-22 niddah/4 minutes=0.1 tokens=n/a changed=short lines in 20 steps (no measures needing a scale)
+2026-11-22 niddah/5 minutes=0.1 tokens=n/a changed=short lines in 12 steps (no measures needing a scale)
+2026-11-22 niddah/6 minutes=0.1 tokens=n/a changed=short lines in 25 steps (no measures needing a scale)
+2026-11-22 niddah/7 minutes=0.1 tokens=n/a changed=short lines in 26 steps (no measures needing a scale)
