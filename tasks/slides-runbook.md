@@ -40,6 +40,7 @@ Spelling (reader note #72, Arachin 5): read every Hebrew word letter by letter �
 Typical misses seen on the first Arachin run: a ריבוי attached to the wrong word of the Mishnah (check every
 arrow/row against our page), duplicated labels, and Roman coins with emperor portraits or idol figures in the
 background — the prompt now forbids coins; if they still appear, regenerate or drop those slides.
+End-of-deck summary (reader note #93, Arachin 13): it must not list numbers or rulings from a sugya the page leaves for the next daf (`to_next`) — erase that box or drop the slide.
 `pdftoppm -r 80 -png deck.pdf /tmp/s` and read each slide image; zoom text blocks. Apply the brief's rules
 (fix what is certain, drop what isn't; small things silently). Note the slide → sugya map from the "סוגיה N" titles.
 
