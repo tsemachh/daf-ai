@@ -50,7 +50,7 @@ window.rectOf = t => { let leaf = null; document.querySelectorAll('*').forEach(e
 window.pdfItem = () => { const it = [...document.querySelectorAll('.cdk-overlay-container [role=menuitem]')].find(x => /PDF/.test(x.innerText)); if (it) { it.click(); return 'ok' } return 'none' };
 'ok';
 
-window.mkR=(title,rows)=>`מצגת לתלמידת כיתה ט׳ על ${title} — רק לפי המקורות שנבחרו (לשון הרמב״ם בספריא ודף הלימוד שלנו).
+window.mkR=(title,rows)=>`מצגת לתלמידי כיתה ט׳ על ${title} — רק לפי המקורות שנבחרו (לשון הרמב״ם בספריא ודף הלימוד שלנו).
 עקוב בדיוק אחרי רשימת הנושאים של דף הלימוד שלנו, באותו סדר ובאותם שמות:
 ${rows.map((r,i)=>'נושא '+(i+1)+': '+r).join('\n')}
 לכל נושא 1–2 שקפים. כותרת כל שקף: "נושא N: שם". בראש השקף ציטוט קצר מלשון הרמב״ם, ומתחתיו הסבר בעברית פשוטה וברורה לבני נוער.
