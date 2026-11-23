@@ -931,5 +931,44 @@
     "פְּרַשְׁתְּבִינָא דְּפוּמְבְּדִיתָא קָאֵי לֵיהּ לְאַדָּא דַּיָּילָא עַד פַּלְגֵיהּ, וְכוּלֵּי עָלְמָא קָאֵי לִפְרַשְׁתְּבִינָא דְּפוּמְבְּדִיתָא עַד חַרְצֵיהּ."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-24-01-d2ab28.webp"
+   ],
+   "s0": [
+    "sl-niddah-24-02-5a7393.webp"
+   ],
+   "s1": [
+    "sl-niddah-24-03-58ae4a.webp"
+   ],
+   "s2": [
+    "sl-niddah-24-04-53a95e.webp",
+    "sl-niddah-24-05-9bb9df.webp"
+   ],
+   "s3": [
+    "sl-niddah-24-06-8c7258.webp"
+   ],
+   "s4": [
+    "sl-niddah-24-07-e23e09.webp"
+   ],
+   "s5": [
+    "sl-niddah-24-08-553d16.webp"
+   ],
+   "s6": [
+    "sl-niddah-24-09-16b068.webp"
+   ],
+   "s7": [
+    "sl-niddah-24-10-da08d0.webp",
+    "sl-niddah-24-11-df0449.webp"
+   ],
+   "end": [
+    "sl-niddah-24-12-9dc6ca.webp"
+   ]
+  }
  }
 }
