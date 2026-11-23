@@ -699,5 +699,32 @@
     "אֶלָּא מַאי ״לָא יָדַעְנָא מַאי תְּיוּבְתָּא״? אֵימַר: הִרְחִיקָה לֵידָתָהּ."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-29-01-876b12.webp"
+   ],
+   "s1": [
+    "sl-niddah-29-02-61b441.webp",
+    "sl-niddah-29-03-38b122.webp"
+   ],
+   "s2": [
+    "sl-niddah-29-04-876ca9.webp"
+   ],
+   "s3": [
+    "sl-niddah-29-05-bdfc95.webp"
+   ],
+   "s4": [
+    "sl-niddah-29-06-d1152e.webp",
+    "sl-niddah-29-07-92c767.webp"
+   ],
+   "end": [
+    "sl-niddah-29-08-009efa.webp"
+   ]
+  }
  }
 }
