@@ -663,5 +663,23 @@
     "הֲדַרַן עֲלָךְ בְּנוֹת כּוּתִים."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-niddah-39-01-303560.webp",
+    "sl-niddah-39-02-b7ac76.webp"
+   ],
+   "s2": [
+    "sl-niddah-39-03-2c244a.webp",
+    "sl-niddah-39-04-3bd3be.webp"
+   ],
+   "end": [
+    "sl-niddah-39-05-7ac3f1.webp"
+   ]
+  }
  }
 }
