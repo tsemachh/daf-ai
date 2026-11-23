@@ -807,5 +807,42 @@
     "וְאֵין חַיָּיבִין עֲלֵיהֶן עַל בִּיאַת מִקְדָּשׁ, וְאֵין שׂוֹרְפִין עֲלֵיהֶם אֶת הַתְּרוּמָה, מִפְּנֵי שֶׁטּוּמְאָתָן סָפֵק."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-31-01-b585dc.webp"
+   ],
+   "s1": [
+    "sl-niddah-31-02-4a9d3f.webp"
+   ],
+   "s2": [
+    "sl-niddah-31-03-119a31.webp"
+   ],
+   "s3": [
+    "sl-niddah-31-04-61da3d.webp"
+   ],
+   "s4": [
+    "sl-niddah-31-05-dbf956.webp"
+   ],
+   "s5": [
+    "sl-niddah-31-06-20ca1a.webp"
+   ],
+   "s6": [
+    "sl-niddah-31-07-2f489d.webp"
+   ],
+   "s7": [
+    "sl-niddah-31-08-c27519.webp"
+   ],
+   "s8": [
+    "sl-niddah-31-09-1fbe31.webp"
+   ],
+   "end": [
+    "sl-niddah-31-10-27ed56.webp"
+   ]
+  }
  }
 }
