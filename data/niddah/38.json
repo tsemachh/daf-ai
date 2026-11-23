@@ -942,5 +942,36 @@
     "אֵימָא: בִּימֵי נִדָּה — נִדָּה, בִּימֵי זִיבָה — טְהוֹרָה? אָמַר קְרָא ״תֵּשֵׁב״ — יְשִׁיבָה אַחַת לְכוּלָּן."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-38-01-83be10.webp"
+   ],
+   "s1": [
+    "sl-niddah-38-02-2dcc22.webp",
+    "sl-niddah-38-03-f30005.webp"
+   ],
+   "s2": [
+    "sl-niddah-38-04-2c0fda.webp"
+   ],
+   "s3": [
+    "sl-niddah-38-05-b1055b.webp",
+    "sl-niddah-38-06-c23ce1.webp"
+   ],
+   "s4": [
+    "sl-niddah-38-07-422d1e.webp"
+   ],
+   "s5": [
+    "sl-niddah-38-08-939e0a.webp",
+    "sl-niddah-38-09-f34f8a.webp"
+   ],
+   "end": [
+    "sl-niddah-38-10-258017.webp"
+   ]
+  }
  }
 }
