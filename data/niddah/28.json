@@ -881,5 +881,37 @@
     "לְחַלֵּק בֵּין עֵרֶךְ אִישׁ לְעֵרֶךְ אִשָּׁה."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-28-01-947c0d.webp"
+   ],
+   "s1": [
+    "sl-niddah-28-02-b374a1.webp"
+   ],
+   "s2": [
+    "sl-niddah-28-03-912808.webp"
+   ],
+   "s3": [
+    "sl-niddah-28-04-1bb9a1.webp"
+   ],
+   "s4": [
+    "sl-niddah-28-05-8fe36b.webp"
+   ],
+   "s5": [
+    "sl-niddah-28-06-d044a4.webp"
+   ],
+   "s6": [
+    "sl-niddah-28-07-856948.webp",
+    "sl-niddah-28-08-c6f2eb.webp"
+   ],
+   "end": [
+    "sl-niddah-28-09-2cdf38.webp"
+   ]
+  }
  }
 }
