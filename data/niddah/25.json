@@ -906,5 +906,32 @@
     "מוֹנֶה תְּחִלַּת נִדָּה לָרִאשׁוֹן, וּתְחִלַּת נִדָּה לָאַחֲרוֹן."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-25-01-f4a3b9.webp"
+   ],
+   "s1": [
+    "sl-niddah-25-02-c9c630.webp",
+    "sl-niddah-25-03-444684.webp"
+   ],
+   "s2": [
+    "sl-niddah-25-04-ed64de.webp",
+    "sl-niddah-25-05-072666.webp"
+   ],
+   "s3": [
+    "sl-niddah-25-06-1f9fcc.webp"
+   ],
+   "s4": [
+    "sl-niddah-25-07-5fb3fe.webp"
+   ],
+   "end": [
+    "sl-niddah-25-08-77e8db.webp"
+   ]
+  }
  }
 }
