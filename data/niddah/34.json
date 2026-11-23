@@ -807,5 +807,40 @@
     "אָמַר רָבָא: תָּא שְׁמַע, ״זֹאת תּוֹרַת הַזָּב״ — בֵּין גָּדוֹל בֵּין קָטָן, מָה גָּדוֹל — רְאִיָּיה רִאשׁוֹנָה שֶׁלּוֹ מְטַמְּאָה, אַף קָטָן — רְאִיָּיה רִאשׁוֹנָה נָמֵי מְטַמְּאָה."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-34-01-5d7d1b.webp"
+   ],
+   "s1": [
+    "sl-niddah-34-02-1bf050.webp",
+    "sl-niddah-34-03-d1f043.webp"
+   ],
+   "s2": [
+    "sl-niddah-34-04-636af8.webp",
+    "sl-niddah-34-05-1efa07.webp"
+   ],
+   "s3": [
+    "sl-niddah-34-06-3b987c.webp",
+    "sl-niddah-34-07-05ad61.webp"
+   ],
+   "s4": [
+    "sl-niddah-34-08-5678d7.webp"
+   ],
+   "s5": [
+    "sl-niddah-34-09-dffbda.webp",
+    "sl-niddah-34-10-7139cf.webp"
+   ],
+   "s6": [
+    "sl-niddah-34-11-f21daf.webp"
+   ],
+   "end": [
+    "sl-niddah-34-12-2443da.webp"
+   ]
+  }
  }
 }
