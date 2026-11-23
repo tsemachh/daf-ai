@@ -76,3 +76,9 @@ niddah/69b
 niddah/70a
 berachot/3b
 berachot/4a
+berachot/12b
+berachot/13a
+berachot/15b
+berachot/16a
+berachot/16b
+berachot/17a
