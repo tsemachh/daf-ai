@@ -88,3 +88,9 @@ berachot/22b
 berachot/23a
 berachot/23b
 berachot/24a
+berachot/25b
+berachot/26a
+berachot/26b
+berachot/27a
+berachot/27b
+berachot/28a
