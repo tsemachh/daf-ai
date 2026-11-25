@@ -164,3 +164,33 @@
 2026-11-24 niddah/35 minutes=0.1 tokens=n/a changed=short lines in 36 steps (no measures needing a scale)
 2026-11-24 niddah/36 minutes=0.5 tokens=n/a changed=new scale קישוי ר׳ מאיר 50 vs ר׳ יהודה חודש at s2#5; short lines in 38 steps
 2026-11-24 niddah/37 minutes=0.5 tokens=n/a changed=new scale חולה 50 / בריאה 40 days at s4#2; short lines in 37 steps
+2026-11-25 niddah/38 minutes=3.1 tokens=n/a changed=calcs moved inline to s2#2 and s4#3; new weekday table 271-273 days at s3#7; short lines in 32 steps
+2026-11-25 niddah/39 minutes=0.1 tokens=n/a changed=short lines in 29 steps (no measures needing a scale)
+2026-11-25 niddah/40 minutes=0.1 tokens=n/a changed=s2 #12-18 de-duplicated: each step now carries its own segment (question, baraita, תמיהה, corrected reading, answer, חכמים); short lines in 14 steps
+2026-11-25 niddah/41 minutes=0.1 tokens=n/a changed=short lines in 30 steps (no measures needing a scale)
+2026-11-25 niddah/42 minutes=0.1 tokens=n/a changed=short lines in 36 steps (no measures needing a scale)
+2026-11-25 niddah/43 minutes=0.1 tokens=n/a changed=short lines in 33 steps (no measures needing a scale)
+2026-11-25 niddah/44 minutes=0.1 tokens=n/a changed=short lines in 24 steps (no measures needing a scale)
+2026-11-25 niddah/45 minutes=0.1 tokens=n/a changed=short lines in 27 steps (no measures needing a scale)
+2026-11-25 niddah/46 minutes=0.1 tokens=n/a changed=short lines in 49 steps (no measures needing a scale)
+2026-11-25 niddah/47 minutes=0.1 tokens=n/a changed=short lines in 24 steps (no measures needing a scale)
+2026-11-25 niddah/48 minutes=0.2 tokens=n/a changed=short lines in 36 steps (no measures needing a scale)
+2026-11-25 niddah/49 minutes=0.2 tokens=n/a changed=short lines in 20 steps (no measures needing a scale)
+2026-11-25 niddah/50 minutes=0.2 tokens=n/a changed=short lines in 16 steps (no measures needing a scale)
+2026-11-25 niddah/51 minutes=0.2 tokens=n/a changed=short lines in 36 steps (no measures needing a scale)
+2026-11-25 niddah/52 minutes=0.2 tokens=n/a changed=short lines in 25 steps (no measures needing a scale)
+2026-11-25 niddah/53 minutes=0.2 tokens=n/a changed=short lines in 18 steps (no measures needing a scale)
+2026-11-25 niddah/55 minutes=0.2 tokens=n/a changed=short lines in 24 steps (no measures needing a scale)
+2026-11-25 niddah/56 minutes=0.2 tokens=n/a changed=short lines in 34 steps (no measures needing a scale)
+2026-11-25 niddah/54 minutes=0.2 tokens=n/a changed=new scale ימי תשמיש מתוך המחזור (7/7, 8/8, 9/9, 10/10) at s3#1; short lines in 29 steps
+2026-11-25 niddah/57 minutes=0.2 tokens=n/a changed=בית הפרס scale (4 vs 5 סאין) moved inline to s4#4; short lines in 49 steps
+2026-11-25 niddah/58 minutes=0.1 tokens=n/a changed=short lines in 30 steps (no measures needing a scale)
+2026-11-25 niddah/59 minutes=0.1 tokens=n/a changed=short lines in 30 steps (no measures needing a scale)
+2026-11-25 niddah/60 minutes=0.1 tokens=n/a changed=short lines in 33 steps (no measures needing a scale)
+2026-11-25 niddah/61 minutes=0.1 tokens=n/a changed=short lines in 31 steps (no measures needing a scale)
+2026-11-25 niddah/62 minutes=0.1 tokens=n/a changed=short lines in 14 steps (no measures needing a scale)
+2026-11-25 niddah/63 minutes=0.1 tokens=n/a changed=short lines in 22 steps (no measures needing a scale)
+2026-11-25 niddah/64 minutes=0.1 tokens=n/a changed=short lines in 33 steps (no measures needing a scale)
+2026-11-25 niddah/65 minutes=0.1 tokens=n/a changed=short lines in 31 steps (no measures needing a scale)
+2026-11-25 niddah/66 minutes=0.1 tokens=n/a changed=short lines in 39 steps (no measures needing a scale)
+2026-11-25 niddah/67 minutes=0.1 tokens=n/a changed=short lines in 27 steps (no measures needing a scale)
