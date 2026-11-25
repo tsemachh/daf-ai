@@ -104,3 +104,5 @@ berachot/38a
 berachot/37b
 berachot/45a
 berachot/44b
+berachot/47a
+berachot/46b
