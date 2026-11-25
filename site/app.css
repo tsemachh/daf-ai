@@ -1240,3 +1240,7 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
 .to-quiz-row .to-quiz{margin:0;flex:1 1 15rem}
 .to-quiz-row .sl-btn.to-quiz{min-height:2.75rem;border-radius:0.625rem;font-size:inherit;color:var(--accent);padding:0.375rem 0.875rem;justify-content:flex-start}
 .to-quiz-row .sl-btn.to-quiz:hover{background:var(--accent-soft)}
+/* the עזרים / בקצרה pills are inline and a finger often lands a few px above or beside them; an invisible
+   halo (part of the <summary>, so it toggles too) widens the target without changing the look */
+details.aids>summary,details.flowd>summary{position:relative}
+details.aids>summary::after,details.flowd>summary::after{content:"";position:absolute;inset:-0.625rem -0.75rem}
