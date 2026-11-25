@@ -814,5 +814,37 @@
     "אֶלָּא לְרַבִּי יַנַּאי קַשְׁיָא! קַשְׁיָא."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-44-01-174949.webp"
+   ],
+   "s1": [
+    "sl-niddah-44-02-203932.webp",
+    "sl-niddah-44-03-d06a04.webp"
+   ],
+   "s2": [
+    "sl-niddah-44-04-8e8c8f.webp",
+    "sl-niddah-44-05-e0b7fa.webp"
+   ],
+   "s3": [
+    "sl-niddah-44-06-8f1434.webp",
+    "sl-niddah-44-07-2a4f22.webp"
+   ],
+   "s4": [
+    "sl-niddah-44-08-cee504.webp"
+   ],
+   "s5": [
+    "sl-niddah-44-09-b9a9b5.webp",
+    "sl-niddah-44-10-1ab051.webp"
+   ],
+   "end": [
+    "sl-niddah-44-11-e916a1.webp"
+   ]
+  }
  }
 }
