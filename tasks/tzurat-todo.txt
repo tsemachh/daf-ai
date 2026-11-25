@@ -100,3 +100,5 @@ berachot/30b
 berachot/31a
 berachot/35b
 berachot/36a
+berachot/38a
+berachot/37b
