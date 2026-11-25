@@ -970,9 +970,8 @@ def render_daf(d, prev, nxt, glossary, sources):
 {catalog_json()}
 <script src="../../app.js" defer></script>
 <script src="../../progress.js" defer></script>
-<!-- Sefaria Linker v3, tracking only: lists this page in Sefaria's "Web Pages" panel for the texts it cites; excludeFromLinking keeps the page UI untouched -->
-<script src="https://www.sefaria.org/linker.v3.js" charset="utf-8" defer></script>
-<script>addEventListener("load",function(){{try{{sefaria.link({{whitelistSelector:".daf header h1",excludeFromLinking:"title,body",contentLang:"hebrew",interfaceLang:"hebrew"}})}}catch(e){{}}}});</script>"""
+<!-- Sefaria "Web Pages" tracking: the same find-refs call linker.v3.js makes, but with only the page heading as text, so nothing on the page is scanned or re-wrapped (the full linker froze taps for seconds on long pages). Once per page per browser per 30 days. -->
+<script>addEventListener("load",function(){{setTimeout(function(){{try{{var u=(document.querySelector("link[rel~=canonical]")||location).href,k="sf-trk:"+u,t=+localStorage.getItem(k)||0;if(Date.now()-t<2592e6)return;var h=document.querySelector(".daf header h1"),m=document.querySelector("meta[name~=description]");fetch("https://www.sefaria.org/api/find-refs?with_text=0&debug=0&max_segments=20",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify({{metaDataForTracking:{{url:u,description:m?m.content:"",title:document.title}},text:{{title:document.title,body:h?h.textContent:""}}}})}}).then(function(r){{if(r.ok)localStorage.setItem(k,String(Date.now()))}}).catch(function(){{}})}}catch(e){{}}}},4000)}})</script>"""
     desc = re.sub("<[^>]+>", "", d["thesis"])
     og = f"{d['slug']}-{d['daf']}.png"
     if not os.path.exists(os.path.join(ROOT, "site", "og", og)):
