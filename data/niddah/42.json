@@ -904,5 +904,33 @@
     "וְלֹא תּוֹךְ תּוֹכוֹ — קָא מַשְׁמַע לַן."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-niddah-42-01-59ffa8.webp",
+    "sl-niddah-42-02-f8bacb.webp"
+   ],
+   "s2": [
+    "sl-niddah-42-03-c61c3e.webp",
+    "sl-niddah-42-04-17f3c5.webp"
+   ],
+   "s3": [
+    "sl-niddah-42-05-c20ee9.webp"
+   ],
+   "s4": [
+    "sl-niddah-42-06-6b7a00.webp",
+    "sl-niddah-42-07-8229e9.webp"
+   ],
+   "s5": [
+    "sl-niddah-42-08-377b42.webp"
+   ],
+   "end": [
+    "sl-niddah-42-09-e4a7a1.webp"
+   ]
+  }
  }
 }
