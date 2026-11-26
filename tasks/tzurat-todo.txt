@@ -110,3 +110,5 @@ berachot/48b
 berachot/49a
 berachot/49b
 berachot/50a
+berachot/51b
+berachot/52a
