@@ -1183,5 +1183,33 @@
     "וְכִי אַסְּקִינְהוּ עֶזְרָא — לָא כּוּלְּהוּ סְלוּק."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-46-01-8d3e70.webp"
+   ],
+   "s0": [
+    "sl-niddah-46-02-4f7e24.webp",
+    "sl-niddah-46-03-4a1279.webp"
+   ],
+   "s1": [
+    "sl-niddah-46-04-c8043c.webp"
+   ],
+   "s2": [
+    "sl-niddah-46-05-2443c7.webp",
+    "sl-niddah-46-06-8936da.webp"
+   ],
+   "s3": [
+    "sl-niddah-46-07-d9628a.webp",
+    "sl-niddah-46-08-301348.webp"
+   ],
+   "end": [
+    "sl-niddah-46-09-b17c00.webp"
+   ]
+  }
  }
 }
