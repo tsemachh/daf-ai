@@ -717,5 +717,36 @@
    ]
   }
  },
- "to_next": "Niddah.47b.16-23"
+ "to_next": "Niddah.47b.16-23",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-niddah-47-01-f290f5.webp"
+   ],
+   "s2": [
+    "sl-niddah-47-02-2f1410.webp",
+    "sl-niddah-47-03-c501b6.webp"
+   ],
+   "s3": [
+    "sl-niddah-47-04-9fb4a4.webp",
+    "sl-niddah-47-05-63b529.webp"
+   ],
+   "s4": [
+    "sl-niddah-47-06-6b462c.webp"
+   ],
+   "s5": [
+    "sl-niddah-47-07-dd09c7.webp"
+   ],
+   "s6": [
+    "sl-niddah-47-08-0bed86.webp",
+    "sl-niddah-47-09-d5bfac.webp"
+   ],
+   "end": [
+    "sl-niddah-47-10-7b46d1.webp"
+   ]
+  }
+ }
 }
