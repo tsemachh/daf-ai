@@ -708,5 +708,32 @@
   }
  ],
  "footer": "נוצר על ידי סוכן AI (Claude) ונבדק אוטומטית מול לשון הגמרא — מומלץ לעיין במקור. ההסבר נכתב כעזר ללימוד ואינו מחליף עיון בגמרא ובמפרשים. להלכה למעשה — יש לשאול רב.",
- "to_next": "Niddah.50b.8-17"
+ "to_next": "Niddah.50b.8-17",
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-niddah-50-01-bf6d83.webp"
+   ],
+   "s1": [
+    "sl-niddah-50-02-a8b77d.webp",
+    "sl-niddah-50-03-7f33be.webp"
+   ],
+   "s2": [
+    "sl-niddah-50-04-b43977.webp"
+   ],
+   "s3": [
+    "sl-niddah-50-05-0e9739.webp"
+   ],
+   "s4": [
+    "sl-niddah-50-06-6628e0.webp",
+    "sl-niddah-50-07-e15b41.webp"
+   ],
+   "end": [
+    "sl-niddah-50-08-4a8040.webp"
+   ]
+  }
+ }
 }
