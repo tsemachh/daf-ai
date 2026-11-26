@@ -224,6 +224,9 @@ Ids: `s1`, `s2`, … in order. `kind` is "sugya" for every section. `hideable`: 
     hold the answer — never on an earlier sugya, and never asks about something the page has not reached yet.
 23. **Every Aramaic phrase that carries a story's point is explained** (reader note, Bechorot 45, ״פשע בינוקי״): what it
     means and why it matters to the outcome, from S/R.
+24. **Two readings that cancel out get shown side by side** (reader note, Arachin 18): when the Gemara sets two
+    derivations against each other (״שקולי משקלי קראי״, ״אישתקלו להו״), put a `seq` on that step: each derivation with the
+    result it gives for the case in question, then what decides it.
 
 ## Work order (keeps tokens low)
 Write sugya by sugya into the output file (re-write the file after each sugya, so a stop loses nothing).
