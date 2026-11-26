@@ -995,5 +995,37 @@
     "דְּלֵית לֵיהּ גִּידּוּדֵי, הָא דְּאִית לֵיהּ גִּידּוּדֵי."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "intro": [
+    "sl-shabbat-40-01-1094b2.webp"
+   ],
+   "s1": [
+    "sl-shabbat-40-02-54780a.webp",
+    "sl-shabbat-40-03-b21f12.webp"
+   ],
+   "s2": [
+    "sl-shabbat-40-04-ee5c16.webp",
+    "sl-shabbat-40-05-620ec3.webp"
+   ],
+   "s3": [
+    "sl-shabbat-40-06-14775f.webp",
+    "sl-shabbat-40-07-aa6e8a.webp"
+   ],
+   "s4": [
+    "sl-shabbat-40-08-78c23a.webp",
+    "sl-shabbat-40-09-c64fe9.webp"
+   ],
+   "s5": [
+    "sl-shabbat-40-10-bc1878.webp"
+   ],
+   "end": [
+    "sl-shabbat-40-11-fecd93.webp"
+   ]
+  }
  }
 }
