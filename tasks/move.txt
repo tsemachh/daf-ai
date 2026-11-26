@@ -1,5 +1,4 @@
 # sugyot to move across the daf break (owner, 2026-11-14) — tools/move_sugya.py <slug> <daf> --to next|prev; top first, by Daf Yomi date
-berachot/49 s8 --to next   # Berakhot.49b.16-50a.4 — 13% on the earlier daf
 berachot/51 s7 --to next   # Berakhot.51b.21-52a.7 — 36% on the earlier daf
 berachot/52 s7 --to next   # Berakhot.52b.30-53a.7 — 39% on the earlier daf
 berachot/54 s10 --to next   # Berakhot.54b.22-55a.6 — 15% on the earlier daf
