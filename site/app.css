@@ -1271,3 +1271,9 @@ details.aids>summary::after,details.flowd>summary::after{content:"";position:abs
 .dg-k span{display:inline-flex;align-items:center;gap:3px}
 .dg-k i{--c:.875rem}
 @media (max-width:420px){.dg-t{display:none}.dg-r{grid-template-columns:2rem repeat(20,var(--c)) .375rem 1.5rem}}
+.card-w{display:flex;flex-direction:column}
+.card-w .card{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.card-w .card:only-child{border-radius:0.875rem}
+.card-links{display:flex;flex-wrap:wrap;gap:0.5rem;padding:0.5rem 1.125rem 0.625rem;background:var(--card);border:1px solid var(--line);border-top:1px dashed var(--line);border-radius:0 0 0.875rem 0.875rem}
+.card-links a{font-size:0.9375rem;font-weight:700;color:var(--accent);text-decoration:none;padding:0.25rem 0.625rem;border-radius:999px;background:var(--accent-soft);min-height:2.25rem;display:inline-flex;align-items:center}
+.card-links a:hover{text-decoration:underline}

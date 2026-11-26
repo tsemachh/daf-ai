@@ -989,9 +989,19 @@ def card(d, href):
   </a>"""
 
 
+def card_links(d, href):
+    """Masechet index card + direct links to the page's review questions and its deck (a card is one <a>, so the links sit beside it)."""
+    links = [f'<a href="{href}#{d["key"]}-quiz">✎ שאלות החזרה ({len(d["quiz"])})</a>'] if d.get("quiz") else []
+    n = sum(len(v) for v in (d.get("slides") or {}).get("g", {}).values())
+    if n:
+        links.append(f'<a href="{href}#{d["key"]}-slides">📊 מצגת הדף ({n} שקפים)</a>')
+    row = f'\n    <div class="card-links">{"".join(links)}</div>' if links else ""
+    return f'  <div class="card-w">\n{card(d, href)}{row}\n  </div>'
+
+
 def render_masechet(slug, dafim):
     first = dafim[0]
-    cards = "\n".join(card(d, f"./{d['daf']}/") for d in sorted(dafim, key=lambda x: x["daf"]))
+    cards = "\n".join(card_links(d, f"./{d['daf']}/") for d in sorted(dafim, key=lambda x: x["daf"]))
     body = f"""<div class="wrap" id="app"><section>
 <a class="back" href="../">→ דף הבית</a>
 {navbar(slug, 0, '../')}
