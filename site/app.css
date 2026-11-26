@@ -1244,3 +1244,30 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area
    halo (part of the <summary>, so it toggles too) widens the target without changing the look */
 details.aids>summary,details.flowd>summary{position:relative}
 details.aids>summary::after,details.flowd>summary::after{content:"";position:absolute;inset:-0.625rem -0.75rem}
+.dg{--c:.875rem;display:grid;gap:3px;padding:2px;direction:rtl}
+@media (max-width:420px){.dg{--c:.6875rem}}
+.dg-r{display:grid;grid-template-columns:2.25rem repeat(20,var(--c)) .375rem 1.75rem auto;column-gap:2px;align-items:center;white-space:nowrap}
+.dg-l{font-size:.8125rem;font-weight:800;text-align:center}
+.dg i,.dg-k i{display:inline-block;width:var(--c,.875rem);height:var(--c,.875rem);box-sizing:border-box;border-radius:3px;border:1px dashed var(--line);vertical-align:middle}
+.dg i.e{border-color:transparent}
+.dg i.z{border-style:solid;border-color:var(--gold)}
+.dg i.n{background:var(--accent-soft)}
+.dg i.y,.dg-k i.y{background:var(--ok-soft);border-color:var(--ok)}
+.dg i.s,.dg-k i.s{border-style:solid}
+.dg i.n.s,.dg-k i.n.s{background:var(--accent);border-color:var(--accent)}
+.dg i.z.s,.dg-k i.z.s{background:var(--gold);border-color:var(--gold)}
+.dg i.y.s,.dg-k i.y.s{background:var(--ok);border-color:var(--ok)}
+.dg i.d,.dg-k i.d{width:.375rem;border:0;border-radius:2px;background:var(--no)}
+.dg-c{text-align:center;font-weight:800;color:var(--no);font-size:.875rem}
+.dg-t{font-size:.6875rem;color:var(--no);font-weight:800;padding-inline-start:.25rem}
+.dg-h{font-size:.625rem;font-weight:800;align-items:end}
+.dg-h .dg-l{font-size:.625rem;white-space:normal;line-height:1.1}
+.dg-hz{grid-column:span 2;text-align:center;color:var(--gold);white-space:normal;line-height:1.1}
+.dg-hn{grid-column:span 7;text-align:center;color:var(--accent);border-bottom:2px solid var(--accent)}
+.dg-hy{grid-column:span 11;text-align:center;color:var(--ok);border-bottom:2px solid var(--ok)}
+.dg-hd{text-align:center;color:var(--no);font-size:.5625rem}
+.dg-h .dg-c{font-size:.625rem}
+.dg-k{font-size:.8125rem;margin:.5rem 0 0;display:flex;flex-wrap:wrap;gap:.25rem .875rem}
+.dg-k span{display:inline-flex;align-items:center;gap:3px}
+.dg-k i{--c:.875rem}
+@media (max-width:420px){.dg-t{display:none}.dg-r{grid-template-columns:2rem repeat(20,var(--c)) .375rem 1.5rem}}
