@@ -194,3 +194,33 @@
 2026-11-25 niddah/65 minutes=0.1 tokens=n/a changed=short lines in 31 steps (no measures needing a scale)
 2026-11-25 niddah/66 minutes=0.1 tokens=n/a changed=short lines in 39 steps (no measures needing a scale)
 2026-11-25 niddah/67 minutes=0.1 tokens=n/a changed=short lines in 27 steps (no measures needing a scale)
+2026-11-27 niddah/68 minutes=0.2 tokens=n/a changed=short lines in 37 steps (no measures needing a scale)
+2026-11-27 niddah/69 minutes=0.2 tokens=n/a changed=טבילות table moved inline to s3#20 (where the count of 15 is settled); short lines in 45 steps
+2026-11-27 niddah/70 minutes=0.2 tokens=n/a changed=short lines in 20 steps (no measures needing a scale)
+2026-11-27 niddah/71 minutes=0.2 tokens=n/a changed=short lines in 33 steps (no measures needing a scale)
+2026-11-27 niddah/72 minutes=0.2 tokens=n/a changed=short lines in 31 steps (no measures needing a scale)
+2026-11-27 niddah/73 minutes=0.2 tokens=n/a changed=short lines in 18 steps (no measures needing a scale)
+2026-11-27 berachot/2 minutes=0.2 tokens=n/a changed=new scale סוף זמן ק״ש ערבית (ר״א/חכמים/ר״ג) at s1#3; short lines in 42 steps
+2026-11-27 berachot/3 minutes=0.2 tokens=n/a changed=calc of ר׳ נתן moved inline to s5#8; short lines in 16 steps
+2026-11-27 berachot/4 minutes=0.2 tokens=n/a changed=short lines in 39 steps (no measures needing a scale)
+2026-11-27 berachot/5 minutes=0.2 tokens=n/a changed=short lines in 30 steps (no measures needing a scale)
+2026-11-27 berachot/6 minutes=0.2 tokens=n/a changed=short lines in 27 steps (no measures needing a scale)
+2026-11-27 berachot/7 minutes=0.2 tokens=n/a changed=short lines in 40 steps (no measures needing a scale)
+2026-11-27 berachot/8 minutes=0.2 tokens=n/a changed=short lines in 25 steps (no measures needing a scale)
+2026-11-27 berachot/9 minutes=0.2 tokens=n/a changed=short lines in 42 steps (no measures needing a scale)
+2026-11-27 berachot/10 minutes=0.2 tokens=n/a changed=short lines in 39 steps (no measures needing a scale)
+2026-11-27 berachot/11 minutes=0.2 tokens=n/a changed=short lines in 32 steps (no measures needing a scale)
+2026-11-27 berachot/12 minutes=0.2 tokens=n/a changed=short lines in 47 steps (no measures needing a scale)
+2026-11-27 berachot/13 minutes=0.2 tokens=n/a changed=short lines in 49 steps (no measures needing a scale)
+2026-11-27 berachot/14 minutes=0.2 tokens=n/a changed=short lines in 51 steps (no measures needing a scale)
+2026-11-27 berachot/15 minutes=0.2 tokens=n/a changed=short lines in 36 steps; פרסה/מיל not converted (no equivalence stated in G/S/R), so no scale
+2026-11-27 berachot/16 minutes=0.2 tokens=n/a changed=short lines in 37 steps (no measures needing a scale)
+2026-11-27 berachot/17 minutes=0.2 tokens=n/a changed=short lines in 36 steps (no measures needing a scale)
+2026-11-27 berachot/18 minutes=0.2 tokens=n/a changed=short lines in 42 steps (no measures needing a scale)
+2026-11-27 berachot/19 minutes=0.2 tokens=n/a changed=short lines in 40 steps (no measures needing a scale)
+2026-11-27 berachot/20 minutes=0.2 tokens=n/a changed=short lines in 38 steps (no measures needing a scale)
+2026-11-27 berachot/21 minutes=0.2 tokens=n/a changed=short lines in 20 steps (no measures needing a scale)
+2026-11-27 berachot/22 minutes=0.2 tokens=n/a changed=short lines in 45 steps; 9 קבין vs 40 סאה not converted (no equivalence stated in G/S/R), so no scale
+2026-11-27 berachot/23 minutes=0.2 tokens=n/a changed=short lines in 47 steps (no measures needing a scale)
+2026-11-27 berachot/24 minutes=0.2 tokens=n/a changed=short lines in 43 steps (no measures needing a scale)
+2026-11-27 berachot/25 minutes=0.2 tokens=n/a changed=short lines in 35 steps; ד׳ אמות from עיקר vs מקום שפסק הריח (s4#1-2) would suit a to-scale fig
