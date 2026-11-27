@@ -118,3 +118,9 @@ berachot/54b
 berachot/55a
 berachot/55b
 berachot/56a
+berachot/58b
+berachot/59a
+berachot/59b
+berachot/60a
+sukkah/23b
+sukkah/24a
