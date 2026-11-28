@@ -843,5 +843,37 @@
     "הַנַּח לְנֵר שֶׁמֶן וּפְתִילָה, הוֹאִיל דְּנַעֲשָׂה בָּסִיס לַדָּבָר הָאָסוּר."
    ]
   }
+ },
+ "slides": {
+  "src": "NotebookLM",
+  "w": 1376,
+  "h": 768,
+  "g": {
+   "s1": [
+    "sl-shabbat-46-01-c28b78.webp",
+    "sl-shabbat-46-02-1a705b.webp"
+   ],
+   "s2": [
+    "sl-shabbat-46-03-ed6c42.webp"
+   ],
+   "s3": [
+    "sl-shabbat-46-04-760022.webp"
+   ],
+   "s4": [
+    "sl-shabbat-46-05-9cd25d.webp",
+    "sl-shabbat-46-06-5adef2.webp"
+   ],
+   "s5": [
+    "sl-shabbat-46-07-4bf327.webp",
+    "sl-shabbat-46-08-7be753.webp"
+   ],
+   "s6": [
+    "sl-shabbat-46-09-1bcde5.webp",
+    "sl-shabbat-46-10-86a606.webp"
+   ],
+   "end": [
+    "sl-shabbat-46-11-8e5feb.webp"
+   ]
+  }
  }
 }
